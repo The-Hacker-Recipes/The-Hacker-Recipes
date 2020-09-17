@@ -3,7 +3,7 @@
 {% hint style="danger" %}
 **This project is a work in progress**. I started it in 2018 and will probably finish it by 2022. I mostly worked on the "Active Directory" and "Web services" parts right now. They are good examples of what I want this whole project to be like.
 
-The 🛠️ emoji is used where the work is not over.
+The 🛠️ emoji is used where work has to be done.
 {% endhint %}
 
 This project is aimed at freely providing technical guides on various hacking topics:
@@ -24,5 +24,9 @@ Keep in mind that these guides are maintained by non-omniscient security enthusi
 
 {% hint style="success" %}
 Please feel free to contribute, give feedback/suggestions or reach out to me on Twitter \([@\_nwodtuhs](https://twitter.com/_nwodtuhs)\), Discord \(Shutdown\#2539\), IRL or whatever you feel appropriate.
+{% endhint %}
+
+{% hint style="success" %}
+Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://github.com/ShutdownRepo/Exegol), another project of mine of a docker environment ready to hack on day-to-day engagements. It's not much but I personaly use it on all my engagements. Feel free to use it, to contribute, to give feedback etc.
 {% endhint %}
 
