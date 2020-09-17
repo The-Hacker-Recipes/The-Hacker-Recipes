@@ -11,11 +11,11 @@ This project is aimed at freely providing technical guides on various hacking to
 * Active Directory services
 * Servers
 * Web services
-* Mobile apps
 * Intelligence gathering
-* Phishing
+* Physical intrusion
 * Social engineering
-* Physical intrusion 
+* Phishing
+* Mobile apps
 * ...
 
 Cheatsheets are huge resources, but they sometimes lack simplicity or on the contrary not giving any context or explanation. This is not a cheatsheets project. Everything here will be verified, tested, and not only copy pasted from I don't know where.
@@ -25,3 +25,4 @@ Keep in mind that these guides are maintained by non-omniscient security enthusi
 {% hint style="success" %}
 Please feel free to contribute, give feedback/suggestions or reach out to me on Twitter \([@\_nwodtuhs](https://twitter.com/_nwodtuhs)\), Discord \(Shutdown\#2539\), IRL or whatever you feel appropriate.
 {% endhint %}
+

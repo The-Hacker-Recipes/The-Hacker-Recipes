@@ -19,7 +19,7 @@ Website caching platforms:
 
 Google Analytics:
 
-* Certificats?  
+* Certificats?
 
   -
 

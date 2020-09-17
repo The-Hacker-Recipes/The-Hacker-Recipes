@@ -115,8 +115,6 @@ Privileged user credentials required.
 File uploading, creating, starting, stopping, deletion of services makes it really noisy.
 {% endhint %}
 
-
-
 **Smbexec** works like **Psexec**, but instead of trying to execute an uploaded executable inside the share, it will try to use directly the binaries _cmd.exe/powershell.exe_. The exploit create an arbitrary service with the _Service File Name_ attribute set to a command string to execute. It echoes the command to be executed to a .bat file, execute it and delete it.
 
 The exploit then get the output of the command via Smb and displays the content. For every command, a new service is created.
@@ -139,23 +137,17 @@ Prioritize using **Smbexec** when you detect a strong AV, _cmd.exe_ is a trusted
 Privileged user credentials required.
 {% endhint %}
 
-
-
 Windows Management Instrumentation is a subsystem of PowerShell that gives high privileged access to system monitoring tools.
 
 Wmiexec has a similar approach to smbexec but it is executing commands through WMI.
 
 {% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py" caption="Exploit" %}
 
-
-
 DCOM is a way for a computer to run a program over the network on a different computer as if the program was running locally.
 
 Dcomexec has a similar approach to psexec but it is executing commands through DCOM.
 
 {% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py" caption="Exploit" %}
-
-
 
 Crackmapexec is a swiss army that has featured a lot of the command execution methods mentionned precedently.
 
@@ -167,13 +159,9 @@ One of its feature is to automate the process of executing code via SMB by switc
 
 {% tabs %}
 
-
-
 Eternalblue is a flaw that allows remote attackers to execute arbitrary code on a target system by sending specially crafted messages to the **SMBv1** server. Other related exploits were labelled as`Eternalchampion`, `Eternalromance` and `Eternalsynergy.`
 
 {% embed url="https://github.com/worawit/MS17-010" caption="POC" %}
-
-
 
 Smbghost is a bug occuring in the decompression mechanism of client message to a **SMBv3.11** server. This bug leads remotely and without any authentication to a **BSOD or an RCE** on the target.
 
