@@ -129,8 +129,6 @@ crackmapexec smb $TARGETS --kerberos --sam/--lsa
 {% endtab %}
 {% endtabs %}
 
-[https://book.hacktricks.xyz/windows/stealing-credentials](https://book.hacktricks.xyz/windows/stealing-credentials) [https://www.ultimatewindowssecurity.com/blog/default.aspx?p=c2bacbe0-d4fc-4876-b6a3-1995d653f32a](https://www.ultimatewindowssecurity.com/blog/default.aspx?p=c2bacbe0-d4fc-4876-b6a3-1995d653f32a) [https://book.hacktricks.xyz/windows/stealing-credentials/credentials-mimikatz\#lsadump](https://book.hacktricks.xyz/windows/stealing-credentials/credentials-mimikatz#lsadump) [https://adsecurity.org/?p=1275](https://adsecurity.org/?p=1275) [https://pure.security/dumping-windows-credentials/](https://pure.security/dumping-windows-credentials/) [https://medium.com/@airman604/dumping-active-directory-password-hashes-deb9468d1633](https://medium.com/@airman604/dumping-active-directory-password-hashes-deb9468d1633)
-
 ## References
 
 {% embed url="http://moyix.blogspot.com/2008/02/syskey-and-sam.html" caption="" %}
