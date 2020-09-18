@@ -1,7 +1,9 @@
 # Introduction
 
 {% hint style="danger" %}
-**This project is a work in progress**. I started it in 2018 and will probably finish it by 2022. I mostly worked on the "Active Directory" and "Web services" parts right now. They are good examples of what I want this whole project to be like.
+**This project is a work in progress**. I started it in 2018 and will probably finish it by 2022. But of course, it will never be finished, and I don't plan on letting this project become deprecated. 
+
+Right now, I mostly worked on the "Active Directory" and "Web services" parts. They are good examples of what I want this whole project to be like.
 
 The 🛠️ emoji is used where work has to be done.
 {% endhint %}

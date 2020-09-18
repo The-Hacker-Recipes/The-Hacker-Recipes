@@ -1,4 +1,4 @@
-# 🛠️ SMB
+# SMB
 
 ## Theory
 
@@ -57,7 +57,7 @@ net use \\$IP\$SHARE_NAME '' /user:''
 Tools like [hydra](https://github.com/vanhauser-thc/thc-hydra), [metasploit](https://github.com/rapid7/metasploit-framework) or [nmap](https://github.com/nmap/nmap) can be used to operate authentication bruteforce attacks.
 
 {% hint style="danger" %}
-In addition to not being stealthy at all, depending on the password policy rules in place, bruteforcing authentication could lead to accounts getting locked out when reaching maximum allowed tries.
+In addition to not being stealthy at all, and depending on the password policy rules in place, bruteforcing authentication could lead to accounts getting locked out when reaching maximum allowed tries.
 {% endhint %}
 
 ```bash
@@ -87,7 +87,7 @@ mget *
 crackmapexec smb $TARGETS -u $USERNAME -p $PASSWORD -M spider_plus -o READ_ONLY=False
 ```
 
-### Authenticated RCE
+### 🛠️ Authenticated RCE
 
 {% tabs %}
 
@@ -130,7 +130,7 @@ The purpose of using **/Q** option of cmd is to stop displaying output. \(je cro
 {% endhint %}
 
 {% hint style="warning" %}
-Prioritize using **Smbexec** when you detect a strong AV, _cmd.exe_ is a trusted component of the operating system.
+Prioritize using **Smbexec** when you detect a strong AV, `cmd.exe`is a trusted component of the operating system.
 {% endhint %}
 
 {% hint style="warning" %}
@@ -155,7 +155,7 @@ One of its feature is to automate the process of executing code via SMB by switc
 
 {% embed url="https://github.com/byt3bl33d3r/CrackMapExec" caption="" %}
 
-### Unauthenticated RCE
+### 🛠️ Unauthenticated RCE
 
 {% tabs %}
 

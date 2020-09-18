@@ -96,16 +96,16 @@
 ## Servers
 
 * [🛠️ Port scanning](servers/port-scanning.md)
-* [🛠️ Abusing services](servers/abusing-services/README.md)
+* [Abusing services](servers/abusing-services/README.md)
   * [🛠️ DNS](servers/abusing-services/dns.md)
-  * [🛠️ FTP](servers/abusing-services/ftp.md)
+  * [FTP](servers/abusing-services/ftp.md)
   * [🛠️ LDAP](servers/abusing-services/ldap.md)
   * [🛠️ MSSQL](servers/abusing-services/mssql.md)
   * [🛠️ MySQL](servers/abusing-services/mysql.md)
   * [🛠️ NFS](servers/abusing-services/nfs.md)
   * [🛠️ RDP](servers/abusing-services/rdp.md)
   * [🛠️ RTSP](servers/abusing-services/rtsp.md)
-  * [🛠️ SMB](servers/abusing-services/smb.md)
+  * [SMB](servers/abusing-services/smb.md)
   * [🛠️ SSH](servers/abusing-services/ssh.md)
   * [🛠️ WinRM](servers/abusing-services/winrm.md)
   * [🛠️ Telnet](servers/abusing-services/telnet.md)
@@ -123,11 +123,6 @@
   * [Web infrastructure](intelligence-gathering/cybint/web-infrastructure.md)
 * [OSINT](intelligence-gathering/osint.md)
 * [GEOINT](intelligence-gathering/geoint.md)
-
-## 🛠️ Mobile applications
-
-* [Android](mobile-applications/android.md)
-* [iOS](mobile-applications/ios.md)
 
 ## 🛠️ Physical
 
