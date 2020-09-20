@@ -4,13 +4,13 @@
 
 Many web applications use one or multiple databases to manage data. In order to dynamically edit the database while users browse the website, some SQL queries can rely on input vectors. When input parameters used in those queries are insufficiently validated or sanitized, these web apps can be vulnerable to SQL injections.
 
-SQL injection attacks can allow attackers to read, update, insert or delete database data by injecting a piece of SQL query through the input vector, hence affecting the intended execution of the original query. In some cases, these attacks can also lead to Local File Disclosure, File Upload or even Remote Code Execution.
+SQL injection attacks can allow attackers to read, update, insert or delete database data by injecting a piece of SQL query through the input vector, hence affecting the intended execution of the original query. In some cases, these attacks can also lead to File Download, File Upload or even Remote Code Execution.
 
 ## Practice
 
 Testers need to identify input vectors \(parts of the app that accept content from the users\) that could be used for database operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
 
-Using special SQL characters \(`'`, `"`, `#`, `;`, `)`, `*`\) in an input could lead to SQL errors sometimes echoed back to the users for debugging. This would indicate an entry point not sanitized enough and thus potentially vulnerable to SQL injection.
+Using special SQL characters \(`'`, `"`, `#`, `;`, `)`, `*`,`%`\) in an input could lead to SQL errors sometimes echoed back to the users for debugging. This would indicate an entry point not sanitized enough and thus potentially vulnerable to SQL injection.
 
 With `some.website/?parameter=value` some basic useful payload to detect vulnerable inputs are:
 
@@ -47,7 +47,7 @@ The following payload is used for testing SQL injections, [XSS \(Cross-Site Scri
 Tools like [SQLmap](https://github.com/sqlmapproject/sqlmap) \(Python\) or [SQLninja](https://github.com/xxgrunge/sqlninja) \(Perl\) can also be used to fuzz input vectors, find vulnerable entry points and automatically exploit them.
 
 {% hint style="danger" %}
-Just like any fuzzing tool, these scans need to be slowed down when testing production instances as it could lead to an unintended denial of service. In addition to that, testers need to use those tools with the greatest care since creating issues with production instances databases \(like overwriting or deleting data\) could have serious fallout.
+Just like any fuzzing tool, these scans need to be slowed down when testing production instances as it could lead to an unintended denial of service. In addition to that, testers need to use those tools with the greatest care since creating issues with production instances databases \(like overwriting or deleting data\) could have a serious fallout.
 {% endhint %}
 
 ```bash

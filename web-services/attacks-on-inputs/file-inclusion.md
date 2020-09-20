@@ -1,4 +1,4 @@
-# File inclusion
+# 🛠️ File inclusion
 
 ## Theory
 
@@ -6,7 +6,7 @@ Many web applications manage files and use server-side scripts to include them. 
 
 LFI/RFI \(Local/Remote File Inclusion\) attacks allow attackers to read sensitive files, include local or remote content that could lead to RCE \(Remote Code Execution\) or to client-side attacks such as XSS \(Cross-Site Scripting\).
 
-Directory traversal \(a.k.a. path traversal, directory climbing, backtracking, the dot dot slash attack\) attacks allow attackers to include sensitive files on the file system, outside the web server directory. File inclusion attacks can leverage a directory traversal vulnerability to access files with a relative path.
+Directory traversal \(a.k.a. path traversal, directory climbing, backtracking, the dot dot slash attack\) attacks allow attackers to access sensitive files on the file system, outside the web server directory. File inclusion attacks can leverage a directory traversal vulnerability to include files with a relative path.
 
 ## Practice
 
@@ -32,11 +32,7 @@ The tool [kadimus](https://github.com/P0cL4bs/Kadimus) \(C\) can help finding an
 kadimus --user-agent "PENTEST" -u '$URL/?parameter=value'
 ```
 
-### From file inclusion to code execution
-
 Depending on the environment, file inclusions can sometimes lead to RCE \(Remote Code Execution\) by including a local file containing code previously injected by the attacker or a remote file containing code that the server can execute.
-
-#### LFI to RCE
 
 Local file inclusions can sometimes be combined with other vulnerabilities to achieve code execution
 
@@ -45,6 +41,8 @@ Local file inclusions can sometimes be combined with other vulnerabilities to ac
 * unrestricted file upload
 * log poisoning
 
+### 🛠️ LFI to RCE \(via logs poisoning\)
+
 For instance, the tester can try to log in with SSH using a crafted login. On a Linux system, the login will be echoed in `/var/log/auth`. By exploiting a Local File Inclusion, the attacker will be able to make the crafted login echoed in this file interpreted by the server.
 
 ```bash
@@ -52,12 +50,22 @@ ssh '<?php phpinfo(); ?>'@$TARGET
 curl --user-agent "PENTEST" $URL/?parameter=/var/log/auth.log&cmd=id
 ```
 
-Another way of achieving RCE from LFI is to combine it with [file upload](unrestricted-file-upload.md).
+🛠️ Introduce other examples, like apache session logs
+
+### 🛠️ LFI to RCE \(via phpinfo\)
+
+### 🛠️ LFI to RCE \(via file upload\)
+
+### 🛠️ LFI to RCE \(via php wrappers\)
+
+🛠️ Introduce php wrappers
+
+PHP wrappers can be combined with a [file upload](unrestricted-file-upload.md) to achieve RCE.
 
 1. Upload a `.zip` file containing a PHP code execution script \(`rce.php`\)
 2. Trigger the code execution by requesting `http://some.website/?page=zip://path/to/file.zip%23rce.php`.
 
-#### RFI to RCE
+### RFI to RCE
 
 The tester can create a `phpinfo.php` containing `<?php phpinfo(); ?>` and use a simple HTTP server so that the target application can fetch it. When exploiting the RFI to include the `phpinfo.php` file, the tester server will send the plaintext PHP code to the target server that should execute the code and show the phpinfo in the response.
 

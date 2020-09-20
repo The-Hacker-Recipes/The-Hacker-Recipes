@@ -1,17 +1,17 @@
-# Insecure deserialization
+# 🛠️ Insecure deserialization
 
 ## Theory
 
 Many web applications manage data and rely on \(de\)serialization for formatting when storing or sending that data. Applications implementing insecure deserialization means they fail to properly verify and sanitize user inputs that are deserialized, leading to potential DoS \(Denial of Service\), RCE \(Remote Code Execution\), logic bugs and so on.
 
-## Practice
+## 🛠️ Practice
 
-Testers need to identify inputs that are serialized \(cookies, hidden inputs in forms\) and which server-side scripting language is in use : Python, Java, Ruby, PHP.
+Testers need to identify inputs that are serialized \(cookies, hidden inputs in forms\) and which server-side language is in use : Python, Java, Ruby, PHP.
 
 <table>
   <thead>
     <tr>
-      <th style="text-align:left">Server-side scripting language</th>
+      <th style="text-align:left">Server-side language</th>
       <th style="text-align:left">Detection</th>
     </tr>
   </thead>
@@ -45,6 +45,8 @@ Testers need to identify inputs that are serialized \(cookies, hidden inputs in 
 </table>
 
 The tool [ysoserial](https://github.com/frohoff/ysoserial) \(Java\) can be used to generate payloads for Java object deserialization.
+
+🛠️ Add some examples ?
 
 ## References
 

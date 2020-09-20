@@ -41,7 +41,7 @@ Check if the spooler service is available
 {% endtabs %}
 
 {% hint style="info" %}
-In the situation where the tester doesn't have any credentials, it should still possible to relay an NTLM authentication and trigger the spooler service of a target via a SOCKS proxy
+In the situation where the tester doesn't have any credentials, it should still be possible to relay an NTLM authentication and trigger the spooler service of a target via a SOCKS proxy
 {% endhint %}
 
 ```bash

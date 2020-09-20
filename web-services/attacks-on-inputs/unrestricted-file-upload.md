@@ -4,7 +4,7 @@
 
 Many web applications manage files and allow users to upload and download pictures, documents and so on \(e.g. profile pictures\). When file upload procedures are not secured enough, attackers can sometimes upload content that servers will execute when later requested \(PHP, ASP, JSP...\).
 
-Among other things, unrestricted file uploads can lead to defacement \(visual appearance alteration\), RCE \(Remote Code Execution\) or even client-side attacks \(like [XSS](xss-cross-site-scripting.md)\).
+Among other things, unrestricted file uploads can lead to defacement \(visual appearance alteration\), client-side attacks \(like [XSS](xss-cross-site-scripting.md)\), or even RCE \(Remote Code Execution\).
 
 ## Practice
 

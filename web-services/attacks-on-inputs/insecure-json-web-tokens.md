@@ -14,8 +14,6 @@ Authorization: Bearer eyJ0eXAiOiJKV1Q[...].eyJpc3MiOiJodHRwO[...].HAveF7AqeKj-4[
 
 Once the tokens are found, testers need to assess their implementation's security by attempting some known attacks and flaws.
 
-[JWT tool](https://github.com/ticarpi/jwt_tool) \(Python\) is a tool that testers can use to operate the following attacks.
-
 ### Sensitive data
 
 JWTs are just base64 encoded data. They may contain sensitive unencrypted information.
