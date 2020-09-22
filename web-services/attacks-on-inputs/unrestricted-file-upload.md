@@ -11,7 +11,7 @@ Among other things, unrestricted file uploads can lead to defacement \(visual ap
 Testers need to find forms that allow users to upload content. On a server using PHP, the following test can be operated.
 
 1. Upload a PHP file with the following content: `<?php phpinfo(): ?>`
-2. Find a way to request that file
+2. Find a way to request or include that file
 3. Assert that the `phpinfo()` function is executed
 4. Repeat steps 1 to 3 but with a PHP file with a code execution payload: `<?php system('whoami'); ?>`
 
