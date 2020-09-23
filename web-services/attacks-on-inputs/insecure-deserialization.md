@@ -44,7 +44,7 @@ Testers need to identify inputs that are serialized \(cookies, hidden inputs in 
   </tbody>
 </table>
 
-The tool [ysoserial](https://github.com/frohoff/ysoserial) \(Java\) can be used to generate payloads for Java object deserialization.
+The tool [ysoserial](https://github.com/frohoff/ysoserial) \(Java\) can be used to generate payloads for Java object deserializatio, and [ysoserial.net](https://github.com/pwntester/ysoserial.net) \(.net\) for .NET object insecure deserialization.
 
 🛠️ Add some examples ?
 
