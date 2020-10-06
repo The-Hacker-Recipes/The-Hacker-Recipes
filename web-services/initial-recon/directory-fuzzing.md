@@ -22,5 +22,5 @@ wfuzz --hc 404,403 -H "User-Agent: PENTEST" -c -z file,/usr/share/seclists/Disco
 ffuf -H "User-Agent: PENTEST" -c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u $URL/FUZZ
 ```
 
-In order to fuzz more accurately, there are many dictionaries adapted for many situations. The ultimate combo is [ffuf](https://github.com/SusmithKrishnan/torghost) + [fzf](https://github.com/junegunn/fzf) + [seclists](https://github.com/danielmiessler/SecLists).
+In order to fuzz more accurately, there are many dictionaries adapted for many situations. The ultimate combo is [ffuf](https://github.com/ffuf/ffuf) + [fzf](https://github.com/junegunn/fzf) + [seclists](https://github.com/danielmiessler/SecLists).
 
