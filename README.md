@@ -1,5 +1,7 @@
 # Introduction
 
+![](.gitbook/assets/thr_preview.png)
+
 {% hint style="danger" %}
 **This project is a work in progress**. I started it in 2018 and will probably finish it by 2022. But of course, it will never be finished, and I don't plan on letting this project become deprecated. 
 
