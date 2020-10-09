@@ -64,7 +64,7 @@ secretsdump.py -k $RELAYED_VICTIM
 
 {% tab title="Domain account promotion" %}
 {% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACLs](../abusing-aces.md)\) to escalate a domain user privileges \(`--escalate-user`\).
+This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACLs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
 {% endhint %}
 
 The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group \(`--escalate-user`\).

@@ -1,6 +1,6 @@
 # PrivExchange \(PushSubscription abuse\)
 
-"PushSubscription" is an API on Exchange Web Services that allows to subscribe to push notifications. Attackers abuse it to make Exchange servers authenticate to a target of their choosing. As Exchange servers usually have high privileges in a domain \(i.e. `WriteDacl`, see [Abusing ACLs](../abusing-aces.md)\), the forced authentication can then be relayed and abused to obtain domain admin privileges \(see [NTLM Relay](../abusing-ntlm/ntlm-relay.md) and [Kerberos Unconstrained Delegations](../abusing-kerberos/kerberos-delegations.md#unconstrained-delegations-kud)\).
+"PushSubscription" is an API on Exchange Web Services that allows to subscribe to push notifications. Attackers abuse it to make Exchange servers authenticate to a target of their choosing. As Exchange servers usually have high privileges in a domain \(i.e. `WriteDacl`, see [Abusing ACLs](../abusing-aces/)\), the forced authentication can then be relayed and abused to obtain domain admin privileges \(see [NTLM Relay](../abusing-ntlm/ntlm-relay.md) and [Kerberos Unconstrained Delegations](../abusing-kerberos/kerberos-delegations.md#unconstrained-delegations-kud)\).
 
 [PrivExchange](https://github.com/dirkjanm/privexchange/) \(Python\) is a tool able to log in on Exchange Web Services and call that API.
 

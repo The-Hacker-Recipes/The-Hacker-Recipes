@@ -130,7 +130,7 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 ### Resource Based Constrained Delegations \(RBCD\)
 
-If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object \(e.g. the `GenericWrite` ACE, see [Abusing ACLs](../abusing-aces.md)\), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
+If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object \(e.g. the `GenericWrite` ACE, see [Abusing ACLs](../abusing-aces/)\), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
 Then, in order to abuse this, the attacker has to control the computer account the object's attribute has been populated with.
 
@@ -148,7 +148,7 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
 ```
 
-The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights, using the credentials of a domain user
+The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute\), using the credentials of a domain user
 
 ```bash
 rbcd-attack -f SHUTDOWN -t $Target -dc-ip $DomainController 'DOMAIN\anonymous:anonymous'

