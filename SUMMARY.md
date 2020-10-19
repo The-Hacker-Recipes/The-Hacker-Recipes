@@ -5,6 +5,7 @@
 ## Active Directory \(ADDS\) <a id="active-directory-domain-services"></a>
 
 * [🛠️ Recon](active-directory-domain-services/recon/README.md)
+  * [Domain controllers](active-directory-domain-services/recon/domain-controllers.md)
   * [BloodHound](active-directory-domain-services/recon/bloodhound.md)
   * [Ping Castle](active-directory-domain-services/recon/ping-castle.md)
   * [enum4linux](active-directory-domain-services/recon/enum4linux.md)
