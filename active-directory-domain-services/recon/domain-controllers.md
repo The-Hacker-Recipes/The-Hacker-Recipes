@@ -20,10 +20,10 @@ nltest /dclist:$DOMAIN
 {% endtab %}
 
 {% tab title="nmap" %}
-Find LDAP and LDAPS ports \(Kerberos too ?\)
+Find Kerberos port
 
 ```bash
-nmap -sS -p 3268,3269 $IP_RANGE
+nmap -sS -n --open -p 88 $IP_RANGE
 ```
 {% endtab %}
 {% endtabs %}
