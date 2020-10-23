@@ -28,7 +28,3 @@ nmap -sS -n --open -p 88 $IP_RANGE
 {% endtab %}
 {% endtabs %}
 
-
-
-
-

@@ -25,3 +25,7 @@ lsadump::changentlm /server:'DC.DOMAIN'  /user:'DC_name$' /oldntlm:31d6cfe0d16ae
 
 {% embed url="https://www.secura.com/blog/zero-logon" caption="" %}
 
+{% embed url="https://github.com/dirkjanm/CVE-2020-1472" %}
+
+
+
