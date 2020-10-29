@@ -25,9 +25,9 @@ Exploiting unrestricted file uploads is like playing "cat and mouse". Inputs can
   * using a valid but **lesser known extension** to bypass blacklists \(let's say the `.php` extension is blacklisted, what about `.php3`, `.php4`, `.php5`, `.php6`, `.pht`, `.phpt` and `.phtml` ?\)
   * using a **double-extension** to bypass filters that don't check the extension ends the filename
 
-    \(`.jpg.php` on Apache, `.asp;.jpg` on IIS6 and prior\)
+    like `.jpg.php`
 
-  * using a **NULL-byte** to bypass filters that do but don't check control characters such as null characters \(`.php%00.jpg` or `.php\x00.jpg`\) \(this as been fixed in PHP 5.3.4\)
+  * using a **NULL-byte** or another separator to bypass filters that do but don't check control characters such as null characters \(`.php%00.jpg` or `.php\x00.jpg`\) \(this as been fixed in PHP 5.3.4\), or a separator like .asp;.jpg \(IIS6 and prior\)
   * alternating upper and lower case letters to bypass case sensitive rules \(`.pHp`, `.aSp`\)
 * **Filters on the media type \(MIME type\)**: the media type identifier is sent along with the name and content of the uploaded file. These filters can easily bypassed by sending a whitelisted/not blacklisted type \(`image/jpeg` or `image/png`\)
 * **Protection mechanisms on dangerous extensions**: `.p.phphp` might be changed to `.php` after going through some flawed protections

