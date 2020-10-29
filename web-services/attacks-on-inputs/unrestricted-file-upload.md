@@ -23,15 +23,14 @@ Exploiting unrestricted file uploads is like playing "cat and mouse". Inputs can
 
 * **Filters on the extension**: depending on the filters put in place, some tricks can sometimes work like
   * using a valid but **lesser known extension** to bypass blacklists \(let's say the `.php` extension is blacklisted, what about `.php3`, `.php4`, `.php5`, `.php6`, `.pht`, `.phpt` and `.phtml` ?\)
-  * using a **double-extension** to bypass filters that don't check the extension ends the filename
-
-    like `.jpg.php`
-
-  * using a **NULL-byte** or another separator to bypass filters that do but don't check control characters such as null characters \(`.php%00.jpg` or `.php\x00.jpg`\) \(this as been fixed in PHP 5.3.4\), or a separator like .asp;.jpg \(IIS6 and prior\)
-  * alternating upper and lower case letters to bypass case sensitive rules \(`.pHp`, `.aSp`\)
-* **Filters on the media type \(MIME type\)**: the media type identifier is sent along with the name and content of the uploaded file. These filters can easily bypassed by sending a whitelisted/not blacklisted type \(`image/jpeg` or `image/png`\)
-* **Protection mechanisms on dangerous extensions**: `.p.phphp` might be changed to `.php` after going through some flawed protections
-* **File type detection**: depending on the detector used, testers can try **concatenation** \(inserting malicious code after valid data/header, or within the file's metadata like the EXIF comments section\) to bypass detectors that only read the magic bytes/headers/first characters. For example, it is possible to create a `.php.gif` file with a valid header by writing `GIF89` at the beginning of the file like the following example.
+  * using a **double extension** like `.jpg.php` when filters are incorrectly operated
+  * using a **double extension** like `.php.1337` when the last extension is not mapped to a MIME type like and the filename is badly filtered \(for Apache servers only\). Only the `.php` extension will be mapped to a known MIME type so the file will be interpreted as a PHP file.
+  * using a **double extension** like `.php.jpg` when Apache servers are not configured to only take into account the last extension. By default, Apache servers will map each extension to a MIME type and the file will be handled according to the first extension.
+  * using a **NULL byte** or another separator to bypass filters that do but don't check control characters such as null characters \(`.php%00.jpg` or `.php\x00.jpg`\) \(this as been fixed in PHP 5.3.4\), or a separator like .asp;.jpg \(IIS6 and prior\)
+  * alternating upper and lower case letters to bypass **case sensitive** rules \(`.pHp`, `.aSp`\)
+  * using a **special extension** like `.p.phphp` that might be changed to `.php` after going through some flawed protections
+* **Filters on the media type \(MIME type\)**: the media type \(sent as "Content-type: MIME type"\) identifier is sent along with the name and content of the uploaded file. These filters can easily bypassed by sending a whitelisted/not blacklisted type \(`image/jpeg` or `image/png`\)
+* **File type detection**: depending on the detector used, testers should make sure to have a valid whitelisted type and include the PHP code in a way it doesn't make the file corrupted \(inserting malicious code after valid data/header, or within the file's metadata like the EXIF comments section\) to bypass detectors that only read the magic bytes/headers/first characters. For example, it is possible to create a `.php.gif` file with a valid header by writing `GIF89` at the beginning of the file like the following example.
 
 ```php
 GIF89
@@ -51,6 +50,8 @@ GIF89
 {% embed url="https://teambi0s.gitlab.io/bi0s-wiki/web/file-upload/" caption="" %}
 
 {% embed url="https://doddsecurity.com/94/remote-code-execution-in-the-avatars/" caption="" %}
+
+{% embed url="https://www.acunetix.com/websitesecurity/upload-forms-threat/" %}
 
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files" caption="" %}
 
