@@ -40,5 +40,3 @@ Invoke-Inveigh -Challenge 1122334455667788 -ConsoleOutput Y -LLMNR Y -NBNS Y -mD
 NTLM capture can be combined with any forced authentication attack. Testers should dissociate the name poisoning features that Responder and Inveigh offer from their capturing features. Those tools can be combined with others offering different "authentication forcing" attacks \(like [IPv6 + name poisoning](../forced-authentications/#ipv6-dns-poisoning), [MS-RPRN abuse](../forced-authentications/#ms-rprn-abuse) and so on\).
 {% endhint %}
 
-## References
-

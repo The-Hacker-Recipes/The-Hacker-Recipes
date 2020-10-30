@@ -8,8 +8,6 @@ With overpass-the-hash, an attacker can leverage a user's NT hash to request a T
 
 ## Practice
 
-{% tabs %}
-
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getTGT](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getTGT.py) \(Python\) can request a TGT \(Ticket Granting Ticket\) given a password, hash \(`LMhash` can be empty\), or aesKey. The TGT will be saved as a ccache file that can then be used by other Impacket scripts.
 
 ```bash

@@ -7,6 +7,6 @@ The IPv6 config will include a rogue DNS server address. Each client will ask th
 [mitm6](https://github.com/fox-it/mitm6) \(Python\) can do name poisoning through IPv6 poisoning.
 
 ```bash
-mitm6 --ignore-nofqdn --interface eth0
+mitm6 --interface eth0 --domain $DOMAIN
 ```
 
