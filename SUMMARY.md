@@ -103,6 +103,8 @@
   * [🛠️ CRLF injection](web-services/attacks-on-inputs/crlf-injection.md)
   * [HTTP response splitting](web-services/attacks-on-inputs/http-response-splitting.md)
   * [🛠️ Arbitrary file download](web-services/attacks-on-inputs/arbitrary-file-download.md)
+  * [🛠️ Directory traversal](web-services/attacks-on-inputs/directory-traversal.md)
+  * [🛠️ Null-byte injection](web-services/attacks-on-inputs/null-byte-injection.md)
 
 ## Servers
 
