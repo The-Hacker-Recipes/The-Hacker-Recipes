@@ -21,12 +21,14 @@ Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclie
 ```bash
 # List shares
 smbclient --list //$IP
+smbmap -H $IP
 
 # List shares (implicit null creds)
 smbclient --no-pass --list //$IP
 
 # List shares (explicit null creds)
-smbclient --user ''%'' -L //$IP
+smbclient --user ''%'' --list //$IP
+smbmap -u '' -p '' -H $IP
 
 # Open an interactive session to operate on a specific share
 smbclient //$IP/$SHARE_NAME
