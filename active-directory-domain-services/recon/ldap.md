@@ -1,4 +1,24 @@
-# BloodHound
+# 🛠️ LDAP
+
+tools: windapsearch, bloodhound
+
+ldap null bind
+
+metadata \(domain name and such\)
+
+
+
+{% hint style="danger" %}
+**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
+{% endhint %}
+
+
+
+
+
+
+
+Move this to LDAP
 
 bloodhound, ingestors etc. Tips \(SharpHound continuous collection, etc.\)
 

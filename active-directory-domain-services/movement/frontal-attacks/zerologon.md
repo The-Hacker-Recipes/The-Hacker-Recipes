@@ -1,5 +1,9 @@
 # 🛠️ ZeroLogon
 
+{% hint style="danger" %}
+**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
+{% endhint %}
+
 ## Theory
 
 This attack exploits an insecure customized cryptographic protocol used in the NetLogon Remote Protocol. It allows attackers to change the password of the domain controller computer account, hence giving those attackers domain admin privileges.
