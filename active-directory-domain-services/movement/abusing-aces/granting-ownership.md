@@ -1,4 +1,4 @@
-# Granting ownership
+# Grant ownership
 
 This abuse can be carried out when controlling an object that has `WriteOwner` or `GenericAll` over any object.
 
