@@ -1,20 +1,45 @@
-# 🛠️ DNS
+# DNS
 
-
-
-{% hint style="danger" %}
-**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
-{% endhint %}
-
-
+AD-DS \(Active Directory Domain Services\) rely on DNS SRV RR \(service location resource records\). Those records can be queried to find the location of some servers : the global catalog, LDAP servers, the Kerberos KDC and so on. 
 
 {% tabs %}
-{% tab title="UNIX-like" %}
-List domain controllers when /etc/resolv.conf is correctly filled with a DNS server \(nameserver\) and a domain name \(search\)
+{% tab title="dnsutils" %}
+dig is a DNS client that can be used to query SRV records. It usually comes with the [dnsutils](https://packages.debian.org/buster/dnsutils) package.
 
 ```bash
-nslookup -type=SRV _ldap._tcp.dc._msdcs.$DOMAIN
+dig -t SRV _ldap._tcp.$FQDN_DOMAIN
+dig -t SRV _kerberos._tcp.$FQDN_DOMAIN
+dig -t SRV _gc._tcp.$FQDN_DOMAIN
+dig -t SRV _kpasswd._tcp.$FQDN_DOMAIN
+dig -t SRV _ldap._tcp.dc._msdcs.$FQDN_DOMAIN
+```
+
+The same commands can be operated the old way with nslookup.
+{% endtab %}
+
+{% tab title="nmap" %}
+The [nmap](https://nmap.org/) tool can be used with its [dns-srv-enum.nse](https://nmap.org/nsedoc/scripts/dns-srv-enum.html) script to operate those queries.
+
+```bash
+nmap --script dns-srv-enum --script-args dns-srv-enum.domain=$FQDN_DOMAIN
 ```
 {% endtab %}
 {% endtabs %}
+
+In order to function properly, the tools need to know the domain name and which nameservers to query. That information is usually [sent through DHCP offers](dhcp.md) and stored in the `/etc/resolv.conf` file in UNIX-like systems. 
+
+If needed, the nameservers may be found with a port scan on the network.
+
+```bash
+nmap -v -sV -p 53 $SUBNET/$MASK
+nmap -v -sV -sU -p 53 $SUBNET/$MASK
+```
+
+{% hint style="info" %}
+The DNS service is usually offered by the domain controllers
+{% endhint %}
+
+{% embed url="https://petri.com/active\_directory\_srv\_records" %}
+
+
 

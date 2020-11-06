@@ -2,15 +2,15 @@
 
 * [Introduction](README.md)
 
-## Active Directory \(ADDS\) <a id="active-directory-domain-services"></a>
+## Active Directory \(AD-DS\) <a id="active-directory-domain-services"></a>
 
 * [🛠️ Recon](active-directory-domain-services/recon/README.md)
   * [🛠️ Domain controllers](active-directory-domain-services/recon/domain-controllers.md)
-  * [🛠️ DNS](active-directory-domain-services/recon/dns.md)
-  * [🛠️ NetBIOS](active-directory-domain-services/recon/netbios.md)
-  * [🛠️ DHCP](active-directory-domain-services/recon/dhcp.md)
-  * [🛠️ MS-RPC](active-directory-domain-services/recon/ms-rpc.md)
+  * [DHCP](active-directory-domain-services/recon/dhcp.md)
+  * [DNS](active-directory-domain-services/recon/dns.md)
+  * [NBT-NS](active-directory-domain-services/recon/nbt-ns.md)
   * [🛠️ LDAP](active-directory-domain-services/recon/ldap.md)
+  * [🛠️ MS-RPC](active-directory-domain-services/recon/ms-rpc.md)
 * [Movement](active-directory-domain-services/movement/README.md)
   * [Credentials](active-directory-domain-services/movement/credentials/README.md)
     * [Dumping](active-directory-domain-services/movement/credentials/dumping/README.md)
@@ -30,7 +30,7 @@
     * [🛠️ Shuffling](active-directory-domain-services/movement/credentials/credential-shuffling.md)
   * [Forced authentications](active-directory-domain-services/movement/forced-authentications/README.md)
     * [🛠️ ARP poisoning](active-directory-domain-services/movement/forced-authentications/arp-poisoning.md)
-    * [LLMNR, NBTNS, MDNS poisoning](active-directory-domain-services/movement/forced-authentications/llmnr-nbtns-mdns.md)
+    * [LLMNR, NBT-NS poisoning](active-directory-domain-services/movement/forced-authentications/llmnr-nbtns-mdns.md)
     * [IPv6 + DNS poisoning](active-directory-domain-services/movement/forced-authentications/ipv6-+-dns-poisoning.md)
     * [Printer Bug \(MS-RPRN abuse\)](active-directory-domain-services/movement/forced-authentications/printer-bug-ms-rprn-abuse.md)
     * [PrivExchange \(PushSubscription abuse\)](active-directory-domain-services/movement/forced-authentications/privexchange-pushsubscription-abuse.md)

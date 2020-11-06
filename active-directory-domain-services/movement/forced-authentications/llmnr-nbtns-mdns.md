@@ -2,9 +2,9 @@
 description: MITRE ATT&CK™ Sub-technique T1557.001
 ---
 
-# LLMNR, NBTNS, MDNS poisoning
+# LLMNR, NBT-NS poisoning
 
-In some environments \(like Windows ones\), multicast name resolution protocols are enabled by default, such as LLMNR \(Local-Link Multicast Name Resolution\), NBT-NS \(NetBIOS Name Service\) and mDNS \(multicast Domain Name System\). Those environments can rely on those protocols when standard domain name resolution protocols fail.
+In some environments \(like Windows ones\), multicast name resolution protocols are enabled by default, such as LLMNR \(Local-Link Multicast Name Resolution\), NBT-NS \(NetBIOS Name Service\) and mDNS \(multicast Domain Name System\). Those environments can fallback to those protocols when standard domain name resolution protocols fail.
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
