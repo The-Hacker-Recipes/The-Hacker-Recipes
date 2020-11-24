@@ -8,7 +8,7 @@
 
 ## Collection
 
-BloodHound needs to be fed JSON files containing info on the objects and relationships within the AD domain. These information are obtained with Ingestors. The best way of doing this is using the official SharpHound \(C\#\) ingestor.
+BloodHound needs to be fed JSON files containing info on the objects and relationships within the AD domain. These information are obtained with collectors \(also called ingestors\). The best way of doing this is using the official SharpHound \(C\#\) collector.
 
 {% tabs %}
 {% tab title="Windows" %}
@@ -24,6 +24,10 @@ Invoke-BloodHound -CollectionMethod All
 # Use the executable version
 .\SharpHound.exe --CollectionMethod All
 ```
+
+{% hint style="info" %}
+When running SharpHound from a `runas /netonly`-spawned command shell, you may need to let SharpHound know what username you are authenticating to other systems as with the `OverrideUserName` flag
+{% endhint %}
 
 The previous commands are basic but some options \(i.e. Stealth and Loop\) can be very useful depending on the context
 
@@ -67,19 +71,26 @@ This ingestor is not as powerful as the C\# one. It mostly misses GPO collection
 
 ## Analysis
 
-Once collection is over, the data can be uploaded and analyzed in BloodHound.
+Once collection is over, the data can be uploaded and analysed in BloodHound by doing the following.
 
+* Find paths between specified nodes
+* Run pre-built analytics queries to find common attack paths
+* Run custom queries to help finding more complex attack paths or interesting objects
+* Run manual neo4j queries
+* Mark nodes as high value targets for easier path finding
+* Mark nodes as owned for easier path finding
+* Find information about selected nodes: sessions, properties, group membership/members, local admin rights, Kerberos delegations, RDP rights, outbound/inbound control rights \(ACEs\), and so on
+* Find help about edges/attacks \(abuse, opsec considerations, references\)
 
+Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/abusing-aces/), [Kerberos delegations abuse](../movement/abusing-kerberos/kerberos-delegations.md), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/abusing-gpos.md), [Kerberoast](../movement/abusing-kerberos/kerberoast.md), [ASREProast](../movement/abusing-kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
 
-// how to use BloodHound \(mark as owned, custom queries, delete edges, mark as high value, path finding, what to look for \(i.e. outbound or inbound permissions\), filters, ...\)
-
-
+For detailed and official documentation on the analysis process, testers can check the following resources: [the BloodHound GUI](https://bloodhound.readthedocs.io/en/latest/data-analysis/bloodhound-gui.html), [nodes](https://bloodhound.readthedocs.io/en/latest/data-analysis/nodes.html) and [edges](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html).
 
 {% embed url="https://blog.riccardoancarani.it/bloodhound-tips-and-tricks/" %}
 
-
-
-
+{% embed url="https://bloodhound.readthedocs.io/en/latest/" %}
 
 {% embed url="https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/" %}
+
+
 
