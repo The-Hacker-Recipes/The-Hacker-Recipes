@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1110.002
 ---
 
-# 🛠️ Cracking
+# ��️ Cracking
 
 * MS-CACHE
 * MS-CACHE v2

