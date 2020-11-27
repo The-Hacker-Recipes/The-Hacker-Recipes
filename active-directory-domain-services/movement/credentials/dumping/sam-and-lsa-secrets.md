@@ -135,3 +135,5 @@ crackmapexec smb $TARGETS --kerberos --sam/--lsa
 
 {% embed url="http://moyix.blogspot.com/2008/02/decrypting-lsa-secrets.html" caption="" %}
 
+{% embed url="https://medium.com/@benichmt1/secretsdump-demystified-bfd0f933dd9b" %}
+
