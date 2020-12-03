@@ -4,14 +4,14 @@ AD-DS \(Active Directory Domain Services\) rely on DNS SRV RR \(service location
 
 {% tabs %}
 {% tab title="dnsutils" %}
-dig is a DNS client that can be used to query SRV records. It usually comes with the [dnsutils](https://packages.debian.org/buster/dnsutils) package.
+nslookup is a DNS client that can be used to query SRV records. It usually comes with the [dnsutils](https://packages.debian.org/buster/dnsutils) package.
 
 ```bash
-dig -t SRV _ldap._tcp.$FQDN_DOMAIN
-dig -t SRV _kerberos._tcp.$FQDN_DOMAIN
-dig -t SRV _gc._tcp.$FQDN_DOMAIN
-dig -t SRV _kpasswd._tcp.$FQDN_DOMAIN
-dig -t SRV _ldap._tcp.dc._msdcs.$FQDN_DOMAIN
+nslookup _ldap._tcp.dc._msdcs.$FQDN_DOMAIN
+nslookup -type=srv _kerberos._tcp.$FQDN_DOMAIN
+nslookup -type=srv _kpasswd._tcp.$FQDN_DOMAIN
+nslookup -type=srv _ldap._tcp.$FQDN_DOMAIN
+nslookup -type=srv _ldap._tcp.dc._msdcs.$FQDN_DOMAIN
 ```
 
 The same commands can be operated the old way with nslookup.
