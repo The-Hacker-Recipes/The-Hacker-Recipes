@@ -1,0 +1,2 @@
+# 🛠️ WPAD spoofing
+

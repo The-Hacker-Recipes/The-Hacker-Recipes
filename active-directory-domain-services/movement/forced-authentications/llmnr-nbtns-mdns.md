@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1557.001
 ---
 
-# LLMNR, NBT-NS poisoning
+# LLMNR, NBT-NS, MDNS poisoning
 
 In some environments \(like Windows ones\), multicast name resolution protocols are enabled by default, such as LLMNR \(Local-Link Multicast Name Resolution\), NBT-NS \(NetBIOS Name Service\) and mDNS \(multicast Domain Name System\). Those environments can fallback to those protocols when standard domain name resolution protocols fail.
 
@@ -21,7 +21,7 @@ responder --interface eth0 --analyze
 Start poisoning, enable answers for netbios wredir and domain suffix queries, and force LM hashing downgrade.
 
 ```bash
-responder --interface eth0 --wredir --NBTNSdomain --wpad --lm
+responder --interface eth0 --wredir --NBTNSdomain --lm
 ```
 {% endtab %}
 
