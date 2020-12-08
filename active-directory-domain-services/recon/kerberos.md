@@ -1,6 +1,10 @@
-# 🛠️ MS-RPC
+# 🛠️ Kerberos
 
-rpcclient
+find DCs with port 88 nmap
+
+```bash
+nmap -sS -n --open -p 88 $IP_RANGE
+```
 
 
 

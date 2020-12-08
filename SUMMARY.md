@@ -4,14 +4,17 @@
 
 ## Active Directory \(AD-DS\) <a id="active-directory-domain-services"></a>
 
-* [🛠️ Recon](active-directory-domain-services/recon/README.md)
+* [Recon](active-directory-domain-services/recon/README.md)
   * [🛠️ Domain controllers](active-directory-domain-services/recon/domain-controllers.md)
   * [DHCP](active-directory-domain-services/recon/dhcp.md)
   * [DNS](active-directory-domain-services/recon/dns.md)
-  * [NBT-NS](active-directory-domain-services/recon/nbt-ns.md)
+  * [NBT-NS](active-directory-domain-services/recon/nbt-ns-1.md)
+  * [Responder](active-directory-domain-services/recon/nbt-ns.md)
   * [LDAP](active-directory-domain-services/recon/ldap-1.md)
-  * [🛠️ BloodHound](active-directory-domain-services/recon/ldap.md)
+  * [BloodHound](active-directory-domain-services/recon/ldap.md)
   * [🛠️ MS-RPC](active-directory-domain-services/recon/ms-rpc.md)
+  * [🛠️ enum4linux](active-directory-domain-services/recon/enum4linux.md)
+  * [🛠️ Kerberos](active-directory-domain-services/recon/kerberos.md)
 * [Movement](active-directory-domain-services/movement/README.md)
   * [Credentials](active-directory-domain-services/movement/credentials/README.md)
     * [Dumping](active-directory-domain-services/movement/credentials/dumping/README.md)
@@ -66,7 +69,7 @@
   * [Group Policy Objects \(GPOs\)](active-directory-domain-services/movement/abusing-gpos.md)
   * [🛠️ Domain trusts](active-directory-domain-services/movement/domain-trusts.md)
   * [🛠️ Netlogon](active-directory-domain-services/movement/frontal-attacks/README.md)
-    * [🛠️ ZeroLogon](active-directory-domain-services/movement/frontal-attacks/zerologon.md)
+    * [🛠️ ZeroLogon \(CVE-2020-1472\)](active-directory-domain-services/movement/frontal-attacks/zerologon.md)
 
 ## Web services
 

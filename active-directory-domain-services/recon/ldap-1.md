@@ -23,5 +23,3 @@ LDAP anonymous binding is usually disabled but it's worth checking. It could be 
 A more advanced LDAP enumeration can be carried out with BloodHound \(see [this](ldap.md)\)
 {% endhint %}
 
-
-

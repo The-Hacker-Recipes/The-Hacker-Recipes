@@ -1,4 +1,4 @@
-# 🛠️ BloodHound
+# BloodHound
 
 {% hint style="danger" %}
 **This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
@@ -83,6 +83,16 @@ Once collection is over, the data can be uploaded and analysed in BloodHound by 
 * Find help about edges/attacks \(abuse, opsec considerations, references\)
 
 Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/abusing-aces/), [Kerberos delegations abuse](../movement/abusing-kerberos/kerberos-delegations.md), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/abusing-gpos.md), [Kerberoast](../movement/abusing-kerberos/kerberoast.md), [ASREProast](../movement/abusing-kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
+
+{% hint style="info" %}
+Here are some examples of quick wins to spot with BloodHound
+
+* **shadow admins**: users that are not members of privileged Active Directory groups but have sensitive privileges over the domain \(run graph queries like "find principals with DCSync rights", "users with most local admin rights", or check "inbound control rights" in the domain and privilegeg AD groups node info panel\)
+* **other over-privileged users**: user that can control many objects \(ACEs\) and that often lead to \(shadown\) admins or sensitive servers \(check for "outbound control rights" in the node info panel\)
+* **over-privileged computers**: find computers that can do \(un\)constrained Kerberos delegation \(run graph queries like "find computer with unconstrained delegations"\)
+{% endhint %}
+
+![](../../.gitbook/assets/screenshot-from-2020-12-08-15-29-30.png)
 
 For detailed and official documentation on the analysis process, testers can check the following resources: [the BloodHound GUI](https://bloodhound.readthedocs.io/en/latest/data-analysis/bloodhound-gui.html), [nodes](https://bloodhound.readthedocs.io/en/latest/data-analysis/nodes.html) and [edges](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html).
 

