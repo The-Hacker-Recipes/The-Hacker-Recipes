@@ -43,3 +43,7 @@ In some situations, Kerberos delegations can be abused by attackers to operate l
 
 {% page-ref page="kerberos-delegations.md" %}
 
+In some situations, Kerberos delegations can't be operated on certains users.The [Bronze bit](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\) introduced the possibility of crafting delegation tickets for protected users. Members of the "Protected users" group are "sensitive and cannot be delegated". For these users, TGS \(service tickets\) come with a "forwardable flag" set to 0 \(False\). This bronze bit vulnerability allows attackers to edit the service ticket's "forwardable" flag and set it to 1 \(True\), hence bypassing the delegation protection for "Protected users" members.
+
+{% page-ref page="silver-and-golden-tickets.md" %}
+
