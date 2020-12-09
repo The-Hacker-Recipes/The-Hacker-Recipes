@@ -16,12 +16,12 @@ Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerb
 
 Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 
-* A TGT is encrypted with the `krbtgt`'s NT hash. An attacker knowing the `krbtgt`'s NT hash can forge TGTs impersonating a domain admin. He can then request TGSs as a domain admin for any service. The attacker would have access to everything. This forged TGT is called a [Golden ticket](silver-and-golden-tickets.md#golden-ticket).
-* A TGS is encrypted with the service account's NT hash. An attacker knowing a service account's NT hash can use it to forge a Service ticket and obtain access to that service. This forged Service ticket is called a [Silver ticket](silver-and-golden-tickets.md#silver-ticket).
+* A TGT is encrypted with the `krbtgt`'s NT hash. An attacker knowing the `krbtgt`'s NT hash can forge TGTs impersonating a domain admin. He can then request TGSs as a domain admin for any service. The attacker would have access to everything. This forged TGT is called a [Golden ticket](forged-tickets.md#golden-ticket).
+* A TGS is encrypted with the service account's NT hash. An attacker knowing a service account's NT hash can use it to forge a Service ticket and obtain access to that service. This forged Service ticket is called a [Silver ticket](forged-tickets.md#silver-ticket).
 
-{% page-ref page="silver-and-golden-tickets.md" %}
+{% page-ref page="forged-tickets.md" %}
 
-[Overpass-the-hash](overpass-the-hash.md), [silver ticket](silver-and-golden-tickets.md#silver-ticket) and [golden ticket](silver-and-golden-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
+[Overpass-the-hash](overpass-the-hash.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
 
 {% page-ref page="pass-the-ticket.md" %}
 
@@ -43,7 +43,7 @@ In some situations, Kerberos delegations can be abused by attackers to operate l
 
 {% page-ref page="kerberos-delegations.md" %}
 
-In some situations, Kerberos delegations can't be operated on certains users.The [Bronze bit](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\) introduced the possibility of crafting delegation tickets for protected users. Members of the "Protected users" group are "sensitive and cannot be delegated". For these users, TGS \(service tickets\) come with a "forwardable flag" set to 0 \(False\). This bronze bit vulnerability allows attackers to edit the service ticket's "forwardable" flag and set it to 1 \(True\), hence bypassing the delegation protection for "Protected users" members.
+In some situations, Kerberos delegations can't be operated on certains users.The [Bronze bit](forged-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\) introduced the possibility of crafting delegation tickets for protected users. Members of the "Protected users" group are "sensitive and cannot be delegated". For these users, TGS \(service tickets\) come with a "forwardable flag" set to 0 \(False\). This bronze bit vulnerability allows attackers to edit the service ticket's "forwardable" flag and set it to 1 \(True\), hence bypassing the delegation protection for "Protected users" members.
 
-{% page-ref page="silver-and-golden-tickets.md" %}
+{% page-ref page="forged-tickets.md" %}
 

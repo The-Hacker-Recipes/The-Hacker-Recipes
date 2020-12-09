@@ -15,7 +15,7 @@ With constrained and unconstrained delegations, the delegation attributes are se
 Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges.
 
 {% hint style="danger" %}
-For any type of delegation \(unconstrained, constrained and resource-based constrained\), an account with `AccountNotDelegated`set can't be impersonated except if the domain controller is vulnerable to the [bronze bit](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\).
+For any type of delegation \(unconstrained, constrained and resource-based constrained\), an account with `AccountNotDelegated`set can't be impersonated except if the domain controller is vulnerable to the [bronze bit](forged-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\).
 {% endhint %}
 
 ## Practice
@@ -108,7 +108,7 @@ getST.py -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -
 
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
-An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
+An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -170,7 +170,7 @@ getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'D
 
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
-An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](silver-and-golden-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
+An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
 
 {% hint style="warning" %}
 In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. 
