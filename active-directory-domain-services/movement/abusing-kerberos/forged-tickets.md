@@ -11,7 +11,9 @@ Silver and golden tickets are forged Kerberos tickets that can be used with [pas
 * **Golden ticket**: The NT hash \(or AES key\) of the special account `krbtgt` can be used to forge a special TGT \(Ticket Granting Ticket\) that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access any resource within the AD domain.
 * **Silver ticket**: The NT hash \(or AES key\) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access that service
 
-The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility of crafting [delegation](kerberos-delegations.md) tickets for protected users. Members of the "Protected users" group are "sensitive and cannot be delegated". For these users, TGS \(service tickets\) come with a "forwardable flag" set to 0 \(False\). This bronze bit vulnerability allows attackers to edit the service ticket's "forwardable" flag and set it to 1 \(True\), hence bypassing the delegation protection for "Protected users" members.
+The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility of forwarding service tickets when it shouldn't normally be possible \(protected users, unconstrained delegation, constrained delegation configured with protocol transition\).
+
+![](../../../.gitbook/assets/kerberos-delegation.png)
 
 🛠️ //TODO : MS14-068
 
@@ -135,7 +137,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 In order to exploit this vulnerability, attackers need to find a service able to delegate to another service \(see [Kerberos delegations](kerberos-delegations.md)\), and they need that first service account NT hash or AES key \(128 or 256 bits\).
 {% endhint %}
 
-For example with [constrained delegation](kerberos-delegations.md#constrained-delegations) set between a controlled service and a target one, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
+For example with [constrained delegation](kerberos-delegations.md#constrained-delegations) set between a controlled service and a target one with protocol transition enabled and the target user being protected, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
 
 The input credentials are those of the compromised service account configured with constrained delegations.
 

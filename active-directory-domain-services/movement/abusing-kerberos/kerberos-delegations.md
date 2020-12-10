@@ -14,9 +14,7 @@ With constrained and unconstrained delegations, the delegation attributes are se
 
 Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges.
 
-{% hint style="danger" %}
-For any type of delegation \(unconstrained, constrained and resource-based constrained\), an account with `AccountNotDelegated`set can't be impersonated except if the domain controller is vulnerable to the [bronze bit](forged-tickets.md#bronze-bit-cve-2020-17049) vulnerability \(CVE-2020-17049\).
-{% endhint %}
+![](../../../.gitbook/assets/kerberos-delegation.png)
 
 ## Practice
 
@@ -24,7 +22,7 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 
 ### Unconstrained Delegations
 
-If a computer, with unconstrained delegations privileges, is compromised, an attacker wait for a privileged user to authenticate on it \(or [force it](../forced-authentications/)\).
+If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../forced-authentications/)\).
 
 1. The authenticating user will send a TGS \(service ticket\) containing a TGT \(Ticket Granting Ticket\).
 2. The attacker can extract that TGT and use it with to request a TGS for another service.
@@ -77,8 +75,6 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 {% endtab %}
 {% endtabs %}
 
-The ticket can also be obtained with the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\), just like with constrained delegation, when the unconstrained delegation computer account credentials are known \(see below for abuse notes\).
-
 ### Constrained Delegations
 
 If an account, configured with constrained delegation to a service, is compromised, an attacker can impersonate any user \(e.g. local admin\) in the environment to access that service.
@@ -108,7 +104,9 @@ getST.py -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -
 
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
-An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
+{% hint style="warning" %}
+In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` to try to bypass restrictions.
+{% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -170,7 +168,9 @@ getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'D
 
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
-An account with `AccountNotDelegatedset` \(member of the "Protected users" group\) can't be impersonated except if the domain controller is vulnerable to the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\). The `-force-forwardable` will try to exploit that vulnerability.
+{% hint style="warning" %}
+In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` to try to bypass restrictions.
+{% endhint %}
 
 {% hint style="warning" %}
 In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. 
