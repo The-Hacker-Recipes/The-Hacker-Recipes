@@ -22,11 +22,7 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 
 ### Unconstrained Delegations
 
-If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../forced-authentications/)\).
-
-1. The authenticating user will send a TGS \(service ticket\) containing a TGT \(Ticket Granting Ticket\).
-2. The attacker can extract that TGT and use it with to request a TGS for another service.
-3. The attacker can use the TGS obtained to access the service it grants access to with [pass-the-ticket](pass-the-ticket.md).
+If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../forced-authentications/)\) using Kerberos. The attacker service will receive a TGS containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
 
 {% hint style="info" %}
 Unconstrained delegation abuses are usually combined with the [PrinterBug](../forced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
@@ -55,7 +51,7 @@ Once the krbrelayx listener is ready, a [forced authentication attack](../forced
 {% endtab %}
 
 {% tab title="From the compromised computer \(Windows\)" %}
-Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/Rubeus) can be used \(on the compromised host\) to as a listener to wait for a user to authenticate, the TGS to show up and to extract the TGT it contains.
+Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/Rubeus) can be used \(on the compromised host\) as a listener to wait for a user to authenticate, the TGS to show up and to extract the TGT it contains.
 
 ```bash
 Rubeus.exe monitor /interval:5
@@ -77,16 +73,12 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 
 ### Constrained Delegations
 
-If an account, configured with constrained delegation to a service, is compromised, an attacker can impersonate any user \(e.g. local admin\) in the environment to access that service.
+If a service account, configured with constrained delegation to another service, is compromised, an attacker can impersonate any user \(e.g. domain admin\) in the environment to access the second service.
 
-1. The attacker can request a delegation TGT
-2. The TGT can be used to request a TGS on behalf of the account to impersonate. 
-3. This TGS can be used to access the service the compromised account can delegate to.
-4. The attacker can use the TGS obtained to access the service it grants access to with [pass-the-ticket](pass-the-ticket.md).
+* If the service is configured with constrained delegation **without protocol transition**, then it works similarly to unconstrained delegation. The attacker controlled service needs to receive a user's TGS in order to  use the embedded TGT as an identity proof. "Without protocol transition" means the Kerberos authentication protocol needs to be used all the way.
+* If the service is configured with constrained delegation **with protocol transition** then it doesn't need that user's TGS. It can obtain it with a S4U2Self request and then use it with a S4U2Proxy request. The identity proof can either be a password, an NT hash or an AES key.
 
-{% hint style="info" %}
-The problem with constrained delegation is that an attacker in control of a KCD capable account can abuse it and gain administrator privileges to every resource that account can delegate to.
-{% endhint %}
+Once the final "impersonating" ticket is obtained, it can be used with [Pass-the-Ticket](pass-the-ticket.md) to access the target service.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -105,7 +97,7 @@ getST.py -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
 {% hint style="warning" %}
-In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` to try to bypass restrictions.
+In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 {% endtab %}
 
@@ -132,9 +124,9 @@ Then, in order to abuse this, the attacker has to control the computer account t
 
 In this situation, an attacker can obtain admin access to the target resource \(the object configured for RBCD in the first step\).
 
-1. Create a computer account leveraging the `MachineAccountQuota` setting
-2. Populate the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object with the machine account created, using the credentials of a domain user that has the capability to populate attributes on the target object \(e.g. `GenericWrite`\).
-3. Using the computer account credentials, request a ticket to access the target resource
+1. Control a computer account \(e.g. create a computer account by leveraging the `MachineAccountQuota` setting\)
+2. Populate the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object with the controlled machine account as value, using the credentials of a domain user that has the capability to populate attributes on the target object \(e.g. `GenericWrite`\).
+3. Using the computer account credentials, operate S4U2Self and S4U2Proxy requests, just like constrained delegation with protocol transition.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -144,15 +136,15 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
 ```
 
-The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor\), using the credentials of a domain user. 
+{% hint style="warning" %}
+In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. Testers can use ntlmrelayx instead with the`--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
+{% endhint %}
+
+The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor\), using the credentials of a domain user. The [rbcd permissions](https://github.com/NinjaStyle82/rbcd_permissions) script \(Python\) is an alternative to rbcd-attack that can also do [pass-the-hash](../abusing-ntlm/pass-the-hash.md), [pass-the-ticket](pass-the-ticket.md), and operate cleanup of the security descriptor.
 
 ```bash
 rbcd-attack -f 'SHUTDOWN' -t $Target -dc-ip $DomainController 'DOMAIN\anonymous:anonymous'
-```
 
-The [rbcd permissions](https://github.com/NinjaStyle82/rbcd_permissions) script \(Python\) is an alternative to rbcd-attack but can also do pass-the-hash, pass-the-ticket, and operate cleanup of the security descriptor.
-
-```bash
 # Attack (example with user/password)
 rbcd-permissions -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,OU=Computers,DC=DOMAIN,DC=LOCAL' -d $DOMAIN_FQDN -u $USER -p $PASSWORD -l $LDAPSERVER
 
@@ -160,7 +152,11 @@ rbcd-permissions -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,
 rbcd-permissions --cleanup -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,OU=Computers,DC=DOMAIN,DC=LOCAL' -d $DOMAIN_FQDN -u $USER -p $PASSWORD -l $LDAPSERVER
 ```
 
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
+{% hint style="success" %}
+Testers can use ntlmrelayx to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../abusing-ntlm/ntlm-relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+{% endhint %}
+
+Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
 
 ```bash
 getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'
@@ -169,18 +165,7 @@ getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'D
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
 {% hint style="warning" %}
-In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` to try to bypass restrictions.
-{% endhint %}
-
-{% hint style="warning" %}
-In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. 
-{% endhint %}
-
-{% hint style="success" %}
-Testers can use ntlmrelayx 
-
-* for the computer account creation, instead of using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py), with the`--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
-* to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../abusing-ntlm/ntlm-relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 {% endtab %}
 
@@ -243,4 +228,6 @@ Once the ticket is injected, it can natively be used when accessing the service 
 {% embed url="https://blog.stealthbits.com/resource-based-constrained-delegation-abuse/" caption="" %}
 
 {% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html" caption="" %}
+
+{% embed url="https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/" %}
 
