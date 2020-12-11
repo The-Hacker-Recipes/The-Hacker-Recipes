@@ -19,7 +19,9 @@ windapsearch --dc $DomainController --module metadata
 LDAP anonymous binding is usually disabled but it's worth checking. It could be handful to list the users and test for [ASREProasting](../movement/abusing-kerberos/asreproast.md) \(since this attack needs no authentication\).
 {% endhint %}
 
-{% hint style="info" %}
-A more advanced LDAP enumeration can be carried out with BloodHound \(see [this](ldap.md)\)
+{% hint style="success" %}
+A more advanced LDAP enumeration can be carried out with BloodHound \(see [this](ldap.md)\).
+
+Some basic LDAP recon can also be carried out with the enum4linux tool \(see [this page](enum4linux.md)\).
 {% endhint %}
 

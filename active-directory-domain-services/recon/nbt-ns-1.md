@@ -12,6 +12,10 @@ nbtscan -r $SUBNET/$MASK
 nmblookup -A $IPAdress
 ```
 
+{% hint style="success" %}
+Some NBT-NS recon can be carried out with the enum4linux tool \(see [this page](enum4linux.md)\).
+{% endhint %}
+
 {% embed url="https://wiki.wireshark.org/NetBIOS/NBNS" %}
 
 
