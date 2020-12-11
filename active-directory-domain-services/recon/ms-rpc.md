@@ -63,3 +63,9 @@ The Python script [ridenum](https://github.com/trustedsec/ridenum) can be used t
 The enum4linux tool can be used to easily operate fast recon through MS-RPC, with Null session or not \(see [this page](enum4linux.md)\).
 {% endhint %}
 
+## Resources
+
+{% embed url="https://actes.sstic.org/SSTIC06/Dissection\_RPC\_Windows/SSTIC06-article-Pouvesle-Dissection\_RPC\_Windows.pdf" %}
+
+
+
