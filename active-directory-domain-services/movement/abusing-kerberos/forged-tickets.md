@@ -11,7 +11,7 @@ Silver and golden tickets are forged Kerberos tickets that can be used with [pas
 * **Golden ticket**: The NT hash \(or AES key\) of the special account `krbtgt` can be used to forge a special TGT \(Ticket Granting Ticket\) that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access any resource within the AD domain.
 * **Silver ticket**: The NT hash \(or AES key\) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access that service
 
-The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility of forwarding service tickets when it shouldn't normally be possible \(protected users, constrained delegation without protocol transition\).
+The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility of forwarding service tickets when it shouldn't normally be possible \(protected users, unconstrained delegation, constrained delegation configured with protocol transition\).
 
 ![](../../../.gitbook/assets/kerberos-delegation.png)
 
@@ -137,7 +137,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 In order to exploit this vulnerability, attackers need to find a service able to delegate to another service \(see [Kerberos delegations](kerberos-delegations.md)\), and they need that first service account NT hash or AES key \(128 or 256 bits\).
 {% endhint %}
 
-For example with [constrained delegation](kerberos-delegations.md#constrained-delegations) set between a controlled service and a target one, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\) and bypass mitigations like protocol transition \("Use Kerberos only"\) and user account protection \("This account is sensitive and cannot be delegated"\).
+For example with [constrained delegation](kerberos-delegations.md#constrained-delegations) set between a controlled service and a target one with protocol transition enabled and the target user being protected, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
 
 The input credentials are those of the compromised service account configured with constrained delegations.
 
@@ -165,5 +165,5 @@ The SPN \(ServicePrincipalName\) set will have an impact on what services will b
 
 {% embed url="https://en.hackndo.com/kerberos" caption="" %}
 
-{% embed url="https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-overview/" %}
+{% embed url="https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-overview/" caption="" %}
 

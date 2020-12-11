@@ -1,9 +1,5 @@
 # BloodHound
 
-{% hint style="danger" %}
-**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
-{% endhint %}
-
 [BloodHound](https://github.com/BloodHoundAD/BloodHound) \(Javascript webapp, compiled with Electron, uses [Neo4j](https://neo4j.com/) as graph DBMS\) is an awesome tool that allows to map relationships within Active Directory environments. It mostly uses Windows API functions and LDAP namespace functions to collect data from domain controllers and domain-joined Windows systems.
 
 ## Collection
