@@ -14,7 +14,7 @@ RPC services over an SMB transport, i.e. port 445/TCP, are reachable through "na
 * `\pipe\samr`: enumerate local users, groups through the local SAM database \(only works pre Win 10 Anniversary\)
 * `\pipe\svcctl`: remotely create, start and stop services to execute commands \(used by Impacket's [psexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py) and [smbexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py)\)
 * `\pipe\atsvc`: remotely create scheduled tasks to execute commands \(used by Impacket's [atexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/atexec.py)\)
-* `\pipe\epmapper`: used by DCOM \(Distributed Component Object Model\), itself used by WMI \(Windows Management Instrumentation\), itself used for command execution \(used by Impacket's [wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)\). DCOM is also used by MMC \(Microsoft Management Console\), itslef used by attackers for command execution \(Impacket's [dcomexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py)\)
+* `\pipe\epmapper`: used by DCOM \(Distributed Component Object Model\), itself used by WMI \(Windows Management Instrumentation\), itself abused by attackers for command execution \(used by Impacket's [wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)\). DCOM is also used by MMC \(Microsoft Management Console\), itslef abused by attackers for command execution \(Impacket's [dcomexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py)\)
 
 ## Practice
 
