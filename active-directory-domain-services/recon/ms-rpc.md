@@ -11,7 +11,7 @@ MS-RPC \(Microsoft Remote Procedure Call\) is a protocol that allows to request 
 RPC services over an SMB transport, i.e. port 445/TCP, are reachable through "named pipes"' \(through the `IPC$` share\). There are many interesting named pipes that allow various operations from NULL sessions context, to local administrative context.
 
 * `\pipe\lsarpc`: enumerate domain users, domains, trust relationships, SIDs, policies through the LSA \(Local Security Authority\)
-* `\pipe\samr`: enumerate local users, groups through the local SAM database
+* `\pipe\samr`: enumerate local users, groups through the local SAM database \(only works pre Win 10 Anniversary\)
 * `\pipe\svcctl`: remotely create, start and stop services to execute commands \(used by Impacket's [psexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py) and [smbexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py)\)
 * `\pipe\atsvc`: remotely create scheduled tasks to execute commands \(used by Impacket's [atexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/atexec.py)\)
 * `\pipe\epmapper`: used by DCOM \(Distributed Component Object Model\), itself used by WMI \(Windows Management Instrumentation\), itself used for command execution \(used by Impacket's [wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)\). DCOM is also used by MMC \(Microsoft Management Console\), itslef used by attackers for command execution \(Impacket's [dcomexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py)\)
