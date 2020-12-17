@@ -2,7 +2,7 @@
 
 ## Theory
 
-In short, an attacker knowing a user's NT hash can use it to authenticate over NTLM \([pass-the-hash](../abusing-ntlm/pass-the-hash.md)\) or indirectly over Kerberos \(overpass-the-hash, also known as pass the key\).
+In short, an attacker knowing a user's NT hash can use it to authenticate over NTLM \([pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md)\) or indirectly over Kerberos \(overpass-the-hash, also known as pass the key\).
 
 With overpass-the-hash, an attacker can leverage a user's NT hash to request a TGT, that can then be used with [pass-the-ticket](pass-the-ticket.md) to request a Service ticket and access a service using Kerberos.
 

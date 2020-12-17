@@ -87,7 +87,7 @@ lsadump::secrets /security:'C:\path\to\security.save' /system:'C:\path\to\system
 {% endtab %}
 
 {% tab title="secretsdump" %}
-[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../abusing-ntlm/pass-the-hash.md) \(NTLM\), or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md) \(Kerberos\).
+[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) \(NTLM\), or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md) \(Kerberos\).
 
 ```bash
 # Remote dumping of SAM & LSA secrets
@@ -111,7 +111,7 @@ secretsdump.py -sam '/path/to/sam.save' -security '/path/to/security.save' -syst
 {% endtab %}
 
 {% tab title="CrackMapExec" %}
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\) can be used to remotely dump SAM and LSA secrets, on multiple hosts. It offers several authentication methods like [pass-the-hash](../../abusing-ntlm/pass-the-hash.md) \(NTLM\), or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md) \(Kerberos\)
+[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\) can be used to remotely dump SAM and LSA secrets, on multiple hosts. It offers several authentication methods like [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) \(NTLM\), or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md) \(Kerberos\)
 
 ```bash
 # Remote dumping of SAM/LSA secrets

@@ -45,7 +45,7 @@ Invoke-BloodHound -SecureLdap -IgnoreLdapCert
 {% hint style="success" %}
 Here are a few **tips and tricks** on the collection process
 
-* Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context \(e.g. with runas, [pass-the-hash](../movement/abusing-ntlm/pass-the-hash.md) or [overpass-the-hash](../movement/abusing-kerberos/overpass-the-hash.md)\). This is useful when domain computers have antivirus or other protections preventing \(or slowing\) testers from using enumerate or exploitation tools.
+* Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context \(e.g. with runas, [pass-the-hash](../movement/abusing-lm-and-ntlm/pass-the-hash.md) or [overpass-the-hash](../movement/abusing-kerberos/overpass-the-hash.md)\). This is useful when domain computers have antivirus or other protections preventing \(or slowing\) testers from using enumerate or exploitation tools.
 * When obtaining a foothold on an AD domain, testers should first run SharpHound with all collection methods, and then start a loop collection to enumerate more sessions.
 {% endhint %}
 {% endtab %}
