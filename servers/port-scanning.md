@@ -1,4 +1,4 @@
-# 🛠️ Port scanning
+# Port scanning
 
 ## Theory
 

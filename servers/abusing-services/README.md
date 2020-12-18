@@ -1,2 +1,2 @@
-# 🛠️ Abusing services
+# Abusing services
 
