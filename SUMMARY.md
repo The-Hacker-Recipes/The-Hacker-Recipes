@@ -152,10 +152,10 @@
 * [Recon](physical/recon.md)
 * [Intrusion](physical/intrusion.md)
 
-## 🛠️ RFID
+## 🛠️ RIFD & NFC <a id="rifd-nfc"></a>
 
-* [Mifare Classic](rfid/mifare-classic/README.md)
-  * [Default keys](rfid/mifare-classic/default-keys.md)
-  * [Darkside](rfid/mifare-classic/darkside.md)
-  * [Nested](rfid/mifare-classic/nested.md)
+* [Mifare Classic](rifd-nfc/mifare-classic/README.md)
+  * [Default keys](rifd-nfc/mifare-classic/default-keys.md)
+  * [Darkside](rifd-nfc/mifare-classic/darkside.md)
+  * [Nested](rifd-nfc/mifare-classic/nested.md)
 
