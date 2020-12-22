@@ -152,10 +152,15 @@
 * [Recon](physical/recon.md)
 * [Intrusion](physical/intrusion.md)
 
-## 🛠️ RIFD & NFC <a id="rifd-nfc"></a>
+## 🛠️ RADIO
 
-* [Mifare Classic](rifd-nfc/mifare-classic/README.md)
-  * [Default keys](rifd-nfc/mifare-classic/default-keys.md)
-  * [Darkside](rifd-nfc/mifare-classic/darkside.md)
-  * [Nested](rifd-nfc/mifare-classic/nested.md)
+* [NFC](radio/nfc/README.md)
+  * [Mifare Classic](radio/nfc/mifare-classic/README.md)
+    * [Default keys](radio/nfc/mifare-classic/default-keys.md)
+    * [Darkside](radio/nfc/mifare-classic/darkside.md)
+    * [Nested](radio/nfc/mifare-classic/nested.md)
+* [RFID](radio/rfid.md)
+* [Bluetooth](radio/bluetooth.md)
+* [Wi-Fi](radio/wi-fi.md)
+* [Wireless keyboard/mouse](radio/wireless-keyboard-mouse.md)
 
