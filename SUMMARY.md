@@ -154,12 +154,11 @@
 
 ## 🛠️ RADIO
 
-* [NFC](radio/nfc/README.md)
-  * [Mifare Classic](radio/nfc/mifare-classic/README.md)
-    * [Default keys](radio/nfc/mifare-classic/default-keys.md)
-    * [Darkside](radio/nfc/mifare-classic/darkside.md)
-    * [Nested](radio/nfc/mifare-classic/nested.md)
-* [RFID](radio/rfid.md)
+* [RFID](radio/rfid/README.md)
+  * [Mifare Classic](radio/rfid/mifare-classic/README.md)
+    * [Default keys](radio/rfid/mifare-classic/default-keys.md)
+    * [Darkside](radio/rfid/mifare-classic/darkside.md)
+    * [Nested](radio/rfid/mifare-classic/nested.md)
 * [Bluetooth](radio/bluetooth.md)
 * [Wi-Fi](radio/wi-fi.md)
 * [Wireless keyboard/mouse](radio/wireless-keyboard-mouse.md)
