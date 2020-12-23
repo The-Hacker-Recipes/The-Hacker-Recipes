@@ -4,7 +4,7 @@
 
 WEP \(Wired Equivalent Privacy\) was designed around 1999 to offer security to wireless network users. This standard requires the access points and the authenticating users to know a common secret key of 5 characters \(40 bits\) or 13 characters \(104 bits\). WEP is known to be very weak \(IVs can be reused, IVs are too short \(24 bits\), secret keys are too weak, ...\).
 
-WEP can be configured with two different authentication modes : Open and SKA \(Shared Key Authentication\).
+WEP can be configured with two different authentication modes : **Open** and **SKA** \(Shared Key Authentication\).
 
 ## Requirements
 
@@ -42,7 +42,7 @@ While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry
 
 ![](../../.gitbook/assets/carbon-17-.png)
 
-For WEP attacks, the PTW attack \(named after its creators Pyshkin, Tews, and Weinmann\) will be used in the cracking process which is much more efficient that the standard bruteforce one.
+For WEP attacks, the PTW attack \(named after its creators Pyshkin, Tews, and Weinmann\) will be used in the cracking process which is much more efficient that the standard bruteforce one. When attacking 104 bits keys \(13 chars\), the only consequence is that the number of IVs needed for the cracking process is higher.
 
 ### Fake authentication
 
@@ -101,27 +101,34 @@ The "ARP replay" mode of `aireplay-ng` can be used to gather new IVs by listenin
 This attack is really useful when no clients are connected to the target access point.
 {% endhint %}
 
-fragmentation attack : in certain scenarios, this process can be very long since it's virtually based on luck.
+//TO EXPLAIN fragmentation attack : in certain scenarios, this process can be very long since it's virtually based on luck.
 
 ![](../../.gitbook/assets/carbon-13-.png)
 
-packet creation
+//TO EXPLAIN packet creation
 
 ![](../../.gitbook/assets/carbon-14-.png)
 
-packet replay while sniffing
+//TO EXPLAIN packet replay
 
 ![](../../.gitbook/assets/carbon-15-.png)
 
 ### ChopChop
 
-alternative to fragmentation
+{% hint style="info" %}
+**Tips and requirements**
 
-chopchop
+* An associated state is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or set a client's MAC address with the `-h` option on `aireplay-ng`.
+* Connected clients are not needed in this attack \(except if the testers wants one's MAC address to meet the associated state requirement\).
+
+This attack is really useful when no clients are connected to the target access point and when the [fragmentation attack](wep.md#fragmentation) fails.
+{% endhint %}
+
+//TO EXPLAIN chopchop /!\ the -h option needs the attacker's MAC address \(or spoofed legitimated client's\)
 
 ![](../../.gitbook/assets/carbon-21-.png)
 
-packet creation
+//TO EXPLAIN packet creation
 
 ![](../../.gitbook/assets/carbon-19-.png)
 

@@ -162,5 +162,9 @@
 * [Bluetooth](radio/bluetooth.md)
 * [Wi-Fi](radio/wi-fi/README.md)
   * [WEP](radio/wi-fi/wep.md)
+  * [WPA](radio/wi-fi/wpa.md)
+  * [WPA2](radio/wi-fi/wpa2.md)
+  * [WPA3](radio/wi-fi/wpa3.md)
+  * [WPS](radio/wi-fi/wps.md)
 * [Wireless keyboard/mouse](radio/wireless-keyboard-mouse.md)
 
