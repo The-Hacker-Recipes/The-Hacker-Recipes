@@ -160,6 +160,7 @@
     * [Darkside](radio/rfid/mifare-classic/darkside.md)
     * [Nested](radio/rfid/mifare-classic/nested.md)
 * [Bluetooth](radio/bluetooth.md)
-* [Wi-Fi](radio/wi-fi.md)
+* [Wi-Fi](radio/wi-fi/README.md)
+  * [WEP](radio/wi-fi/wep.md)
 * [Wireless keyboard/mouse](radio/wireless-keyboard-mouse.md)
 
