@@ -2,9 +2,9 @@
 
 ## Theory
 
-WEP \(Wired Equivalent Privacy\) was designed around 1999 to offer security to wireless network users. This standard requires the access points and the authenticating users to know a common secret key of 5 characters \(40 bits\) or 13 characters \(104 bits\). WEP is known to be very weak \(IVs can be reused, IVs are too short \(24 bits\), secret keys are too weak, ...\).
+WEP \(Wired Equivalent Privacy\) was designed around 1999 to offer security to wireless network users. This standard requires the access points and the authenticating users to know a common secret key of 5 characters \(40 bits\) or 13 characters \(104 bits\). WEP is known to be very weak \(IVs can be reused, IVs are too short \(24 bits\), secret keys are too weak, ...\). Nota: when attacking 104 bits keys \(13 chars\), the only consequence is that the number of IVs needed for the cracking process is higher.
 
-WEP can be configured with two different authentication modes : **Open** and **SKA** \(Shared Key Authentication\).
+WEP can be configured with two different authentication modes : **Open** and **SKA** \(Shared Key Authentication\). As the name implies, SKA is more "secure" than Open. In practice, it can mitigate the part where the attacker needs to [obtain an associated state](wep.md#obtain-an-associated-state). Once this step is taken care of, SKA is as easy as Open to break.
 
 ## Requirements
 
@@ -34,7 +34,18 @@ When no clients are connected to the AP, or when the tester doesn't want to spoo
 
 ## Attacks
 
-When attacking WEP networks, testers need to gather a sufficient amount of IVs \(Initialization Vectors\) to operate a known-plaintext attack and find the secret key. This amount is indicated in the `#Data` column in `airodump-ng`'s output. It is hence required to run `airodump-ng` in the background when operating any of the following attacks. In certain scenarios, it will print additionnal information \(like SSID of hidden networks, authentication types for WEP SKA, ...\) or capture useful data \(keystreams, frames captures, ...\).
+{% hint style="info" %}
+Basically, the easiest attacks paths come down to the following. "Client spoofing" means using a legitimate client's MAC address with `aireplay-ng`'s `-h` option when operating packet injection attacks to the router \(i.e. arpreplay, fragmentation, chopchop\).
+
+| Scenarios | Open | SKA |
+| :--- | :--- | :--- |
+| Connected clients | [sniffing](wep.md#sniffing-and-cracking) + [arpreplay](wep.md#arp-replay) \(with client spoofing\) + [deauth](wep.md#de-authentication) + [cracking](wep.md#sniffing-and-cracking) | [sniffing](wep.md#sniffing-and-cracking) + [arpreplay](wep.md#arp-replay) \(with client spoofing\) + [deauth](wep.md#de-authentication) + [cracking](wep.md#sniffing-and-cracking) |
+| No clients | [sniffing](wep.md#sniffing-and-cracking) + [fake auth](wep.md#fake-authentication) + [fragmentation](wep.md#fragmentation) or [chopchop](wep.md#chopchop) + [cracking](wep.md#sniffing-and-cracking) | 😰  |
+{% endhint %}
+
+### Sniffing & cracking
+
+When attacking WEP networks, testers "just" need to gather a sufficient amount \(~20,000 to 60,000 depending on the key size\) of IVs \(Initialization Vectors\) to operate a known-plaintext attack and find the secret key. This amount is indicated in the `#Data` column in `airodump-ng`'s output. It is hence required to run `airodump-ng` in the background when operating any of the following attacks. In certain scenarios, it will print additional information \(like SSID of hidden networks, authentication types for WEP SKA, ...\) or capture useful data \(keystreams, frames captures, ...\).
 
 ![](../../.gitbook/assets/image%20%281%29.png)
 
@@ -42,7 +53,7 @@ While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry
 
 ![](../../.gitbook/assets/carbon-17-.png)
 
-For WEP attacks, the PTW attack \(named after its creators Pyshkin, Tews, and Weinmann\) will be used in the cracking process which is much more efficient that the standard bruteforce one. When attacking 104 bits keys \(13 chars\), the only consequence is that the number of IVs needed for the cracking process is higher.
+FYI, for the WEP cracking process, the "PTW attack" \(named after its creators Pyshkin, Tews, and Weinmann\) will be used in the cracking process which is much more efficient that the standard bruteforce one.
 
 ### Fake authentication
 
@@ -52,18 +63,18 @@ When no clients are connected to the AP, or when the tester doesn't want to spoo
 
 When the authentication mode in use is not OPEN, but rather SKA, the tester can either 
 
-* use a legitimate client's MAC address when attacking with `aireplay-ng` with option `-h`.
+* spoof a legitimate client's MAC address when attacking with `aireplay-ng` with option `-h`.
 * wait a legitimate client to connect to the AP \(or [force it](wep.md#de-authentication)\), capture the authentication, have airodump-ng extract the keystream from it, and use it with a known-plaintext attack to bypass the SKA mode requirement \(.i.e the need to know the secret key\).
 
 {% hint style="danger" %}
-**TODO** : I've had issues with my AP, I need to try again with a Rpi or something...
+**TODO** : I've had issues with my AP, I need to try again with a RPi or something...
 {% endhint %}
 
 Depending on the scenario, it is advisable to operate fake authentication regularly to keep the association state alive during long attacks. This can be achieved by setting the fakeauth delay to something like 60 \(`--fakeauth 60`\) and/or changing the delay between keep-alive packets \(`-q` option, set to 15 by default\). 
 
 ### De-authentication
 
-It is possible to send disassociation packets to clients connected to an access point. This works since 802.11 is a protocol where the source can be impersonated \(spoofed access point MAC address\), 802.11 is on the physical and data link layers of the OSI model. This will make the client try to re-authenticate to the target AP.
+It is possible to send disassociation packets to clients connected to an access point. This works since 802.11 is a protocol where the source can be impersonated \(spoofed access point MAC address\), 802.11 is on the physical and data link layers of the OSI model. This will make the client try to re-authenticate to the target AP. In this attack, there is no need to spoof legitimate clients since the impersonated source is the access point itself and the destination is broadcast.
 
 ![](../../.gitbook/assets/carbon-4-.png)
 
@@ -78,7 +89,7 @@ This attack can be used continuously to prevent the client\(s\) from accessing t
 {% hint style="info" %}
 **Tips and requirements**
 
-* An [associated state](wep.md#obtain-an-associated-state) is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or set a client's MAC address with the `-h` option on `aireplay-ng`.
+* An [associated state](wep.md#obtain-an-associated-state) is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or spoof a legitimate client's MAC address with the `-h` option on `aireplay-ng`.
 * Connected clients are needed.
 
 In order to make that operation more effective, it is possible to combine the ARP replay technique with a [de-authentication attack](wep.md#deauthentication).
@@ -95,7 +106,7 @@ The "ARP replay" mode of `aireplay-ng` can be used to gather new IVs by listenin
 {% hint style="info" %}
 **Tips and requirements**
 
-* An associated state is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or set a client's MAC address with the `-h` option on `aireplay-ng`.
+* An associated state is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or spoof a legitimate client's MAC address with the `-h` option on `aireplay-ng`.
 * Connected clients are not needed in this attack \(except if the testers wants one's MAC address to meet the associated state requirement\).
 
 This attack is really useful when no clients are connected to the target access point.
@@ -118,7 +129,7 @@ This attack is really useful when no clients are connected to the target access 
 {% hint style="info" %}
 **Tips and requirements**
 
-* An associated state is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or set a client's MAC address with the `-h` option on `aireplay-ng`.
+* An associated state is needed. Testers can either run a [fake authentication attack](wep.md#fake-authentication) or spoof a legitimate client's MAC address with the `-h` option on `aireplay-ng`.
 * Connected clients are not needed in this attack \(except if the testers wants one's MAC address to meet the associated state requirement\).
 
 This attack is really useful when no clients are connected to the target access point and when the [fragmentation attack](wep.md#fragmentation) fails.
