@@ -8,8 +8,11 @@ description: MITRE ATT&CK™ Sub-technique T1110.002
 * MS-CACHE v2
 * LM hash
 * NT hash
-* NTLMv1
-* NTLMv2
+* LM ChallengeResponse
+* NTLMv1 ChallengeResponse
+* NTLMv2 ChallengeResponse
 * ASREProats
 * Kerberoast
+
+google collab, hashonymize
 

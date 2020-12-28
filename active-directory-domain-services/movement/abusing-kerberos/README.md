@@ -2,15 +2,22 @@
 
 ## Tickets
 
-Kerberos is an authentication protocol based on tickets. It works like this:
+Kerberos is an authentication protocol based on tickets. It basically works like this \(simplified process\):
 
 1. Client asks the KDC \(Key Distribution Center, usually is a domain controller\) for a TGT \(Ticket Granting Ticket\). The requesting user's NT hash is used for authentication.
 2. Client uses the TGT to ask the KDC for a Service ticket, a.k.a. TGS \(Ticket Granting Service\)
 3. Client uses the Service ticket/TGS to access a service
 
-A Service ticket allows access to a specific service. A TGT can be used to access any service/resource the requesting user had the rights to access \(the TGT is used to ask for Service tickets\).
+A Service ticket \(TGS\) allows access to a specific service. The TGT is used to ask for TGSs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following \(read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii__kerberos_cont/SSTIC2014-Article-secrets_dauthentification_pisode_ii__kerberos_contre-attaque-bordes_2.pdf)\).
 
-Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT. This is called [Overpass-the-hash](overpass-the-hash.md).
+| Key name \(a.k.a. etype\) | Details on key calculation |
+| :--- | :--- |
+| DES | Key derivated from user's password |
+| RC4 | **Key is NT hash** |
+| AES128 | Key derivated from user's password |
+| AES256 | Key derivated from user's password |
+
+Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT \(if RC4 key is accepted\). This is called [Overpass-the-hash](overpass-the-hash.md).
 
 {% page-ref page="overpass-the-hash.md" %}
 

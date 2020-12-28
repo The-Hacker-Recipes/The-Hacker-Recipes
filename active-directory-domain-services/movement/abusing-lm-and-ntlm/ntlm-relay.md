@@ -6,11 +6,11 @@ description: MITRE ATT&CK™ Sub-technique T1557.001
 
 ## Theory
 
-After successfully [forcing a victim to authenticate](../forced-authentications/) \(NTLM authentication\) to an attack server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
+After successfully [forcing a victim to authenticate](../forced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
 
 ## Practice
 
-The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The way NTLM authentication is conducted is kind of protocol-independent. It means one can relay NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called **cross-protocols NTLM relay**. It also means the relays and attacks possible depend on the application protocol the NTLM authentication is embedded in.
+The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The LM and NTLM authentication protocols are "application protocol-independent". It means one can relay LM or NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called **cross-protocols LM/NTLM relay**. It also means the relays and attacks possible depend on the application protocol the authentication messages are embedded in.
 
 [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) \(Python\), [MultiRelay](https://github.com/lgandx/Responder/blob/master/tools/MultiRelay.py) \(Python\) and [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for relaying NTLM authentications. Those tools setup relay clients and relay servers waiting for incoming authentications. Once the servers are up and ready, the tester can initiate a [forced authentication attack](../forced-authentications/).
 
@@ -100,7 +100,7 @@ The ntlmrelayx tool offers many features making it a very valuable asset when pe
 * It has the ability to relay a single connection \(SMB only for now\) to multiple targets.
 
 {% hint style="info" %}
-In theory, thanks to [the recent "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a NTLM hash with a custom challenge on an interface/machine, while relaying on another.
+Thanks to [the recent "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a ChallengeResponse \(i.e. LM or NTLM hash\) with a custom challenge on an interface/machine, while relaying on another.
 {% endhint %}
 
 The targets file used with the `-tf` option can contain the following
