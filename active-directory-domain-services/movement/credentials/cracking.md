@@ -44,8 +44,8 @@ hashcat --hash-type $number --attack-mode 0 $hashes_file $wordlist_file
 
 Hashcat can also be used in a hybrid mode by combining a dictionary attack with rules that will operate transformations to the words of the list.
 
-* **Great wordlists**: hashesorg2019, TODOTODO
-* **Great rules**: oneruletorulethemall, TODOTODO
+* **Great wordlists**: [weakpass](https://weakpass.com/), [packetstorm](https://packetstormsecurity.com/Crackers/wordlists/)
+* **Great rules**: [pantagrule](https://github.com/rarecoil/pantagrule), [OneRuleToRuleThemAll](https://notsosecure.com/one-rule-to-rule-them-all/) 
 
 ```bash
 hashcat --hash-type $number --attack-mode 0 --rules-file $rules_file $hashes_file $wordlist_file
