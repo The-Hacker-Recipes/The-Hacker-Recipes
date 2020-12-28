@@ -1,5 +1,7 @@
 # LM and NTLM
 
+## Theory
+
 {% hint style="danger" %}
 A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are **hashing formats** used to store user passwords: LM, NT. And there are **authentication protocols** used to authenticate users to remote resources: LM \(v1 or v2\), NTLM \(v1 or v2\).
 
@@ -49,4 +51,8 @@ Attackers could also rely on [forced authentications and phishing](../forced-aut
 {% page-ref page="../forced-authentications/" %}
 
 {% page-ref page="ntlm-relay.md" %}
+
+## Resources
+
+{% embed url="http://davenport.sourceforge.net/ntlm.html" %}
 
