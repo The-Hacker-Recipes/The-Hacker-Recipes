@@ -1,13 +1,11 @@
 # LM and NTLM
 
 {% hint style="danger" %}
-A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are **hashing formats** used to store user passwords: LM, NT. And there are **authentication protocols** used to authenticate users to remote resources: LM, NTLM \(v1 and v2\).
+A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are **hashing formats** used to store user passwords: LM, NT. And there are **authentication protocols** used to authenticate users to remote resources: LM \(v1 or v2\), NTLM \(v1 or v2\).
 
 * LM hash and NT hash will refer to the hashing formats
-* LM, NTLM, NTLMv1, NTLMv2, will refer to the authentication protocols
-* LM hash, NTLM hash will refer to the **ChallengeReponse** exchanged during an authentication on LM or NTLM.
-
-Yes, LM hash can either refer to the hashing format used to store the user's password, or to the ChallengeResponse exchanged during an authentication on the LM protocol. It will depend on the context.
+* LM\(v1\), LMv2, NTLM\(v1\), NTLMv2, will refer to the authentication protocols
+* LM\(v1/v2\) hash, NTLM\(v1/v2\) ChallengeReponses will refer to the hash exchanged during an authentication on LM or NTLM.
 
 Yes.. this is confusing, but hey go tell this to Microsoft 😤 
 {% endhint %}
@@ -22,7 +20,8 @@ The following table details the secret key used by each authentication protocols
 | Authentication protocol | Algorithm \(for the protocol\) | Secret key |
 | :--- | :--- | :--- |
 | LM | DES-ECB | LM hash |
-| NTLMv1 | DES-ECB | NT hash |
+| LMv2 | HMAC-MD5 | NT hash |
+| NTLM | DES-ECB | NT hash |
 | NTLMv2 | HMAC-MD5 | NT hash |
 
 The following table details the hashing algorithm used by each hashing format in Windows that allows the system to transform the user's password in a non-reversible format.
@@ -34,7 +33,7 @@ The following table details the hashing algorithm used by each hashing format in
 
 This is meant to protect the user's password from eavesdropping by implementing the "zero-knowledge proof" concept. Attackers [capturing authentication](capturing-hashes.md) \(during a man-in-the-middle attack for example\) would not be able to use the ChallengeResponse to authenticate. In theory, they could only try to retrieve the user's password from an NTLM hash by operating two expensive \(in time and resources\) [bruteforce attacks](./):
 
-* a bruteforce attack against the ChallengeResponse \(i.e. LM or NTLM hash\) to retrieve the LM or NT hash it was derivated from
+* a bruteforce attack against the LM/NTLM ChallengeResponse to retrieve the LM or NT hash it was derivated from
 * if found, a bruteforce/dictionary attack against the NT hash to retrieve the user's password
 
 {% page-ref page="capturing-hashes.md" %}
