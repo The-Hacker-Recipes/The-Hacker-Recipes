@@ -27,32 +27,32 @@ In Windows environments, passwords are stored in a hashed format in registry hiv
       <td style="text-align:left">stores domain cached credentials (referred to as LSA secrets)</td>
       <td
       style="text-align:left">
-        <p>Plaintext password</p>
-        <p>LM or NT hash</p>
-        <p>MS-CACHE (a.k.a. DCC1, NT hash derivation) or MS-CACHE v2 (a.k.a. DCC2,
-          MS-CACHE derivation)</p>
+        <p>Plaintext passwords</p>
+        <p>LM or NT hashes</p>
+        <p>Kerberos keys (RC4, DES, AES)</p>
+        <p>Domain Cached Credentials (DCC1 and DCC2)</p>
         </td>
     </tr>
     <tr>
       <td style="text-align:left">SYSTEM</td>
-      <td style="text-align:left">contains enough info to decrypt SAM secrets or LSA secrets</td>
+      <td style="text-align:left">contains enough info to decrypt SAM secrets and LSA secrets</td>
       <td style="text-align:left">N/A</td>
     </tr>
   </tbody>
 </table>
 
-SAM and LSA secrets can be dumped either locally or remotely from the mounted registry hives. These secrets can also be extracted offline from the exported hives.
+SAM and LSA secrets can be dumped either locally or remotely from the mounted registry hives. These secrets can also be extracted offline from the exported hives. Once the secrets are extracted, they can be used for various attacks : [credential spraying](../password-spraying.md), [stuffing](../stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/overpass-the-hash.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md).
 
 ## Practice
 
-### Exporting hives
+### Exfiltration
 
 When the Windows operating system is running, the hives are in use and mounted. The command-line tool named `reg` can be used to export them.
 
 ```bash
-reg save HKLM\SAM 'C:\path\to\sam.save'
-reg save HKLM\SECURITY 'C:\path\to\security.save'
-reg save HKLM\SYSTEM 'C:\path\to\system.save'
+reg save HKLM\SAM 'C:\Windows\Temp\sam.save'
+reg save HKLM\SECURITY 'C:\Windows\Temp\security.save'
+reg save HKLM\SYSTEM 'C:\Windows\Temp\system.save'
 ```
 
 When Windows is not running, the hives are not mounted and they can be copied just like any other file. This can be operated when mounting the hard drive from another OS \(e.g. when booting the computer on another operating system\). The hive files can be found at the following locations.
@@ -63,7 +63,11 @@ When Windows is not running, the hives are not mounted and they can be copied ju
 \system32\config\system
 ```
 
-### Dumping secrets
+{% hint style="info" %}
+Hives files can also be exfiltrated from live systems using [Volume Shadow Copy](ntds.dit.md#volume-shadow-copy-vssadmin).
+{% endhint %}
+
+### Secrets dump
 
 Here are some examples and tools that can be used for local/remote/offline dumping.
 

@@ -29,10 +29,12 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | :--- | :--- |
 | LM hash | 3000 |
 | NT hash | 1000 |
-| LM ChallengeResponse | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
-| LMv2 ChallengeResponse | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
-| NTLM ChallengeResponse | 5500 |
-| NTLMv2 ChallengeResponse | 5600 |
+| [LM ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
+| [LMv2 ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
+| [NTLM ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | 5500 |
+| [NTLMv2 ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | 5600 |
+| [Domain Cached Credentials](dumping/sam-and-lsa-secrets.md) | 1100 |
+| [Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100 |
 | [ASREProast](../abusing-kerberos/asreproast.md) | 13100 |
 | [Kerberoast](../abusing-kerberos/kerberoast.md) | 18200 |
 
