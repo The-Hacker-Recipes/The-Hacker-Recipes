@@ -6,11 +6,9 @@ description: MITRE ATT&CK™ Sub-technique T1003.006
 
 ## Theory
 
-DCSync is a technique that uses Windows Domain Controller's API to simulate the replication process from a remote domain controller. This attack can lead to the compromise of major credential material such as the Kerberos `krbtgt` keys used legitimately for tickets creation, but also for [tickets forging](../../abusing-kerberos/forged-tickets.md) by attackers. The consequences of this attack are similar to an [NTDS.dit dump and parsing](ntds.dit.md).
+DCSync is a technique that uses Windows Domain Controller's API to simulate the replication process from a remote domain controller. This attack can lead to the compromise of major credential material such as the Kerberos `krbtgt` keys used legitimately for tickets creation, but also for [tickets forging](../../abusing-kerberos/forged-tickets.md) by attackers. The consequences of this attack are similar to an [NTDS.dit dump and parsing](ntds.dit.md) but the practical aspect differ. **A DCSync is not a simple copy & parse of the NTDS.dit file**, it's a `DsGetNCChanges` operation transported in an RPC request to the DRSUAPI \(Directory Replication Service API\) to replicate data \(including credentials\) from a domain controller.
 
-This attack requires domain admin privileges to succeed \(more specifically, it needs the following extended privileges: `DS-Replication-Get-Changes`  and `DS-Replication-Get-Changes-All`\). Members of the Administrators, Domain Admins, Enterprise Admins, and Domain Controllers groups have these privileges by default. In some cases, over-privileged accounts can be abused to [grant controlled objects the right to DCSync](../../abusing-aces/granting-genericall.md).
-
-Long story short, DCSync is a `DsGetNCChanges` operation transported in an RPC request to the DRSUAPI \(Directory Replication Service API\) to replicate data \(including credentials\) from a domain controller.
+**This attack requires domain admin privileges** to succeed \(more specifically, it needs the following extended privileges: `DS-Replication-Get-Changes`  and `DS-Replication-Get-Changes-All`\). Members of the Administrators, Domain Admins, Enterprise Admins, and Domain Controllers groups have these privileges by default. In some cases, over-privileged accounts can be abused to [grant controlled objects the right to DCSync](../../abusing-aces/granting-genericall.md).
 
 ## Practice
 
