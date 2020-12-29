@@ -14,6 +14,8 @@ Cracking is on operation that can be carried out through different types of atta
 * **Dictionary**: every word of a given list \(a.k.a. dictionary\) is hashed and compared against the target hash.
 * **Rainbow tables**: the hash is looked for in a precomputed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows to crack hashes faster, but costing a greater amount of memory that traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additionnal random value as prefix/suffix, making the precomputed table irrelevant\)
 
+There are many other and more complex types of attacks \(incremental, mask, rules, hybrid types, ...\) but the major/core ones are the three above.
+
 ## Practice
 
 One of the greatest tools that can be used for cracking is [hashcat](https://hashcat.net/hashcat/) \(C\). It implements different types of attacks and many types of hashes. It has many other great features like
@@ -53,7 +55,7 @@ Hashcat can also be used in a hybrid mode by combining a dictionary attack with 
 hashcat --hash-type $number --attack-mode 0 --rules-file $rules_file $hashes_file $wordlist_file
 ```
 
-A robust alternative to hashcat is [John the Ripper](https://github.com/openwall/john), a.k.a. john \(C\).
+A robust alternative to hashcat is [John the Ripper](https://github.com/openwall/john), a.k.a. john \(C\). It handles some hash types that hashcat doesn't \(Domain Cached Credentials for instance\) but it also has a strong community that regularly releases tools in the form of "something2john" that convert things to a john crackable format \(e.g. `bitlocker2john`, `1password2john`, `keepass2john`, `lastpass2john` and so on\).
 
 {% hint style="success" %}
 **Tips & tricks**
