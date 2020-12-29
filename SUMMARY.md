@@ -20,7 +20,7 @@
       * [SAM & LSA secrets](active-directory-domain-services/movement/credentials/dumping/sam-and-lsa-secrets.md)
       * [NTDS.dit](active-directory-domain-services/movement/credentials/dumping/ntds.dit.md)
       * [LSASS.exe](active-directory-domain-services/movement/credentials/dumping/lsass.exe.md)
-      * [🛠️ DCSync](active-directory-domain-services/movement/credentials/dumping/dcsync.md)
+      * [DCSync](active-directory-domain-services/movement/credentials/dumping/dcsync.md)
       * [🛠️ Group Policies \(Domain Controller's SYSVOL\)](active-directory-domain-services/movement/credentials/dumping/group-policies-domain-controllers-sysvol.md)
       * [🛠️ Cached Kerberos tickets](active-directory-domain-services/movement/credentials/dumping/cached-kerberos-tickets.md)
       * [🛠️ Web browsers](active-directory-domain-services/movement/credentials/dumping/web-browsers.md)

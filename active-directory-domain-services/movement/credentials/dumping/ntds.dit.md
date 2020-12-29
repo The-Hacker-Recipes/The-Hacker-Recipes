@@ -34,6 +34,10 @@ Once the required files are exfiltrated, the shadow copy can be removed
 vssadmin delete shadows /shadow=$ShadowCopyId
 ```
 
+{% hint style="info" %}
+This attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) with the `-use-vss` option. Additionaly, the `-exec-method` option can be set to `smbexec`, `wmiexec` or `mmcexec` to specify on which remote command execution method to rely on for the process.
+{% endhint %}
+
 ### AD maintenance \(NTDSUtil\)
 
 NTDSUtil.exe is a diagnostic tool available as part of Active Directory. It has the ability to save a snapshot of the Active Directory data. Running the following command will copy the NTDS.dit database and the SYSTEM and SECURITY hives to `C:\Windows\Temp`.

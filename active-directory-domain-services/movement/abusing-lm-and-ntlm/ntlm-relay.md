@@ -49,6 +49,7 @@ proxychains secretsdump.py -no-pass $DOMAIN/$USER@$TARGET
 {% tab title="Kerberos delegation" %}
 The following command will 
 
+* enable SMB2 support \(`-smb2support`\)
 * try to relay the authentication over LDAPS, attempt to exploit CVE-2019-1040 \(a.k.a. Drop the MIC\) to "unsign" the NTLM messages \(`--remove-mic`\)
 * abuse the default value \(10\) of `ms-DS-MachineAccountQuota` to create a domain machine account \(`--add-machine`\)
 * and finally, [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../abusing-kerberos/kerberos-delegations.md#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine \(`--delegate-access`\).
@@ -89,7 +90,7 @@ ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 
 The ntlmrelayx tool offers many features making it a very valuable asset when pentesting an Active Directory domain:
 
-* It can be combined with mitm6 \(for [DHCPv6 + name poisoning](../forced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option.
+* It can be combined with mitm6 \(for [DHCPv6 + DNS poisoning](../forced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option.
 * It has the ability to open SOCKS proxies for every new session after a successful relayed authentication. This allows testers to exploit those sessions later on with tools like [proxychains](https://github.com/haad/proxychains). This feature can be enabled with the `-socks` option.
 * It supports SMB2. It can be enabled with the `-smb2support` option.
 * It implements **CVE-2019-1040** with the `--remove-mic` option, usually needed when attempting "**unsigning cross-protocols NTLM relay attacks**" \(e.g. **SMB to LDAP/S\)**.
@@ -124,6 +125,10 @@ crackmapexec smb --gen-relay-list targets.txt $SUBNET
 ### 🛠️ Drop The MIC \(CVE-2019-1040\)
 
 //TODO
+
+//TODO : downgrade to SMBv1 to bypass signing negotiation and be able to relay without having to unsign for targets that don't enforce signing \(don't use -smb2support\)
+
+//TODO : downgrade to lm/ntlmv1 to bypass other securities ? \(not implemented in impacket, and not even needed since it'd be better to capture and crack the ntlmv1 challengresponse\)
 
 ## References
 
