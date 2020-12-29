@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1003.003
 ---
 
-# NTDS.dit
+# NTDS.dit secrets
 
 NTDS \(Windows NT Directory Services\) is the directory services used by Microsoft Windows NT to locate, manage, and organize network resources. The NTDS.dit file is a database that stores the Active Directory data \(including users, groups, security descriptors and password hashes\). This file is stored on the domain controllers.
 

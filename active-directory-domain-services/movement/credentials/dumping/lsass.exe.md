@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1003.001
 ---
 
-# LSASS.exe
+# LSASS.exe secrets
 
 ## Theory
 
