@@ -7,7 +7,7 @@ A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things cl
 
 * LM hash and NT hash will refer to the hashing formats
 * LM\(v1\), LMv2, NTLM\(v1\), NTLMv2, will refer to the authentication protocols
-* LM\(v1/v2\) hash, NTLM\(v1/v2\) ChallengeReponses will refer to the hash exchanged during an authentication on LM or NTLM.
+* LM\(v1/v2\) and NTLM\(v1/v2\) ChallengeReponses will refer to the hash exchanged during an authentication on LM or NTLM.
 
 Yes.. this is confusing, but hey go tell this to Microsoft 😤 
 {% endhint %}
