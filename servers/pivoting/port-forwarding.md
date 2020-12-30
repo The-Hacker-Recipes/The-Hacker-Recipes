@@ -1,33 +1,73 @@
 # Port forwarding
 
-//TODO : talk about the upsides, downsides \(easy but SSH needed and so on\), how to on Windows, talk about ssh -D == dynamic port forwarding == SOCKS
-
 ## Theory
 
-//TODO 
+Port forwarding is a pivoting technique that allows network packets to be relayed from a port to another. The tunnel can be setup between two controlled and connected machines, hence allowing a bridge between a network and another. That concept is similar to PAT \(Port Address Translation\), an extension of NAT \(Network Address Translation\) that allows multiple devices on a LAN to be mapped to a single public IP address by assigning addresses to ports numbers.
+
+This technique is useful when an attacker wants to stay under the radar or when access to a service is limited to a specific network.
 
 ## Practice
 
-//TODO : simple usage for LPF/RPF
+There are multiple types of port forwarding used during penetration testing engagments.
+
+* **Local port forwarding**: access a port that only a remote machine can communicate with \(e.g. "firewalled" network, internal localhost network\).
+* **Remote port forwarding**: access an attacker's service \(from the attacker's machine's networks\) from a remote workstation that can't access those networks directly.
+* **Dynamic port forwarding**: tunnel the whole attacker's network traffic \(instead of only one port\) through a remote machine. Explained in [SOCKS proxy](socks-proxy.md).
+* **Reverse dynamic port forwarding**: tunnel the whole network traffic from a remote machine through the attacker's machine. Explained in [SOCKS proxy](socks-proxy.md).
+
+### Basic setup
+
+Port forwarding can be set up in many different ways.
+
+{% tabs %}
+{% tab title="SSH" %}
+One of the most easy is by relying on SSH however, it requires to have an SSH server running on the controlled machine and a valid account. The tester needs to open an SSH connection to the machine that should be turned into a SOCKS proxy, and supply 
+
+* the `-L` option for a local port forwarding, along with the ports and addresses to bind
+* the `-R` option for a remote port forwarding, along with the ports and addresses to bind
+
+The command can also be used with `-N` option to make sure no command gets executed after the SSH session is opened.
+
+```bash
+# Local port forwarding
+ssh -N -L $LOCAL_ADDRESS:$LOCAL_PORT:$REMOTE_ADDRESS:$REMOTE_PORT user@target
+
+# Remote port forwarding
+ssh -N -R $REMOTE_ADDRESS:$REMOTE_PORT:$LOCAL_ADDRESS:$LOCAL_PORT user@target
+```
+
+Once the ssh command exits successful \(or once a session opens\) the tester can then proceed to use the tunnel.
+{% endtab %}
+
+{% tab title="Metasploit" %}
+
+{% endtab %}
+
+{% tab title="plink" %}
+
+{% endtab %}
+{% endtabs %}
 
 ### Chained local port forwarding
 
-//TODO
+In the following example \(real-world badly secured network\), let's assume the remote attacker wants to access a internal workstation's web service \(i.e. localhost\), and that the attackers controls multiple machines that can bridge the multiple networks at play.
+
+![](../../.gitbook/assets/multi-port-forwarding-local-port-forwarding.png)
+
+![Setting up the pivoting points](../../.gitbook/assets/carbon-8-.png)
+
+This setup allows the attackers to connect to the workstation webservice on port `80/TCP` by targetting port `1111/TCP` on his own machine. His machine will forward the communication to pivot1's port `2222/TCP`. Pivot1 will forward to pivot2's `3333/TCP`. Pivot2 will forward to workstation's `80/TCP`.
 
 ### Chained remote port forwarding
 
-In the following example, let's assume the remote attacker wants a target workstation to connect back to him with a reverse shell. There are multiple scenarios where using a combination of remote port forwarding would be interesting or even required.
+In the following example \(real-world badly secured network\), let's assume the remote attacker wants a target workstation to connect back to him with a reverse shell, and that the attackers controls multiple machines that can bridge the multiple networks at play. There are multiple scenarios where using a combination of remote port forwarding would be interesting or even required.
 
-* the attacker wants to stay stealthy and make multiple specific hops to make the tr by targeting port affic legitimate-looking \(workstation communicates with an internal server, an internal server communicates with a DMZed server, a DMZed server communicates with a remote client\)
+* the attacker wants to stay stealthy by using multiple specific hops to make the traffic legitimate-looking \(workstation communicates with an internal server, an internal server communicates with a DMZed server, a DMZed server communicates with a remote client\)
 * the target workstation doesn't have access to the remote attacker's network \(i.e. to the Internet\)
 
 ![](../../.gitbook/assets/multi-remote-port-forwarding.png)
 
-The commands to run from the attacker's machine and from the pivot1 are the following.
+![Setting up the pivoting points](../../.gitbook/assets/carbon-6-.png)
 
-![](../../.gitbook/assets/carbon-6-.png)
-
-This setup allows the target workstation to communicate with the attacker's port `1111/TCP3333/TCP` on pivot2. Pivot2 will forward the communication to pivot1's port `2222/TCP` which will itself forward to attacker's port `1111/TCP`.
-
-
+This setup allows the target workstation to communicate with the attacker's port `1111/TCP` by targeting pivot2 on port `3333/TCP`. Pivot2 will forward the communication to pivot1's port `2222/TCP` which will itself forward to attacker's port `1111/TCP`.
 

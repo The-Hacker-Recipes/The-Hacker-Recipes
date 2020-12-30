@@ -3,9 +3,9 @@
 ![](.gitbook/assets/thr_preview_2.png)
 
 {% hint style="danger" %}
-**This project is a work in progress**. I started it in 2018 and will probably finish it by 2022. But of course, it will never be finished, and I don't plan on letting this project become deprecated. 
+**This project is a work in progress**. I started it in 2018 and will probably "finish" it by 2022. But of course, it will never be finished, those subjects evolve day after day and I don't plan on letting this project become deprecated. 
 
-Right now, I mostly worked on the "Active Directory" and "Web services" parts. They are good examples of what I want this whole project to be like.
+The "Active Directory" part is a good example of what I want this whole project to be like.
 
 The 🛠️ emoji is used where work has to be done.
 {% endhint %}
@@ -31,6 +31,6 @@ Please feel free to contribute, give feedback/suggestions or reach out to me on 
 {% endhint %}
 
 {% hint style="success" %}
-Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://github.com/ShutdownRepo/Exegol), another project of mine of a docker environment ready to hack on day-to-day engagements. It's not much but I personaly use it on all my engagements. Feel free to use it, to contribute, to give feedback etc.
+Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://github.com/ShutdownRepo/Exegol), another project of mine of a docker environment ready to hack on day-to-day engagements. It's not much but I use it on all my engagements. Feel free to use it, to contribute, to give feedback etc.
 {% endhint %}
 
