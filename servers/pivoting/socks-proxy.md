@@ -10,7 +10,7 @@ In short, a SOCKS proxy can relay TCP and UDP connections and hence help bypass 
 
 ## Practice
 
-### Setup
+### Server setup
 
 #### Using SSH
 
@@ -34,17 +34,21 @@ Once the ssh command exits successful \(or a session opens\) the tester can then
 
 //TODO
 
-### Usage
+### Client usage
 
-Network traffic can be tunneled through SOCKS proxy servers with [proxychains-ng](https://github.com/rofl0r/proxychains-ng) \(C\), a tool still maintained and more advanced based on the original [proxychains](https://github.com/haad/proxychains) \(that is not maintained anymore\).
+Network traffic can be tunneled through SOCKS proxy servers with [proxychains-ng](https://github.com/rofl0r/proxychains-ng) \(C\), a tool still maintained and more advanced based on the original [proxychains](https://github.com/haad/proxychains) \(that is not maintained anymore\). The port in use by the SOCKS proxy should be supplied in the configuration file \(`/etc/proxychains.conf`\) like in the following examples.
 
 ```bash
-
+# type   ip             port    [user  pass]
+socks5   192.168.67.78  1080	  lamer	 secret
+http     192.168.89.3   8080	  justu	 hidden
+socks4	 192.168.1.49   1080
+http     192.168.39.93  8080
 ```
 
 ### Chaining proxies
 
-In certain scenarios, SOCKS proxies can be chained. This can easily be done with proxychains. In the following example, SSH is used to turn compromised machines into SOCKS proxy servers.
+In certain scenarios, SOCKS proxies can be chained. This can easily be done with [proxychains](socks-proxy.md#client-usage). In the following example, SSH is used to turn compromised machines into SOCKS proxy servers.
 
 ![](../../.gitbook/assets/multi-socks-pivoting.png)
 
@@ -52,5 +56,5 @@ In certain scenarios, SOCKS proxies can be chained. This can easily be done with
 
 ![](../../.gitbook/assets/carbon-1-%20%281%29.png)
 
-![](../../.gitbook/assets/carbon-2-%20%281%29.png)
+![](../../.gitbook/assets/carbon-4-%20%281%29.png)
 
