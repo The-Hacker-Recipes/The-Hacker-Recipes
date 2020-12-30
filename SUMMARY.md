@@ -9,7 +9,7 @@
   * [DNS](active-directory-domain-services/recon/dns.md)
   * [NBT-NS](active-directory-domain-services/recon/nbt-ns-1.md)
   * [Responder](active-directory-domain-services/recon/nbt-ns.md)
-  * [Port-scanning](active-directory-domain-services/recon/kerberos.md)
+  * [Port scanning](active-directory-domain-services/recon/kerberos.md)
   * [LDAP](active-directory-domain-services/recon/ldap-1.md)
   * [BloodHound](active-directory-domain-services/recon/ldap.md)
   * [MS-RPC](active-directory-domain-services/recon/ms-rpc.md)
@@ -137,7 +137,9 @@
   * [UNIX-like](servers/privilege-escalation/unix-like/README.md)
     * [SUID/SGID binaries](servers/privilege-escalation/unix-like/suid-sgid-binaries.md)
     * [Capabilities](servers/privilege-escalation/unix-like/capabilities.md)
-* [Pivoting](servers/pivoting.md)
+* [Pivoting](servers/pivoting/README.md)
+  * [Port forwarding](servers/pivoting/port-forwarding.md)
+  * [SOCKS proxy](servers/pivoting/socks-proxy.md)
 
 ## 🛠️ Intelligence gathering
 
