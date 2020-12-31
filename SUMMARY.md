@@ -71,6 +71,8 @@
   * [🛠️ Privileged groups](active-directory-domain-services/movement/privileged-groups.md)
   * [🛠️ Netlogon](active-directory-domain-services/movement/frontal-attacks/README.md)
     * [🛠️ ZeroLogon \(CVE-2020-1472\)](active-directory-domain-services/movement/frontal-attacks/zerologon.md)
+  * [🛠️ Frontal attacks](active-directory-domain-services/movement/frontal-attacks-2/README.md)
+    * [🛠️ MS07-029 \(CVE-2007-1748\)](active-directory-domain-services/movement/frontal-attacks-2/ms07-029-cve-2007-1748.md)
 
 ## Web services
 

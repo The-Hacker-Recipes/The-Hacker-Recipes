@@ -17,6 +17,10 @@ There are multiple types of port forwarding used during penetration testing enga
 
 ### Basic setup
 
+{% hint style="info" %}
+While setting up port forwarding, it's important to remember that non-admin users can only open ports above 1024.
+{% endhint %}
+
 Port forwarding can be set up in many different ways.
 
 {% tabs %}
@@ -70,4 +74,8 @@ In the following example \(real-world badly secured network\), let's assume the 
 ![Setting up the pivoting points](../../.gitbook/assets/carbon-6-.png)
 
 This setup allows the target workstation to communicate with the attacker's port `1111/TCP` by targeting pivot2 on port `3333/TCP`. Pivot2 will forward the communication to pivot1's port `2222/TCP` which will itself forward to attacker's port `1111/TCP`.
+
+{% hint style="info" %}
+If ports are only opened on the loopback interface, testers should make sure the `/etc/ssh/sshd_config` has the `GatewayPorts` option set to `yes` or `clientspecified`.
+{% endhint %}
 

@@ -17,6 +17,10 @@ There are two types of dynamic port forwarding used during penetration testing e
 
 ### Basic server setup
 
+{% hint style="info" %}
+While setting up port forwarding, it's important to remember that non-admin users can only open ports above 1024.
+{% endhint %}
+
 In practice, there are many ways to turn a controlled machine into a SOCKS proxy server.
 
 {% tabs %}

