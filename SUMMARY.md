@@ -153,8 +153,10 @@
 
 ## 🛠️ Physical
 
-* [Recon](physical/recon.md)
-* [Intrusion](physical/intrusion.md)
+* [Keylogging](physical/keylogging.md)
+* [HID injection](physical/hid-injection.md)
+* [Attacks on drives](physical/attacks-on-drives.md)
+* [Lockpicking](physical/lockpicking.md)
 
 ## 🛠️ RADIO
 
