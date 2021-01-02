@@ -51,7 +51,7 @@ When attacking WEP networks, testers "just" need to gather a sufficient amount \
 
 While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry cracking the secret key every 5.000 IVs.
 
-![](../../.gitbook/assets/carbon-17-.png)
+![](../../.gitbook/assets/carbon-17-%20%281%29.png)
 
 FYI, for the WEP cracking process, the "PTW attack" \(named after its creators Pyshkin, Tews, and Weinmann\) will be used in the cracking process which is much more efficient that the standard bruteforce one.
 
@@ -114,6 +114,8 @@ This attack is really useful when no clients are connected to the target access 
 
 //TO EXPLAIN fragmentation attack : in certain scenarios, this process can be very long since it's virtually based on luck.
 
+//TO EXPLAIN : deauth or disassociation packets can sometimes be received. In this case, it can indicate client MAC filtering. Testers should spoof a legitimate client. 
+
 ![](../../.gitbook/assets/carbon-13-.png)
 
 //TO EXPLAIN packet creation
@@ -146,6 +148,10 @@ This attack is really useful when no clients are connected to the target access 
 packet replay
 
 ![](../../.gitbook/assets/carbon-20-.png)
+
+{% hint style="success" %}
+In previous tests, combining a fragmentation attack with a chopchop attack resulted in high a number of received IVs per second \(`#/s` column in `airodump-ng`\) around 250. 
+{% endhint %}
 
 ## Resources
 
