@@ -10,7 +10,7 @@
   * [NBT-NS](active-directory-domain-services/recon/nbt-ns-1.md)
   * [Responder](active-directory-domain-services/recon/nbt-ns.md)
   * [Port scanning](active-directory-domain-services/recon/kerberos.md)
-  * [LDAP](active-directory-domain-services/recon/ldap-1.md)
+  * [LDAP](active-directory-domain-services/recon/ldap-2.md)
   * [BloodHound](active-directory-domain-services/recon/ldap.md)
   * [MS-RPC](active-directory-domain-services/recon/ms-rpc.md)
   * [enum4linux](active-directory-domain-services/recon/enum4linux.md)
