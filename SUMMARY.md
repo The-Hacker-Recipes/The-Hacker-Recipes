@@ -26,7 +26,7 @@
       * [🛠️ Web browsers](active-directory-domain-services/movement/credentials/dumping/web-browsers.md)
       * [🛠️ Passwords in files](active-directory-domain-services/movement/credentials/dumping/passwords-in-files.md)
       * [🛠️ Passwords in memory](active-directory-domain-services/movement/credentials/dumping/passwords-in-memory.md)
-    * [🛠️ Guessing](active-directory-domain-services/movement/credentials/guessing.md)
+    * [Guessing](active-directory-domain-services/movement/credentials/guessing.md)
     * [Cracking](active-directory-domain-services/movement/credentials/cracking.md)
     * [🛠️ Spraying](active-directory-domain-services/movement/credentials/password-spraying.md)
     * [🛠️ Stuffing](active-directory-domain-services/movement/credentials/stuffing.md)
