@@ -42,7 +42,7 @@ Below are good examples of where to find default passwords
 
 ### Situational guessing
 
-Users are known to be a weak \(if not the weakest\) link of security. Unaware users are know to choose passwords that are easy to remember, hence easy to guess. Below are a few examples that are found to be often used.
+Users are known to be a weak \(if not the weakest\) link of security. Unaware users are known to choose passwords that are easy to remember, hence easy to guess. Below are a few examples that are found to be often used.
 
 * the username
 * the name of the company
