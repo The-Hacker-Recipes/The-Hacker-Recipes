@@ -12,7 +12,7 @@ Cracking is on operation that can be carried out through different types of atta
 
 * **Brute-force**: every possibility for a given character set and a given length \(i.e. aaa, aab, aac, ...\) is hashed and compared against the target hash.
 * **Dictionary**: every word of a given list \(a.k.a. dictionary\) is hashed and compared against the target hash.
-* **Rainbow tables**: the hash is looked for in a precomputed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows to crack hashes faster, but costing a greater amount of memory that traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additionnal random value as prefix/suffix, making the precomputed table irrelevant\)
+* **Rainbow tables**: the hash is looked for in a precomputed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows to crack hashes faster, but costing a greater amount of memory that traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additional random value as prefix/suffix, making the precomputed table irrelevant\)
 
 There are many other and more complex types of attacks \(incremental, mask, rules, hybrid types, ...\) but the major/core ones are the three above.
 

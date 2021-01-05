@@ -14,7 +14,7 @@ DCSync is a technique that uses Windows Domain Controller's API to simulate the 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../stuffing.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md).
+On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md).
 
 ```bash
 # using a plaintext password
@@ -29,7 +29,7 @@ secretsdump -k -outputfile resultsfile 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) \(C\) can be used to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../abusing-kerberos/forged-tickets.md#golden-ticket). For this attack to work, the following mimikatz command should run in an elevated context \(i.e. through [plaintext password stuffing](../stuffing.md#runas), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md)\).
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) \(C\) can be used to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../abusing-kerberos/forged-tickets.md#golden-ticket). For this attack to work, the following mimikatz command should run in an elevated context \(i.e. through [plaintext password stuffing](../bruteforcing/stuffing.md#runas), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md)\).
 
 ```bash
 lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
