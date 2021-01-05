@@ -1,2 +1,2 @@
-# 🛠️ Privileged groups
+# ��️ Privileged groups
 
