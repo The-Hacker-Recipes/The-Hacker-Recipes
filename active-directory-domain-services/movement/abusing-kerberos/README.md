@@ -48,9 +48,9 @@ Kerberos delegations allow services to impersonate users on other services. For 
 
 In some situations, Kerberos delegations can be abused by attackers to operate lateral movement or privilege escalation.
 
-{% page-ref page="kerberos-delegations.md" %}
+{% page-ref page="delegations.md" %}
 
-In [some cases](kerberos-delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used to try to bypass restrictions.
+In [some cases](delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used to try to bypass restrictions.
 
 {% page-ref page="forged-tickets.md" %}
 

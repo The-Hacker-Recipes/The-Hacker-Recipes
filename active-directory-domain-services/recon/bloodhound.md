@@ -78,7 +78,7 @@ Once collection is over, the data can be uploaded and analysed in BloodHound by 
 * Find information about selected nodes: sessions, properties, group membership/members, local admin rights, Kerberos delegations, RDP rights, outbound/inbound control rights \(ACEs\), and so on
 * Find help about edges/attacks \(abuse, opsec considerations, references\)
 
-Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/abusing-aces/), [Kerberos delegations abuse](../movement/abusing-kerberos/kerberos-delegations.md), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/abusing-gpos.md), [Kerberoast](../movement/abusing-kerberos/kerberoast.md), [ASREProast](../movement/abusing-kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
+Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/abusing-aces/), [Kerberos delegations abuse](../movement/abusing-kerberos/delegations.md), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/abusing-gpos.md), [Kerberoast](../movement/abusing-kerberos/kerberoast.md), [ASREProast](../movement/abusing-kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
 
 {% hint style="info" %}
 Here are some examples of quick wins to spot with BloodHound

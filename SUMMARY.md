@@ -57,7 +57,7 @@
     * [Pass the ticket](active-directory-domain-services/movement/abusing-kerberos/pass-the-ticket.md)
     * [ASREProast](active-directory-domain-services/movement/abusing-kerberos/asreproast.md)
     * [Kerberoast](active-directory-domain-services/movement/abusing-kerberos/kerberoast.md)
-    * [Kerberos delegations](active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations.md)
+    * [Delegations](active-directory-domain-services/movement/abusing-kerberos/delegations.md)
   * [Access Control Entries \(ACEs\)](active-directory-domain-services/movement/abusing-aces/README.md)
     * [AddMember](active-directory-domain-services/movement/abusing-aces/addmember.md)
     * [ForceChangePassword](active-directory-domain-services/movement/abusing-aces/forcechangepassword.md)

@@ -2,7 +2,7 @@
 
 ## Theory
 
-In Active Directory domains, attackers often rely on forced authentications and MITM \(man in the middle\) to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../abusing-lm-and-ntlm/ntlm-relay.md)\) or when [abusing Kerberos delegations](../abusing-kerberos/kerberos-delegations.md).
+In Active Directory domains, attackers often rely on forced authentications and MITM \(man in the middle\) to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../abusing-lm-and-ntlm/ntlm-relay.md)\) or when [abusing Kerberos delegations](../abusing-kerberos/delegations.md).
 
 These techniques enable attackers to redirect traffic or redirect/force targets authentications. Attackers will then be able, in certain cases, to capture credentials or relay authentications.
 
