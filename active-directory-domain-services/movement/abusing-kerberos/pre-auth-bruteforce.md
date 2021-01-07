@@ -1,2 +1,2 @@
-# 🛠️  Pre-auth bruteforce
+# 🛠️ Pre-auth bruteforce
 
