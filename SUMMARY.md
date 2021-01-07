@@ -74,6 +74,11 @@
     * [🛠️ ZeroLogon \(CVE-2020-1472\)](active-directory-domain-services/movement/frontal-attacks/zerologon.md)
   * [🛠️ Frontal attacks](active-directory-domain-services/movement/frontal-attacks-2/README.md)
     * [🛠️ MS07-029 \(CVE-2007-1748\)](active-directory-domain-services/movement/frontal-attacks-2/ms07-029-cve-2007-1748.md)
+* [🛠️ Persistence](active-directory-domain-services/persistence/README.md)
+  * [Silver & Golden tickets](active-directory-domain-services/persistence/silver-and-golden-tickets.md)
+  * [SID History](active-directory-domain-services/persistence/sid-history.md)
+  * [AdminSDHolder](active-directory-domain-services/persistence/adminsdholder.md)
+  * [DCShadow](active-directory-domain-services/persistence/dcshadow.md)
 
 ## Web services
 
