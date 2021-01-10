@@ -153,7 +153,7 @@ rbcd-permissions --cleanup -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t '
 ```
 
 {% hint style="success" %}
-Testers can use ntlmrelayx to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../abusing-lm-and-ntlm/ntlm-relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+Testers can use ntlmrelayx to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../abusing-lm-and-ntlm/relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
 {% endhint %}
 
 Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).

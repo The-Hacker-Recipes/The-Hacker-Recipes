@@ -49,7 +49,7 @@ Check if the spooler service is available
 {% endtabs %}
 
 {% hint style="info" %}
-In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../abusing-lm-and-ntlm/ntlm-relay.md) and trigger the spooler service of a target via a SOCKS proxy
+In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../abusing-lm-and-ntlm/relay.md) and trigger the spooler service of a target via a SOCKS proxy
 {% endhint %}
 
 ```bash

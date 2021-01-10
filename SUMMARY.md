@@ -49,7 +49,7 @@
     * [🛠️ Evil files on network shares](active-directory-domain-services/movement/forced-authentications/evil-files-on-network-shares.md)
   * [LM and NTLM](active-directory-domain-services/movement/abusing-lm-and-ntlm/README.md)
     * [Capture](active-directory-domain-services/movement/abusing-lm-and-ntlm/capturing-hashes.md)
-    * [Relay](active-directory-domain-services/movement/abusing-lm-and-ntlm/ntlm-relay.md)
+    * [Relay](active-directory-domain-services/movement/abusing-lm-and-ntlm/relay.md)
     * [Pass the hash](active-directory-domain-services/movement/abusing-lm-and-ntlm/pass-the-hash.md)
   * [Kerberos](active-directory-domain-services/movement/abusing-kerberos/README.md)
     * [🛠️ Pre-auth bruteforce](active-directory-domain-services/movement/abusing-kerberos/pre-auth-bruteforce.md)
