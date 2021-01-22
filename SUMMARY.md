@@ -94,7 +94,7 @@
   * [🛠️ Default credentials](web-services/configuration/default-credentials.md)
   * [🛠️ HTTP headers](web-services/configuration/http-headers.md)
   * [🛠️ HTTP verb tampering](web-services/configuration/http-verb-tampering.md)
-  * [🛠️ Dangerous HTTP methods](web-services/configuration/dangerous-http-methods.md)
+  * [🛠️ HTTP methods](web-services/configuration/http-methods.md)
   * [🛠️ HTTP parameter pollution](web-services/configuration/http-parameter-pollution.md)
   * [🛠️ CORS \(Cross-Origin Resource Sharing\)](web-services/configuration/cors-cross-origin-resource-sharing.md)
   * [🛠️ CSP \(Content Security Policy\)](web-services/configuration/csp-content-security-policy.md)

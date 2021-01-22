@@ -1,2 +1,0 @@
-# 🛠️ Dangerous HTTP methods
-
