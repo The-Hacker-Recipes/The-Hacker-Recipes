@@ -83,11 +83,11 @@
 
 ## Web services
 
-* [Initial recon](web-services/initial-recon/README.md)
-  * [HTTP headers](web-services/initial-recon/http-banners.md)
-  * [Comments and metadata](web-services/initial-recon/comments-and-metadata.md)
-  * [Site crawling](web-services/initial-recon/site-crawling.md)
-  * [Directory fuzzing](web-services/initial-recon/directory-fuzzing.md)
+* [Recon](web-services/recon/README.md)
+  * [HTTP headers](web-services/recon/http-banners.md)
+  * [Comments and metadata](web-services/recon/comments-and-metadata.md)
+  * [Site crawling](web-services/recon/site-crawling.md)
+  * [Directory fuzzing](web-services/recon/directory-fuzzing.md)
 * [🛠️ Configuration](web-services/configuration/README.md)
   * [🛠️ DoS mitigations](web-services/configuration/dos-mitigations.md)
   * [🛠️ User-agent filtering](web-services/configuration/user-agent-filtering.md)
