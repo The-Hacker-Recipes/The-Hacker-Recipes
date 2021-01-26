@@ -8,7 +8,13 @@ Crawling is a technique used to recursively follow those links and build the ind
 
 ## Practice
 
-Tools like [hakrawler](https://github.com/hakluke/hakrawler) \(Go\), [scrapy](https://scrapy.org/) \(Python\) and [spidy](https://github.com/rivermont/spidy) \(Python\) can be used here but **Burp Suite**'s graphical interface is often better suited \(`Dashboard > New scan (Crawl)` then `Target`\).
+Tools like [hakrawler](https://github.com/hakluke/hakrawler) \(Go\), [scrapy](https://scrapy.org/) \(Python\) and [spidy](https://github.com/rivermont/spidy) \(Python\) can be used here.
 
-Once the crawling is over, testers need to inspect the website architecture and look for admin paths, unusual redirections and anything that could lead to a potentiel vulnerability.
+```bash
+hakrawler -url $URL
+```
+
+**Burp Suite**'s graphical interface is a great alternative \(`Dashboard > New scan (Crawl)` then `Target`\).
+
+Once the crawling is over, testers need to inspect the website architecture and look for admin paths, unusual redirections and anything that could lead to a potential vulnerability.
 
