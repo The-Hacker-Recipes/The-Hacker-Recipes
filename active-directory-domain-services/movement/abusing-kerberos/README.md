@@ -12,10 +12,10 @@ A Service ticket \(TGS\) allows access to a specific service. The TGT is used to
 
 | Key name \(a.k.a. etype\) | Details on key calculation |
 | :--- | :--- |
-| DES | Key derivated from user's password |
+| DES | Key derivated from user's password \(DOMAINusername as salt\) |
 | RC4 | **Key is NT hash** |
-| AES128 | Key derivated from user's password |
-| AES256 | Key derivated from user's password |
+| AES128 | Key derivated from user's password \(DOMAINusername as salt\) |
+| AES256 | Key derivated from user's password \(DOMAINusername as salt\) |
 
 Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT \(if RC4 key is accepted\). This is called [Overpass-the-hash](overpass-the-hash.md).
 
