@@ -1,4 +1,4 @@
-# DHCPv6 + DNS poisoning
+# DHCPv6 spoofing
 
 By default on Windows environments, IPv6 is enabled and has priority over IPv4. Usually, IPv6 is neither used nor configured. When a Windows machine boots or gets plugged in the network, it asks for a IPv6 configuration using DHCPv6. Since DHCPv6 works in multicast, attackers on the same network can answer the DHCPv6 queries and provide the clients with a specific IPv6 config. This is IPv6 poisoning.
 

@@ -1,4 +1,16 @@
 # 🛠️ ADIDNS spoofing
 
-[https://blog.netspi.com/exploiting-adidns/](https://blog.netspi.com/exploiting-adidns/)
+## Theory
+
+
+
+## Practice
+
+
+
+## References
+
+{% embed url="https://blog.netspi.com/exploiting-adidns/" %}
+
+
 

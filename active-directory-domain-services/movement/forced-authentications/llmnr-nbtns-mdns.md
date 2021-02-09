@@ -2,9 +2,9 @@
 description: MITRE ATT&CK™ Sub-technique T1557.001
 ---
 
-# LLMNR, NBT-NS, MDNS poisoning
+# LLMNR, NBT-NS, mDNS spoofing
 
-In some environments \(like Windows ones\), multicast name resolution protocols are enabled by default, such as LLMNR \(Local-Link Multicast Name Resolution\), NBT-NS \(NetBIOS Name Service\) and mDNS \(multicast Domain Name System\). Those environments can fallback to those protocols when standard domain name resolution protocols fail.
+In some environments \(like Windows ones\), multicast name resolution protocols are enabled by default, such as LLMNR \(Local-Link Multicast Name Resolution\), NBT-NS \(NetBIOS Name Service\) and mDNS \(multicast Domain Name System\). Those environments can fallback to those protocols when standard domain name resolution protocols fail. Windows systems attempt to resolve names in the following order: DNS, LLMNR and NBT-NS.
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
@@ -12,7 +12,7 @@ Attackers can then answer those multicast or broadcast queries. The victims are 
 
 {% tabs %}
 {% tab title="Responder" %}
-Analyze the network to see if LLMNR, NBT-NS and DNS are used, and to inspect BROWSER requests.
+Analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
 
 ```bash
 responder --interface eth0 --analyze
@@ -26,11 +26,13 @@ responder --interface eth0
 {% endtab %}
 
 {% tab title="Inveigh" %}
-Start poisoning LLMNR, NBT-NS and mDNS
+The following command will start poisoning LLMNR, NBT-NS and mDNS and set the Challenge to `1122334455667788` to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/).
 
 ```text
-Invoke-Inveigh -ConsoleOutput Y -LLMNR Y -NBNS Y -mDNS Y
+Invoke-Inveigh -ConsoleOutput Y -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -
 ```
+
+Flags like ADIDNS, ADIDNSForest, ADIDNSCleanup, ADIDNSThreshold and more can be set to combine LLMNR, NBT-NS and mDNS spoofing with [ADIDNS spoofing](adidns-spoofing.md).
 {% endtab %}
 {% endtabs %}
 

@@ -47,7 +47,7 @@ Basically, the easiest attacks paths come down to the following. "Client spoofin
 
 When attacking WEP networks, testers "just" need to gather a sufficient amount \(~20,000 to 60,000 depending on the key size\) of IVs \(Initialization Vectors\) to operate a known-plaintext attack and find the secret key. This amount is indicated in the `#Data` column in `airodump-ng`'s output. It is hence required to run `airodump-ng` in the background when operating any of the following attacks. In certain scenarios, it will print additional information \(like SSID of hidden networks, authentication types for WEP SKA, ...\) or capture useful data \(keystreams, frames captures, ...\).
 
-![](../../.gitbook/assets/image%20%281%29.png)
+![](../../.gitbook/assets/image%20%281%29%20%281%29.png)
 
 While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry cracking the secret key every 5.000 IVs.
 
