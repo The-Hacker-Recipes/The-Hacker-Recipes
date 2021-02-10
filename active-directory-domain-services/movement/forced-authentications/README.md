@@ -1,4 +1,4 @@
-# Forced authentications
+# 🛠️ Forced authentications
 
 In Active Directory domains, attackers often rely on forced authentications and MITM \(man in the middle\) to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../abusing-lm-and-ntlm/relay.md)\) or when [abusing Kerberos delegations](../abusing-kerberos/delegations.md).
 
@@ -12,13 +12,14 @@ There are many ways attackers can do MITM or redirect/force targets authenticati
 
 | MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-dns-poisoning.md) | [ARP](arp-poisoning.md) | [PrinterBug](printer-bug-ms-rprn-abuse.md) | [PrivExchange](privexchange-pushsubscription-abuse.md) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Can require waiting for replication/syncing | x |  |  |  | ? |  |  |
-| Easy to start and stop attacks |  | x | x | takes ~5 minutes to revert | ? | x | x |
-| Exploitable when default settings are present | x | x | x | x | ? | x | up to 2019 |
-| Impacts fully qualified name requests | x | not if wildcard ADIDNS record exists | not if wildcard ADIDNS record exists | x | ? |  |  |
-| Requires constant network traffic for spoofing |  | x | x | x | ? |  |  |
-| Requires domain credentials | x |  |  |  | ? | x | requires emails-capable account |
-| Requires editing AD | x |  |  |  | ? |  |  |
-| Requires privileged access to launch attack from a compromised system |  | x |  |  | ? |  |  |
-| Targets limited to the same broadcast/multicast domains as the attacker |  | x | x | x | ? | x | x |
+| Can require waiting for replication/syncing | x |  |  |  |  |  |  |
+| Easy to start and stop attacks |  | x | x | takes ~5 minutes to revert | revert time depends on targets arp cache timeout \(usually ~60 sec | x | x |
+| Exploitable when default settings are present | x | x | x | x | x | x | up to 2019 |
+| Impacts fully qualified name requests | x | not if wildcard ADIDNS record exists | not if wildcard ADIDNS record exists | x |  |  |  |
+| Requires constant network traffic for spoofing |  | x | x | x | x |  |  |
+| Requires domain credentials | x |  |  |  |  | x | requires emails-capable account |
+| Requires editing AD | x |  |  |  |  |  |  |
+| Requires privileged access to launch attack from a compromised system |  | x |  |  | x |  |  |
+| Targets limited to the same broadcast/multicast domains as the attacker |  | x | x | x | x | x | x |
+| Disruption | low | low | low | low to high | low to high | none | none |
 
