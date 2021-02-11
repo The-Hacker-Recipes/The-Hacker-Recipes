@@ -11,7 +11,7 @@ Attackers can then answer those multicast or broadcast queries. The victims are 
 [Responder](https://github.com/SpiderLabs/Responder) \(Python\) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers \(listeners\) that will [capture authentications](../abusing-lm-and-ntlm/capturing-hashes.md) and echo the NTLMv1/2 hashes to the attacker.
 
 {% tabs %}
-{% tab title="Responder" %}
+{% tab title="UNIX-like" %}
 Analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
 
 ```bash
@@ -25,14 +25,36 @@ responder --interface eth0
 ```
 {% endtab %}
 
-{% tab title="Inveigh" %}
-The following command will start poisoning LLMNR, NBT-NS and mDNS and set the Challenge to `1122334455667788` to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/).
+{% tab title="Windows" %}
+Inspect the network to see if LLMNR, NBT-NS and mDNS are used.
 
-```text
-Invoke-Inveigh -ConsoleOutput Y -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -
+```bash
+Invoke-Inveigh -ConsoleOutput Y -Inspect
 ```
 
-Flags like ADIDNS, ADIDNSForest, ADIDNSCleanup, ADIDNSThreshold and more can be set to combine LLMNR, NBT-NS and mDNS spoofing with [ADIDNS spoofing](adidns-spoofing.md).
+The following command will 
+
+* operate [LLMNR, NBT-NS and mDNS spoofing](llmnr-nbtns-mdns.md)
+* operate ADIDNS spoofing
+  * `combo` looks at LLMNR/NBNS requests and adds a record to DNS if the same request is received from multiple systems
+  * `ns` injects an NS record and if needed, a target record. This is primarily for the GQBL bypass for wpad. 
+  * `wildcard` injects a wildcard record
+* set the threshold at which the combo ADIDNS spoofing mode will take effect
+* enable showing NTLM challenge/response captures from machine accounts \(for \)
+* set the Challenge to `1122334455667788` \(to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)\)
+
+```text
+Invoke-Inveigh -ConsoleOutput Y -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -MachineAccounts Y
+```
+
+Flags like `-ADIDNS,` `-ADIDNSForest,` `-ADIDNSCleanup`, `-ADIDNSThreshold` and more can be set to combine LLMNR, NBT-NS and mDNS spoofing with [ADIDNS spoofing](adidns-spoofing.md).
+
+[This wiki page](https://github.com/Kevin-Robertson/Inveigh/wiki/Basics) can be really useful to help master Inveigh and its support functions
+
+* `Clear-Inveigh` to clear the $inveigh hashtable
+* `Get-Inveigh` to get data from the $inveigh hashtable
+* `Stop-Inveigh` to stop all running Inveigh modules
+* `Watch-Inveigh` to enable real time console output
 {% endtab %}
 {% endtabs %}
 
