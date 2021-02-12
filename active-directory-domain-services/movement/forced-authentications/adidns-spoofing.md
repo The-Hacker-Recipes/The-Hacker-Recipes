@@ -1,4 +1,4 @@
-# 🛠️ ADIDNS spoofing
+# ADIDNS spoofing
 
 ## Theory
 

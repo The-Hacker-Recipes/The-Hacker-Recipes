@@ -38,7 +38,7 @@
     * [🛠️ DNS spoofing](active-directory-domain-services/movement/forced-authentications/dns-spoofing.md)
     * [LLMNR, NBT-NS, mDNS spoofing](active-directory-domain-services/movement/forced-authentications/llmnr-nbtns-mdns.md)
     * [🛠️ WPAD spoofing](active-directory-domain-services/movement/forced-authentications/wpad-spoofing.md)
-    * [🛠️ ADIDNS spoofing](active-directory-domain-services/movement/forced-authentications/adidns-spoofing.md)
+    * [ADIDNS spoofing](active-directory-domain-services/movement/forced-authentications/adidns-spoofing.md)
     * [DHCPv6 spoofing](active-directory-domain-services/movement/forced-authentications/dhcpv6-dns-poisoning.md)
     * [Printer Bug \(MS-RPRN abuse\)](active-directory-domain-services/movement/forced-authentications/printer-bug-ms-rprn-abuse.md)
     * [PrivExchange \(PushSubscription abuse\)](active-directory-domain-services/movement/forced-authentications/privexchange-pushsubscription-abuse.md)

