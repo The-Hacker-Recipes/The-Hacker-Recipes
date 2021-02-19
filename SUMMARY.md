@@ -162,8 +162,8 @@
     * [SUID/SGID binaries](servers/privilege-escalation/unix-like/suid-sgid-binaries.md)
     * [Capabilities](servers/privilege-escalation/unix-like/capabilities.md)
 * [Pivoting](servers/pivoting/README.md)
-  * [Port forwarding](servers/pivoting/port-forwarding.md)
-  * [SOCKS proxy](servers/pivoting/socks-proxy.md)
+  * [🛠️ Port forwarding](servers/pivoting/port-forwarding.md)
+  * [🛠️ SOCKS proxy](servers/pivoting/socks-proxy.md)
 
 ## 🛠️ Intelligence gathering
 

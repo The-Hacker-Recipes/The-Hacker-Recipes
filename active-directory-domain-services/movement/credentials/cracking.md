@@ -62,7 +62,7 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 
 * Google offers services like [Colab](https://colab.research.google.com/) and [Cloud Shell](https://console.cloud.google.com/home/dashboard?cloudshell=true) that can be used for "cloud cracking". There are projects like [penglab](https://github.com/mxrch/penglab), [google-colab-hashcat](https://github.com/ShutdownRepo/google-colab-hashcat) and [cloudtopolis](https://github.com/JoelGMSec/Cloudtopolis) that can help testers to setup a cracking session on such resources
 * Other solutions, cloud-based or not, can be used to improve cracking speed: [setting up a rig](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig) for instance.
-* LM and NTLM ChallengeResponses can be cracked really fast \(and for free depending on the hash\) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables.
+* LM and NTLM ChallengeResponses can be cracked really fast \(and for free depending on the hash\) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables \([here's how to capture those hashes](../abusing-lm-and-ntlm/capturing-hashes.md#practice)\).
 * Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.exe.md) to create a custom wordlist for a dictionary attack
 {% endhint %}
 

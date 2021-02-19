@@ -1,4 +1,4 @@
-# SOCKS proxy
+# 🛠️ SOCKS proxy
 
 ## Theory
 
