@@ -71,6 +71,8 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 {% endtab %}
 {% endtabs %}
 
+There is also another attack based on unconstrained delegations, the [MachineAccontQuota](../domain-settings/machineaccountquota.md) domain-level attribute and the `SeEnableDelegationPrivilege` user right.
+
 ### Constrained Delegations
 
 If a service account, configured with constrained delegation to another service, is compromised, an attacker can impersonate any user \(e.g. domain admin\) in the environment to access the second service.
@@ -130,15 +132,11 @@ In this situation, an attacker can obtain admin access to the target resource \(
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) \(Python\) can be used to create a computer account, using the credentials of a domain user \(with`ms-DS-MachineAccountQuota` &gt; 0, by default it is set to 10\).
+**1 - Check the value** 🔎 **& Create the computer account** ⚒\*\*\*\*
 
-```bash
-addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
-```
+Check the [MachineAccountQuota](../domain-settings/machineaccountquota.md) page
 
-{% hint style="warning" %}
-In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. Testers can use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the`--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
-{% endhint %}
+**2 - Edit the target's security descriptor** ✏ ****
 
 The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor\), using the credentials of a domain user. The [rbcd permissions](https://github.com/NinjaStyle82/rbcd_permissions) script \(Python\) is an alternative to rbcd-attack that can also do [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md), [pass-the-ticket](pass-the-ticket.md), and operate cleanup of the security descriptor.
 
@@ -156,6 +154,8 @@ rbcd-permissions --cleanup -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t '
 Testers can use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../abusing-lm-and-ntlm/relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
 {% endhint %}
 
+**3 - Obtain a ticket** 🎫 ****
+
 Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
 
 ```bash
@@ -167,24 +167,20 @@ The SPN \(ServicePrincipalName\) set will have an impact on what services will b
 {% hint style="warning" %}
 In [some cases](delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
+
+**4 - Pass-the-ticket** 🛂 ****
+
+Once the ticket is obtained, it can be used with [pass-the-ticket](pass-the-ticket.md).
 {% endtab %}
 
 {% tab title="Windows" %}
 In order to run the following commands and tools as other users, testers can check the [user impersonation](../credentials/impersonation.md) part.
 
-The following command will help testers make sure the controlled domain user can create computer accounts \(`ms-DS-MachineAccountQuota` must be greater than 0, by default it is set to 10\).
+**1 - Check the value** 🔎 **& Create the computer account** ⚒\*\*\*\*
 
-```bash
-Get-ADDomain | Select-Object -ExpandProperty DistinguishedName | Get-ADObject -Properties 'ms-DS-MachineAccountQuota'
-```
+Check the [MachineAccountQuota](../domain-settings/machineaccountquota.md) page
 
-The module [Powermad](https://github.com/Kevin-Robertson/Powermad)  \(PowerShell\) can be used to create a domain computer account.
-
-```bash
-Import-Module .\Powermad.ps1
-$password = ConvertTo-SecureString 'SomePassword' -AsPlainText -Force
-New-MachineAccount -machineaccount 'PENTEST01' -Password $($password)
-```
+**2 - Edit the target's security descriptor** ✏ ****
 
 The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Set-ADComputer and Get-ADComputer can be used to write and read the attributed of an object \(in this case, to modify the delegation rights\).
 
@@ -211,6 +207,8 @@ $SD.GetBinaryForm($SDBytes, 0)
 Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
 ```
 
+**3 - Obtain a ticket** 🎫 ****
+
 [Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the "impersonation TGS" and inject it for later use.
 
 ```bash
@@ -222,6 +220,8 @@ The NT hash can be computed as follows.
 ```bash
 Rubeus.exe hash /password:$password
 ```
+
+**4 - Pass-the-ticket** 🛂 ****
 
 Once the ticket is injected, it can natively be used when accessing the service \(see [pass-the-ticket](pass-the-ticket.md)\).
 {% endtab %}

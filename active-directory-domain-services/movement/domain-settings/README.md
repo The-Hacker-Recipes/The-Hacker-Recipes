@@ -1,2 +1,2 @@
-# 🛠️ Domain settings
+# Domain settings
 

