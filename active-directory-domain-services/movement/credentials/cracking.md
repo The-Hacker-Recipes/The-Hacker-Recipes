@@ -37,8 +37,8 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | [NTLMv2 ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | 5600 |
 | [Domain Cached Credentials](dumping/sam-and-lsa-secrets.md) | 1100 |
 | [Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100 |
-| [ASREProast](../abusing-kerberos/asreproast.md) | 13100 |
-| [Kerberoast](../abusing-kerberos/kerberoast.md) | 18200 |
+| [ASREProast](../abusing-kerberos/asreproast.md) | 18200 |
+| [Kerberoast](../abusing-kerberos/kerberoast.md) | 13100 |
 
 Below is an example of how to use hashcat for a dictionary attack.
 
