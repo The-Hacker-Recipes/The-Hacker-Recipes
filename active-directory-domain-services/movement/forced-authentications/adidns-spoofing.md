@@ -49,7 +49,7 @@ The following command will
   * `ns` injects an NS record and if needed, a target record. This is primarily for the GQBL bypass for wpad. 
   * `wildcard` injects a wildcard record
 * set the threshold at which the combo ADIDNS spoofing mode will take effect
-* enable showing NTLM challenge/response captures from machine accounts \(for \)
+* enable showing NTLM challenge/response captures from machine accounts
 * set the Challenge to `1122334455667788` \(to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)\)
 
 ```text

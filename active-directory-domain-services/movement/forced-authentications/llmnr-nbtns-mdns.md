@@ -8,17 +8,17 @@ In some environments \(like Windows ones\), multicast name resolution protocols 
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
-[Responder](https://github.com/SpiderLabs/Responder) \(Python\) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers \(listeners\) that will [capture authentications](../abusing-lm-and-ntlm/capturing-hashes.md) and echo the NTLMv1/2 hashes to the attacker.
+[Responder](https://github.com/SpiderLabs/Responder) \(Python\) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers \(listeners\) that will [capture authentications](../abusing-lm-and-ntlm/capturing-hashes.md) and echo the NTLM hashes to the attacker.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-Analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
+The following command will make Responder analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
 
 ```bash
 responder --interface eth0 --analyze
 ```
 
-Start LLMNR, NBTS and mDNS poisoning. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will capture NTLM hashes.
+The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will [capture NTLM hashes](../abusing-lm-and-ntlm/capturing-hashes.md).
 
 ```bash
 responder --interface eth0
@@ -26,22 +26,15 @@ responder --interface eth0
 {% endtab %}
 
 {% tab title="Windows" %}
-Inspect the network to see if LLMNR, NBT-NS and mDNS are used.
+The following command will make Inveigh inspect the network to see if LLMNR, NBT-NS and mDNS are used.
 
 ```bash
 Invoke-Inveigh -ConsoleOutput Y -Inspect
 ```
 
-The following command will 
+The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will [capture NTLM hashes](../abusing-lm-and-ntlm/capturing-hashes.md) \(even from machine accounts\) and set the Challenge to `1122334455667788` \(to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)\).
 
-* operate [LLMNR, NBT-NS and mDNS spoofing](llmnr-nbtns-mdns.md)
-* operate ADIDNS spoofing
-  * `combo` looks at LLMNR/NBNS requests and adds a record to DNS if the same request is received from multiple systems
-  * `ns` injects an NS record and if needed, a target record. This is primarily for the GQBL bypass for wpad. 
-  * `wildcard` injects a wildcard record
-* set the threshold at which the combo ADIDNS spoofing mode will take effect
-* enable showing NTLM challenge/response captures from machine accounts \(for \)
-* set the Challenge to `1122334455667788` \(to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)\)
+Inveigh also starts a WPAD rogue proxy server by default for [WPAD abuse](wpad-spoofing.md).
 
 ```text
 Invoke-Inveigh -ConsoleOutput Y -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -MachineAccounts Y

@@ -151,7 +151,7 @@ This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivE
 {% tab title="+" %}
 The ntlmrelayx tool offers other features making it a very valuable asset when pentesting an Active Directory domain:
 
-* It can work with mitm6 \(for [DHCPv6 + DNS poisoning](../forced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option
+* It can work with mitm6 \(for [DHCPv6 + DNS poisoning](../forced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option \(IPv6 support is not required since most hosts will send IPv4 but using this option is recommanded since it will allow relay servers to work with IPv4 and IPv6\)
 * It supports SMB2. It can be enabled with the `-smb2support` option
 * It implements **CVE-2019-1040** with the `--remove-mic` option, usually needed when attempting "cross-protocols unsigning relays" \(e.g. **SMB to SMB-with-required-signing, or SMB to LDAP/S\)**
 * It has the ability to attack multiple targets with the `-tf` option instead of `-t`, and the `-w` option can be set to watch the target file for changes and update target list automatically
