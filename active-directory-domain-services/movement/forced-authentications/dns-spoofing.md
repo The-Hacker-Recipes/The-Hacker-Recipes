@@ -6,6 +6,24 @@ DNS is not multicast or broadcast like LLMNR, NBT-NS or mDNS. In order to spoof 
 
 ## Practice
 
+{% tabs %}
+{% tab title="Responder" %}
+[Responder](https://github.com/SpiderLabs/Responder)'s \(Python\) DNS server feature can be used to answer DNS queries.
+
+```bash
+responder --interface eth0 
+```
+{% endtab %}
+
+{% tab title="dnschef" %}
+[dnschef](https://github.com/iphelix/dnschef) \(Python\) can be used as a DNS server. 
+
+```bash
+dnschef --fakeip 'Pentest_IP_Address' --interface 'Pentest_IP_Address' --port 53 --logfile dnschef.log
+```
+{% endtab %}
+
+{% tab title="bettercap" %}
 In order to spoof DNS requests, [bettercap](https://www.bettercap.org/) \(Go\) can be used. This tool can also be used for the first step of [ARP spoofing](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-dns-poisoning.md). 
 
 ```bash
@@ -13,12 +31,8 @@ set dns.spoof.domains $DOMAIN_FQDN
 set dns.spoot.all true
 dns.spoof on
 ```
-
-As an alternative, [dnschef](https://github.com/iphelix/dnschef) \(Python\) can be used as a DNS server. 
-
-```bash
-dnschef --fakeip 'Pentest_IP_Address' --interface 'Pentest_IP_Address' --port 53 --logfile dnschef.log
-```
+{% endtab %}
+{% endtabs %}
 
 ## Resources
 
