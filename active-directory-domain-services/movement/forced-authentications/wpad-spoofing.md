@@ -6,6 +6,11 @@ The Web Proxy Automatic Discovery \(WPAD\) protocol allows clients to obtain pro
 
 ## Practice
 
+WPAD spoofing can be combined with 
+
+* [LLMNR and NBT-NS spoofing](llmnr-nbtns-mdns.md)
+* [ARP spoofing](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-dns-poisoning.md), followed by [DNS spoofing](dns-spoofing.md)
+
 ### through LLMNR, NBT-NS spoofing
 
 On old Windows systems \(i.e. lacking the MS16-077 security update\), the WPAD location could be obtained through insecure name resolution protocols like LLMNR and NBT-NS when standard DNS queries were failing \(i.e. no DNS record for WPAD\). This allowed attackers to operate [LLMNR and NBT-NS spoofing](llmnr-nbtns-mdns.md) to answer those WPAD queries and redirect to a fake `wpad.dat` file, hence poisoning the web proxy configuration of the requesting clients, hence obtaining more traffic.
@@ -58,7 +63,7 @@ New-ADIDNSNode -Node 'pentester01' -Data 'Pentest_IP_Address'
 New-ADIDNSNode -Node wpad -Type NS -Data 'pentester01.TARGETDOMAIN.LOCAL'
 ```
 
-In order for the NS record technique to work, the tester has to have a DNS server running. This can easily be accomplished with [dnschef](https://github.com/iphelix/dnschef) \(Python\).
+In order for the NS record technique to work, the tester has to have a DNS server running for [DNS spoofing](dns-spoofing.md). This can easily be accomplished with [dnschef](https://github.com/iphelix/dnschef) \(Python\).
 
 ```bash
 dnschef --fakeip 'Pentest_IP_Address' --interface 'Pentest_IP_Address' --port 53 --logfile dnschef.log

