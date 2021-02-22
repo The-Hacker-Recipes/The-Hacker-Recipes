@@ -40,12 +40,12 @@ Tools like [ettercap](https://www.ettercap-project.org/) \(C\) of [bettercap](ht
 
 {% tabs %}
 {% tab title="Bettercap" %}
-The following commands can be used to 
+The following commands can be used, with parameters as follows
 
-* set the targets
-* set bettercap to spoof local connections among computers of the network
-* start the spoofer in ban mode, meaning the target\(s\) connectivity will not work
-* start the spoofer
+* `set arp.spoof.targets` to set the targets
+* `set arp.spoof.internal true` to make bettercap spoof local connections among computers of the network
+* `arp.ban on` to start the spoofer in ban mode, meaning the target\(s\) connectivity will not work
+* `arp.spoof` on to start the spoofer
 
 ```bash
 set arp.spoof.targets $TARGET_TO_POISON_IP
@@ -71,4 +71,6 @@ ettercap --text --quiet --nopromisc --mitm arp:remote /$SWITCH_IP// /$TARGET_TO_
 {% embed url="https://luemmelsec.github.io/Relaying-101/\#arp-spoofing" %}
 
 {% embed url="https://www.bettercap.org/modules/ethernet/spoofers/arp.spoof/" %}
+
+{% embed url="https://ivanitlearning.wordpress.com/2019/04/07/arp-dns-poisoning-with-bettercap-and-impacket-ntlmrelayx/" %}
 
