@@ -10,7 +10,7 @@ The ARP \(Address Resolution Protocol\) is used to link IPv4 addresses with MAC 
 
 ## Practice
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 Since spoofing every address in a subnet can cause temporary but severe disruption in that subnet, it is highly recommended to target specific addresses and machines while doing ARP spoofing.
 {% endhint %}
 
