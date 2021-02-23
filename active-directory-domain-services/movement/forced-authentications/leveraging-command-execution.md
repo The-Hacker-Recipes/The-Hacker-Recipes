@@ -43,3 +43,5 @@ SMB trap etc. HTTP server sends 302 redirect to file://attacker\_ip/something
 
 [https://www.ired.team/offensive-security/initial-access](https://www.ired.team/offensive-security/initial-access)
 
+[https://github.com/mdsecactivebreach/Farmer](https://github.com/mdsecactivebreach/Farmer)
+
