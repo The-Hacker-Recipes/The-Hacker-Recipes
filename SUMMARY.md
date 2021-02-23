@@ -33,7 +33,7 @@
       * [Stuffing](active-directory-domain-services/movement/credentials/bruteforcing/stuffing.md)
     * [Shuffling](active-directory-domain-services/movement/credentials/credential-shuffling.md)
     * [Impersonation](active-directory-domain-services/movement/credentials/impersonation.md)
-  * [🛠️ Forced authentications](active-directory-domain-services/movement/forced-authentications/README.md)
+  * [Coerced authentications](active-directory-domain-services/movement/forced-authentications/README.md)
     * [ARP spoofing](active-directory-domain-services/movement/forced-authentications/arp-poisoning.md)
     * [DHCPv6 spoofing](active-directory-domain-services/movement/forced-authentications/dhcpv6-dns-poisoning.md)
     * [DNS spoofing](active-directory-domain-services/movement/forced-authentications/dns-spoofing.md)
