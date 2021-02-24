@@ -185,8 +185,8 @@
     * [Nested](radio/rfid/mifare-classic/nested.md)
 * [Bluetooth](radio/bluetooth.md)
 * [Wi-Fi](radio/wi-fi/README.md)
-  * [WEP](radio/wi-fi/wep.md)
-  * [WPA2](radio/wi-fi/wpa2.md)
-  * [WPS](radio/wi-fi/wps.md)
+  * [🛠️ WEP](radio/wi-fi/wep.md)
+  * [🛠️ WPA2](radio/wi-fi/wpa2.md)
+  * [🛠️ WPS](radio/wi-fi/wps.md)
 * [Wireless keyboard/mouse](radio/wireless-keyboard-mouse.md)
 
