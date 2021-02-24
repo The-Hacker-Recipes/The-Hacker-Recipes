@@ -12,6 +12,10 @@ Attackers can then proceed to [DNS spoofing](dns-spoofing.md). Once the clients 
 
 ## Practice
 
+{% hint style="danger" %}
+Combining DHCPv6 spoofing with DNS spoofing can temporary but severe disruption in the network. It is highly recommended to target specific addresses and machines.
+{% endhint %}
+
 [mitm6](https://github.com/fox-it/mitm6) \(Python\) is an all-in-one tool for DHCPv6 spoofing + DNS poisoning. The following command can be run to make mitm6 redirect internal traffic only.
 
 ```bash
