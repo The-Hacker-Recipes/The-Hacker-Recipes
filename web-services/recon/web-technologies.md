@@ -1,4 +1,4 @@
 # 🛠️ Web technologies
 
-whatweb
+whatweb, wappalyzer
 
