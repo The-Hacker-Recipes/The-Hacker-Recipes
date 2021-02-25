@@ -46,9 +46,9 @@ The problem is that Microsoft has poorly implemented the zero-knowledge proof co
 
 {% page-ref page="pass-the-hash.md" %}
 
-Attackers could also rely on [forced authentications and phishing](../forced-authentications/) to [relay incoming authentications](relay.md).
+Attackers could also rely on [forced authentications and phishing](../coerced-authentications/) to [relay incoming authentications](relay.md).
 
-{% page-ref page="../forced-authentications/" %}
+{% page-ref page="../coerced-authentications/" %}
 
 {% page-ref page="relay.md" %}
 

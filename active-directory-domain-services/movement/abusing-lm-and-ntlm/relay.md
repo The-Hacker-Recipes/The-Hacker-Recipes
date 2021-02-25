@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1557.001
 
 ## Theory
 
-After successfully [forcing a victim to authenticate](../forced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
+After successfully [forcing a victim to authenticate](../coerced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
 
 The chart below sums up the expected behavior of cross-protocols NTLMv2 relay attacks depending on the mitigations in place \([original here](https://beta.hackndo.com/ntlm-relay/)\).
 
@@ -68,10 +68,10 @@ For more details on how NTLM works, testers can read [the MS-NLMP doc](https://w
 
 The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The LM and NTLM authentication protocols are "application protocol-independent". It means one can relay LM or NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called **cross-protocols LM/NTLM relay**. It also means the relays and attacks possible depend on the application protocol the authentication messages are embedded in.
 
-[ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) \(Python\), [MultiRelay](https://github.com/lgandx/Responder/blob/master/tools/MultiRelay.py) \(Python\) and [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for relaying NTLM authentications. Those tools setup relay clients and relay servers waiting for incoming authentications. Once the servers are up and ready, the tester can initiate a [forced authentication attack](../forced-authentications/).
+[ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) \(Python\), [MultiRelay](https://github.com/lgandx/Responder/blob/master/tools/MultiRelay.py) \(Python\) and [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for relaying NTLM authentications. Those tools setup relay clients and relay servers waiting for incoming authentications. Once the servers are up and ready, the tester can initiate a [forced authentication attack](../coerced-authentications/).
 
 {% hint style="warning" %}
-When combining NTLM relay with Responder for [name poisoning](../forced-authentications/#llmnr-nbt-ns-mdns-name-poisoning), testers need to make sure that Responder's servers are deactivated, otherwise they will interfere with ntlmrelayx ones.
+When combining NTLM relay with Responder for [name poisoning](../coerced-authentications/#llmnr-nbt-ns-mdns-name-poisoning), testers need to make sure that Responder's servers are deactivated, otherwise they will interfere with ntlmrelayx ones.
 
 ```text
 sed -i 's/SMB = On/SMB = Off/g' /PATH/TO/Responder/Responder.conf
@@ -144,14 +144,14 @@ ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 ```
 
 {% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../forced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
+This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
 {% endhint %}
 {% endtab %}
 
 {% tab title="+" %}
 The ntlmrelayx tool offers other features making it a very valuable asset when pentesting an Active Directory domain:
 
-* It can work with mitm6 \(for [DHCPv6 + DNS poisoning](../forced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option \(IPv6 support is not required since most hosts will send IPv4 but using this option is recommanded since it will allow relay servers to work with IPv4 and IPv6\)
+* It can work with mitm6 \(for [DHCPv6 + DNS poisoning](../coerced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option \(IPv6 support is not required since most hosts will send IPv4 but using this option is recommanded since it will allow relay servers to work with IPv4 and IPv6\)
 * It supports SMB2. It can be enabled with the `-smb2support` option
 * It implements **CVE-2019-1040** with the `--remove-mic` option, usually needed when attempting "cross-protocols unsigning relays" \(e.g. **SMB to SMB-with-required-signing, or SMB to LDAP/S\)**
 * It has the ability to attack multiple targets with the `-tf` option instead of `-t`, and the `-w` option can be set to watch the target file for changes and update target list automatically

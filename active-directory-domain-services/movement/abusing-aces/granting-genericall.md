@@ -20,7 +20,7 @@ Pro tip for UNIX-like users, ntlmrelayx has the ability to operate that abuse wi
 A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `-Credential` and `-Domain` options in order to work
 {% endhint %}
 
-When an object has `WriteDacl` over the Domain object, it is possible to operate [DCSync](../credentials/dumping/dcsync.md). Exchange Servers used to have this right, allowing attackers to conduct a PrivExchange attack \(see the [PushSubscription abuse](../forced-authentications/privexchange-pushsubscription-abuse.md), and the [NTLM relay attack](../abusing-lm-and-ntlm/relay.md) using Impacket's [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) and the `--escalate-user` option\)
+When an object has `WriteDacl` over the Domain object, it is possible to operate [DCSync](../credentials/dumping/dcsync.md). Exchange Servers used to have this right, allowing attackers to conduct a PrivExchange attack \(see the [PushSubscription abuse](../coerced-authentications/privexchange-pushsubscription-abuse.md), and the [NTLM relay attack](../abusing-lm-and-ntlm/relay.md) using Impacket's [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) and the `--escalate-user` option\)
 
 ## References
 

