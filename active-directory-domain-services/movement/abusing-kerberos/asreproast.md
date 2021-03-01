@@ -50,7 +50,7 @@ Rubeus.exe asreproast  /format:hashcat /outfile:ASREProastables.txt
 {% endtab %}
 {% endtabs %}
 
-Depending on the output format used \(`hashcat` or `john`\), [hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can be used to try cracking the hashes.
+Depending on the output format used \(`hashcat` or `john`\), [hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can be used to try [cracking the hashes](../credentials/cracking.md).
 
 ```bash
 hashcat -m 18200 -a 0 ASREProastables.txt $wordlist

@@ -53,7 +53,7 @@ Invoke-Kerberoast -OutputFormat hashcat | % { $_.Hash } | Out-File -Encoding ASC
 {% endtab %}
 {% endtabs %}
 
-[Hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can then be used to try cracking the hash.
+[Hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can then be used to try [cracking the hash](../credentials/cracking.md).
 
 ```bash
 hashcat -m 13100 kerberoastables.txt $wordlist
