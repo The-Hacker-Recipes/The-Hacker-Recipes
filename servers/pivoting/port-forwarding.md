@@ -1,5 +1,9 @@
 # 🛠️ Port forwarding
 
+{% hint style="danger" %}
+**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name. Need to do some SSH config work
+{% endhint %}
+
 ## Theory
 
 Port forwarding is a pivoting technique that allows network packets to be relayed from a port to another. The tunnel can be setup between two controlled and connected machines, hence allowing a bridge between a network and another. That concept is similar to PAT \(Port Address Translation\), an extension of NAT \(Network Address Translation\) that allows multiple devices on a LAN to be mapped to a single public IP address by assigning addresses to ports numbers.
@@ -8,7 +12,7 @@ This technique is useful when an attacker wants to stay under the radar or when 
 
 ## Practice
 
-There are multiple types of port forwarding used during penetration testing engagments.
+There are multiple types of port forwarding used during penetration testing engagements.
 
 * **Local port forwarding**: access a port that only a remote machine can communicate with \(e.g. "firewalled" network, internal localhost network\).
 * **Remote port forwarding**: access an attacker's service \(from the attacker's machine's networks\) from a remote workstation that can't access those networks directly.
@@ -24,7 +28,7 @@ While setting up port forwarding, it's important to remember that non-admin user
 Port forwarding can be set up in many different ways.
 
 {% tabs %}
-{% tab title="SSH" %}
+{% tab title="SSH commands" %}
 One of the most easy is by relying on SSH however, it requires to have an SSH server running on the controlled machine and a valid account. The tester needs to open an SSH connection to the machine that should be turned into a SOCKS proxy, and supply 
 
 * the `-L` option for a local port forwarding, along with the ports and addresses to bind
@@ -41,6 +45,10 @@ ssh -N -R $REMOTE_ADDRESS:$REMOTE_PORT:$LOCAL_ADDRESS:$LOCAL_PORT user@target
 ```
 
 Once the ssh command exits successful \(or once a session opens\) the tester can then proceed to use the tunnel.
+{% endtab %}
+
+{% tab title="SSH config" %}
+
 {% endtab %}
 
 {% tab title="Metasploit" %}
@@ -60,7 +68,7 @@ In the following example \(real-world badly secured network\), let's assume the 
 
 ![Setting up the pivoting points](../../.gitbook/assets/carbon-8-.png)
 
-This setup allows the attackers to connect to the workstation webservice on port `80/TCP` by targetting port `1111/TCP` on his own machine. His machine will forward the communication to pivot1's port `2222/TCP`. Pivot1 will forward to pivot2's `3333/TCP`. Pivot2 will forward to workstation's `80/TCP`.
+This setup allows the attackers to connect to the workstation web-service on port `80/TCP` by targeting port `1111/TCP` on his own machine. His machine will forward the communication to pivot1's port `2222/TCP`. Pivot1 will forward to pivot2's `3333/TCP`. Pivot2 will forward to workstation's `80/TCP`.
 
 ### Chained remote port forwarding
 

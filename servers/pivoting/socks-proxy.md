@@ -24,7 +24,7 @@ While setting up port forwarding, it's important to remember that non-admin user
 In practice, there are many ways to turn a controlled machine into a SOCKS proxy server.
 
 {% tabs %}
-{% tab title="SSH" %}
+{% tab title="SSH commands" %}
 One of the most easy is by relying on SSH however, it requires to have an SSH server running on the controlled machine and a valid account. The tester needs to open an SSH connection to the machine that should be turned into a SOCKS proxy, and supply the `-D` option along with the port to use for tunneling. The command can also be used with `-N` option to make sure no command gets executed after the SSH session is opened.
 
 ```bash
@@ -38,6 +38,10 @@ A reverse dynamic port forwarding can be also put in place to tunnel a machine's
 ```bash
 ssh -N -R $PORT $CONTROLLED_TARGET
 ```
+{% endtab %}
+
+{% tab title="SSH config" %}
+
 {% endtab %}
 
 {% tab title="Metasploit" %}
