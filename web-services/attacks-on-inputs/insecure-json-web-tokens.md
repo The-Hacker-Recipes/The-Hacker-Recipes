@@ -89,6 +89,12 @@ JWT secrets can also be cracked using hashcat \(see the [AD credential cracking]
 hashcat --hash-type 16500 --attack-mode 0 $JWTs_file $wordlist_file
 ```
 
+### Recovering the public key
+
+In certain scenarios, public keys can be recovered when knowing one \(for algos ES256, ES384, ES512\) or two \(for algos RS256, RS384, RS512\) tokens.
+
+This can be achieved with the following Python script : [JWT-Key-Recover](https://github.com/FlorianPicca/JWT-Key-Recovery)
+
 ## References
 
 {% embed url="https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/" caption="" %}
