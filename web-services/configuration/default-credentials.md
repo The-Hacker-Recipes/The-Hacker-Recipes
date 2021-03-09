@@ -1,6 +1,6 @@
 # 🛠️ Default credentials
 
-Default credentials are a really simple and extremely common way to get an initial access to a system. Many devices (especially in the Internet of Things) come with default non-random password that are often left unchanged. Here is an example of a few very common credentials :
+Default credentials are a really simple and extremely common way to get an initial access to a system. Many devices (especially in the Internet of Things) come with default non-random passwords that are often left unchanged. Here is an example of a few very common credentials :
 
 | Username | Password |
 |----------|----------|
