@@ -68,7 +68,7 @@ In Sudo before 1.8.28, an attacker with access to a Runas ALL sudoer account can
 
 Exploiting the bug requires that the user have sudo privileges that allow them to run commands with an arbitrary user ID. Typically, this means that the user's sudoers entry has the special value ALL in the Runas specifier. Sudo supports running a command with a user-specified user name or user ID, if permitted by the sudoers policy.
 
-**Find vulnerable users :**
+**Find vulnerable users**
 
 ```bash
 grep -e '(\s*ALL\s*,\s*!root\s*)' /etc/sudoers
