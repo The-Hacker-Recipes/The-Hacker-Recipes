@@ -66,9 +66,30 @@ su -l backdoorroot
 
 //TODO
 
-#### CVE-2021-3156
+#### CVE-2021-3156 - Heap-Based Buffer Overflow in Sudo (Baron Samedit)
 
-//TODO
+Sudo before 1.9.5p2 has a Heap-based Buffer Overflow, allowing privilege escalation to root via "sudoedit -s" and a command-line argument that ends with a single backslash character. To test if a system is vulnerable or not, login to the system as a non-root user and run command `sudoedit -s /`. 
+
+ - If the system is patched, it will respond with an error that starts with `usage:` such as :
+
+```
+usage: sudoedit [-AknS] [-r role] [-t type] [-C num] [-g group] [-h host] [-p prompt] [-T timeout] [-u user] file ...
+```
+
+ - If the system is vulnerable, it will respond with an error that starts with `sudoedit:` such as :
+
+```
+$ sudoedit -s /
+[sudo] password for user: 
+sudoedit: /: not a regular file
+```
+
+To exploit a vulnerable system, you can use this exploit : https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156_one_shot
+
+**Additional References** :
+
+ - Original Advisory : https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit
+ - https://nvd.nist.gov/vuln/detail/CVE-2021-3156
 
 ## References
 
