@@ -19,3 +19,21 @@ You can find the detail of these directives as well as their browser compatibili
 
 ## Practice
 
+There is a few techniques to bypass content security policies :
+
+### Dangling markup injection
+
+Dangling markup injection is a technique that can be used to capture data cross-domain in situations where a full [Cross Site Scripting (XSS)](https://www.thehacker.recipes/web-services/attacks-on-inputs/xss-cross-site-scripting) exploit is not possible, due to input filters or other defenses. It can often be exploited to capture sensitive information that is visible to other users, including CSRF tokens that can be used to perform unauthorized actions on behalf of the user.
+
+A lot of useful payloads can be found here :
+
+ - [https://book.hacktricks.xyz/pentesting-web/dangling-markup-html-scriptless-injection](https://book.hacktricks.xyz/pentesting-web/dangling-markup-html-scriptless-injection)
+ - [https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass](https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass)
+
+### JS/JSON/JSONP injections
+
+JSONP hijacking or unexploitable injection of content into JavaScript or JSON and can also help. For example, if there is no function name validation in JSONP, you can replace the called function with arbitrary JS code.
+
+Here is a list of various JSONP endpoints that can be used to perform code injections :
+
+ - [https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/XSS%20Injection/Intruders/jsonp_endpoint.txt](https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/XSS%20Injection/Intruders/jsonp_endpoint.txt)
