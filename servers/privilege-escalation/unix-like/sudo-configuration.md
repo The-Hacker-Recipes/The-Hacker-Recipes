@@ -64,7 +64,18 @@ su -l backdoorroot
 
 #### CVE-2019-14287
 
-//TODO
+In Sudo before 1.8.28, an attacker with access to a Runas ALL sudoer account can bypass certain policy blacklists and session PAM modules by invoking sudo with a crafted user ID. For example, this allows bypass of !root configuration, and USER= logging, for a `sudo -u \#$((0xffffffff))` command.
+
+Exploiting the bug requires that the user have sudo privileges that allow them to run commands with an arbitrary user ID. Typically, this means that the user's sudoers entry has the special value ALL in the Runas specifier. Sudo supports running a command with a user-specified user name or user ID, if permitted by the sudoers policy.
+
+Sudo uses the `setresuid(2)` and `setreuid(2)` system calls to change the user ID before running the command. So if you try to enter a negative user id `-1` (or its unsigned equivalent `4294967295`), `setresuid(2)` and `setreuid(2)` cannot set a negative user id and you're left with the user id sudo is running with : `0`.
+
+Therefore `sudo -u#-1 id -u` or `sudo -u#4294967295 id -u` will actually return `uid=0` and run command as root.
+
+
+**Additional References** :
+
+ - https://nvd.nist.gov/vuln/detail/CVE-2019-14287
 
 #### CVE-2021-3156 - Heap-Based Buffer Overflow in Sudo (Baron Samedit)
 
