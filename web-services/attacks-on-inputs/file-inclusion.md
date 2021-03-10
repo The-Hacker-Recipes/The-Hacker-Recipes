@@ -65,6 +65,8 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/auth.log&cmd=id
 
 ### 🛠️ LFI to RCE \(via php wrappers\)
 
+//note : not sure we can achieve RCE with wrapper, we can however leak local file content \(i.e. source code\)
+
 * php://file
 * php://filter
 * php://input
