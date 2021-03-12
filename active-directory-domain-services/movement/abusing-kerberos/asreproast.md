@@ -39,6 +39,8 @@ This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/Cra
 ```bash
 crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --KdcHost $KeyDistributionCenter
 ```
+
+The [kerberoast](https://github.com/skelsec/kerberoast) pure-python toolkit is a good alternative to the tools mentioned above.
 {% endtab %}
 
 {% tab title="Windows" %}

