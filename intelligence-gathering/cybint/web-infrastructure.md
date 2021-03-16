@@ -18,7 +18,7 @@ Website caching platforms:
 -[https://archive.fo/](https://archive.fo/)
 
 Google Analytics:
-  - The last piece of information that is really interesting is to check if the same Google Analytics / Adsense ID is used in several websites. This technique was discovered in 2015 and is well described here by [Bellingcat](https://www.bellingcat.com/resources/how-tos/2015/07/23/unveiling-hidden-connections-with-google-analytics-ids/).
 
+* The last piece of information that is really interesting is to check if the same Google Analytics / Adsense ID is used in several websites. This technique was discovered in 2015 and is well described here by [Bellingcat](https://www.bellingcat.com/resources/how-tos/2015/07/23/unveiling-hidden-connections-with-google-analytics-ids/).
 * Certificats?
 

@@ -109,7 +109,7 @@ sudoedit: /: not a regular file
 
 **Exploits** :
 
-To exploit a vulnerable system, you can use this exploit : [https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156\_one\_shot](https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156_one_shot)
+To exploit a vulnerable system, you can use this exploit : [https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156\_one\_shot](https://github.com/r4j0x00/exploits/tree/master/CVE-2021-3156_one_shot) or [https://github.com/worawit/CVE-2021-3156](https://github.com/worawit/CVE-2021-3156)
 
 **Additional References** :
 
