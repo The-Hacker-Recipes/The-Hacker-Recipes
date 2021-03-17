@@ -22,5 +22,25 @@ wfuzz --hc 404,403 -H "User-Agent: PENTEST" -c -z file,/usr/share/seclists/Disco
 ffuf -H "User-Agent: PENTEST" -c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u $URL/FUZZ
 ```
 
+Another great tool named [feroxbuster](https://github.com/epi052/feroxbuster) \(Rust\) can do really fast recursive content discovery. The tools mentioned above don't recurse in found directories.
+
+```bash
+feroxbuster -H "User-Agent: PENTEST" -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.10.10/
+```
+
 In order to fuzz more accurately, there are many dictionaries adapted for many situations. The ultimate combo is [ffuf](https://github.com/ffuf/ffuf) + [fzf](https://github.com/junegunn/fzf) + [seclists](https://github.com/danielmiessler/SecLists).
+
+{% hint style="success" %}
+In the following command, [fzf](https://github.com/junegunn/fzf) is used to print a file fuzzer prompt allowing the user to quickly choose the perfect wordlist for content discovery.
+
+```bash
+feroxbuster -H "User-Agent: PENTEST" -w `fzf-wordlists` -u http://192.168.10.10/
+```
+
+In this case, `fzf-wordlists` is an alias to the following command using fzf and find to fuzz wordlists from specific directories.
+
+```bash
+find /usr/share/seclists /usr/share/wordlists /usr/share/dirbuster /usr/share/wfuzz /usr/share/dirb -type f | fzf
+```
+{% endhint %}
 
