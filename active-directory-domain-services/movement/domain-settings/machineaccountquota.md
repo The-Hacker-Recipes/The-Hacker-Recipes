@@ -31,7 +31,7 @@ server = ldap3.Server(domain)
 connection = ldap3.Connection(server = server, user = user, password = password, authentication = ldap3.NTLM)
 connection.bind()
 connection.search(target_dn,"(objectClass=*)", attributes=['ms-DS-MachineAccountQuota'])
-print(connection.entries)
+print(connection.entries[0])
 ```
 {% endtab %}
 
