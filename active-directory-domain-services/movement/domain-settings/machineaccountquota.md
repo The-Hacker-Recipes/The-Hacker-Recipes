@@ -22,11 +22,13 @@ The following Python code can be used to check the value of the MachineAccountQu
 
 ```bash
 import ldap3
-target_dn = "" # something like 'DC=domain,DC=local'
-domain = "domain"
-username = "username"
+
+target_dn = "DC=domain,DC=local" # change this
+domain = "domain" # change this
+username = "username" # change this
+password = "password" # change this
+
 user = "{}\\{}".format(domain, username)
-password = "password"
 server = ldap3.Server(domain)
 connection = ldap3.Connection(server = server, user = user, password = password, authentication = ldap3.NTLM)
 connection.bind()
