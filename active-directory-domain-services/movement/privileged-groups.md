@@ -12,7 +12,7 @@ Below is a table summing up some groups' rights and abuse paths.
 
 | Security Group | Rights and abuses |
 | :--- | :--- |
-| Account Operators | its members can create and manage users and groups, including its own membership and that of the Server Operators group |
+| Account Operators | its members can create and manage users and groups, including its own membership and that of the Server Operators group \(e.g. [add a member to a group](abusing-aces/addmember.md)\) |
 | Administrators | full admin rights to the Active Directory domain and Domain Controllers |
 | Backup Operators | can backup or restore Active Directory and have logon rights to Domain Controllers |
 | Server Operators | its members can sign-in to a server, start and stop services, access domain controllers, perform maintenance tasks \(such as backup and restore\), and they have the ability to change binaries that are installed on the domain controllers |

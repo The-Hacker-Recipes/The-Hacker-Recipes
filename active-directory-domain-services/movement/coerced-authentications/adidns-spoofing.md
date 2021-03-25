@@ -17,7 +17,7 @@ ADIDNS zones can be remotely edited
 
 ## Practice
 
-### Manual record manipulation
+### \(Windows\) Manual record manipulation
 
 On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add/view/edit/enable/disable/remove records. In the following examples, the wildcard \(`*`\) record is targeted but the examples should also work with other records \(except things like `WPAD` that are in the [GQBL](wpad-spoofing.md#through-adidns-spoofing)\).
 
@@ -95,11 +95,12 @@ New-ADIDNSNode -Tombstone -Verbose -Node * -Data $ATTACKER_IP
 
 More help on usage, support functions, parameters and attacks [here](https://github.com/Kevin-Robertson/Powermad#adidns-functions).
 
-On UNIX-like systems, [adidnsdump](https://github.com/dirkjanm/adidnsdump) \(Python\) can be used for enumeration and export of all DNS records in the Active Directory Domain or Forest DNS zones.
+### \(UNIX\) Manual record manipulation
+
+A Python alternative to Powermad's functions is [dnstool](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py). Theoretically, this script can be used to `add`, `modify`, `query`, `remove` and `resurrect` records in ADIDNS, however, only `query`, `add`, and `modify` actions were successful during some of my tests.
 
 ```bash
-adidnsdump -u "DOMAIN\user" -p 'password' --include-tombstoned $DOMAIN_CONTROLLER
-grep "*" records.csv
+dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
 ```
 
 ### Dynamic spoofing
