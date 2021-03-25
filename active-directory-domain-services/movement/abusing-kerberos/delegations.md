@@ -237,6 +237,8 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 {% embed url="https://blog.stealthbits.com/resource-based-constrained-delegation-abuse/" caption="" %}
 
+{% embed url="https://exploit.ph/user-constrained-delegation.html" %}
+
 {% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html" caption="" %}
 
 {% embed url="https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/" %}
