@@ -13,7 +13,7 @@ ntlmrelayx.py -t ldaps://10.0.0.5 -debug --dump-gmsa --no-dump --no-da --no-acl 
 ```
 
 {% hint style="success" %}
-In order to easily fake a relayed authentication, once the relay servers are up and running, the tester can browe [http://127.0.0.1/](http://127.0.0.1/) in order to trigger a basic authentication that will then be relayed by ntlmrelayx, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
+In order to easily fake a relayed authentication, once the relay servers are up and running, the tester can browse [http://127.0.0.1/](http://127.0.0.1/) in order to trigger a basic authentication that will then be relayed by ntlmrelayx, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
 {% endhint %}
 
 The `msDS-ManagedPassword` attribute can also be manually obtained by running the following Python script. The [following code](https://github.com/SecureAuthCorp/impacket/blob/3f3002e1c1dd78a5ee6100d6824ff7b65bbb92b6/impacket/examples/ntlmrelayx/attacks/ldapattack.py#L672-L702) can then be used to decode the blob.
