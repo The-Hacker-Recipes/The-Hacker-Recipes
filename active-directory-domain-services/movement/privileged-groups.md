@@ -20,7 +20,6 @@ Below is a table summing up some groups' rights and abuse paths.
 | Domain Admins | full admin rights to the Active Directory domain, all computers, workstations, servers, users and so on |
 | Entreprise Admins | full admin rights to all Active Directory domains in the AD forest |
 | Group Policy Creators Owners | create Group Policies in the domain. Its members can't apply group policies to users or group or edit existing GPOs |
-|  |  |
 
 ## Resources
 
