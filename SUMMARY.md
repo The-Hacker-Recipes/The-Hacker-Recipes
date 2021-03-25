@@ -68,7 +68,7 @@
   * [Domain settings](active-directory-domain-services/movement/domain-settings/README.md)
     * [MachineAccountQuota](active-directory-domain-services/movement/domain-settings/machineaccountquota.md)
   * [🛠️ Domain trusts](active-directory-domain-services/movement/domain-trusts.md)
-  * [🛠️ Privileged groups](active-directory-domain-services/movement/privileged-groups.md)
+  * [Security groups](active-directory-domain-services/movement/privileged-groups.md)
   * [🛠️ Netlogon](active-directory-domain-services/movement/frontal-attacks/README.md)
     * [🛠️ ZeroLogon \(CVE-2020-1472\)](active-directory-domain-services/movement/frontal-attacks/zerologon.md)
   * [🛠️ Frontal attacks](active-directory-domain-services/movement/frontal-attacks-2/README.md)

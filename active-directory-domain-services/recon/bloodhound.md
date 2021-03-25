@@ -92,6 +92,14 @@ Here are some examples of quick wins to spot with BloodHound
 
 For detailed and official documentation on the analysis process, testers can check the following resources: [the BloodHound GUI](https://bloodhound.readthedocs.io/en/latest/data-analysis/bloodhound-gui.html), [nodes](https://bloodhound.readthedocs.io/en/latest/data-analysis/nodes.html) and [edges](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html).
 
+{% hint style="success" %}
+Some quickwins can be easily found with the [bloodhound-quickwin](https://github.com/kaluche/bloodhound-quickwin) Python script
+
+```bash
+bhqc.py -u $neo4juser -p $neo4jpassword
+```
+{% endhint %}
+
 {% embed url="https://blog.riccardoancarani.it/bloodhound-tips-and-tricks/" %}
 
 {% embed url="https://bloodhound.readthedocs.io/en/latest/" %}

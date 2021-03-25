@@ -20,9 +20,11 @@ LDAP anonymous binding is usually disabled but it's worth checking. It could be 
 {% endhint %}
 
 {% hint style="success" %}
-A more advanced LDAP enumeration can be carried out with BloodHound \(see [this](bloodhound.md)\).
+**Automation and scripting**
 
-Some basic LDAP recon can also be carried out with the enum4linux tool \(see [this page](enum4linux.md)\).
+* A more advanced LDAP enumeration can be carried out with BloodHound \(see [this](bloodhound.md)\).
+* A basic LDAP recon can be done with [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad).
+* The enum4linux tool can be used, among other things, for LDAP recon \(see [this page](enum4linux.md)\).
 {% endhint %}
 
 
