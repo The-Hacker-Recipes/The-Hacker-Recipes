@@ -90,7 +90,7 @@ New-ADIDNSNode -Tombstone -Verbose -Node * -Data $ATTACKER_IP
 {% endhint %}
 
 {% hint style="warning" %}
-**Warning**: in some environments, the disabling or removal of the records created for tests failed. The records were shown as tombstoned or nonexistant when using functions like Get-ADIDNSNodeOwner, Get-ADIDNSNodeAttribute, and so on. However, the DNS Manager console was still showing those records and name resolution was still effective. It will probably stay an unsolved mystery for me, but testers need to keep this in mind.
+**Warning**: in some environments, the disabling or removal of the records previously created for tests failed. The records were shown as tombstoned or nonexistant when using functions like `Get-ADIDNSNodeOwner`, `Get-ADIDNSNodeAttribute`, and so on. However, the DNS Manager console was still showing those records and name resolution was still effective. It will probably stay an unsolved mystery for me, but testers need to keep this in mind when abusing ADIDNS.
 {% endhint %}
 
 More help on usage, support functions, parameters and attacks [here](https://github.com/Kevin-Robertson/Powermad#adidns-functions).
