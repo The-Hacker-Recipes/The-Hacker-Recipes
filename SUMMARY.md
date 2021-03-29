@@ -14,6 +14,7 @@
   * [BloodHound](active-directory-domain-services/recon/bloodhound.md)
   * [MS-RPC](active-directory-domain-services/recon/ms-rpc.md)
   * [enum4linux](active-directory-domain-services/recon/enum4linux.md)
+  * [🛠️ Password policy](active-directory-domain-services/recon/password-policy.md)
 * [Movement](active-directory-domain-services/movement/README.md)
   * [Credentials](active-directory-domain-services/movement/credentials/README.md)
     * [Dumping](active-directory-domain-services/movement/credentials/dumping/README.md)
