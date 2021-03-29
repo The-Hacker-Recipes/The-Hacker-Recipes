@@ -97,7 +97,7 @@ More help on usage, support functions, parameters and attacks [here](https://git
 
 ### \(UNIX\) Manual record manipulation
 
-A Python alternative to Powermad's functions is [dnstool](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py). Theoretically, this script can be used to `add`, `modify`, `query`, `remove` and `resurrect` records in ADIDNS, however, only `query`, `add`, and `modify` actions were successful during some of my tests.
+An awesome Python alternative to Powermad's functions is [dnstool](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py). Theoretically, this script can be used to `add`, `modify`, `query`, `remove`, `resurrect` and `ldapdelete` records in ADIDNS.
 
 ```bash
 dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
