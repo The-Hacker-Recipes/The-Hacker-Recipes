@@ -47,7 +47,7 @@ The Samba utility named [rpcclient](https://www.samba.org/samba/docs/current/man
 * `enumdomgroups`: list groups equivalent to `net group /domain`
 * `queryuser <rid/name>`: obtain info on a user, equivalent to `net user <user> /domain`
 * `querygroupmem <rid>`: obtan group members, equivalent to `net group <group> /domain`
-* `getdompwinfo`: get password complexity policy
+* `getdompwinfo`: get password policy
 
 ```bash
 rpcclient -c "command1,command2" $TARGET_IP
