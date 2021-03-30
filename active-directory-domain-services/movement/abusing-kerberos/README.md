@@ -7,6 +7,7 @@ Kerberos is an authentication protocol based on tickets. It basically works like
 1. Client asks the KDC \(Key Distribution Center, usually is a domain controller\) for a TGT \(Ticket Granting Ticket\). The requesting user's NT hash is used for authentication.
 2. Client uses the TGT to ask the KDC for a Service ticket, a.k.a. TGS \(Ticket Granting Service\)
 3. Client uses the Service ticket/TGS to access a service
+4. The tickets contain the PAC \(Privilege Authentication Certificate\), a set of information that the target service will read to decide if the authentication user can access the service or not \(user ID, group memberships and so on\). Only one very special and sensitive service account can write the PAC : `krbtgt`. 
 
 A Service ticket \(TGS\) allows access to a specific service. The TGT is used to ask for TGSs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following \(read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii__kerberos_cont/SSTIC2014-Article-secrets_dauthentification_pisode_ii__kerberos_contre-attaque-bordes_2.pdf)\).
 
