@@ -56,7 +56,7 @@ su -l backdoorroot
 
 With SUDO running version &lt; 1.8.28, an attacker in control of a "runas ALL" sudoer account can bypass certain policy blacklists and session PAM modules by invoking sudo with a crafted user ID. 
 
-Exploiting the bug requires sudo privileges and being able to run commands with an arbitrary user ID. This means the user's sudoers entry has to have the special value `ALL` in the "runas" specifier \(the yellow and green parts in [the doodle above](sudo-configuration.md#theory)\).
+Exploiting the bug requires sudo privileges and being able to run commands with an arbitrary user ID. This means the user's sudoers entry has to have the special value `ALL` in the "runas" specifier \(the yellow and green parts in [the doodle above](sudo.md#theory)\).
 
 Vulnerable users can be found with the two commands below
 
