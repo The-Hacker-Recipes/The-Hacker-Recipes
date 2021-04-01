@@ -1,8 +1,12 @@
 # BloodHound
 
+## Theory
+
 [BloodHound](https://github.com/BloodHoundAD/BloodHound) \(Javascript webapp, compiled with Electron, uses [Neo4j](https://neo4j.com/) as graph DBMS\) is an awesome tool that allows to map relationships within Active Directory environments. It mostly uses Windows API functions and LDAP namespace functions to collect data from domain controllers and domain-joined Windows systems.
 
-## Collection
+## Practice
+
+### Collection
 
 BloodHound needs to be fed JSON files containing info on the objects and relationships within the AD domain. These information are obtained with collectors \(also called ingestors\). The best way of doing this is using the official SharpHound \(C\#\) collector.
 
@@ -65,7 +69,7 @@ This ingestor is not as powerful as the C\# one. It mostly misses GPO collection
 {% endtab %}
 {% endtabs %}
 
-## Analysis
+### Analysis
 
 Once collection is over, the data can be uploaded and analysed in BloodHound by doing the following.
 
@@ -80,25 +84,28 @@ Once collection is over, the data can be uploaded and analysed in BloodHound by 
 
 Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/abusing-aces/), [Kerberos delegations abuse](../movement/abusing-kerberos/delegations.md), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/abusing-gpos.md), [Kerberoast](../movement/abusing-kerberos/kerberoast.md), [ASREProast](../movement/abusing-kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
 
-{% hint style="info" %}
-Here are some examples of quick wins to spot with BloodHound
-
-* **shadow admins**: users that are not members of privileged Active Directory groups but have sensitive privileges over the domain \(run graph queries like "find principals with DCSync rights", "users with most local admin rights", or check "inbound control rights" in the domain and privilegeg AD groups node info panel\)
-* **other over-privileged users**: user that can control many objects \(ACEs\) and that often lead to \(shadown\) admins or sensitive servers \(check for "outbound control rights" in the node info panel\)
-* **over-privileged computers**: find computers that can do \(un\)constrained Kerberos delegation \(run graph queries like "find computer with unconstrained delegations"\)
-{% endhint %}
-
 ![](../../.gitbook/assets/screenshot-from-2020-12-08-15-29-30.png)
 
 For detailed and official documentation on the analysis process, testers can check the following resources: [the BloodHound GUI](https://bloodhound.readthedocs.io/en/latest/data-analysis/bloodhound-gui.html), [nodes](https://bloodhound.readthedocs.io/en/latest/data-analysis/nodes.html) and [edges](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html).
 
+### Quick wins
+
 {% hint style="success" %}
-Some quickwins can be easily found with the [bloodhound-quickwin](https://github.com/kaluche/bloodhound-quickwin) Python script
+Here are some examples of quick wins to spot with BloodHound
+
+* **shadow admins**: users that are not members of privileged Active Directory groups but have sensitive privileges over the domain \(run graph queries like "find principals with [DCSync](../movement/credentials/dumping/dcsync.md) rights", "users with most local admin rights", or check "inbound control rights" in the domain and privileged groups node info panel\)
+* **other over-privileged users**: user that can control many objects \([ACEs](../movement/abusing-aces/)\) and that often lead to admins, shadow admins or sensitive servers \(check for "outbound control rights" in the node info panel\)
+* **over-privileged computers**: find computers that can do [\(un\)constrained Kerberos delegation](../movement/abusing-kerberos/delegations.md) \(run graph queries like "find computer with unconstrained delegations"\)
+* **admin computers**: find computers \(A\) that have admin rights against other computers \(B\). This can be exploited as follows: computer A triggered with an [MS-RPRN abuse \(printerbug\),](../movement/coerced-authentications/printer-bug-ms-rprn-abuse.md) authentication is then [relayed](../movement/abusing-lm-and-ntlm/relay.md), and credentials are [dumped](../movement/credentials/dumping/) on the computer B.
+
+Other quick wins can be easily found with the [bloodhound-quickwin](https://github.com/kaluche/bloodhound-quickwin) Python script
 
 ```bash
 bhqc.py -u $neo4juser -p $neo4jpassword
 ```
 {% endhint %}
+
+## References
 
 {% embed url="https://blog.riccardoancarani.it/bloodhound-tips-and-tricks/" %}
 
