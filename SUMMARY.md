@@ -155,7 +155,7 @@
     * [Windows Subsystem for Linux](servers/privilege-escalation/windows/windows-subsystem-for-linux.md)
     * [Runas saved creds](servers/privilege-escalation/windows/runas-saved-creds.md)
   * [UNIX-like](servers/privilege-escalation/unix-like/README.md)
-    * [🛠️ SUDO](servers/privilege-escalation/unix-like/sudo-configuration.md)
+    * [SUDO](servers/privilege-escalation/unix-like/sudo-configuration.md)
     * [🛠️ SUID/SGID binaries](servers/privilege-escalation/unix-like/suid-sgid-binaries.md)
     * [🛠️ Living off the land](servers/privilege-escalation/unix-like/living-off-the-land.md)
     * [Capabilities](servers/privilege-escalation/unix-like/capabilities.md)
