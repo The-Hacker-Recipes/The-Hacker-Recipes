@@ -43,6 +43,7 @@
     * [ADIDNS spoofing](active-directory-domain-services/movement/coerced-authentications/adidns-spoofing.md)
     * [Printer Bug \(MS-RPRN abuse\)](active-directory-domain-services/movement/coerced-authentications/printer-bug-ms-rprn-abuse.md)
     * [PrivExchange \(PushSubscription abuse\)](active-directory-domain-services/movement/coerced-authentications/privexchange-pushsubscription-abuse.md)
+    * [🛠️ WSUS spoofing](active-directory-domain-services/movement/coerced-authentications/wsus-spoofing.md)
     * [🛠️ Living off the land](active-directory-domain-services/movement/coerced-authentications/living-off-the-land.md)
   * [LM and NTLM](active-directory-domain-services/movement/abusing-lm-and-ntlm/README.md)
     * [Capture](active-directory-domain-services/movement/abusing-lm-and-ntlm/capturing-hashes.md)
