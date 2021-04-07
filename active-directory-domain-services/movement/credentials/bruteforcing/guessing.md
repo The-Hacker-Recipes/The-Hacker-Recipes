@@ -62,3 +62,7 @@ sprayhound -d $DOMAIN -dc $DOMAIN_CONTROLLER -lu $LDAP_USER -lp $LDAP_PASSWORD
 sprayhound -d $DOMAIN -dc $DOMAIN_CONTROLLER -lu $LDAP_USER -lp $LDAP_PASSWORD -p "qwerty"
 ```
 
+{% hint style="info" %}
+When using this technique, make sure the number of tested users matches the total number of uses on the domain. Dynamically obtaining the users list from a Domain Controller that is not the primary one. 
+{% endhint %}
+
