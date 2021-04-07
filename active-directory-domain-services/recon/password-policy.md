@@ -28,6 +28,7 @@ From domain-joined machine, the `net` cmdlet can be used to obtain the password 
 
 ```bash
 net accounts
+net accounts /domain
 ```
 
 From non domain-joined machines, it can be done with [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) \(Powershell\).
