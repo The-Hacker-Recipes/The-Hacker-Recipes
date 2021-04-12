@@ -24,8 +24,9 @@ Below is a table summing up some groups' rights and abuse paths.
         <p>its members can create and manage users and groups, including its own
           membership and that of the Server Operators group (e.g. <a href="abusing-aces/addmember.md">add a member to a group</a>)</p>
         <p></p>
-        <p>&#x1F525;members can also escalate through the &quot;Entreprise Key Admins&quot;
-          group and obtain full control over the root domain (read <a href="https://secureidentity.se/adprep-bug-in-windows-server-2016/">the ADPREP bug</a>).</p>
+        <p>&#x1F525;at the time of writing (12th, April 2021) members can sometimes
+          also escalate through the &quot;Entreprise Key Admins&quot; group and obtain
+          full control over the root domain (read <a href="https://secureidentity.se/adprep-bug-in-windows-server-2016/">the ADPREP bug</a>).</p>
       </td>
     </tr>
     <tr>
