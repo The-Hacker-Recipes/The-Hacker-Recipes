@@ -10,7 +10,11 @@ SQL injection attacks can allow attackers to read, update, insert or delete data
 
 Testers need to identify input vectors \(parts of the app that accept content from the users\) that could be used for database operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
 
+### Vulnerable input recon
+
 Using special SQL characters \(`'`, `"`, `#`, `;`, `)`, `*`,`%`\) in an input could lead to SQL errors sometimes echoed back to the users for debugging. This would indicate an entry point not sanitized enough and thus potentially vulnerable to SQL injection.
+
+### Manuel testing
 
 With `some.website/?parameter=value` some basic useful payload to detect vulnerable inputs are:
 
@@ -43,6 +47,8 @@ The following payload is used for testing SQL injections, [XSS \(Cross-Site Scri
 ```text
 '"<svg/onload=prompt(5);>{{7*7}}
 ```
+
+### Automated tests
 
 Tools like [SQLmap](https://github.com/sqlmapproject/sqlmap) \(Python\) or [SQLninja](https://github.com/xxgrunge/sqlninja) \(Perl\) can also be used to fuzz input vectors, find vulnerable entry points and automatically exploit them.
 
