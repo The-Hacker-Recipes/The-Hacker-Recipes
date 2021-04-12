@@ -69,7 +69,7 @@
     * [Grant ownership](active-directory-domain-services/movement/abusing-aces/granting-ownership.md)
     * [Grant rights](active-directory-domain-services/movement/abusing-aces/granting-genericall.md)
   * [Group Policy Objects \(GPOs\)](active-directory-domain-services/movement/abusing-gpos.md)
-  * [Security groups](active-directory-domain-services/movement/privileged-groups.md)
+  * [Special groups](active-directory-domain-services/movement/privileged-groups.md)
   * [Domain settings](active-directory-domain-services/movement/domain-settings/README.md)
     * [MachineAccountQuota](active-directory-domain-services/movement/domain-settings/machineaccountquota.md)
   * [🛠️ Domain trusts](active-directory-domain-services/movement/domain-trusts.md)
