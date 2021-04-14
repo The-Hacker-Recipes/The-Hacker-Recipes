@@ -77,9 +77,9 @@ More help on usage, support functions, parameters and attacks [here](https://git
 {% endtabs %}
 
 {% hint style="info" %}
-When adding records has no impact on name resolution or when the tools throw errors like `NoSuchObject`, it could be that the DNS zones in use are stored in the legacy `System` partition instead of the `DomainDnsZones` one.
+When adding records has no impact on name resolution or when the tools throw errors like `NoSuchObject`, it could be that the DNS zones in use are stored in the legacy `System` partition, or the `ForestDnsZones`, instead of the `DomainDnsZones` one.
 
-The tools mentioned above have the ability to work with the legacy storage with the `--legacy` option for dnstool.py and the `-Partition` argument for Powermad. 
+This can be set with the `--legacy` or `--forest` option on dnstool.py, or with the `-Partition` argument for Powermad.
 {% endhint %}
 
 ### Dynamic spoofing
