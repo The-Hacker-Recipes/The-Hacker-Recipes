@@ -1,4 +1,4 @@
-# ADIDNS spoofing
+# ADIDNS poisoning
 
 ## Theory
 

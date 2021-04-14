@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1557.002
 ---
 
-# 🛠️ ARP spoofing
+# 🛠️ ARP poisoning
 
 {% hint style="danger" %}
 Add PCredz [https://github.com/lgandx/PCredz](https://github.com/lgandx/PCredz)

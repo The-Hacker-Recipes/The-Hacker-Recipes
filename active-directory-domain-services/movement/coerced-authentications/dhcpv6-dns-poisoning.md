@@ -2,7 +2,7 @@
 
 ## Theory
 
-### DHCPv6 spoofing
+### DHCPv6 spoofing and poisoning
 
 By default on Windows environments, IPv6 is enabled and has priority over IPv4. Usually, IPv6 is neither used nor configured. When a Windows machine boots or gets plugged in the network, it asks for an IPv6 configuration through a DHCPv6 request. Since DHCPv6 works in multicast, attackers on the same network can answer the DHCPv6 queries and provide the clients with a specific IP config. The IP config will include a rogue DNS server address \(actually, for [mitm6](https://github.com/fox-it/mitm6), it will include two addresses, one IPv4 and one IPv6\). This technique is called DHCPv6 spoofing.
 
@@ -13,7 +13,7 @@ Attackers can then proceed to [DNS spoofing](dns-spoofing.md). Once the clients 
 ## Practice
 
 {% hint style="danger" %}
-Combining DHCPv6 spoofing with DNS spoofing can temporary but severe disruption in the network. It is highly recommended to target specific addresses and machines.
+Combining DHCPv6 spoofing with DNS spoofing can cause temporary but severe disruption in the network. It is highly recommended to target specific addresses and machines.
 {% endhint %}
 
 [mitm6](https://github.com/fox-it/mitm6) \(Python\) is an all-in-one tool for DHCPv6 spoofing + DNS poisoning. The following command can be run to make mitm6 redirect internal traffic only.

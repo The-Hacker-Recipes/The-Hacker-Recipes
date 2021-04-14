@@ -1,4 +1,4 @@
-# PrivExchange \(PushSubscription abuse\)
+# PushSubscription abuse \(PrivExchange\)
 
 ## Theory
 

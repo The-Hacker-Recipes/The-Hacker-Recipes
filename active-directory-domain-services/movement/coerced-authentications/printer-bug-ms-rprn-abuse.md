@@ -1,4 +1,4 @@
-# Printer Bug \(MS-RPRN abuse\)
+# MS-RPRN abuse \(PrinterBug\)
 
 ## Theory
 
