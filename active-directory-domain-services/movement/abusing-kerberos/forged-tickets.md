@@ -8,18 +8,20 @@ description: MITRE ATT&CK™ Sub-techniques T1558.001 and T1558.002
 
 Silver and golden tickets are forged Kerberos tickets that can be used with [pass-the-ticket](pass-the-ticket.md) to access services in an Active Directory domain.
 
-* **Golden ticket**: The NT hash \(or AES key\) of the special account `krbtgt` can be used to forge a special TGT \(Ticket Granting Ticket\) that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access any resource within the AD domain.
-* **Silver ticket**: The NT hash \(or AES key\) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access that service
+* **Golden ticket**: The NT hash \(or AES key\) of the special account `krbtgt` can be used to forge a special TGT \(Ticket Granting Ticket\) that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access any resource within the AD domain. In practice, the `krbtgt`'s key is used to encrypt, among other things, the PAC \(Privilege Authentication Certificate\), a special set of information about the requesting user that the KDC \(Key Distribution Center\) will copy/paste in the TGS the users requests.
+* **Silver ticket**: The NT hash \(or AES key\) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access that service. In practice, the key is used to encrypt, among other things, the PAC \(Privilege Authentication Certificate\), a special set of information about the requesting user that the target service will decrypt and read to decide if the user can have access.
 
 The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility of forwarding service tickets when it shouldn't normally be possible \(protected users, unconstrained delegation, constrained delegation configured with protocol transition\).
 
 ![](../../../.gitbook/assets/kerberos-delegation.png)
 
-🛠️ //TODO : MS14-068
-
 ## Practice
 
 The following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](pass-the-ticket.md).
+
+{% hint style="success" %}
+For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups \(i.e. group ids 513, 512, 520, 518, 519\). There are scenarios where these groups are not enough \(special machines where even Domain Admins don't have local admin rights\). In these situations, testers can either look for the domain groups that have local administrator privileges on the target machine, or specify all the groups ids when creating the ticket.
+{% endhint %}
 
 ### Golden ticket
 
@@ -27,7 +29,7 @@ The following parts allow to obtain modified or crafted Kerberos tickets. Once o
 In order to craft a golden ticket, testers need to find the `krbtgt`'s NT hash or AES key \(128 or 256 bits\). In most cases, this can only be achieved with domain admin privileges through a [DCSync attack](../credentials/dumping/dcsync.md). Because of this, golden tickets only allow lateral movement and not privilege escalation.
 {% endhint %}
 
-{% hint style="success" %}
+{% hint style="info" %}
 Microsoft now uses AES 256 bits by default. Using this encryption algorithm \(instead of giving the NThash\) will be stealthier.
 {% endhint %}
 
@@ -71,7 +73,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 In order to craft a silver ticket, testers need to find the target service account's NT hash or AES key \(128 or 256 bits\).
 {% endhint %}
 
-{% hint style="success" %}
+{% hint style="info" %}
 _"While the scope is more limited than Golden Tickets, the required hash is easier to get and there is no communication with a DC when using them, so detection is more difficult than Golden Tickets." \(_[_adsecurity.org_](https://adsecurity.org/?p=2011)_\)_
 {% endhint %}
 
