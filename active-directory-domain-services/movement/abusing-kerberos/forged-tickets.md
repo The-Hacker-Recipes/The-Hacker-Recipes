@@ -141,7 +141,7 @@ This vulnerability allows attackers to forge a TGT with unlimited power \(i.e. w
 {% tab title="pykek" %}
 This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md).
 
-Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60)` when trying to use the generated .ccache ticket mean the target is patched.
+Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60)` when trying to use the generated `.ccache` ticket mean the target is patched.
 
 ```bash
 # with a plaintext password
@@ -151,7 +151,11 @@ ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTR
 ms14-068.py -u 'USER'@'DOMAIN_FQDN' --rc4 'NThash' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
 ```
 
-If the attack is successful, the script will write a `.ccache` ticket that will be usable with [pass-the-ticket](pass-the-ticket.md).
+If the attack is successful, the script will write a `.ccache` ticket that will be usable with [pass-the-ticket](pass-the-ticket.md). An easy way to check if the TGT works is to use it and ask for a service ticket. This can be done with Impacket's [getST.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\).
+
+```bash
+getST.py -k -no-pass -spn 'any_valid_spn' $DOMAIN_FQDN/$USER
+```
 
 {% hint style="warning" %}
 In some scenarios, I personally have had trouble using the `.ccache` ticket on UNIX-like systems. What I did was [convert it](pass-the-ticket.md#practice) to `.kirbi`, switch to a Windows system, inject the ticket with mimikatz's `kerberos:ptt` command, and then create a new user and add it to the domain admins group.
