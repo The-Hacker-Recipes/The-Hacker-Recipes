@@ -1,0 +1,8 @@
+# Windows
+
+privesccheck
+
+winenum
+
+winpeas
+

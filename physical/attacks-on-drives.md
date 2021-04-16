@@ -1,2 +1,0 @@
-# Attacks on drives
-

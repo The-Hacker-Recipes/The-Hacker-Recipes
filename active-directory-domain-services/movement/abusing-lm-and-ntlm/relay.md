@@ -91,7 +91,7 @@ ntlmrelayx.py -t smb://$TARGET
 {% endtab %}
 
 {% tab title="SOCKS" %}
-The following command will try to relay the authentication and open [SOCKS proxies](../../../servers/pivoting/socks-proxy.md).
+The following command will try to relay the authentication and open [SOCKS proxies](../../../systems-and-services/pivoting/socks-proxy.md).
 
 ```bash
 ntlmrelayx.py -tf targets.txt -socks
