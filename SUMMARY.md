@@ -152,6 +152,7 @@
   * [��️ \(5985\) WinRM](systems-and-services/abusing-services/winrm.md)
 * [Privilege escalation](systems-and-services/privilege-escalation/README.md)
   * [Windows](systems-and-services/privilege-escalation/windows/README.md)
+    * [WSUS attacks](systems-and-services/privilege-escalation/windows/wsus-attacks.md)
     * [Credential dumping](systems-and-services/privilege-escalation/windows/credential-dumping.md)
     * [Unquoted path](systems-and-services/privilege-escalation/windows/unquoted-service-paths.md)
     * [Scheduled tasks](systems-and-services/privilege-escalation/windows/scheduled-tasks.md)
