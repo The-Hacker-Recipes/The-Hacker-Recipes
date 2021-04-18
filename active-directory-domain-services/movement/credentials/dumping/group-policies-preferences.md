@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1552.006
 ---
 
-# Group Policies Preferences
+# Group Policy Preferences
 
 ## Theory
 
