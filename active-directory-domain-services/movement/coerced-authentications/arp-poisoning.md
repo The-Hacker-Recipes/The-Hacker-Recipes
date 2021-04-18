@@ -2,11 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1557.002
 ---
 
-# 🛠️ ARP poisoning
-
-{% hint style="danger" %}
-Add PCredz [https://github.com/lgandx/PCredz](https://github.com/lgandx/PCredz)
-{% endhint %}
+# ARP poisoning
 
 ## Theory
 
@@ -18,10 +14,12 @@ The ARP \(Address Resolution Protocol\) is used to link IPv4 addresses with MAC 
 Since spoofing every address in a subnet can cause temporary but severe disruption in that subnet, it is highly recommended to target specific addresses and machines while doing ARP spoofing.
 {% endhint %}
 
-There are multiple scenarios where ARP spoofing can be used to operate lateral movement within Active Directory domains. 
+There are multiple scenarios where ARP spoofing can be used to operate lateral movement within Active Directory domains \(not an comprehensive list\). 
 
-1. One could spoof an SMB server and route received SMB packets to internal capture or relay servers for [NTLM capture](../abusing-lm-and-ntlm/capturing-hashes.md) or [NTLM relay](../abusing-lm-and-ntlm/relay.md). 
-2. One could also spoof the internal DNS server, so that DNS queries can be answered with fake resolution \([DNS spoofing](dns-spoofing.md)\).
+1. [NTLM capture](../abusing-lm-and-ntlm/capturing-hashes.md) and [NTLM relay](../abusing-lm-and-ntlm/relay.md) : spoof an SMB server and reroute received SMB packets to internal capture or relay servers
+2. [DNS spoofing](dns-spoofing.md) : spoof the internal DNS server, so that DNS queries can be answered with fake resolutions
+3. [WSUS attacks](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) : spoof the WSUS server and deliver evil configurations to Windows clients
+4. [Dumping network secrets](../credentials/dumping/network-secrets.md) : reroute any traffic and dump secrets that were insecurely sent \(i.e. FTP, HTTP, SMTP, ...\)
 
 ### Preparation
 
