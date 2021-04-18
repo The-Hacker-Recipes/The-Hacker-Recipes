@@ -22,7 +22,7 @@
       * [NTDS.dit secrets](active-directory-domain-services/movement/credentials/dumping/ntds.dit.md)
       * [LSASS.exe secrets](active-directory-domain-services/movement/credentials/dumping/lsass.exe.md)
       * [DCSync](active-directory-domain-services/movement/credentials/dumping/dcsync.md)
-      * [🛠️ Group Policies Preferences](active-directory-domain-services/movement/credentials/dumping/group-policies-preferences.md)
+      * [Group Policies Preferences](active-directory-domain-services/movement/credentials/dumping/group-policies-preferences.md)
       * [🛠️ Cached Kerberos tickets](active-directory-domain-services/movement/credentials/dumping/cached-kerberos-tickets.md)
       * [🛠️ Web browsers](active-directory-domain-services/movement/credentials/dumping/web-browsers.md)
       * [🛠️ Passwords in files](active-directory-domain-services/movement/credentials/dumping/passwords-in-files.md)

@@ -4,7 +4,7 @@ description: MITRE ATT&CK™ Sub-technique T1550.002
 
 # Pass the hash
 
-Theory
+## Theory
 
 An attacker knowing a user's NT hash can use it to authenticate over NTLM \(pass-the-hash\) \(or indirectly over Kerberos with [overpass-the-hash](../abusing-kerberos/overpass-the-hash.md)\).
 
@@ -83,6 +83,8 @@ xfreerdp /u:$USER /d:$DOMAIN /pth:'LMhash:NThash' /v:$TARGET /h:1010 /w:1920
 ```
 {% endtab %}
 {% endtabs %}
+
+### Limitations, tips and tricks
 
 {% hint style="warning" %}
 **UAC limits pass-the-hash**
