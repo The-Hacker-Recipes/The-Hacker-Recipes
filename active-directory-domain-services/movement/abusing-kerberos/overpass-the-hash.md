@@ -2,11 +2,11 @@
 
 ## Theory
 
-In short, an attacker knowing a user's NT hash can use it to authenticate over NTLM \([pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md)\) or indirectly over Kerberos \(overpass-the-hash, **also known as pass-the-key**\).
+In short, an attacker knowing a user's NT hash can use it to authenticate over NTLM \([pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md)\) or indirectly over Kerberos \(overpass-the-hash, **also known as pass-the-key**\) when the RC4 etype is not disabled.
 
 With overpass-the-hash, an attacker can leverage a user's NT hash to request a TGT, that can then be used with [pass-the-ticket](pass-the-ticket.md) to request a Service ticket and access a service using Kerberos. This is possible only when RC4 etype is enable for Kerberos, which is the case by default.
 
-When RC4 etype is not enabled, they other keys \(DES, AES\) can be passed in the same way, hence the alias for this technique "pass the key".
+When RC4 etype is not enabled, they other keys \(DES, AES\) can be passed in the same way, hence the alias for this technique "pass the key". But bear in mind the NT hash can only be used when RC4 is not disabled.
 
 ## Practice
 
