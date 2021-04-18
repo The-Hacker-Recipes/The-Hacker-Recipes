@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1552.006
 
 ## Theory
 
-GPP \(Group Policy Preferences\) 
+GPP \(Group Policy Preferences\) passwords
 
 ## Practice
 
