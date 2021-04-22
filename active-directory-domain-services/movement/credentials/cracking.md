@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1110.002
 
 ## Theory
 
-Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When these information cannot be directly leveraged for higher privileges \(like with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../abusing-kerberos/overpass-the-hash.md)\), it is required to crack it.
+Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When these information cannot be directly leveraged for higher privileges \(like with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../abusing-kerberos/pass-the-key.md)\), it is required to crack it.
 
 Cracking is on operation that can be carried out through different types of attacks:
 

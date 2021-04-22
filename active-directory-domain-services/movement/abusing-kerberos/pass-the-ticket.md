@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1550.003
 
 ## Theory
 
-[Overpass-the-hash](overpass-the-hash.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets. A ticket \(TGT or service ticket, forged or not\) can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
+[Overpass-the-hash](pass-the-key.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets. A ticket \(TGT or service ticket, forged or not\) can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
 
 ## Practice
 

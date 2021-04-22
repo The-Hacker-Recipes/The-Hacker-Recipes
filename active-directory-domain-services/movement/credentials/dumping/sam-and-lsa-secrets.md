@@ -46,8 +46,8 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 | Credential material | Subsequent attacks |
 | :--- | :--- |
 | Plaintext passwords | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
-| LM/NT hashes | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/overpass-the-hash.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
-| Kerberos keys \(RC4\) | [credential cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/overpass-the-hash.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| LM/NT hashes | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| Kerberos keys \(RC4\) | [credential cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
 | Kerberos keys \(DES, AES\) | [credential cracking](../cracking.md) |
 | Domain Cached Credentials \(DCC1 or DCC2\) | [credential cracking](../cracking.md) |
 

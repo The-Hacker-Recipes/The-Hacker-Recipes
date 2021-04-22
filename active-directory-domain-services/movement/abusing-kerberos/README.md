@@ -18,9 +18,9 @@ A Service ticket \(TGS\) allows access to a specific service. The TGT is used to
 | AES128 | Key derivated from user's password \(DOMAINusername as salt\) |
 | AES256 | Key derivated from user's password \(DOMAINusername as salt\) |
 
-Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT \(if RC4 key is accepted\). This is called [Overpass-the-hash](overpass-the-hash.md).
+Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT \(if RC4 key is accepted\). This is called [Overpass-the-hash](pass-the-key.md).
 
-{% page-ref page="overpass-the-hash.md" %}
+{% page-ref page="pass-the-key.md" %}
 
 Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 
@@ -29,7 +29,7 @@ Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 
 {% page-ref page="forged-tickets.md" %}
 
-[Overpass-the-hash](overpass-the-hash.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
+[Overpass-the-hash](pass-the-key.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
 
 {% page-ref page="pass-the-ticket.md" %}
 

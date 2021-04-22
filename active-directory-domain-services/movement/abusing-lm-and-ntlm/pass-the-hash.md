@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1550.002
 
 ## Theory
 
-An attacker knowing a user's NT hash can use it to authenticate over NTLM \(pass-the-hash\) \(or indirectly over Kerberos with [overpass-the-hash](../abusing-kerberos/overpass-the-hash.md)\).
+An attacker knowing a user's NT hash can use it to authenticate over NTLM \(pass-the-hash\) \(or indirectly over Kerberos with [overpass-the-hash](../abusing-kerberos/pass-the-key.md)\).
 
 ## Practice
 
