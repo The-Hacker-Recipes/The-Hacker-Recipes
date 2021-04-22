@@ -56,6 +56,7 @@
     * [Pass the key](active-directory-domain-services/movement/abusing-kerberos/pass-the-key.md)
     * [Overpass the hash](active-directory-domain-services/movement/abusing-kerberos/overpass-the-hash-2.md)
     * [Pass the ticket](active-directory-domain-services/movement/abusing-kerberos/pass-the-ticket.md)
+    * [Pass the cache](active-directory-domain-services/movement/abusing-kerberos/pass-the-cache.md)
     * [Forged tickets](active-directory-domain-services/movement/abusing-kerberos/forged-tickets.md)
     * [ASREProast](active-directory-domain-services/movement/abusing-kerberos/asreproast.md)
     * [Kerberoast](active-directory-domain-services/movement/abusing-kerberos/kerberoast.md)
