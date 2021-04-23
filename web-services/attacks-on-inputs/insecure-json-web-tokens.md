@@ -36,7 +36,6 @@ If the token is accepted by the web app, it means the payload can be altered.
 
 ```python
 import jwt
-public_key = open('pubkey.pem', 'r').read()
 payload = {'key1':'value1', 'key2':'value2'}
 token = jwt.encode(payload, key='', algorithm=None)
 print(token)
