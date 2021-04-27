@@ -170,7 +170,7 @@
     * [SUDO](systems-and-services/privilege-escalation/unix/sudo.md)
     * [🛠️ SUID/SGID binaries](systems-and-services/privilege-escalation/unix/suid-sgid-binaries.md)
     * [🛠️ Living off the land](systems-and-services/privilege-escalation/unix/living-off-the-land.md)
-    * [Capabilities](systems-and-services/privilege-escalation/unix/capabilities.md)
+    * [🛠️ Capabilities](systems-and-services/privilege-escalation/unix/capabilities.md)
     * [Network secrets](systems-and-services/privilege-escalation/unix/network-secrets.md)
 * [Pivoting](systems-and-services/pivoting/README.md)
   * [🛠️ Port forwarding](systems-and-services/pivoting/port-forwarding.md)
