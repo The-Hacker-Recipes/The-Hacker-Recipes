@@ -10,7 +10,7 @@ Just like other linux files, binaries have permissions. Due to obligation or mis
 
 #### SUID binaries
 
-The SUID bit allows the binary to run with the privileges of the owner instead of those of the user executing it. They can be spotted to the `s` permission in the file owner permissions \(ie files with permissions `-rws...`\).
+The SUID bit allows the binary to run with the privileges of the owner instead of those of the user executing it. They can be spotted to the `s` permission in the file owner permissions \(i.e. files with permissions `-rws...`\).
 
 {% hint style="info" %}
 Note that if the permission is listed with a capital `S` such as `-rwS...`, the file is suid-enabled but not executable...
@@ -23,11 +23,11 @@ find / -user root -perm -4000 -exec ls -ldb {} \;
 find / -user root -perm -4000 -print 2>/dev/null
 ```
 
-In this command, replace `/` with the directory you want to search, `f` indicates that only regular \(ie not directories, special files\) will be listed.
+In this command, replace `/` with the directory you want to search, `f` indicates that only regular files \(ie not directories, special files\) will be listed.
 
-Once the suid binaries listed, you can try and exploit them. If in the list you get a usual linux command, chances are that it is exploitable : [GTFOBins-sudo](https://gtfobins.github.io/#+sudo)
+Once the SUID binaries listed, you can try and exploit them. If you find in the list a well known linux command, you can check if it is exploitable on [GTFOBins](https://gtfobins.github.io/#+sudo).
 
-Set special user permission on a file :
+You can set the SUID bit on a file like this :
 
 ```bash
 # Set SUID bit to file
