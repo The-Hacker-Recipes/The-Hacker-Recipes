@@ -95,6 +95,8 @@
   * [🛠️ WAF fingerprinting](web-services/recon/waf-fingerprinting.md)
   * [Site crawling](web-services/recon/site-crawling.md)
   * [Directory fuzzing](web-services/recon/directory-fuzzing.md)
+  * [🛠️ Virtual host fuzzing](web-services/recon/virtual-host-fuzzing.md)
+  * [🛠️ Known vulnerabilities](web-services/recon/known-vulnerabilities.md)
 * [🛠️ Configuration](web-services/configuration/README.md)
   * [🛠️ Default credentials](web-services/configuration/default-credentials.md)
   * [🛠️ DoS mitigations](web-services/configuration/dos-mitigations.md)
