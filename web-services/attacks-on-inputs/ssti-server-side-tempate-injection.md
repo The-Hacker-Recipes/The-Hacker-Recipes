@@ -1,4 +1,4 @@
-# 🛠️ SSTI \(Server-Side Tempate Injection\)
+# 🛠️ SSTI \(Server-Side Template Injection\)
 
 ## Theory
 

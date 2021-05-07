@@ -124,7 +124,7 @@
   * [Open redirect](web-services/attacks-on-inputs/open-redirect.md)
   * [Insecure JSON Web Tokens](web-services/attacks-on-inputs/insecure-json-web-tokens.md)
   * [Insecure Cookies](web-services/attacks-on-inputs/insecure-cookies.md)
-  * [🛠️ SSTI \(Server-Side Tempate Injection\)](web-services/attacks-on-inputs/ssti-server-side-tempate-injection.md)
+  * [🛠️ SSTI \(Server-Side Template Injection\)](web-services/attacks-on-inputs/ssti-server-side-tempate-injection.md)
   * [🛠️ Insecure deserialization](web-services/attacks-on-inputs/insecure-deserialization.md)
   * [SSRF \(Server-Side Request Forgery\)](web-services/attacks-on-inputs/ssrf-server-side-request-forgery.md)
   * [XXE injection](web-services/attacks-on-inputs/xxe-injection.md)
