@@ -20,14 +20,20 @@ The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility o
 The following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](pass-the-ticket.md).
 
 {% hint style="success" %}
-For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups \(i.e. group ids 513, 512, 520, 518, 519\). There are scenarios where these groups are not enough \(special machines where even Domain Admins don't have local admin rights\). In these situations, testers can either look for the domain groups that have local administrator privileges on the target machine, or specify all the groups ids when creating the ticket \(Deny ACEs could actually prevent this from working. Encountering a Deny ACE preventing domain admins to log on could be an issue when having all groups ids in the tickey, including the domain admin group id\).
+For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups \(i.e. group ids 513, 512, 520, 518, 519\). There are scenarios where these groups are not enough \(special machines where even Domain Admins don't have local admin rights\). 
+
+In these situations, testers can either look for the domain groups that have local administrator privileges on the target machine, or specify all the groups ids when creating the ticket.
+
+_**Nota bene**: Deny ACEs could actually prevent the second solution from working. Encountering a Deny ACE preventing domain admins to log on could be an issue when having all groups ids in the tickey, including the domain admin group id._
+{% endhint %}
+
+{% hint style="info" %}
+When forging tickets, only the user-id and groups-ids are useful. The username supplied is mostly useless.
 {% endhint %}
 
 ### Golden ticket
 
-{% hint style="warning" %}
 In order to craft a golden ticket, testers need to find the `krbtgt`'s NT hash or AES key \(128 or 256 bits\). In most cases, this can only be achieved with domain admin privileges through a [DCSync attack](../credentials/dumping/dcsync.md). Because of this, golden tickets only allow lateral movement and not privilege escalation.
-{% endhint %}
 
 {% hint style="info" %}
 Microsoft now uses AES 256 bits by default. Using this encryption algorithm \(instead of giving the NThash\) will be stealthier.
@@ -69,13 +75,9 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 
 ### Silver ticket
 
-{% hint style="warning" %}
 In order to craft a silver ticket, testers need to find the target service account's NT hash or AES key \(128 or 256 bits\).
-{% endhint %}
 
-{% hint style="info" %}
 _"While the scope is more limited than Golden Tickets, the required hash is easier to get and there is no communication with a DC when using them, so detection is more difficult than Golden Tickets." \(_[_adsecurity.org_](https://adsecurity.org/?p=2011)_\)_
-{% endhint %}
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -116,7 +118,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 ### Bronze bit \(CVE-2020-17049\)
 
 {% hint style="warning" %}
-In order to exploit this vulnerability, attackers need to find a service able to delegate to another service \(see [Kerberos delegations](delegations.md)\), and they need that first service account NT hash or AES key \(128 or 256 bits\).
+In order to exploit this vulnerability, attackers need to find a service able to delegate to another service \(see [Kerberos delegations](delegations.md)\), and they need that first service account Kerberos key \(NT hash or AES key, 128 or 256 bits\).
 {% endhint %}
 
 For example with [constrained delegation](delegations.md#constrained-delegations) set between a controlled service and a target one with protocol transition enabled and the target user being protected, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
