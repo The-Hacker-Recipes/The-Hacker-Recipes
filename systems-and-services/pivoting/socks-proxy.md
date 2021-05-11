@@ -25,7 +25,7 @@ In practice, there are many ways to turn a controlled machine into a SOCKS proxy
 
 {% tabs %}
 {% tab title="SSH commands" %}
-One of the most easy is by relying on SSH however, it requires to have an SSH server running on the controlled machine and a valid account. The tester needs to open an SSH connection to the machine that should be turned into a SOCKS proxy, and supply the `-D` option along with the port to use for tunneling. The command can also be used with `-N` option to make sure no command gets executed after the SSH session is opened.
+One of the most easy is by relying on SSH, however, it requires to have an SSH server running on the controlled machine and a valid account. The tester needs to open an SSH connection to the machine that should be turned into a SOCKS proxy, and supply the `-D` option along with the port to use for tunneling. The command can also be used with `-N` option to make sure no command gets executed after the SSH session is opened.
 
 ```bash
 ssh -N -D $PORT $CONTROLLED_TARGET
@@ -45,7 +45,13 @@ ssh -N -R $PORT $CONTROLLED_TARGET
 {% endtab %}
 
 {% tab title="Metasploit" %}
+A meterpreter session can be taken advantage of by setting up a sock proxy with the appropriate module.
 
+```bash
+msf > use auxiliary/server/socks4a
+msf > set SRVPORT $PORT
+msf > run
+```
 {% endtab %}
 
 {% tab title="Cobalt Strike" %}
