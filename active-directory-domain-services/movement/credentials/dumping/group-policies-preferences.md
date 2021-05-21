@@ -16,7 +16,7 @@ Windows systems come with a built-in Administrator \(with an RID of 500\) that m
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, the [Get-GPPPassword](https://github.com/ShutdownRepo/Get-GPPPassword) \(Python\) script can be used to remotely parse `.xml` files and loot for passwords.
+From UNIX-like systems, the [Get-GPPPassword.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/Get-GPPPassword.py) \(Python\) script in the impacket examples can be used to remotely parse `.xml` files and loot for passwords.
 
 ```bash
 # with a NULL session
@@ -29,7 +29,7 @@ Get-GPPPassword.py 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
 Get-GPPPassword.py -hashes 'LMhash':'NThash' 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
 ```
 
-Alternatively, searching for passwords can be done manually \(or with Metasploit `smb_enum_gpp` module\), however it requires mounting the `SYSVOL` share, which can't be done through a docker environment unless it's run with privileged rights.
+Alternatively, searching for passwords can be done manually \(or with Metasploit's `smb_enum_gpp` module\), however it requires mounting the `SYSVOL` share, which can't be done through a docker environment unless it's run with privileged rights.
 
 Tools like [pypykatz](https://github.com/skelsec/pypykatz) \(Python\) and [gpp-decrypt](https://github.com/BustedSec/gpp-decrypt) \(Ruby\) can then be used to decrypt the matches.
 
@@ -88,6 +88,10 @@ The decryption process is as follows
 {% embed url="https://adsecurity.org/?p=2288" %}
 
 {% embed url="http://blog.carnal0wnage.com/2012/10/group-policy-preferences-and-getting.html" %}
+
+{% embed url="https://podalirius.net/en/articles/exploiting-windows-group-policy-preferences/" %}
+
+{% embed url="https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be" %}
 
 
 
