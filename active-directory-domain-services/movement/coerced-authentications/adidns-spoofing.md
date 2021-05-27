@@ -13,7 +13,13 @@ ADIDNS zones can be remotely edited
 * with **dynamic updates** \(a DNS specific protocol used by machine accounts to add and update their own DNS records\). Users can create records if they don't exist, and they will have full control over it. By default, users that don't own a record will not be able to edit it, or to add another one with the same name, even if the type is different \(A, AAAA, CNAME, MX, and so on\).
 * by **using LDAP** to create dnsNode objects. While dynamic updates can't be used to inject a wildcard DNS record, LDAP can be \(only if the record doesn't already exist, which is the case by default\).
 
+### Wildcard records
+
 > Wildcard records allow DNS to function in a very similar fashion to LLMNR/NBNS spoofing. Once you create a wildcard record, the DNS server will use the record to answer name requests that do not explicitly match records contained in the zone. \([source](https://blog.netspi.com/exploiting-adidns/#wildcard)\)
+
+💡 In some scenarios, adding a wildcard record the the proper ADIDNS zone won't work. This is usually due to the **WINS forward lookup** being enabled on that zone. WINS forward lookup makes the DNS server send a NBT-NS Query Request to a predefined WINS server when it receives an address record query for which it doesn't know the answer. In short, it serves the same purpose as the wildcard record. This feature needs to be disabled for the wildcard record to be used.
+
+![](../../../.gitbook/assets/wins_lookup.png)
 
 ## Practice
 
