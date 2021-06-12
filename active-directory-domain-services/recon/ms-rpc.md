@@ -2,7 +2,7 @@
 
 ## Theory
 
-MS-RPC \(Microsoft Remote Procedure Call\) is a protocol that allows to request service from a program on another computer without having to understand the details of that computer's network. An MS-RPC service can be accessed through different transport protocols, among which:
+MS-RPC \(Microsoft Remote Procedure Call\) is a protocol that allows requesting service from a program on another computer without having to understand the details of that computer's network. An MS-RPC service can be accessed through different transport protocols, among which:
 
 * a network SMB pipe \(listening ports are 139 & 445\)
 * plain TCP or plain UDP \(listening port set at the service creation\)
@@ -46,7 +46,7 @@ The Samba utility named [rpcclient](https://www.samba.org/samba/docs/current/man
 * `enumdomusers`: list users, equivalent to `net user /domain`
 * `enumdomgroups`: list groups equivalent to `net group /domain`
 * `queryuser <rid/name>`: obtain info on a user, equivalent to `net user <user> /domain`
-* `querygroupmem <rid>`: obtan group members, equivalent to `net group <group> /domain`
+* `querygroupmem <rid>`: obtain group members, equivalent to `net group <group> /domain`
 * `getdompwinfo`: get password policy
 
 ```bash
@@ -55,7 +55,7 @@ rpcclient -c "command1,command2" $TARGET_IP
 
 ### RID Cycling
 
-RID Cycling is a method that allows attacker to enumerate domain objects by bruteforcing or guessing RIDs and SIDs, based on the fact that RIDs are sequential.
+RID Cycling is a method that allows attackers to enumerate domain objects by bruteforcing or guessing RIDs and SIDs, based on the fact that RIDs are sequential.
 
 The Python script [ridenum](https://github.com/trustedsec/ridenum) can be used to operate that recon technique, with a Null session or with an authenticated one.
 

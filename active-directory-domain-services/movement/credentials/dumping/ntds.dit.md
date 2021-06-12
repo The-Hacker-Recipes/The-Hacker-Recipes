@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1003.003
 
 NTDS \(Windows NT Directory Services\) is the directory services used by Microsoft Windows NT to locate, manage, and organize network resources. The NTDS.dit file is a database that stores the Active Directory data \(including users, groups, security descriptors and password hashes\). This file is stored on the domain controllers.
 
-Once the secrets are extracted, they can be used for various attacks : [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver or golden tickets](../../abusing-kerberos/forged-tickets.md).
+Once the secrets are extracted, they can be used for various attacks: [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver or golden tickets](../../abusing-kerberos/forged-tickets.md).
 
 ## Exfiltration
 
@@ -16,7 +16,7 @@ Just like with [SAM & LSA secrets](sam-and-lsa-secrets.md), the SYSTEM registry 
 
 ### Volume Shadow Copy \(VSSAdmin\)
 
-VSS \(Volume Shadow Copy\) is a Microsoft Windows technology, implemented as a service, that allows to create backup copies of files or volumes, even when they are in use. The following command will create the shadow copy and will print two values that will be used later : the ID and the Name of the shadow copy.
+VSS \(Volume Shadow Copy\) is a Microsoft Windows technology, implemented as a service, that allows the creation of backup copies of files or volumes, even when they are in use. The following command will create the shadow copy and will print two values that will be used later: the ID and the Name of the shadow copy.
 
 ```bash
 vssadmin create shadow /for=C:

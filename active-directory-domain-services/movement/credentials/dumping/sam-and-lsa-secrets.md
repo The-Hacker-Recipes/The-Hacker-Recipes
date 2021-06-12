@@ -19,8 +19,9 @@ In Windows environments, passwords are stored in a hashed format in registry hiv
   <tbody>
     <tr>
       <td style="text-align:left">SAM</td>
-      <td style="text-align:left">stores local cached credentials (referred to as SAM secrets)</td>
-      <td style="text-align:left">LM or NT hashes</td>
+      <td style="text-align:left">stores locally cached credentials (referred to as SAM secrets)</td>
+      <td
+      style="text-align:left">LM or NT hashes</td>
     </tr>
     <tr>
       <td style="text-align:left">SECURITY</td>

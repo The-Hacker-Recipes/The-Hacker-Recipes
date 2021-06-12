@@ -6,13 +6,13 @@ description: MITRE ATT&CK™ Sub-technique T1110.002
 
 ## Theory
 
-Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When these information cannot be directly leveraged for higher privileges \(like with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../abusing-kerberos/pass-the-key.md)\), it is required to crack it.
+Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges \(like with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../abusing-kerberos/pass-the-key.md)\), it is required to crack it.
 
-Cracking is on operation that can be carried out through different types of attacks:
+Cracking is an operation that can be carried out through different types of attacks:
 
 * **Brute-force**: every possibility for a given character set and a given length \(i.e. aaa, aab, aac, ...\) is hashed and compared against the target hash.
 * **Dictionary**: every word of a given list \(a.k.a. dictionary\) is hashed and compared against the target hash.
-* **Rainbow tables**: the hash is looked for in a precomputed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows to crack hashes faster, but costing a greater amount of memory that traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additional random value as prefix/suffix, making the precomputed table irrelevant\)
+* **Rainbow tables**: the hash is looked for in a precomputed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows cracking hashes faster, but costing a greater amount of memory than traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additional random value as prefix/suffix, making the precomputed table irrelevant\)
 
 There are many other and more complex types of attacks \(incremental, mask, rules, hybrid types, ...\) but the major/core ones are the three above.
 
@@ -20,8 +20,8 @@ There are many other and more complex types of attacks \(incremental, mask, rule
 
 One of the greatest tools that can be used for cracking is [hashcat](https://hashcat.net/hashcat/) \(C\). It implements different types of attacks and many types of hashes. It has many other great features like
 
-* it is cross-platform \(support for Linux, Windows and macOS\) and support anything that comes with an OpenCL runtime \(CPU, GPU, APU, ...\)
-* it can crack multiple hashes at the same time and use multiple device at once \(distributed cracking networks supported too\)
+* it is cross-platform \(support for Linux, Windows and macOS\) and supports anything that comes with an OpenCL runtime \(CPU, GPU, APU, ...\)
+* it can crack multiple hashes at the same time and use multiple devices at once \(distributed cracking networks supported too\)
 * it can save and restore sessions
 * it has a builtin benchmarking system
 

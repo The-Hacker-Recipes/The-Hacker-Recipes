@@ -4,7 +4,7 @@ A lot of information on an AD domain can be obtained through LDAP. Most of the i
 
 {% tabs %}
 {% tab title="ldapsearch-ad" %}
-The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) Python script can also be used to enumerate essential information like domain admins that have there password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.
+The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) Python script can also be used to enumerate essential information like domain admins that have their password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.
 
 ```bash
 ldapsearch-ad --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD --type all
@@ -36,7 +36,7 @@ ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump
 {% endtabs %}
 
 {% hint style="info" %}
-LDAP anonymous binding is usually disabled but it's worth checking. It could be handful to list the users and test for [ASREProasting](../movement/abusing-kerberos/asreproast.md) \(since this attack needs no authentication\).
+LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/abusing-kerberos/asreproast.md) \(since this attack needs no authentication\).
 {% endhint %}
 
 {% hint style="success" %}

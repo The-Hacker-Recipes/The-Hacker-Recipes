@@ -1,6 +1,6 @@
 # DNS
 
-AD-DS \(Active Directory Domain Services\) rely on DNS SRV RR \(service location resource records\). Those records can be queried to find the location of some servers : the global catalog, LDAP servers, the Kerberos KDC and so on. 
+AD-DS \(Active Directory Domain Services\) rely on DNS SRV RR \(service location resource records\). Those records can be queried to find the location of some servers: the global catalog, LDAP servers, the Kerberos KDC and so on. 
 
 {% tabs %}
 {% tab title="dnsutils" %}

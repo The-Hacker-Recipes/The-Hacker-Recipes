@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1003.001
 
 ## Theory
 
-The Local Security Authority Subsystem Service \(LSASS\) is a Windows service responsible for enforcing the security policy on the system. It verifies users logging in, handles password changes and creates access tokens. Those operations lead to the storage of credential material in the process memory of LSASS. **With administrative rights only**, these material can be harvested \(either locally or remotely\).
+The Local Security Authority Subsystem Service \(LSASS\) is a Windows service responsible for enforcing the security policy on the system. It verifies users logging in, handles password changes and creates access tokens. Those operations lead to the storage of credential material in the process memory of LSASS. **With administrative rights only**, this material can be harvested \(either locally or remotely\).
 
 ## Practice
 

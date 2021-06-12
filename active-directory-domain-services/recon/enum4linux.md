@@ -7,7 +7,7 @@ The following techniques can be operated.
 * Service & port scan \(for LDAP\(S\), SMB, NetBIOS, MS-RPC\)
 * NetBIOS names and workgroup \(via [reverse lookup](nbt-ns.md)\)
 * SMB dialects checks \(SMBv1 only or SMBv1 and higher\)
-* RPC sessions checks \(checks if user creds supplied are valid or if [null session](ms-rpc.md#null-sessions) works\)
+* RPC sessions checks \(checks if the user creds supplied are valid or if [null session](ms-rpc.md#null-sessions) works\)
 * Domain information via LDAP \(find out whether host is a parent or child DC\)
 * Domain information via RPC \([via SMB named pipe](ms-rpc.md#recon-through-interesting-named-pipes) `\pipe\lsarpc` for MS-RPC\)
 * OS information via RPC \([via SMB named pipe](ms-rpc.md#recon-through-interesting-named-pipes) `\pipe\srvsvc` for MS-RPC\)
