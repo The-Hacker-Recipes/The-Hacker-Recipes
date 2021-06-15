@@ -21,7 +21,7 @@ ffuf -w $wordlist -u $URL -H "Host: FUZZ.$URL"
 ```
 
 {% hint style="info" %}
-We can filter the responses with a specific size using `-fs $size`.  
+It is possible to filter the responses with a specific size using `-fs $size`.  
 An example can be found [here](https://asciinema.org/a/211360) and more tips [here](https://codingo.io/tools/ffuf/bounty/2020/09/17/everything-you-need-to-know-about-ffuf.html).
 {% endhint %}
 
@@ -49,7 +49,7 @@ Using Google Dorks.
 site:<url> -www
 ```
 
-With `-www`, we avoid printing searches related to our main domain so we can focus on interesting subdomains.
+With `-www`, the response avoids printing searches related to our main domain so it is easier to focus on interesting subdomains.
 
 ## References
 

@@ -13,14 +13,14 @@ This attack could allow an attacker to bypass input validation and WAFs rules, m
 
 ### Before the test
 
-We can use [Arjun](https://github.com/s0md3v/Arjun) to find HTTP parameters in a website.
+[Arjun](https://github.com/s0md3v/Arjun) can be used to find HTTP parameters in a website.
 
 ```bash
 arjun -u $URL/endpoint
 ```
 
 {% hint style="info" %}
-We can specify a delay between requests and handle rate limits.  
+It is possible to specify a delay between requests and handle rate limits.  
 Check out the [GitHub page](https://github.com/s0md3v/Arjun/wiki/Usage#scan-a-single-url).
 {% endhint %}
 

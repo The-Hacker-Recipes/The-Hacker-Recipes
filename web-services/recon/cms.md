@@ -52,7 +52,7 @@ droopescan scan $cms_name -u $URL
 
 ### Other tools
 
-**Browser extension**: [Wappalyzer](https://www.wappalyzer.com/) allows you to identify technologies on websites \(including CMS\).  
-**Website**: [Whatcms.org](https://whatcms.org/) which helps you answer the question "What CMS Is This Site Using?" by entering an URL.  
+**Browser extension**: [Wappalyzer](https://www.wappalyzer.com/) allows its user to identify technologies on websites \(including CMS\).  
+**Website**: [Whatcms.org](https://whatcms.org/) which helps in answering the question "What CMS Is This Site Using?" by entering an URL.  
 **Source code and robots.txt**: information about the CMS used can be written in these files.
 

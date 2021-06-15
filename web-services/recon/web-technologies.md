@@ -4,7 +4,7 @@
 
 Web technologies are a set of components surrounding a web application. These components could be web servers, CMS, JS frameworks, etc.
 
-The main goal is to find these components and their version. We can then take advantage of that to search for vulnerabilities to exploit.
+The main goal is to find these components and their version. It can be taken advantage of to search for vulnerabilities to exploit.
 
 Aside from using tools to uncover the specific technologies used, another way would be to check for error stack traces, error code, and so on. Applications \(web apps, web servers, databases, etc.\) would generate error pages that could disclose information about the technology used.
 
@@ -26,7 +26,7 @@ Another way to find the web technologies used is [Wappalyzer](https://www.wappal
 
 ### Error handling
 
-In addition to the previous techniques \(using WhatWeb and Wappalyzer\), we can check for error handling manually:
+In addition to the previous techniques \(using WhatWeb and Wappalyzer\), it is possible to check for error handling manually:
 
 * Requesting a 404 error page can be done by requesting incorrect URLs.
 * Requesting a 403 forbidden page.

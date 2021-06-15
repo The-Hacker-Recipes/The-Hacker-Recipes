@@ -27,7 +27,7 @@ nmap -p 80,443 --script=http-waf-fingerprint $URL
 ```
 
 {% hint style="info" %}
-We could also use another script called `http-waf-detect`. It detects IDS/IPS/WAF but doesn't give us information about the vendor, or version...
+Another script called `http-waf-detect`can be used. It detects IDS/IPS/WAF but doesn't give information about the vendor, or version...
 {% endhint %}
 
 ### Other examples

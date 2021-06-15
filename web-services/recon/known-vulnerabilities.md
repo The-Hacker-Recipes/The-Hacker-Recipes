@@ -2,7 +2,7 @@
 
 ## Theory
 
-Once we have gathered all the useful information we could, it's time to find possible vulnerabilities associated with the components we found.
+Once all the useful information are gathered, it's time to find possible vulnerabilities associated with the components we found.
 
 ## Practice
 
