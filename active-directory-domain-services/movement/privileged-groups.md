@@ -47,7 +47,7 @@ Below is a table summing up some groups' rights and abuse paths.
     </tr>
     <tr>
       <td style="text-align:left">DnsAdmins</td>
-      <td style="text-align:left">can read, write, create, delete DNS records (e.g. edit the <a href="coerced-authentications/adidns-spoofing.md#manual-record-manipulation">wildcard record</a> if
+      <td style="text-align:left">can read, write, create, delete DNS records (e.g. edit the <a href="mitm-and-coerced-authentications/adidns-spoofing.md#manual-record-manipulation">wildcard record</a> if
         it already exists). Its members can also <a href="https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83">run code via DLL on a Domain Controller operating as a DNS server</a>.</td>
     </tr>
     <tr>

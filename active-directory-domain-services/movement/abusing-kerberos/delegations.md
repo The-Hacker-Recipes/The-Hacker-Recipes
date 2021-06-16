@@ -22,10 +22,10 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 
 ### Unconstrained Delegations
 
-If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../coerced-authentications/)\) using Kerberos. The attacker service will receive a TGS containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
+If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive a TGS containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
 
 {% hint style="info" %}
-Unconstrained delegation abuses are usually combined with the [PrinterBug](../coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
+Unconstrained delegation abuses are usually combined with the [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 {% endhint %}
 
 {% tabs %}
@@ -47,7 +47,7 @@ dnstool.py -u 'DOMAIN\MachineAccont$' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQD
 krbrelayx.py -aesKey 'MachineAccount_AES_key'
 ```
 
-Once the krbrelayx listener is ready, a [forced authentication attack](../coerced-authentications/) \(e.g. [PrinterBug](../coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive an authentication, hence a TGS, containing a TGT.
+Once the krbrelayx listener is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive an authentication, hence a TGS, containing a TGT.
 {% endtab %}
 
 {% tab title="From the compromised computer \(Windows\)" %}
@@ -57,7 +57,7 @@ Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/
 Rubeus.exe monitor /interval:5
 ```
 
-Once the monitor is ready, a [forced authentication attack](../coerced-authentications/) \(e.g. [PrinterBug](../coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. Rubeus will then receive an authentication \(hence a TGS, containing a TGT\). The TGT can be used to request a TGS for another service.
+Once the monitor is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. Rubeus will then receive an authentication \(hence a TGS, containing a TGT\). The TGT can be used to request a TGS for another service.
 
 ```bash
 Rubeus.exe asktgs /ticket:$base64_extracted_TGT /service:$target_SPN /ptt
