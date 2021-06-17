@@ -1,4 +1,12 @@
-# WSUS attacks
+# WSUS spoofing
+
+[ARP poisoning](../../../active-directory-domain-services/movement/mitm-and-coerced-authentications/arp-poisoning.md)
+
+```text
+reg query HKML\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
+```
+
+
 
 [https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/](https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/)
 
