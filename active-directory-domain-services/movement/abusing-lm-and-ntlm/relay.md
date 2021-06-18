@@ -118,6 +118,16 @@ The following command will abuse the default value \(i.e. 10\) of `ms-DS-Machine
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET --add-computer SHUTDOWN
 ```
+
+Another way of creating an account is to relay a user that has that right. When the domain user has enough privileges, that account will be promoted to a privileged group.
+
+```bash
+ntlmrelayx.py -t ldaps://$DC_TARGET --add-computer 
+```
+
+{% hint style="info" %}
+In most cases, the `--remove-mic` option will be needed when relaying to LDAP\(S\) because of the [MIC protection](relay.md#mic-message-integrity-code).
+{% endhint %}
 {% endtab %}
 
 {% tab title="Kerberos deleg." %}
@@ -147,8 +157,10 @@ ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
 {% endhint %}
 {% endtab %}
+{% endtabs %}
 
-{% tab title="+" %}
+### Tips & tricks
+
 The ntlmrelayx tool offers other features making it a very valuable asset when pentesting an Active Directory domain:
 
 * It can work with mitm6 \(for [DHCPv6 + DNS poisoning](../mitm-and-coerced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option \(IPv6 support is not required since most hosts will send IPv4 but using this option is recommanded since it will allow relay servers to work with IPv4 and IPv6\)
@@ -160,7 +172,7 @@ The ntlmrelayx tool offers other features making it a very valuable asset when p
 * It has the ability to relay a single connection \(SMB only for now\) to multiple targets, see below
 
 {% hint style="info" %}
-Thanks to [the recent "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a ChallengeResponse \(i.e. LM or NTLM hash\) with a custom challenge on an interface/machine, while relaying on another.
+Thanks to [the "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a ChallengeResponse \(i.e. LM or NTLM hash\) with a custom challenge on an interface/machine, while relaying on another.
 {% endhint %}
 
 The targets file used with the `-tf` option can contain the following
@@ -180,8 +192,6 @@ someserver.domain.lan
 ```bash
 crackmapexec smb --gen-relay-list targets.txt $SUBNET
 ```
-{% endtab %}
-{% endtabs %}
 
 ## References
 
