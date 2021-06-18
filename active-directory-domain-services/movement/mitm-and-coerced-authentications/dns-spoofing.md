@@ -28,7 +28,7 @@ In order to spoof DNS requests, [bettercap](https://www.bettercap.org/) \(Go\) c
 
 ```bash
 set dns.spoof.domains $DOMAIN_FQDN
-set dns.spoot.all true
+set dns.spoof.all true
 dns.spoof on
 ```
 {% endtab %}
