@@ -65,7 +65,7 @@ hashcat --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_fil
 **TL; DR**: here is a hashcat command that bruteforce any password from 4 to 8 characters long. Each character can be any printable character.
 
 ```bash
-hashcat --attack-mode 3 --increment --increment-min 4 --increment-max 8 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
+hashcat --attack-mode 3 --increment --increment-min 4 --increment-max 8 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a?a?a?a?a"
 ```
 {% endhint %}
 
@@ -102,8 +102,8 @@ Hashcat also has an incremental feature that allows to bruteforce passwords up t
 # Password are up to 8 chars-long and can be any printable char.
 hashcat --attack-mode 3 --increment --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
 
-# Password are 4 to 8 chars-long and can be any printable char.
-hashcat --attack-mode 3 --increment --increment-min 4 --increment-max 8 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
+# Password are 4 to 8 chars-long and can be any printable char (mask length is 12 so that --increment-max can be upped to 12).
+hashcat --attack-mode 3 --increment --increment-min 4 --increment-max 8 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a?a?a?a?a"
 ```
 
 More information on how to fully use hashcat can be found [here](https://www.4armed.com/blog/perform-mask-attack-hashcat/).
