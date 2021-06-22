@@ -40,11 +40,15 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | [ASREProast](../abusing-kerberos/asreproast.md) | 18200 |
 | [Kerberoast](../abusing-kerberos/kerberoast.md) | 13100 |
 
+### Dictionnary attack
+
 Below is an example of how to use hashcat for a dictionary attack.
 
 ```bash
-hashcat --hash-type $number --attack-mode 0 $hashes_file $wordlist_file
+hashcat --attack-mode 0 --hash-type $number $hashes_file $wordlist_file
 ```
+
+### Dictionnary and rules attack
 
 Hashcat can also be used in a hybrid mode by combining a dictionary attack with rules that will operate transformations to the words of the list.
 
@@ -52,14 +56,65 @@ Hashcat can also be used in a hybrid mode by combining a dictionary attack with 
 * **Great rules**: [pantagrule](https://github.com/rarecoil/pantagrule), [OneRuleToRuleThemAll](https://notsosecure.com/one-rule-to-rule-them-all/) 
 
 ```bash
-hashcat --hash-type $number --attack-mode 0 --rules-file $rules_file $hashes_file $wordlist_file
+hashcat --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file
 ```
+
+### Brute-force attack
+
+{% hint style="success" %}
+**TL; DR**: here is a hashcat command that bruteforce any password from 4 to 8 characters long. Each character can be any printable character.
+
+```bash
+hashcat --attack-mode 3 --increment-min 4 --increment-max 8 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
+```
+{% endhint %}
+
+Hashcat has the following built-in charsets that can be used.
+
+```text
+?l = abcdefghijklmnopqrstuvwxyz
+?u = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+?d = 0123456789
+?s =  !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+?a = ?l?u?d?s
+?b = 0x00 - 0xff
+```
+
+Below are examples of hashcat beeing used with built-in charset.
+
+```bash
+# Passwords are like : 1 capital letter, 3 letters, 4 numbers, 1 special char
+hashcat --attack-mode 3 --hash-type $number $hashes_file "?u?l?l?l?d?d?d?d?s"
+
+# Password are 8 chars-long and can be any printable char.
+hashcat --attack-mode 3 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
+```
+
+Hashcat can also be started with custom charsets in the following manner.
+
+```bash
+hashcat --attack-mode 3 --custom-charset1 "?u" --custom-charset2 "?l?u?d" --custom-charset3 "?d" --hash-type $number $hashes_file "?1?2?2?2?3"
+```
+
+Hashcat also has an incremental feature that allows to bruteforce passwords up to a certain length whereas the commands above only try the specified mask's length.
+
+```bash
+# Password are up to 8 chars-long and can be any printable char.
+hashcat --attack-mode 3 --increment --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
+
+# Password are 4 to 8 chars-long and can be any printable char.
+hashcat --attack-mode 3 --increment-min 4 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a"
+```
+
+More information on how to fully use hashcat can be found [here](https://www.4armed.com/blog/perform-mask-attack-hashcat/).
+
+### Hashcat alternative
 
 A robust alternative to hashcat is [John the Ripper](https://github.com/openwall/john), a.k.a. john \(C\). It handles some hash types that hashcat doesn't \(Domain Cached Credentials for instance\) but it also has a strong community that regularly releases tools in the form of "something2john" that convert things to a john crackable format \(e.g. `bitlocker2john`, `1password2john`, `keepass2john`, `lastpass2john` and so on\).
 
-{% hint style="success" %}
-**Tips & tricks**
+## Tips & tricks
 
+{% hint style="success" %}
 * Google offers services like [Colab](https://colab.research.google.com/) and [Cloud Shell](https://console.cloud.google.com/home/dashboard?cloudshell=true) that can be used for "cloud cracking". There are projects like [penglab](https://github.com/mxrch/penglab), [google-colab-hashcat](https://github.com/ShutdownRepo/google-colab-hashcat) and [cloudtopolis](https://github.com/JoelGMSec/Cloudtopolis) that can help testers to setup a cracking session on such resources
 * Other solutions, cloud-based or not, can be used to improve cracking speed: [setting up a rig](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig) for instance.
 * LM and NTLM ChallengeResponses can be cracked really fast \(and for free depending on the hash\) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables \([here's how to capture those hashes](../abusing-lm-and-ntlm/capturing-hashes.md#practice)\).
