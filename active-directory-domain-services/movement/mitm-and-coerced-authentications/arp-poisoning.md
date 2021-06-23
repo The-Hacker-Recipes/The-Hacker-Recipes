@@ -167,7 +167,6 @@ set any.proxy.dst_port 8530
 # control logging and verbosity
 events.ignore endpoint
 events.ignore net.sniff
-events.include net.sniff.http
 
 # start the modules
 any.proxy on
