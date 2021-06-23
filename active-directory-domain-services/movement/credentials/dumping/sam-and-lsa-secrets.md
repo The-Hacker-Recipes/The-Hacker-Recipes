@@ -48,7 +48,7 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 | :--- | :--- |
 | Plaintext passwords | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
 | LM/NT hashes | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
-| Kerberos keys \(RC4\) | [credential cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| Kerberos keys \(RC4\) | [credential cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md), [pass-the-key](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
 | Kerberos keys \(DES, AES\) | [credential cracking](../cracking.md) |
 | Domain Cached Credentials \(DCC1 or DCC2\) | [credential cracking](../cracking.md) |
 
@@ -149,4 +149,6 @@ crackmapexec smb $TARGETS --kerberos --sam/--lsa
 {% embed url="http://moyix.blogspot.com/2008/02/decrypting-lsa-secrets.html" caption="" %}
 
 {% embed url="https://medium.com/@benichmt1/secretsdump-demystified-bfd0f933dd9b" %}
+
+{% embed url="https://webstersprodigy.net/2014/02/03/mscash-hash-primer-for-pentesters/" %}
 
