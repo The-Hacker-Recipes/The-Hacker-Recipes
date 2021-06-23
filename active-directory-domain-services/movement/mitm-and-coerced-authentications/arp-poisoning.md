@@ -42,7 +42,7 @@ Besides the scenarios mentioned above, many network topologies exist and ARP poi
 Since spoofing every address in a subnet can cause temporary but severe disruption in that subnet, it is highly recommended to target specific addresses and machines while doing ARP spoofing.
 {% endhint %}
 
-The best tool to operate ARP spoofing is [bettercap](https://www.bettercap.org/) \(Go\) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
+The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org/) \(Go\) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
 
 ### Network filter
 
@@ -52,14 +52,14 @@ In order to forward packets, the system has to be prepared accordingly. The firs
 iptables --policy FORWARD ACCEPT
 ```
 
-### ARP spoofing
+### ARP poisoning
 
 Bettercap's [arp.spoof](https://www.bettercap.org/modules/ethernet/spoofers/arp.spoof/) module has multiple options that allow multiple scenarios
 
 * `arp.spoof.targets` is the list of targets whose ARP tables will be poisoned
 * `arp.spoof.internal` is an option that allows bettercap to choose which addresses to spoof. If set to `true`, machines from the same subnet as the client victim will be spoofed \(i.e. their IP addresses will be matched to the attacker's MAC address on the victim client's ARP table\). To put it simply, this option needs to be set to `true` when the attacker wants to be the man-in-the-middle between two machines of a same subnet. When the victim client and the spoofed server are on different subnets, this option can be left to `false`.
 * `arp.spoof.fullduplex` is an option that, when set to `true`, will make bettercap automatically try to poison the gateway's ARP table so that packets aimed at the victim client also get intercepted.
-* `arp.spoof` is a trigger to set to `on` when starting the ARP spoofing, `off` when stopping it. This trigger will also enable packets forwarding \(i.e. write `1` in `/proc/sys/net/ip/ip_forward`\) while the `arp.ban` trigger will disabled that and the poisoned victim will not have access to the spoofed machines anymore.
+* `arp.spoof` is a trigger to set to `on` when starting the ARP poisoning, `off` when stopping it. This trigger will also enable packets forwarding \(i.e. write `1` in `/proc/sys/net/ip/ip_forward`\) while the `arp.ban` trigger will disabled that and the poisoned victim will not have access to the spoofed machines anymore.
 
 ### Packet forwarding
 
@@ -182,7 +182,7 @@ The caplet above can be loaded with the following command in order to launch the
 bettercap --iface $interface --caplet wsus_spoofing.cap
 ```
 
-The lookup for Windows updates can be manually triggered when having access to the target computer by going to `Settings > Update & Security > Windows Update > Check for updates`.
+The search for Windows updates can be manually triggered when having access to the target computer by going to `Settings > Update & Security > Windows Update > Check for updates`.
 {% endtab %}
 
 {% tab title="Dumping network secrets" %}
