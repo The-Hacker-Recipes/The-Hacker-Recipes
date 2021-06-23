@@ -167,6 +167,7 @@ set any.proxy.dst_port 8530
 # control logging and verbosity
 events.ignore endpoint
 events.ignore net.sniff
+events.include net.sniff.http.request
 
 # start the modules
 any.proxy on
@@ -200,7 +201,6 @@ set arp.spoof.fullduplex true
 # control logging and verbosity
 events.ignore endpoint
 events.ignore net.sniff
-events.include net.sniff.http
 
 # start the modules
 arp.spoof on
