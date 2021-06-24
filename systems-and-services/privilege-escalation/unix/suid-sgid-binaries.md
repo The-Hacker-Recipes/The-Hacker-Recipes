@@ -37,9 +37,9 @@ If a SUID/SGID binary makes calls to programs using relative paths instead of ab
 {% code title="vuln.c" %}
 ```c
 int function(int argc, char *argv[]){
-···
-    system("ls") // instead of system("/usr/bin/cat")
-···
+/* ... */
+    system("ls") // instead of system("/usr/bin/ls")
+/* ... */
 }
 ```
 {% endcode %}
