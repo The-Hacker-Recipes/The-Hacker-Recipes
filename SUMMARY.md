@@ -173,7 +173,7 @@
     * [Network secrets](systems-and-services/privilege-escalation/windows/network-secrets.md)
   * [UNIX-like](systems-and-services/privilege-escalation/unix/README.md)
     * [SUDO](systems-and-services/privilege-escalation/unix/sudo.md)
-    * [🛠️ SUID/SGID binaries](systems-and-services/privilege-escalation/unix/suid-sgid-binaries.md)
+    * [SUID/SGID binaries](systems-and-services/privilege-escalation/unix/suid-sgid-binaries.md)
     * [Living off the land](systems-and-services/privilege-escalation/unix/living-off-the-land.md)
     * [Capabilities](systems-and-services/privilege-escalation/unix/capabilities.md)
     * [Network secrets](systems-and-services/privilege-escalation/unix/network-secrets.md)
@@ -208,4 +208,9 @@
   * [🛠️ WPA2](radio/wi-fi/wpa2.md)
   * [🛠️ WPS](radio/wi-fi/wps.md)
 * [Wireless keyboard/mouse](radio/wireless-keyboard-mouse.md)
+
+## 🛠️ binary exploitation
+
+* [Use-after-free](binary-exploitation/use-after-free.md)
+* [Buffer overflow](binary-exploitation/buffer-overflow.md)
 

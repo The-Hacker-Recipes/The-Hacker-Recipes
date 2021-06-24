@@ -1,87 +1,58 @@
-# 🛠️ SUID/SGID binaries
-
-{% hint style="danger" %}
-**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
-{% endhint %}
+# SUID/SGID binaries
 
 ## Theory
 
-Just like other linux files, binaries have permissions. Due to obligation or misconfiguration, some of them run with higher privileges than usual and can therefore be targeted in priority when trying to locally escalate privileges on a machine.
+On UNIX-like systems, binaries have permissions, just like any other file. Some of them often are over-privileged, sometimes allowing attackers to escalate privileges on the system. These permissions can be read, write, execute or extended ones like setuid, setgid, sticky mode, and so on.
 
-#### SUID binaries
+The setuid/setgid \(SUID/SGID\) bit allows the binary to run with the privileges of the user/group owner instead of those of the user executing it. They can be spotted with the `s` or `S` permission in the file user or group owner permissions \(i.e. `---s--s---`\). When the file permissions features an uppercase `S` instead of a lowercase one, it means the corresponding user or group owner doesn't have execution rights.
 
-The SUID bit allows the binary to run with the privileges of the owner instead of those of the user executing it. They can be spotted to the `s` permission in the file owner permissions \(i.e. files with permissions `-rws...`\).
+{% hint style="warning" %}
+**Limitations**
 
-{% hint style="info" %}
-Note that if the permission is listed with a capital `S` such as `-rwS...`, the file is suid-enabled but not executable...
+* Just like capabilities, setuid and setgid bits are unset when a file is copied with `cp`.
+* Some partitions of the UNIX file system can be mounted with the `nosuid` option. In this case the setuid and setgid bits are ignored for binaries placed inside those partitions. It is a common good practice for tmpfs partitions like `/tmp` or`/run`. Searching the `/proc/mounts` pseudo-file for a `nosuid` flag can help find these partitions.
 {% endhint %}
-
-```bash
-# List all the root suid-enabled running binaries on the machine (and variants)
-find / -perm -u=s -type f 2>/dev/null
-find / -user root -perm -4000 -exec ls -ldb {} \;
-find / -user root -perm -4000 -print 2>/dev/null
-```
-
-In this command, replace `/` with the directory you want to search, `f` indicates that only regular files \(ie not directories, special files\) will be listed.
-
-Once the SUID binaries listed, you can try and exploit them. If you find in the list a well known linux command, you can check if it is exploitable on [GTFOBins](https://gtfobins.github.io/#+sudo).
-
-You can set the SUID bit on a file like this :
-
-```bash
-# Set SUID bit to file
-sudo chmod u+s file
-```
-
-#### SGID binaries
-
-The same principles apply to SGID binaries. They can be spotted by the `s` permission in the file group permission \(ie files with the permissions `-...rws...`\).
-
- Set special group permission on a file :
-
-```bash
-# Set SGID bit to file
-sudo chmod g+s file
-```
-
-#### Limitations
-
-* Just like capabilities, SUID and GUID bits are cleared when a file is copied with `cp`.
-* Some partitions of the linux file system are mounted with the `nosuid` option. In this case the SUID bit is ignored for binaries placed inside the partition. It is a common good practice for tmpfs partitions like `/tmp` or`/run`. You can spot these partitions  by inspecting the `/proc/mounts` pseudo-file for a `nosuid` flag. 
 
 ## Practice
 
-#### Relative path calls
+All suid or sgid-enabled files the user can have access to can be listed with the following command.
 
-If a SUID binary calls to another one using a relative path instead of absolute.
+```bash
+find $starting_path -perm -u=s -type f 2>/dev/null
+find $starting_path -perm -u=s -type f 2>/dev/null
+```
 
+Binaries with these permissions are then targets to exploit to obtain the user or group owner privileges. There are many techniques that attackers use to hijack those binaries and obtain those rights.
+
+### Living of the land
+
+Using standard binaries features to bypass security restrictions is called Living off the land.
+
+{% page-ref page="living-off-the-land.md" %}
+
+### Relative path calls
+
+If a SUID/SGID binary makes calls to programs using relative paths instead of absolute paths, attackers can try to make the binary run a program of the attacker's choosing.
+
+{% code title="vuln.c" %}
 ```c
 int function(int argc, char *argv[]){
 ···
-    system("cat") // instead of system("/usr/bin/cat")
+    system("ls") // instead of system("/usr/bin/cat")
 ···
 }
 ```
+{% endcode %}
 
-You can add a `cat` binary to the current working directory and edit the `PATH` environment variable so it is found first : `PATH=.:$PATH`
+In the example above, the SUID/SGID binary calls the `ls` program using a relative path. An attacker can try to create a `ls` program somewhere he has write access to and edit the `PATH` environment variable so that his custom program is executed when running the SUID/SGID binary.
 
-#### Common SUID privilege escalation
-
-Known binaries that allow command execution and can be exploited :
-
-```text
-find -exec sh -p \; -quit
-
-ftp
->!sh -p
-
-less
->!sh -p
-
-# Apparently system-dependent
-vim -c ':!sh -p'
+```bash
+PATH=.:$PATH ./vuln
 ```
+
+### Binary exploitation
+
+In some cases, the binary that have SUID/SGID permissions can be reverse-engineered and attackers find ways to change the execution flow of that program to make it run something else \(e.g. [buffer overflow](../../../binary-exploitation/buffer-overflow.md), [use-after-free](../../../binary-exploitation/use-after-free.md), ...\).
 
 ## References
 

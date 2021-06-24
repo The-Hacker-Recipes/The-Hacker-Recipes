@@ -28,7 +28,7 @@ For instance, this configuration allows the `johnthesudoer` user to run any priv
 
 ### Living off the land
 
-While, the SUDO configuration can be hardened to restrict privileged execution to specific program, there are some that can be abused to bypass local security restrictions. This is called [Living off the land](living-off-the-land.md).
+While the SUDO configuration can be hardened to restrict privileged execution to specific program, there are some that can be abused to bypass local security restrictions. This is called [Living off the land](living-off-the-land.md).
 
 ```bash
 User johnthesudoer may run the following commands on johncomputer:
