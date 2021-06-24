@@ -1,10 +1,12 @@
 # Living off the land
 
-### Theory
+## Theory
 
 Living of the Land is a well known privilege escalation technique, where an attacker will leverage binaries found on the attacked machine to perform a privilege escalation. Indeed, many UNIX programs have options that can be exploited to open a shell. Therefore if we can start the program we exploit as another user, we might be able to open a shell as this user ! 
 
-Most of the payloads to do this can be found here : [https://gtfobins.github.io/gtfobins/](https://gtfobins.github.io/gtfobins/tar/#shell)
+Most of the payloads to do this on UNIX programs can be found on [gtfobins.github.io](https://gtfobins.github.io/).
+
+## Practice
 
 Here are two case study to better understand the principle of these privilege escalations :
 
