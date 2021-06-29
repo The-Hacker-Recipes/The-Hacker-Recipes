@@ -58,6 +58,14 @@ Once the ssh command exits successful \(or once a session opens\) the tester can
 {% tab title="plink" %}
 
 {% endtab %}
+
+{% tab title="nc" %}
+From a UNIX-like host, the `nc` utility can be used to setup local port forwarding.
+
+```bash
+nc -lvk $LOCAL_ADDRESS $LOCAL_PORT -c "nc -v $REMOTE_ADDRESS $REMOTE_PORT"
+```
+{% endtab %}
 {% endtabs %}
 
 ### Chained local port forwarding
