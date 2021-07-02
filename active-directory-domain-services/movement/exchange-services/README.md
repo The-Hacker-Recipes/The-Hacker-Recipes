@@ -1,2 +1,2 @@
-# 🛠️ Exchange services
+# Exchange services
 

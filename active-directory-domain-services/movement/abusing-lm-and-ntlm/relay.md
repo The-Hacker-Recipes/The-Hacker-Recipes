@@ -159,7 +159,7 @@ This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivE
 {% endtab %}
 
 {% tab title="DCSync" %}
-A [DCSync](../credentials/dumping/dcsync.md) can also be operated with a relayed NTLM authentication, but only if the target domain controller is vulnerable to [Zerologon](../frontal-attacks-2/zerologon.md) since the DRSUAPI always requires signing.
+A [DCSync](../credentials/dumping/dcsync.md) can also be operated with a relayed NTLM authentication, but only if the target domain controller is vulnerable to [Zerologon](../netlogon/zerologon.md) since the DRSUAPI always requires signing.
 
 ```bash
 # target vulnerable to Zerologon, dump DC's secrets only
