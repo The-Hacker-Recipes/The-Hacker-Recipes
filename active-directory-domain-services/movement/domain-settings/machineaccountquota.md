@@ -64,9 +64,7 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
 ```
 
-{% hint style="warning" %}
-In some mysterious cases, using [addcomputer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) to create a computer account resulted in the creation of a **disabled** computer account. Testers can use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the`--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
-{% endhint %}
+Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the `--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
 {% endtab %}
 
 {% tab title="Windows" %}
