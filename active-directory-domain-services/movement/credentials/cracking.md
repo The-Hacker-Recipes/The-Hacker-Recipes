@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1110.002
 
 ## Theory
 
-Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges \(like with [pass-the-hash](../abusing-lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../abusing-kerberos/pass-the-key.md)\), it is required to crack it.
+Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges \(like with [pass-the-hash](../lm-and-ntlm/pass-the-hash.md), [overpass-the-hash](../kerberos/pass-the-key.md)\), it is required to crack it.
 
 Cracking is an operation that can be carried out through different types of attacks:
 
@@ -31,14 +31,14 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | :--- | :--- |
 | LM hash | 3000 |
 | NT hash | 1000 |
-| [LM ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
-| [LMv2 ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
-| [NTLM ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | 5500 |
-| [NTLMv2 ChallengeResponse](../abusing-lm-and-ntlm/capturing-hashes.md) | 5600 |
+| [LM ChallengeResponse](../lm-and-ntlm/capture.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
+| [LMv2 ChallengeResponse](../lm-and-ntlm/capture.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
+| [NTLM ChallengeResponse](../lm-and-ntlm/capture.md) | 5500 |
+| [NTLMv2 ChallengeResponse](../lm-and-ntlm/capture.md) | 5600 |
 | [\(DCC1\) Domain Cached Credentials](dumping/sam-and-lsa-secrets.md) | 1100 |
 | [\(DCC2\) Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100 |
-| [ASREProast](../abusing-kerberos/asreproast.md) | 18200 |
-| [Kerberoast](../abusing-kerberos/kerberoast.md) | 13100 |
+| [ASREProast](../kerberos/asreproast.md) | 18200 |
+| [Kerberoast](../kerberos/kerberoast.md) | 13100 |
 
 ### Dictionnary attack
 
@@ -117,7 +117,7 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 {% hint style="success" %}
 * Google offers services like [Colab](https://colab.research.google.com/) and [Cloud Shell](https://console.cloud.google.com/home/dashboard?cloudshell=true) that can be used for "cloud cracking". There are projects like [penglab](https://github.com/mxrch/penglab), [google-colab-hashcat](https://github.com/ShutdownRepo/google-colab-hashcat) and [cloudtopolis](https://github.com/JoelGMSec/Cloudtopolis) that can help testers to setup a cracking session on such resources
 * Other solutions, cloud-based or not, can be used to improve cracking speed: [setting up a rig](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig) for instance.
-* LM and NTLM ChallengeResponses can be cracked really fast \(and for free depending on the hash\) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables \([here's how to capture those hashes](../abusing-lm-and-ntlm/capturing-hashes.md#practice)\).
+* LM and NTLM ChallengeResponses can be cracked really fast \(and for free depending on the hash\) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables \([here's how to capture those hashes](../lm-and-ntlm/capture.md#practice)\).
 * Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.exe.md) to create a custom wordlist for a dictionary attack
 {% endhint %}
 

@@ -1,6 +1,6 @@
 # Man in the middle and coerced authentications
 
-In Active Directory domains, attackers often rely on coerced authentications and MitM \(man in the middle\) techniques to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../abusing-lm-and-ntlm/relay.md)\) or when [abusing Kerberos delegations](../abusing-kerberos/delegations.md).
+In Active Directory domains, attackers often rely on coerced authentications and MitM \(man in the middle\) techniques to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../lm-and-ntlm/relay.md)\) or when [abusing Kerberos delegations](../kerberos/delegations.md).
 
 These techniques enable attackers to redirect traffic or redirect/force targets authentications. Attackers will then be able, in certain cases, to capture credentials or relay authentications. I'm using "coerce" instead of "force" in this category's title since some technique can rely on a bit of social engineering to work.
 
@@ -10,7 +10,7 @@ There are many ways attackers can do MitM or redirect/force targets authenticati
 **This page is a work-in-progress**
 {% endhint %}
 
-| MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-dns-poisoning.md) | [ARP](arp-poisoning.md) | [DNS](dns-spoofing.md) | [WPAD](wpad-spoofing.md) | [PrinterBug](printerbug.md) | [PrivExchange](pushsubscription-abuse.md) |
+| MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns-spoofing.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-spoofing.md) | [ARP](arp-poisoning.md) | [DNS](dns-spoofing.md) | [WPAD](wpad-spoofing.md) | [PrinterBug](printerbug.md) | [PrivExchange](pushsubscription-abuse.md) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | Can require waiting for replication/syncing | x |  |  |  |  |  |  |  |  |
 | Easy to start and stop attacks |  | x | x | takes ~5 minutes to revert | revert time depends on targets arp cache timeout \(usually ~60 sec | x | x | x | x |

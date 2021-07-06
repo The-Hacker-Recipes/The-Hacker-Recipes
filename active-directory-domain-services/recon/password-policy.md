@@ -40,6 +40,6 @@ Get-DomainPolicy
 {% endtabs %}
 
 {% hint style="info" %}
-Accounts that lockout can be attacked with [sprayhound](https://github.com/Hackndo/sprayhound) \([credential spraying](../movement/credentials/bruteforcing/password-spraying.md)\) while those that don't can be directly bruteforced with [kerbrute](https://github.com/ropnop/kerbrute) \([Kerberos pre-auth bruteforcing](../movement/abusing-kerberos/pre-auth-bruteforce.md)\)
+Accounts that lockout can be attacked with [sprayhound](https://github.com/Hackndo/sprayhound) \([credential spraying](../movement/credentials/bruteforcing/password-spraying.md)\) while those that don't can be directly bruteforced with [kerbrute](https://github.com/ropnop/kerbrute) \([Kerberos pre-auth bruteforcing](../movement/kerberos/pre-auth-bruteforce.md)\)
 {% endhint %}
 

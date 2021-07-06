@@ -28,8 +28,8 @@ In order to navigate the notes, testers can use the mindmap below.
 
 All of the aforementioned attacks \(red blocks\) are detailed in the child notes, except:
 
-* **Kerberos RBCD**: see [ADDS &gt; Movement &gt; Kerberos &gt; Kerberos Delegations &gt; RBCD](../abusing-kerberos/delegations.md#resource-based-constrained-delegations-rbcd)
-* **GPO abuses**: see [ADDS &gt; Movement &gt; GPOs](../abusing-gpos.md)
+* **Kerberos RBCD**: see [ADDS &gt; Movement &gt; Kerberos &gt; Kerberos Delegations &gt; RBCD](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd)
+* **GPO abuses**: see [ADDS &gt; Movement &gt; GPOs](../group-policy-objects.md)
 * **DCSync** : see [ADDS &gt; Movement &gt; Credential &gt; Dumping &gt; DCSync](../credentials/dumping/dcsync.md)
 
 ## Resources

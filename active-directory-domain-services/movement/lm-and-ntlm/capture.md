@@ -13,7 +13,7 @@ NTLM capture can be combined with any forced authentication attack. Testers shou
 [Responder](https://github.com/SpiderLabs/Responder) \(Python\) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools able to do name poisoning for forced authentication attacks, but also able to capture ChallengeResponses \(LM or NTLM hashes\) by starting servers waiting for incoming authentications. Once those listening servers are up and ready, the tester can initiate the [forced authentication attack](../mitm-and-coerced-authentications/).
 
 {% hint style="info" %}
-In order to help the later [cracking process](capturing-hashes.md), testers need to set the NTLM challenge sent to victims to `1122334455667788`.
+In order to help the later [cracking process](capture.md), testers need to set the NTLM challenge sent to victims to `1122334455667788`.
 
 For Inveigh, it can be defined with a command-line argument. For Responder, testers need to edit the configuration file.
 
@@ -24,7 +24,7 @@ sed -i 's/ Random/ 1122334455667788/g' /PATH/TO/Responder/Responder.conf
 
 {% tabs %}
 {% tab title="Responder" %}
-Start [poisoning LLMNR, NBTNS and mDNS](../mitm-and-coerced-authentications/llmnr-nbtns-mdns.md), enable answers for NetBIOS wredir and domain suffix queries, and try to force LM hashing downgrade \(this will allow to downgrade to the weakest authentication protocol accepted\).
+Start [poisoning LLMNR, NBTNS and mDNS](../mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md), enable answers for NetBIOS wredir and domain suffix queries, and try to force LM hashing downgrade \(this will allow to downgrade to the weakest authentication protocol accepted\).
 
 ```bash
 responder --interface eth0 --wredir --NBTNSdomain --wpad --lm
@@ -37,7 +37,7 @@ ntlmv1-multi --ntlmv1 SV01$::BREAKING.BAD:AD1235DEAC142CD5FC2D123ADCF51A111ADF45
 ```
 
 {% hint style="success" %}
-Machine account NT hashes can be used with the [Silver Ticket](../abusing-kerberos/forged-tickets.md#silver-ticket) technique to gain admin access to it.
+Machine account NT hashes can be used with the [Silver Ticket](../kerberos/forged-tickets.md#silver-ticket) technique to gain admin access to it.
 {% endhint %}
 {% endtab %}
 

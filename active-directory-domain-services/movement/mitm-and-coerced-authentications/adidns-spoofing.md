@@ -92,7 +92,7 @@ This can be set with the `--legacy` or `--forest` option on dnstool.py, or with 
 
 Using [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\), the following command will 
 
-* operate [LLMNR, NBT-NS and mDNS spoofing](llmnr-nbtns-mdns.md)
+* operate [LLMNR, NBT-NS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md)
 * operate ADIDNS spoofing
   * `combo` looks at LLMNR/NBNS requests and adds a record to DNS if the same request is received from multiple systems
   * `ns` injects an NS record and if needed, a target record. This is primarily for the GQBL bypass for wpad. 

@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1550.002
 
 ## Theory
 
-An attacker knowing a user's NT hash can use it to authenticate over NTLM \(pass-the-hash\) \(or indirectly over Kerberos with [overpass-the-hash](../abusing-kerberos/pass-the-key.md)\).
+An attacker knowing a user's NT hash can use it to authenticate over NTLM \(pass-the-hash\) \(or indirectly over Kerberos with [overpass-the-hash](../kerberos/pass-the-key.md)\).
 
 ## Practice
 
@@ -109,7 +109,7 @@ Testers should look out for environments with WinRM enabled. During the WinRM co
 {% hint style="info" %}
 **Machine accounts**
 
-Just like with any other domain account, a machine account's NT hash can be used with pass-the-hash, but it is not possible to operate remote operations that require local admin rights \(such as [SAM & LSA secrets dump](../credentials/dumping/sam-and-lsa-secrets.md)\). These operations can instead be conducted with a [Silver Ticket](../abusing-kerberos/forged-tickets.md#silver-ticket) since the machine accounts validates Kerberos tickets used to authenticate to a said computer/service.
+Just like with any other domain account, a machine account's NT hash can be used with pass-the-hash, but it is not possible to operate remote operations that require local admin rights \(such as [SAM & LSA secrets dump](../credentials/dumping/sam-and-lsa-secrets.md)\). These operations can instead be conducted with a [Silver Ticket](../kerberos/forged-tickets.md#silver-ticket) since the machine accounts validates Kerberos tickets used to authenticate to a said computer/service.
 
 A domain controller machine account's NT hash can be used with pass-the-hash to [dump the domain hashes \(NTDS.dit\)](../credentials/dumping/ntds.dit.md). 
 {% endhint %}

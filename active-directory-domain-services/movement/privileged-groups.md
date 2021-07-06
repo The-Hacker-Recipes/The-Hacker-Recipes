@@ -22,7 +22,7 @@ Below is a table summing up some groups' rights and abuse paths.
       <td style="text-align:left">Account Operators</td>
       <td style="text-align:left">
         <p>its members can create and manage users and groups, including its own
-          membership and that of the Server Operators group (e.g. <a href="abusing-aces/addmember.md">add a member to a group</a>)</p>
+          membership and that of the Server Operators group (e.g. <a href="access-control-entries/addmember.md">add a member to a group</a>)</p>
         <p></p>
         <p>&#x1F525;at the time of writing (12th, April 2021) members can sometimes
           also escalate through the &quot;Entreprise Key Admins&quot; group and obtain

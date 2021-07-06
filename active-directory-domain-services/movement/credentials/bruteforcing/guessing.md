@@ -22,7 +22,7 @@ Depending on the target service, different lists of common passwords \(e.g. [the
 
 * [Hydra](https://github.com/vanhauser-thc/thc-hydra) \(C\) can be used against **a lot \(50+\)** of services like FTP, HTTP, IMAP, LDAP, MS-SQL, MYSQL, RDP, SMB, SSH and many many more.
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\) can be used against LDAP, WinRM, SMB, SSH and MS-SQL.
-* [Kerbrute](https://github.com/ropnop/kerbrute) \(Go\) can be used against Kerberos pre-authentication \(detailed [here](../../abusing-kerberos/pre-auth-bruteforce.md)\).
+* [Kerbrute](https://github.com/ropnop/kerbrute) \(Go\) can be used against Kerberos pre-authentication \(detailed [here](../../kerberos/pre-auth-bruteforce.md)\).
 
 {% hint style="info" %}
 CrackMapExec has useful options for password guessing

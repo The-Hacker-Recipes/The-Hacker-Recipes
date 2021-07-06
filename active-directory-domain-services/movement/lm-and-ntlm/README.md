@@ -33,12 +33,12 @@ The following table details the hashing algorithm used by each hashing format in
 | LM hash | based on DES \([learn more](http://techgenix.com/how-cracked-windows-password-part1/)\) |
 | NT hash | MD4 |
 
-This is meant to protect the user's password from eavesdropping by implementing the "zero-knowledge proof" concept. Attackers [capturing authentication](capturing-hashes.md) \(during a man-in-the-middle attack for example\) would not be able to use the ChallengeResponse to authenticate. In theory, they could only try to retrieve the user's password from an NTLM hash by operating two expensive \(in time and resources\) [bruteforce attacks](./):
+This is meant to protect the user's password from eavesdropping by implementing the "zero-knowledge proof" concept. Attackers [capturing authentication](capture.md) \(during a man-in-the-middle attack for example\) would not be able to use the ChallengeResponse to authenticate. In theory, they could only try to retrieve the user's password from an NTLM hash by operating two expensive \(in time and resources\) [bruteforce attacks](./):
 
 * a bruteforce attack against the LM/NTLM ChallengeResponse to retrieve the LM or NT hash it was derivated from
 * if found, a bruteforce/dictionary attack against the NT hash to retrieve the user's password
 
-{% page-ref page="capturing-hashes.md" %}
+{% page-ref page="capture.md" %}
 
 {% page-ref page="../credentials/cracking.md" %}
 
