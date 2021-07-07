@@ -82,7 +82,7 @@ Here are some examples and tools that can be used for local/remote/offline dumpi
 
 {% tabs %}
 {% tab title="secretsdump" %}
-[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../lm-and-ntlm/pass-the-hash.md) \(NTLM\), or [pass-the-ticket](../../kerberos/pass-the-ticket.md) \(Kerberos\).
+[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../lm-and-ntlm/pass-the-hash.md) \(LM/NTLM\), or [pass-the-ticket](../../kerberos/pass-the-ticket.md) \(Kerberos\).
 
 ```bash
 # Remote dumping of SAM & LSA secrets

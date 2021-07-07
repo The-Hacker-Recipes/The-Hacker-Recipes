@@ -14,6 +14,19 @@ Since the NTDS.dit is constantly used by AD processes such as the Kerberos KDC, 
 
 Just like with [SAM & LSA secrets](sam-and-lsa-secrets.md), the SYSTEM registry hive contains enough info to decrypt the NTDS.dit data. The hive file \(`\system32\config\system`\) can either be exfiltrated the same way the NTDS.dit file is, or it can be exported with `reg save HKLM\SYSTEM 'C:\Windows\Temp\system.save'`.
 
+### AD maintenance \(NTDSUtil\)
+
+NTDSUtil.exe is a diagnostic tool available as part of Active Directory. It has the ability to save a snapshot of the Active Directory data. Running the following command will copy the NTDS.dit database and the SYSTEM and SECURITY hives to `C:\Windows\Temp`.
+
+```bash
+ntdsutil "activate instance ntds" "ifm" "create full C:\Windows\Temp\NTDS" quit quit
+```
+
+The following files can then be exported
+
+* `C:\Windows\Temp\NTDS\Active Directory\ntds.dit`
+* `C:\Windows\Temp\NTDS\registry\SYSTEM`
+
 ### Volume Shadow Copy \(VSSAdmin\)
 
 VSS \(Volume Shadow Copy\) is a Microsoft Windows technology, implemented as a service, that allows the creation of backup copies of files or volumes, even when they are in use. The following command will create the shadow copy and will print two values that will be used later: the ID and the Name of the shadow copy.
@@ -37,14 +50,6 @@ vssadmin delete shadows /shadow=$ShadowCopyId
 {% hint style="info" %}
 This attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) with the `-use-vss` option. Additionaly, the `-exec-method` option can be set to `smbexec`, `wmiexec` or `mmcexec` to specify on which remote command execution method to rely on for the process.
 {% endhint %}
-
-### AD maintenance \(NTDSUtil\)
-
-NTDSUtil.exe is a diagnostic tool available as part of Active Directory. It has the ability to save a snapshot of the Active Directory data. Running the following command will copy the NTDS.dit database and the SYSTEM and SECURITY hives to `C:\Windows\Temp`.
-
-```bash
-ntdsutil "ac i ntds" "ifm" "create full C:\Windows\Temp" quit quit
-```
 
 ### NTFS structure parsing
 
