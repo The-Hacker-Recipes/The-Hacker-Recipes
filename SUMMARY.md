@@ -84,6 +84,7 @@
   * [SharePoint Services](active-directory-domain-services/movement/sharepoint-services/README.md)
     * [🛠️ ProxyLogon](active-directory-domain-services/movement/sharepoint-services/proxylogon.md)
   * [Print Spooler Service](active-directory-domain-services/movement/print-spooler-service/README.md)
+    * [PrinterBug](active-directory-domain-services/movement/print-spooler-service/printerbug.md)
     * [🛠️ PrintNightmare](active-directory-domain-services/movement/print-spooler-service/printnightmare.md)
 * [🛠️ Persistence](active-directory-domain-services/persistence/README.md)
   * [Silver & Golden tickets](active-directory-domain-services/persistence/silver-and-golden-tickets.md)
