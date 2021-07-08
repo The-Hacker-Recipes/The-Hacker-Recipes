@@ -17,7 +17,7 @@ The attacker needs to be in control of the object the ACE is set on to abuse it 
 {% hint style="info" %}
 **Windows or UNIX ?**
 
-All abuses below can be carried out on a Windows system that doesn't even have to be joined to the domain. On UNIX-like systems, a few of the following abuses can be carried out with tools like [aclpwn](https://github.com/fox-it/aclpwn.py) and [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py). I personally find it way easier to abuse ACEs from a Windows machine.
+All abuses below can be carried out on a Windows system that doesn't even have to be joined to the domain. On UNIX-like systems, a few of the following abuses can be carried out with tools like [aclpwn](https://github.com/fox-it/aclpwn.py) \(I often have issues with this one\) and [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py). Abusing ACEs from a Windows machine is usually easier though.
 {% endhint %}
 
 ### Exploitation paths
