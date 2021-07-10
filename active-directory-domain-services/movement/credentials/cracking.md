@@ -121,3 +121,7 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 * Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.exe.md) to create a custom wordlist for a dictionary attack
 {% endhint %}
 
+{% embed url="https://hashcat.net/wiki/doku.php?id=example\_hashes" %}
+
+
+
