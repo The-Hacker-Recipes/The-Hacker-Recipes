@@ -71,3 +71,7 @@ Below is a table summing up some groups' rights and abuse paths.
 
 {% embed url="https://adsecurity.org/?p=3658" %}
 
+{% embed url="https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/security-identifiers-in-windows" %}
+
+
+

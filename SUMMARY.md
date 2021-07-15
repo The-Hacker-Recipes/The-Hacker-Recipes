@@ -71,6 +71,7 @@
     * [ReadGMSAPassword](active-directory-domain-services/movement/access-control-entries/readgmsapassword.md)
     * [Grant ownership](active-directory-domain-services/movement/access-control-entries/grant-ownership.md)
     * [Grant rights](active-directory-domain-services/movement/access-control-entries/grant-rights.md)
+    * [🛠️ Shadow Credentials](active-directory-domain-services/movement/access-control-entries/shadow-credentials.md)
   * [Group Policy Objects \(GPOs\)](active-directory-domain-services/movement/group-policy-objects.md)
   * [Special groups](active-directory-domain-services/movement/privileged-groups.md)
   * [Domain settings](active-directory-domain-services/movement/domain-settings/README.md)
