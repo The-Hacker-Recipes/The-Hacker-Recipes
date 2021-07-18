@@ -50,7 +50,11 @@ In conclusion, session signing is protected by the MIC, which is enabled with th
 * Stealing the session key \(CVE-2019-1019\)
 
 {% hint style="warning" %}
-As of november 2020, MIC was optionnal, but unofficial channels suggest it might've become mandatory \([source](https://twitter.com/decoder_it/status/1347976999567032321)\).
+As of november 2020, MIC was optional, but unofficial channels suggest it might've become mandatory \([source](https://twitter.com/decoder_it/status/1347976999567032321)\).
+{% endhint %}
+
+{% hint style="info" %}
+Windows Server 2019 ISOs seem to be patched against \(at least\) CVE-2019-1040.
 {% endhint %}
 
 ### EPA \(a.k.a. Channel binding\) <a id="EPA-Extended-Protection-for-Authentication"></a>
