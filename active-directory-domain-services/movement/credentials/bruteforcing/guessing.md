@@ -22,13 +22,18 @@ Depending on the target service, different lists of common passwords \(e.g. [the
 
 * [Hydra](https://github.com/vanhauser-thc/thc-hydra) \(C\) can be used against **a lot \(50+\)** of services like FTP, HTTP, IMAP, LDAP, MS-SQL, MYSQL, RDP, SMB, SSH and many many more.
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\) can be used against LDAP, WinRM, SMB, SSH and MS-SQL.
-* [Kerbrute](https://github.com/ropnop/kerbrute) \(Go\) can be used against Kerberos pre-authentication \(detailed [here](../../kerberos/pre-auth-bruteforce.md)\).
+* [Kerbrute](https://github.com/ropnop/kerbrute) \(Go\) and [smartbrute](https://github.com/ShutdownRepo/smartbrute) \(Python\) can be used against [Kerberos pre-authentication](../../kerberos/pre-auth-bruteforce.md).
 
 {% hint style="info" %}
 CrackMapExec has useful options for password guessing
 
 * `--no-bruteforce`: tries user1 -&gt; password1, user2 -&gt; password2 instead of trying every password for every user
 * `--continue-on-success`: continues authentication attempts even after successes
+
+Smartbrute has equivalent features
+
+* `--line-per-line`: equivalent of crackmapexec's `--no-bruteforce` option
+* `--stop-on-success`: reversed equivalent of crackmapexec's `--continue-on-success` option
 {% endhint %}
 
 ### Default passwords
@@ -52,17 +57,5 @@ Users are known to be a weak \(if not the weakest\) link of security. Unaware us
 
 Testers can try the combinations of user/passwords with the tools mentioned in the "common passwords" technique.
 
-[Sprayhound](https://github.com/Hackndo/sprayhound) \(Python\) is a tool that can dynamically fetch the organization's users and lockout policy to only bruteforce accounts \(against LDAP\) that have a few attempts left in order to avoid locking them out. This can only be done when supplying an Active Directory account's credentials. This tool has the ability to check if accounts have their username set as password. Finally, a great additional feature is that neo4j is supported and compromised accounts can be set as pwned \(useful when working with [BloodHound](../../../recon/bloodhound.md)\).
-
-```bash
-# try password equal to the username
-sprayhound -d $DOMAIN -dc $DOMAIN_CONTROLLER -lu $LDAP_USER -lp $LDAP_PASSWORD
-
-# try "qwerty" against each user
-sprayhound -d $DOMAIN -dc $DOMAIN_CONTROLLER -lu $LDAP_USER -lp $LDAP_PASSWORD -p "qwerty"
-```
-
-{% hint style="info" %}
-When using this technique, make sure the number of tested users matches the total number of uses on the domain. Dynamically obtaining the users list from a Domain Controller that is not the primary one. 
-{% endhint %}
+[Smartbrute](https://github.com/ShutdownRepo/smartbrute) \(Python\) and [sprayhound](https://github.com/Hackndo/sprayhound) \(Python\) can dynamically fetch the organization's users and lockout policy to only bruteforce accounts that have a few attempts left in order to avoid locking them out. This can only be done when supplying a valid Active Directory account's credentials. These tools have the ability to check if accounts have their username set as password. Finally, a great additional feature is that neo4j is supported and compromised accounts can be set as owned \(useful when working with [BloodHound](../../../recon/bloodhound.md)\).
 

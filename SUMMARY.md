@@ -53,7 +53,7 @@
     * [Relay](active-directory-domain-services/movement/lm-and-ntlm/relay.md)
     * [Pass the hash](active-directory-domain-services/movement/lm-and-ntlm/pass-the-hash.md)
   * [Kerberos](active-directory-domain-services/movement/kerberos/README.md)
-    * [🛠️ Pre-auth bruteforce](active-directory-domain-services/movement/kerberos/pre-auth-bruteforce.md)
+    * [Pre-auth bruteforce](active-directory-domain-services/movement/kerberos/pre-auth-bruteforce.md)
     * [Pass the key](active-directory-domain-services/movement/kerberos/pass-the-key.md)
     * [Overpass the hash](active-directory-domain-services/movement/kerberos/overpass-the-hash.md)
     * [Pass the ticket](active-directory-domain-services/movement/kerberos/pass-the-ticket.md)

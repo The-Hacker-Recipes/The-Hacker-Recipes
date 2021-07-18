@@ -2,11 +2,13 @@
 
 ## Theory
 
-An attacker knowing a user's Kerberos key can use it to obtain Kerberos tickets and authenticate to remote services.
+The Kerberos authentication protocol works with tickets in order to grant access. A TGS \(Ticket Granting Service\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can be obtained by validating a first step named "pre-authentication".
+
+The pre-authentication requires the requesting user to supply its secret key \(DES, RC4, AES128 or AES256\) derived from the user password. An attacker knowing that secret key doesn't need knowledge of the actual password to obtain tickets. This is called pass-the-key.
 
 Kerberos offers 4 different key types: DES, RC4, AES-128 and AES-256.
 
-* When the RC4 etype is enabled, the RC4 key can be used. The problem is that the RC4 key is in fact the user's NT hash. Using a an NT hash to obtain Kerberos tickets is called **overpass the hash**.
+* When the RC4 etype is enabled, the RC4 key can be used. The problem is that the RC4 key is in fact the user's NT hash. Using a an NT hash to obtain Kerberos tickets is called [**overpass the hash**](overpass-the-hash.md).
 * When RC4 is disabled, other Kerberos keys \(DES, AES-128, AES-256\) can be passed as well. This technique is called **pass the key**. In fact, only the name and key used differ between overpass the hash and pass the key, the technique is the same.
 
 ## Practice

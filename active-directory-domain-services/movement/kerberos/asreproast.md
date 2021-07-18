@@ -2,13 +2,13 @@
 
 ## Theory
 
-When asking the KDC \(Key Distribution Center\) for a TGT \(Ticket Granting Ticket\), the requesting user needs to send a piece of information \(a timestamp\) encrypted with it's own credentials. It ensures the user is requesting a TGT for himself. This is called Kerberos preauthentication.
+The Kerberos authentication protocol works with tickets in order to grant access. A TGS \(Ticket Granting Service\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can be obtained by validating a first step named "pre-authentication".
 
-The TGT is then sent to the user in the `KRB_AS_REP` message, but that message also contains a session key. That session key is encrypted with the requested user's NT hash.
-
-Kerberos preauthentication prevents attackers from requesting a TGT for any user, receive the `KRB_AS_REP` message, extract the session key and crack it offline in an attempt to retrieve that user's password.
+The pre-authentication requires the requesting user to supply its secret key \(DES, RC4, AES128 or AES256\) derived from the user password. Technically, when asking the KDC \(Key Distribution Center\) for a TGT \(Ticket Granting Ticket\), the requesting user needs to validate pre-authentication by sending a timestamp encrypted with it's own credentials. It ensures the user is requesting a TGT for himself. Once validated, the TGT is then sent to the user in the `KRB_AS_REP` message, but that message also contains a session key. That session key is encrypted with the requested user's NT hash.
 
 Because some applications don't support Kerberos preauthentication, it is common to find users with Kerberos preauthentication disabled, hence allowing attackers to request TGTs for these users and crack the session keys offline. This is ASREProasting.
+
+While this technique can possibly allow to retrieve a user's credentials, the TGT obtained in the `KRB_AS_REP` messages are encrypted cannot be used without knowledge of the account's password.
 
 ## Practice
 
