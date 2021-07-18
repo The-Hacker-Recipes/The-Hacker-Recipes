@@ -48,6 +48,7 @@
     * [🛠️ DHCP masquerading](active-directory-domain-services/movement/mitm-and-coerced-authentications/dhcp-masquerading.md)
     * [🛠️ ICMP Redirect](active-directory-domain-services/movement/mitm-and-coerced-authentications/icmp-redirect.md)
     * [🛠️ Living off the land](active-directory-domain-services/movement/mitm-and-coerced-authentications/living-off-the-land.md)
+    * [MS-EFSR abuse](active-directory-domain-services/movement/mitm-and-coerced-authentications/ms-efsr-abuse.md)
   * [LM and NTLM](active-directory-domain-services/movement/lm-and-ntlm/README.md)
     * [Capture](active-directory-domain-services/movement/lm-and-ntlm/capture.md)
     * [Relay](active-directory-domain-services/movement/lm-and-ntlm/relay.md)
