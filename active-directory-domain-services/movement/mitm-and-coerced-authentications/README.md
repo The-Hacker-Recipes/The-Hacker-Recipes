@@ -10,7 +10,7 @@ There are many ways attackers can do MitM or redirect/force targets authenticati
 **This page is a work-in-progress**
 {% endhint %}
 
-| MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns-spoofing.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-spoofing.md) | [ARP](arp-poisoning.md) | [DNS](dns-spoofing.md) | [WPAD](wpad-spoofing.md) | [PrinterBug](printerbug.md) | [PrivExchange](pushsubscription-abuse.md) |
+| MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns-spoofing.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-spoofing.md) | [ARP](arp-poisoning.md) | [DNS](dns-spoofing.md) | [WPAD](wpad-spoofing.md) | [PrinterBug](ms-rprn.md) | [PrivExchange](pushsubscription-abuse.md) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | Can require waiting for replication/syncing | x |  |  |  |  |  |  |  |  |
 | Easy to start and stop attacks |  | x | x | takes ~5 minutes to revert | revert time depends on targets arp cache timeout \(usually ~60 sec | x | x | x | x |

