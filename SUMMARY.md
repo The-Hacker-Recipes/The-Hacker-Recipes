@@ -36,7 +36,7 @@
     * [Shuffling](active-directory-domain-services/movement/credentials/credential-shuffling.md)
     * [Impersonation](active-directory-domain-services/movement/credentials/impersonation.md)
   * [Man in the middle and coerced authentications](active-directory-domain-services/movement/mitm-and-coerced-authentications/README.md)
-    * [🛠️ ARP poisoning](active-directory-domain-services/movement/mitm-and-coerced-authentications/arp-poisoning.md)
+    * [ARP poisoning](active-directory-domain-services/movement/mitm-and-coerced-authentications/arp-poisoning.md)
     * [DNS spoofing](active-directory-domain-services/movement/mitm-and-coerced-authentications/dns-spoofing.md)
     * [DHCPv6 spoofing](active-directory-domain-services/movement/mitm-and-coerced-authentications/dhcpv6-spoofing.md)
     * [LLMNR, NBT-NS, mDNS spoofing](active-directory-domain-services/movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md)

