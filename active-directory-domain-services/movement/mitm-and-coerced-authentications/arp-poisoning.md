@@ -92,7 +92,7 @@ Below are examples or targetted ARP poisoning attacks where the attacker wants t
 {% tab title="SMB spoofing" %}
 Start the SMB server for [capture](../lm-and-ntlm/capture.md) or [relay](../lm-and-ntlm/relay.md) then start the poisoning attack.
 
-{% code title="wsus\_spoofing.cap" %}
+{% code title="smb\_spoofing.cap" %}
 ```bash
 # quick recon of the network
 net.probe on
@@ -125,7 +125,7 @@ net.sniff on
 {% tab title="DNS spoofing" %}
 Start the DNS server \([responder](https://github.com/lgandx/Responder), [dnschef](https://github.com/iphelix/dnschef), or [bettercap](https://github.com/bettercap/bettercap)\) for [DNS poisoning](dns-spoofing.md) then start the ARP poisoning attack.
 
-{% code title="wsus\_spoofing.cap" %}
+{% code title="dns\_spoofing.cap" %}
 ```bash
 # quick recon of the network
 net.probe on
