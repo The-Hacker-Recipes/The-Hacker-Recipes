@@ -1,4 +1,4 @@
-# 🛠️ Shadow Credentials
+# Shadow Credentials
 
 ## Theory
 
@@ -31,32 +31,42 @@ If those per-requisites are met, an attacker can
 From UNIX-like systems, the `msDs-KeyCredentialLink` attribute of a user or computer target can be manipulated with the [pyWhisker](https://github.com/ShutdownRepo/pywhisker) tool.
 
 ```bash
-python3 pywhisker.py -d "FQDN_DOMAIN" -u "user1" -p "CERTIFICATE_PASSWORD" --target "TARGET_SAMNAME" --action "list"
+pywhisker.py -d "FQDN_DOMAIN" -u "user1" -p "CERTIFICATE_PASSWORD" --target "TARGET_SAMNAME" --action "list"
 ```
 
-When the public key has been set in the `msDs-KeyCredentialLink` of the target, we can use [Dirk-jan](https://twitter.com/_dirkjan)'s [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/) tool to request a TGT \(Ticket Granting Ticket\) for the target object:
+When the public key has been set in the `msDs-KeyCredentialLink` of the target, we can use [Dirk-jan](https://twitter.com/_dirkjan)'s [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/) tool to request a TGT \(Ticket Granting Ticket\) for the target object.
 
 ```python
-python3 PKINITtools/gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
 ```
+
+The ticket obtained can then be used to authenticate with [pass-the-cache](pass-the-cache.md) or a specific request can be made to the Key Distribution Center to recover the account's NT hash with [getnthash.py](https://github.com/dirkjanm/PKINITtools/blob/master/getnthash.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/).
 {% endtab %}
 
 {% tab title="Windows" %}
-From UNIX-like, the `msDs-KeyCredentialLink` attribute of a target user or computer can be manipulated with the [Whisker](https://github.com/eladshamir/Whisker) tool.
+From Windows systems, the `msDs-KeyCredentialLink` attribute of a target user or computer can be manipulated with the [Whisker](https://github.com/eladshamir/Whisker) tool.
 
 ```bash
 Whisker.exe add /target:"TARGET_SAMNAME" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
 ```
 
-When the public key has been set in the `msDs-KeyCredentialLink` of the target, we can use [Rubeus](https://github.com/GhostPack/Rubeus) tool to request a TGT \(Ticket Granting Ticket\) for the target object:
+When the public key has been set in the `msDs-KeyCredentialLink` of the target, [Rubeus](https://github.com/GhostPack/Rubeus) can be used to request a TGT \(Ticket Granting Ticket\) for the target object.
 
 ```bash
 Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
 ```
+
+That ticket will then be usable with [pass-the-ticket](pass-the-ticket.md) to authenticate.
 {% endtab %}
 {% endtabs %}
 
+{% hint style="info" %}
+**Nota bene**
 
+User objects can't edit their own `msDS-KeyCredentialLink` attribute while computer objects can. This means the following scenario could work: [trigger an NTLM authentication](../mitm-and-coerced-authentications/) from DC01, [relay it](../lm-and-ntlm/relay.md) to DC02, make pywhisker edit DC01's attribute to create a Kerberos PKINIT pre-authentication backdoor on it, and have persistent access to DC01 with PKINIT and [pass-the-cache](pass-the-cache.md).
+
+Computer objects can edit their own `msDS-KeyCredentialLink` attribute but can only add a KeyCredential if none already exists.
+{% endhint %}
 
 ## Resources
 
@@ -64,7 +74,5 @@ Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /pass
 
 {% embed url="https://github.com/eladshamir/Whisker" %}
 
-For WriteProperty at least ?
-
-For special members of groups like Enterprise Key Admins and Key Admins
+{% embed url="https://github.com/ShutdownRepo/pywhisker" %}
 
