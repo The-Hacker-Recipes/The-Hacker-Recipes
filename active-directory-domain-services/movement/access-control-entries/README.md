@@ -14,12 +14,6 @@ When misconfigured, ACEs can be abused to operate lateral movement or privilege 
 
 The attacker needs to be in control of the object the ACE is set on to abuse it and possibly gain control over what this ACE applies to. The following abuses can only be carried out when running commands as the user the ACE is set on \(see [impersonation techniques](../credentials/impersonation.md)\).
 
-{% hint style="info" %}
-**Windows or UNIX ?**
-
-All abuses below can be carried out on a Windows system that doesn't even have to be joined to the domain. On UNIX-like systems, a few of the following abuses can be carried out with tools like [aclpwn](https://github.com/fox-it/aclpwn.py) \(I often have issues with this one\) and [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py). Abusing ACEs from a Windows machine is usually easier though.
-{% endhint %}
-
 ### Exploitation paths
 
 In order to navigate the notes, testers can use the mindmap below.
@@ -32,6 +26,13 @@ All of the aforementioned attacks \(red blocks\) are detailed in the child notes
 * **Kerberos RBCD**: see [ADDS &gt; Movement &gt; Kerberos &gt; Kerberos Delegations &gt; RBCD](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd)
 * **GPO abuses**: see [ADDS &gt; Movement &gt; GPOs](../group-policy-objects.md)
 * **DCSync** : see [ADDS &gt; Movement &gt; Credential &gt; Dumping &gt; DCSync](../credentials/dumping/dcsync.md)
+
+{% hint style="success" %}
+**Self-attacks**
+
+* User and computers objects can conduct a [Kerberos RCD](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd) attack on themselves.
+* Computer objects can conduct a [Shadow Credentials](../kerberos/shadow-credentials.md) attack on themselves.
+{% endhint %}
 
 ## Resources
 
