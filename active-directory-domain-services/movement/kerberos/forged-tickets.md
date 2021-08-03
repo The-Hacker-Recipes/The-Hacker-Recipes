@@ -144,7 +144,7 @@ This vulnerability allows attackers to forge a TGT with unlimited power \(i.e. w
 
 {% tabs %}
 {% tab title="pykek" %}
-This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../lm-and-ntlm/pass-the-hash.md).
+This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../ntlm/pass-the-hash.md).
 
 Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60)` when trying to use the generated `.ccache` ticket mean the target is patched.
 

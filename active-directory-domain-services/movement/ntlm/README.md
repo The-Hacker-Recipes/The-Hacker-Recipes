@@ -1,4 +1,4 @@
-# LM and NTLM
+# NTLM
 
 ## Theory
 

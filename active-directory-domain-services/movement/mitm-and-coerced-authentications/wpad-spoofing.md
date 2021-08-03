@@ -15,11 +15,11 @@ WPAD spoofing can be combined with
 
 On old Windows systems \(i.e. lacking the MS16-077 security update\), the WPAD location could be obtained through insecure name resolution protocols like LLMNR and NBT-NS when standard DNS queries were failing \(i.e. no DNS record for WPAD\). This allowed attackers to operate [LLMNR and NBT-NS spoofing](llmnr-nbtns-mdns-spoofing.md) to answer those WPAD queries and redirect to a fake `wpad.dat` file, hence poisoning the web proxy configuration of the requesting clients, hence obtaining more traffic.
 
-[Responder](https://github.com/SpiderLabs/Responder) \(Python\) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers \(listeners\) that will [capture authentications](../lm-and-ntlm/capture.md) and echo the NTLM hashes to the attacker.
+[Responder](https://github.com/SpiderLabs/Responder) \(Python\) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers \(listeners\) that will [capture authentications](../ntlm/capture.md) and echo the NTLM hashes to the attacker.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will [capture NTLM hashes](../lm-and-ntlm/capture.md).
+The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will [capture NTLM hashes](../ntlm/capture.md).
 
 * The `--wpad` option will make Responder start the WPAD rogue server so that fake `wpad.dat` file can be served to requesting clients.
 * The `--ForceWpadAuth` option is needed on servers that applied the MS16-077 security patch. This patch introduced a mitigation that now prevents clients from automatically authenticating. This option forces the authentication request, hence potentially causing a login prompt.
@@ -30,7 +30,7 @@ responder --interface eth0 --wpad --ForceWpadAuth
 {% endtab %}
 
 {% tab title="Windows" %}
-The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will [capture NTLM hashes](../lm-and-ntlm/capture.md) \(even from machine accounts\) and set the Challenge to `1122334455667788` \(to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)\).
+The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers \(HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...\) will [capture NTLM hashes](../ntlm/capture.md) \(even from machine accounts\) and set the Challenge to `1122334455667788` \(to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)\).
 
 * Inveigh starts a WPAD rogue proxy server by default.
 * Options like `-WPADAuth`, `-WPADAuthIgnore`, `-WPADIP`, `-WPADPort`, `-WPADResponse` \(and others\) can be used to tweak the WPAD abuse.

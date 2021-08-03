@@ -71,7 +71,7 @@ That ticket will then be usable with [pass-the-ticket](pass-the-ticket.md) to au
 {% hint style="info" %}
 **Nota bene**
 
-User objects can't edit their own `msDS-KeyCredentialLink` attribute while computer objects can. This means the following scenario could work: [trigger an NTLM authentication](../mitm-and-coerced-authentications/) from DC01, [relay it](../lm-and-ntlm/relay.md) to DC02, make pywhisker edit DC01's attribute to create a Kerberos PKINIT pre-authentication backdoor on it, and have persistent access to DC01 with PKINIT and [pass-the-cache](pass-the-cache.md).
+User objects can't edit their own `msDS-KeyCredentialLink` attribute while computer objects can. This means the following scenario could work: [trigger an NTLM authentication](../mitm-and-coerced-authentications/) from DC01, [relay it](../ntlm/relay.md) to DC02, make pywhisker edit DC01's attribute to create a Kerberos PKINIT pre-authentication backdoor on it, and have persistent access to DC01 with PKINIT and [pass-the-cache](pass-the-cache.md).
 
 Computer objects can edit their own `msDS-KeyCredentialLink` attribute but can only add a KeyCredential if none already exists.
 {% endhint %}

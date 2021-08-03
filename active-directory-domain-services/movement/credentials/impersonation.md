@@ -2,7 +2,7 @@
 
 When credentials are found \(through [dumping](dumping/) or [cracking](cracking.md) for instance\), attackers try to use them to obtain access to new resources. Depending on the harvested credential material type, the impersonation can be done in different ways.
 
-* **LM or NT password hash**: [pass-the-hash](../lm-and-ntlm/pass-the-hash.md)
+* **LM or NT password hash**: [pass-the-hash](../ntlm/pass-the-hash.md)
 * **RC4 Kerberos key \(i.e. NT hash\)**: [overpass-the-hash](../kerberos/pass-the-key.md)
 * **non-RC4 Kerberos key \(i.e. DES or AES\)**: [pass-the-key](../kerberos/pass-the-key.md) \(alias for overpass-the-hash\)
 * **Kerberos ticket**: [pass-the-ticket](../kerberos/pass-the-ticket.md)

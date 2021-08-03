@@ -49,7 +49,7 @@ Invoke-BloodHound -SecureLdap -IgnoreLdapCert
 {% hint style="success" %}
 Here are a few **tips and tricks** on the collection process
 
-* Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context \(e.g. with runas, [pass-the-hash](../movement/lm-and-ntlm/pass-the-hash.md) or [overpass-the-hash](../movement/kerberos/pass-the-key.md)\). This is useful when domain computers have antivirus or other protections preventing \(or slowing\) testers from using enumerate or exploitation tools.
+* Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context \(e.g. with runas, [pass-the-hash](../movement/ntlm/pass-the-hash.md) or [overpass-the-hash](../movement/kerberos/pass-the-key.md)\). This is useful when domain computers have antivirus or other protections preventing \(or slowing\) testers from using enumerate or exploitation tools.
 * When obtaining a foothold on an AD domain, testers should first run SharpHound with all collection methods, and then start a loop collection to enumerate more sessions.
 {% endhint %}
 {% endtab %}
@@ -96,7 +96,7 @@ Here are some examples of quick wins to spot with BloodHound
 * **shadow admins**: users that are not members of privileged Active Directory groups but have sensitive privileges over the domain \(run graph queries like "find principals with [DCSync](../movement/credentials/dumping/dcsync.md) rights", "users with most local admin rights", or check "inbound control rights" in the domain and privileged groups node info panel\)
 * **other over-privileged users**: user that can control many objects \([ACEs](../movement/access-control-entries/)\) and that often leads to admins, shadow admins or sensitive servers \(check for "outbound control rights" in the node info panel\)
 * **over-privileged computers**: find computers that can do [\(un\)constrained Kerberos delegation](../movement/kerberos/delegations.md) \(run graph queries like "find computer with unconstrained delegations"\)
-* **admin computers**: find computers \(A\) that have admin rights against other computers \(B\). This can be exploited as follows: computer A triggered with an [MS-RPRN abuse \(printerbug\),](../movement/mitm-and-coerced-authentications/ms-rprn.md) authentication is then [relayed](../movement/lm-and-ntlm/relay.md), and credentials are [dumped](../movement/credentials/dumping/) on the computer B.
+* **admin computers**: find computers \(A\) that have admin rights against other computers \(B\). This can be exploited as follows: computer A triggered with an [MS-RPRN abuse \(printerbug\),](../movement/mitm-and-coerced-authentications/ms-rprn.md) authentication is then [relayed](../movement/ntlm/relay.md), and credentials are [dumped](../movement/credentials/dumping/) on the computer B.
 
 Other quick wins can be easily found with the [bloodhound-quickwin](https://github.com/kaluche/bloodhound-quickwin) Python script
 
