@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-08-05T21:33:28.071Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15" etag="o7sVmu_9X639CYO4PjmA" version="14.9.4" type="github">
+<mxfile host="app.diagrams.net" modified="2021-08-05T21:49:09.864Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15" etag="cSoUeuanSfFFqVBazCGd" version="14.9.4" type="github">
   <diagram id="hH7pEeF3YHhmBUNXaw4B" name="Page-1">
     <mxGraphModel dx="313" dy="2118" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -8,10 +8,10 @@
           <mxGeometry x="2520" y="-867.5" width="140" height="117.5" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-9" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;fontStyle=1;opacity=50;strokeColor=none;arcSize=7;" vertex="1" parent="1">
-          <mxGeometry x="1480" y="-790" width="140" height="100" as="geometry" />
+          <mxGeometry x="1494.5" y="-790" width="140" height="100" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-6" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;fontStyle=1;opacity=50;strokeColor=none;arcSize=7;" vertex="1" parent="1">
-          <mxGeometry x="1480" y="-910" width="140" height="100" as="geometry" />
+          <mxGeometry x="1494.5" y="-910" width="140" height="100" as="geometry" />
         </mxCell>
         <mxCell id="J9YO0TIa6yCJs-UxPbS8-112" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;fontStyle=1;opacity=50;strokeColor=none;arcSize=7;" parent="1" vertex="1">
           <mxGeometry x="2520" y="-740" width="140" height="220" as="geometry" />
@@ -478,16 +478,16 @@
           <mxGeometry x="2130" y="-795" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-1" value="WebDAV&lt;br&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;(Combine with others)&lt;/font&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#E6E6E6;fillColor=#850000;strokeColor=none;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="1490" y="-900" width="120" height="35" as="geometry" />
+          <mxGeometry x="1504.5" y="-900" width="120" height="35" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-2" value="PrinterBug&lt;br&gt;&lt;font style=&quot;font-size: 10px ; font-weight: normal&quot;&gt;(MS-RPRN abuse)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#E6E6E6;fillColor=#850000;strokeColor=none;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="1490" y="-780" width="120" height="35" as="geometry" />
+          <mxGeometry x="1504.5" y="-780" width="120" height="35" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-3" value="PetitPotam&lt;br&gt;&lt;font style=&quot;font-size: 10px ; font-weight: normal&quot;&gt;(MS-EFSR abuse)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#E6E6E6;fillColor=#850000;strokeColor=none;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="1490" y="-735" width="120" height="35" as="geometry" />
+          <mxGeometry x="1504.5" y="-735" width="120" height="35" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-4" value="PrivExchange&lt;br&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;(PushSubscription abuse)&lt;/font&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#E6E6E6;fillColor=#850000;strokeColor=none;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="1490" y="-855" width="120" height="35" as="geometry" />
+          <mxGeometry x="1504.5" y="-855" width="120" height="35" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-5" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=none;endFill=0;dashed=1;fillColor=#f8cecc;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="J9YO0TIa6yCJs-UxPbS8-47" target="MCJ4tLDUuDzxqkEf6m1W-9">
           <mxGeometry relative="1" as="geometry">
@@ -508,13 +508,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-12" value="&lt;font&gt;Coercion method&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C75B57;" vertex="1" parent="1">
-          <mxGeometry x="1480" y="-970" width="140" height="20" as="geometry" />
+          <mxGeometry x="1494.5" y="-970" width="140" height="20" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-13" value="&lt;font color=&quot;#666666&quot;&gt;Incoming NTLM auth over&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C75B57;" vertex="1" parent="1">
           <mxGeometry x="1664.5" y="-965" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="MCJ4tLDUuDzxqkEf6m1W-14" value="Client-side mitigation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#6788B8;" vertex="1" parent="1">
-          <mxGeometry x="1814.5" y="-970" width="160" height="20" as="geometry" />
+        <mxCell id="MCJ4tLDUuDzxqkEf6m1W-14" value="Client-side&lt;br&gt;mitigation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#6788B8;" vertex="1" parent="1">
+          <mxGeometry x="1814.5" y="-965" width="160" height="30" as="geometry" />
         </mxCell>
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-15" value="&lt;font color=&quot;#666666&quot;&gt;Relayed NTLM auth over&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C75B57;" vertex="1" parent="1">
           <mxGeometry x="2340" y="-960" width="140" height="20" as="geometry" />
@@ -522,8 +522,8 @@
         <mxCell id="MCJ4tLDUuDzxqkEf6m1W-16" value="Post-relay attack" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C75B57;" vertex="1" parent="1">
           <mxGeometry x="2520" y="-970" width="140" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="MCJ4tLDUuDzxqkEf6m1W-17" value="Server-side mitigation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#6788B8;" vertex="1" parent="1">
-          <mxGeometry x="2160" y="-970" width="170" height="20" as="geometry" />
+        <mxCell id="MCJ4tLDUuDzxqkEf6m1W-17" value="Server-side&lt;br&gt;mitigation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#6788B8;" vertex="1" parent="1">
+          <mxGeometry x="2165" y="-965" width="170" height="30" as="geometry" />
         </mxCell>
         <mxCell id="snwm5DKrS2Qic9GJKbOS-19" value="" style="group" vertex="1" connectable="0" parent="1">
           <mxGeometry x="1470" y="-360" width="521" height="170" as="geometry" />
