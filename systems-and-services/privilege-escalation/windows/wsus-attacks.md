@@ -16,11 +16,11 @@ reg query HKML\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
 
 The WSUS spoofing attack can be conducted as follows
 
-1. Obtain a Man-in-the-Middle position between clients and the update server with [ARP poisoning](../../../active-directory-domain-services/movement/mitm-and-coerced-authentications/arp-poisoning.md).
+1. Obtain a Man-in-the-Middle position between clients and the update server with [ARP poisoning](../../../ad-ds/movement/mitm-and-coerced-authentications/arp-poisoning.md).
 2. Redirect traffic from `clients -> legitimate WSUS` to `clients -> attacker's WSUS`
 3. Have a custom WSUS server running able to send evil updates to clients
 
-In a scenario where the clients and the attacker are on the same subnet, and the update server is on another one, the steps below can be followed. For other scenarios or more info on ARP poisoning, have a look at : [ARP poisoning](../../../active-directory-domain-services/movement/mitm-and-coerced-authentications/arp-poisoning.md).
+In a scenario where the clients and the attacker are on the same subnet, and the update server is on another one, the steps below can be followed. For other scenarios or more info on ARP poisoning, have a look at : [ARP poisoning](../../../ad-ds/movement/mitm-and-coerced-authentications/arp-poisoning.md).
 
 ### Preparing the evil WSUS
 
