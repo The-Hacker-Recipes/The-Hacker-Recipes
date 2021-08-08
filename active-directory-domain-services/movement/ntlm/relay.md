@@ -12,6 +12,10 @@ The chart below sums up the expected behavior of cross-protocols NTLMv2 relay at
 
 ![](../../../.gitbook/assets/ntlm_relay_mitigation_chart.png)
 
+The following mindmap sums up the overall attack paths of NTLMv2 relay.
+
+![](../../../.gitbook/assets/ntlm_relay-mindmap.png)
+
 ### Session signing
 
 Session signing is a powerful but limited mitigation against NTLM relay that only SMB and LDAP can use.
