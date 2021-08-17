@@ -6,11 +6,11 @@ description: MITRE ATT&CK™ Sub-technique T1558.003
 
 ## Theory
 
-When asking the KDC \(Key Distribution Center\) for a Service Ticket \(ST\), the requesting user needs to send a valid TGT \(Ticket Granting Ticket\) and the SPN \(Service Principal Name\) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the TGS to the requesting user.
+When asking the KDC \(Key Distribution Center\) for a Service Ticket \(ST\), the requesting user needs to send a valid TGT \(Ticket Granting Ticket\) and the SPN \(Service Principal Name\) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the ST to the requesting user.
 
-The TGS is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a SPN for a service, he can request a TGS for this service and crack it offline later in an attempt to retrieve that service account's password.
+The ST is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a SPN for a service, he can request a ST for this service and crack it offline later in an attempt to retrieve that service account's password.
 
-In most situations, services accounts are machine accounts, which have very complex, long, and random passwords. But if a service account, with a human-defined password, has a SPN set, attackers can request a TGS for this service and attempt to crack it offline. This is Kerberoasting.
+In most situations, services accounts are machine accounts, which have very complex, long, and random passwords. But if a service account, with a human-defined password, has a SPN set, attackers can request a ST for this service and attempt to crack it offline. This is Kerberoasting.
 
 ## Practice
 
