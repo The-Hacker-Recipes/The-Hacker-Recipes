@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1558.003
 
 ## Theory
 
-When asking the KDC \(Key Distribution Center\) for a Service Ticket, a.k.a. TGS \(Ticket Granting Service\), the requesting user needs to send a valid TGT \(Ticket Granting Ticket\) and the SPN \(Service Principal Name\) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the TGS to the requesting user.
+When asking the KDC \(Key Distribution Center\) for a Service Ticket \(ST\), the requesting user needs to send a valid TGT \(Ticket Granting Ticket\) and the SPN \(Service Principal Name\) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the TGS to the requesting user.
 
 The TGS is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a SPN for a service, he can request a TGS for this service and crack it offline later in an attempt to retrieve that service account's password.
 

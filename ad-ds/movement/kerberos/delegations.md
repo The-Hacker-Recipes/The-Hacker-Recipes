@@ -22,7 +22,7 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 
 ### Unconstrained Delegations
 
-If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive a TGS containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
+If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive a ST containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
 
 {% hint style="info" %}
 Unconstrained delegation abuses are usually combined with the [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
@@ -47,7 +47,7 @@ dnstool.py -u 'DOMAIN\MachineAccont$' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQD
 krbrelayx.py -aesKey 'MachineAccount_AES_key'
 ```
 
-Once the krbrelayx listener is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive an authentication, hence a TGS, containing a TGT.
+Once the krbrelayx listener is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive an authentication, hence a ST, containing a TGT.
 {% endtab %}
 
 {% tab title="From the compromised computer \(Windows\)" %}
@@ -77,14 +77,14 @@ There is also another attack based on unconstrained delegations, the [MachineAcc
 
 If a service account, configured with constrained delegation to another service, is compromised, an attacker can impersonate any user \(e.g. domain admin\) in the environment to access the second service.
 
-* If the service is configured with constrained delegation **without protocol transition**, then it works similarly to unconstrained delegation. The attacker controlled service needs to receive a user's TGS in order to  use the embedded TGT as an identity proof. "Without protocol transition" means the Kerberos authentication protocol needs to be used all the way.
-* If the service is configured with constrained delegation **with protocol transition** then it doesn't need that user's TGS. It can obtain it with a S4U2Self request and then use it with a S4U2Proxy request. The identity proof can either be a password, an NT hash or an AES key.
+* If the service is configured with constrained delegation **without protocol transition**, then it works similarly to unconstrained delegation. The attacker controlled service needs to receive a user's ST in order to  use the embedded TGT as an identity proof. "Without protocol transition" means the Kerberos authentication protocol needs to be used all the way.
+* If the service is configured with constrained delegation **with protocol transition** then it doesn't need that user's ST. It can obtain it with a S4U2Self request and then use it with a S4U2Proxy request. The identity proof can either be a password, an NT hash or an AES key.
 
 Once the final "impersonating" ticket is obtained, it can be used with [Pass-the-Ticket](pass-the-ticket.md) to access the target service.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can perform all the necessary steps to obtain the final "impersonating" ST \(in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment\).
 
 The input credentials are those of the compromised service account configured with constrained delegations.
 
@@ -156,7 +156,7 @@ Testers can use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/mas
 
 **3 - Obtain a ticket** 🎫 ****
 
-Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" TGS \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
+Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" ST \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
 
 ```bash
 getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'

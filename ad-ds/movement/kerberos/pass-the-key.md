@@ -2,7 +2,7 @@
 
 ## Theory
 
-The Kerberos authentication protocol works with tickets in order to grant access. A TGS \(Ticket Granting Service\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can be obtained by validating a first step named "pre-authentication".
+The Kerberos authentication protocol works with tickets in order to grant access. A Service Ticket \(ST\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can be obtained by validating a first step named "pre-authentication".
 
 The pre-authentication requires the requesting user to supply its secret key \(DES, RC4, AES128 or AES256\) derived from the user password. An attacker knowing that secret key doesn't need knowledge of the actual password to obtain tickets. This is called pass-the-key.
 
@@ -27,7 +27,7 @@ getTGT.py -aesKey 'KerberosKey' $DOMAIN/$USER@$TARGET
 
 Once a TGT is obtained, the tester can use it with the environment variable `KRB5CCNAME` with tools implementing [pass-the-ticket](pass-the-ticket.md).
 
-An alternative to requesting the TGT and then passing the ticket is using the `-k` option in Impacket scripts. Example below with secretsdump.
+An alternative to requesting the TGT and then passing the ticket is using the `-k` option in Impacket scripts. Using that option allows for passing either TGTs or STs. Example below with secretsdump.
 
 ```bash
 secretsdump.py -k -hashes 'LMhash:NThash' $DOMAIN/$USER@$TARGET
