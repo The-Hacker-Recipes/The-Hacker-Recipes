@@ -1,5 +1,7 @@
 # Kerberos
 
+![](../../../.gitbook/assets/pass-the-things-mindmap.png)
+
 ## Tickets
 
 Kerberos is an authentication protocol based on tickets. It basically works like this \(simplified process\):

@@ -37,15 +37,15 @@ Attackers that want to avoid glitches like this need to operate an **cross-proto
 
 MIC \(Message Integrity Code\) is an optional mitigation that garantess the NTLM messages integrity. MIC prevents attackers from tampering with NTLM messages when relaying them \(i.e. cross-protocols unsigning relays\). With this mitigation, attackers can't remove the session signing negotiation flags. Unlike session signing, MIC protects the authentication.
 
-On a side note, NTLMv2 ChallengeResponses are computed against multiples values including
+On a side note, NTLMv2 responses are computed against multiples values including
 
 * the user's NT hash
 * the server Challenge
 * the `AvPairs`, a byte array containing the `msAvFlags` flag, which is used to enable the MIC
 
-On the other hand, NTLMv1 ChallengeResponses do not include the `AvPairs` in their calculation, leaving the MIC unprotected.
+On the other hand, NTLMv1 responses do not include the `AvPairs` in their calculation, leaving the MIC unprotected.
 
-In conclusion, session signing is protected by the MIC, which is enabled with the `msAvFlags`, which is protected by the NTLMv2 ChallengeResponse, which can not be modified when not knowing the user's NT hash.
+In conclusion, session signing is protected by the MIC, which is enabled with the `msAvFlags`, which is protected by the NTLMv2 response, which can not be modified when not knowing the user's NT hash.
 
 \(Un\)fortunately, there are vulnerabilities that exist that allow attackers to operate cross-protocols unsigning relays on unpatched targets.
 
@@ -192,7 +192,7 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 * It has the ability to relay a single connection \(SMB only for now\) to multiple targets, see below
 
 {% hint style="info" %}
-Thanks to [the "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a ChallengeResponse \(i.e. LM or NTLM hash\) with a custom challenge on an interface/machine, while relaying on another.
+Thanks to [the "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a response \(i.e. LM or NTLM hash\) with a custom challenge on an interface/machine, while relaying on another.
 {% endhint %}
 
 The targets file used with the `-tf` option can contain the following
