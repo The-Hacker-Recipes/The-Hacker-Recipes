@@ -2,7 +2,7 @@
 
 ## Theory
 
-The Kerberos authentication protocol works with tickets in order to grant access. A TGS \(Ticket Granting Service\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can be obtained by validating a first step named "pre-authentication".
+The Kerberos authentication protocol works with tickets in order to grant access. A ST \(Service Ticket\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can be obtained by validating a first step named "pre-authentication".
 
 The pre-authentication requires the requesting user to supply its secret key \(DES, RC4, AES128 or AES256\) derived from the user password. Technically, when asking the KDC \(Key Distribution Center\) for a TGT \(Ticket Granting Ticket\), the requesting user needs to validate pre-authentication by sending a timestamp encrypted with it's own credentials. It ensures the user is requesting a TGT for himself. Once validated, the TGT is then sent to the user in the `KRB_AS_REP` message, but that message also contains a session key. That session key is encrypted with the requested user's NT hash.
 

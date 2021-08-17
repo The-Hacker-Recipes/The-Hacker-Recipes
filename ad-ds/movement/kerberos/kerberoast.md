@@ -20,7 +20,7 @@ Unlike [ASREProasting](asreproast.md), this attack can only be carried out with 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) \(Python\) can perform all the necessary steps to request a TGS for a service given its SPN and valid domain credentials.
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) \(Python\) can perform all the necessary steps to request a ST for a service given its SPN and valid domain credentials.
 
 ```bash
 # with a password
