@@ -51,13 +51,13 @@ Once the krbrelayx listener is ready, a [forced authentication attack](../mitm-a
 {% endtab %}
 
 {% tab title="From the compromised computer \(Windows\)" %}
-Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/Rubeus) can be used \(on the compromised host\) as a listener to wait for a user to authenticate, the TGS to show up and to extract the TGT it contains.
+Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/Rubeus) can be used \(on the compromised host\) as a listener to wait for a user to authenticate, the ST to show up and to extract the TGT it contains.
 
 ```bash
 Rubeus.exe monitor /interval:5
 ```
 
-Once the monitor is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. Rubeus will then receive an authentication \(hence a TGS, containing a TGT\). The TGT can be used to request a TGS for another service.
+Once the monitor is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. Rubeus will then receive an authentication \(hence a ST, containing a TGT\). The TGT can be used to request a ST for another service.
 
 ```bash
 Rubeus.exe asktgs /ticket:$base64_extracted_TGT /service:$target_SPN /ptt
@@ -104,7 +104,7 @@ In [some cases](delegations.md#theory), the delegation will not work. Depending 
 {% endtab %}
 
 {% tab title="Windows" %}
-[Rubeus ](https://github.com/GhostPack/Rubeus)can be used to request the delegation TGT and the "impersonation TGS".
+[Rubeus ](https://github.com/GhostPack/Rubeus)can be used to request the delegation TGT and the "impersonation ST".
 
 ```bash
 # Request the TGT
@@ -209,7 +209,7 @@ Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoacto
 
 **3 - Obtain a ticket** 🎫 ****
 
-[Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the "impersonation TGS" and inject it for later use.
+[Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the "impersonation ST" and inject it for later use.
 
 ```bash
 Rubeus.exe s4u /user:SHUTDOWN$ /rc4:$NThash /impersonateuser:Administrator /msdsspn:$Target_SPN /ptt
