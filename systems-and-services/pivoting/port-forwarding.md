@@ -85,7 +85,7 @@ In the following example \(real-world badly secured network\), let's assume the 
 * the attacker wants to stay stealthy by using multiple specific hops to make the traffic legitimate-looking \(workstation communicates with an internal server, an internal server communicates with a DMZed server, a DMZed server communicates with a remote client\)
 * the target workstation doesn't have access to the remote attacker's network \(i.e. to the Internet\)
 
-![](../../.gitbook/assets/multi-remote-port-forwarding.png)
+![](../../.gitbook/assets/multi-port-forwarding-remote-port-forwarding.png)
 
 ![Setting up the pivoting points](../../.gitbook/assets/carbon-6-.png)
 

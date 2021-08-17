@@ -14,7 +14,7 @@ With constrained and unconstrained delegations, the delegation attributes are se
 
 Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges.
 
-![](../../../.gitbook/assets/kerberos-delegation.png)
+![](../../../.gitbook/assets/kerberos_delegation.png)
 
 ## Practice
 

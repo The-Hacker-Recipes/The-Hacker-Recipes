@@ -13,7 +13,7 @@ Silver and golden tickets are forged Kerberos tickets that can be used with [pas
 
 The **Bronze bit** vulnerability \(CVE-2020-17049\) introduced the possibility of forwarding service tickets when it shouldn't normally be possible \(protected users, unconstrained delegation, constrained delegation configured with protocol transition\).
 
-![](../../../.gitbook/assets/kerberos-delegation.png)
+![](../../../.gitbook/assets/kerberos_delegation.png)
 
 ## Practice
 
