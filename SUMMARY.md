@@ -222,3 +222,9 @@
 * [Use-after-free](binary-exploitation/use-after-free.md)
 * [Buffer overflow](binary-exploitation/buffer-overflow.md)
 
+## 🛠️ mobile apps
+
+* [Android](mobile-apps/android.md)
+* [iOS](mobile-apps/ios/README.md)
+  * [Certificate pinning](mobile-apps/ios/certificate-pinning.md)
+
