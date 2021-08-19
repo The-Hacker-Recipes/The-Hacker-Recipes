@@ -150,6 +150,7 @@
   * [BIOS security](systems-and-services/physical-access/bios-security.md)
   * [Encryption](systems-and-services/physical-access/encryption.md)
   * [Airstrike attack](systems-and-services/physical-access/airstrike-attack.md)
+  * [🍳 Omelette du fromage](systems-and-services/physical-access/omelette-du-fromage.md)
 * [Port scanning](systems-and-services/port-scanning.md)
 * [Abusing services](systems-and-services/abusing-services/README.md)
   * [🛠️ \(21\) FTP](systems-and-services/abusing-services/ftp.md)
