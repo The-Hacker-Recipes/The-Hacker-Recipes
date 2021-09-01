@@ -5,7 +5,7 @@
 {% hint style="danger" %}
 **This project is a work in progress**. I started it in 2018 and will probably "finish" it by 2024. But of course, it will never be finished, those subjects evolve day after day and I don't plan on letting this project become deprecated. 
 
-The "Active Directory" part is a good example of what I want this whole project to be like.
+The "Active Directory" part is a good example of what I want this whole project to be like
 
 The 🛠️ emoji is used where work has to be done.
 {% endhint %}
