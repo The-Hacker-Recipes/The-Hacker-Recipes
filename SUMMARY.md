@@ -35,7 +35,7 @@
       * [Stuffing](ad-ds/movement/credentials/bruteforcing/stuffing.md)
     * [Shuffling](ad-ds/movement/credentials/credential-shuffling.md)
     * [Impersonation](ad-ds/movement/credentials/impersonation.md)
-  * [MITM and and coerced auths](ad-ds/movement/mitm-and-coerced-authentications/README.md)
+  * [MITM and coerced auths](ad-ds/movement/mitm-and-coerced-authentications/README.md)
     * [ARP poisoning](ad-ds/movement/mitm-and-coerced-authentications/arp-poisoning.md)
     * [DNS spoofing](ad-ds/movement/mitm-and-coerced-authentications/dns-spoofing.md)
     * [DHCP poisoning](ad-ds/movement/mitm-and-coerced-authentications/dhcp-poisoning.md)
