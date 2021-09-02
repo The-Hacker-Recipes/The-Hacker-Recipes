@@ -63,7 +63,7 @@ When attacking WEP networks, testers "just" need to gather a sufficient amount \
 airodump-ng --channel $channel --bssid 'TA:RG:ET:BS:SI:DD' --write $output_file $wlan_interface
 ```
 
-![](../../.gitbook/assets/image%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29.png)
+![](../../.gitbook/assets/image%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29.png)
 
 While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry cracking the secret key every 5.000 IVs.
 

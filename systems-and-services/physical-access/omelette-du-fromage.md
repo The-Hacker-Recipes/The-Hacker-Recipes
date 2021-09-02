@@ -49,7 +49,7 @@ The process will take around 2 to 3 minutes.
 7. Add some parsley if you'd like
 8. Savor the **Omelette du fromage** now!
 
-![Photograph: Vicky Wasik. Video: Serious Eats Video](../../.gitbook/assets/image.png)
+![Photograph: Vicky Wasik. Video: Serious Eats Video](../../.gitbook/assets/image%20%281%29.png)
 
 {% hint style="info" %}
 During pentesting engagements, cooking and eating an Omelette du fromage can help you _hack_ with ease!
