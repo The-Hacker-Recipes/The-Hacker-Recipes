@@ -1,4 +1,4 @@
 # 🛠️ Passwords in memory
 
-mimipenguin, mimipy for UNIX-like systems
+mimipenguin, mimipy \(LaZagne ?\) for UNIX-like systems
 

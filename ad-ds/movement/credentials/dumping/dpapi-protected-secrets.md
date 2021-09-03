@@ -1,0 +1,2 @@
+# 🛠️ DPAPI protected secrets
+
