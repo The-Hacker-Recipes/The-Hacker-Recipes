@@ -1,4 +1,4 @@
-# BloodHound
+# BloodHound ⚙️
 
 ## Theory
 

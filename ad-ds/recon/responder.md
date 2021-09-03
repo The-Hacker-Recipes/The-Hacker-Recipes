@@ -1,4 +1,4 @@
-# Responder
+# Responder ⚙️
 
 [Responder](https://github.com/SpiderLabs/Responder) \(Python\) is a great tool for [LLMNR, NBTNS, MDNS poisoning](../movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md) and [WPAD spoofing](../movement/mitm-and-coerced-authentications/wpad-spoofing.md) but it can also be used in "analyze" modes.
 
