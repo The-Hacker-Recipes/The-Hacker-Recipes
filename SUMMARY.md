@@ -117,6 +117,7 @@
   * [🛠️ CORS \(Cross-Origin Resource Sharing\)](web-services/configuration/cors-cross-origin-resource-sharing.md)
   * [🛠️ CSP \(Content Security Policy\)](web-services/configuration/csp-content-security-policy.md)
   * [🛠️ MIME sniffing](web-services/configuration/mime-sniffing.md)
+  * [🛠️ OAuth 2.0](web-services/configuration/oauth-2.0.md)
 * [Accounts and sessions](web-services/accounts-and-sessions/README.md)
   * [Security policies](web-services/accounts-and-sessions/security-policies.md)
   * [Password reset](web-services/accounts-and-sessions/password-reset.md)
