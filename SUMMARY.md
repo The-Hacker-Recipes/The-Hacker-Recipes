@@ -19,7 +19,7 @@
   * [Credentials](ad-ds/movement/credentials/README.md)
     * [Dumping](ad-ds/movement/credentials/dumping/README.md)
       * [SAM & LSA secrets](ad-ds/movement/credentials/dumping/sam-and-lsa-secrets.md)
-      * [🛠️ DPAPI secrets](ad-ds/movement/credentials/dumping/dpapi-protected-secrets.md)
+      * [DPAPI secrets](ad-ds/movement/credentials/dumping/dpapi-protected-secrets.md)
       * [NTDS.dit secrets](ad-ds/movement/credentials/dumping/ntds.dit.md)
       * [LSASS.exe secrets](ad-ds/movement/credentials/dumping/lsass.exe.md)
       * [DCSync](ad-ds/movement/credentials/dumping/dcsync.md)
