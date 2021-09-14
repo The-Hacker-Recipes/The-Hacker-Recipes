@@ -30,7 +30,7 @@ Besides the scenarios mentioned above, many network topologies exist and ARP poi
 
 1. **One segment**: the client, the server, and the attacker are on the same network segment. The ARP tables can be poisoned with the attacker spoofing either the client or the server.
 2. **Two segments**: the client and the attacker are on the same network segment but the server is on another one. For a hijacking attack, the client's ARP table can be poisoned with the attacker posing as the client's gateway. For a relaying attack, the gateway's ARP table also has to be poisoned with the attacker posing as the client. 
-3. **Three segments**: all three machines are on different network segments. For bot hijacking and relaying attacks, I'm not sure what can be done... 🤷♂ 
+3. **Three segments**: all three machines are on different network segments. For both hijacking and relaying attacks, I'm not sure what can be done... 🤷♂ 
 
 ## Practice
 
