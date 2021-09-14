@@ -59,9 +59,9 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 When the Windows operating system is running, the hives are in use and mounted. The command-line tool named `reg` can be used to export them.
 
 ```bash
-reg save HKLM\SAM 'C:\Windows\Temp\sam.save'
-reg save HKLM\SECURITY 'C:\Windows\Temp\security.save'
-reg save HKLM\SYSTEM 'C:\Windows\Temp\system.save'
+reg save HKLM\SAM "C:\Windows\Temp\sam.save"
+reg save HKLM\SECURITY "C:\Windows\Temp\security.save"
+reg save HKLM\SYSTEM "C:\Windows\Temp\system.save"
 ```
 
 When Windows is not running, the hives are not mounted and they can be copied just like any other file. This can be operated when mounting the hard drive from another OS \(e.g. when booting the computer on another operating system\). The hive files can be found at the following locations.
