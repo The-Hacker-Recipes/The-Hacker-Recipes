@@ -36,5 +36,5 @@ Petitpotam.py $ATTACKER_IP $TARGET_IP
 
 {% embed url="https://www.exploit-db.com/exploits/47115" %}
 
-{% embed url="https://github.com/topotam/PetitPotam/blob/main/Petitpotam.py" %}
+{% embed url="https://github.com/topotam/PetitPotam" %}
 
