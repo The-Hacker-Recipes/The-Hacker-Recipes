@@ -9,7 +9,7 @@ In 2019, Google's Project Zero research team found and reported a bug on MS-EFSR
 While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Gilles LIONEL](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication.
 
 {% hint style="warning" %}
-At the time of writing \(2021/07/20\), this bug has not been addressed by Microsoft.
+At the time of writing \(08/11/2021\), this bug has not been [fully addressed](https://blog.0patch.com/2021/08/free-micropatches-for-petitpotam.html) by Microsoft.
 {% endhint %}
 
 ## Practice
