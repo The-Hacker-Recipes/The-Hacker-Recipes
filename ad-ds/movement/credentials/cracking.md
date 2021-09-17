@@ -10,9 +10,9 @@ Attacking Active Directory domains often leads to obtaining password interesting
 
 Cracking is an operation that can be carried out through different types of attacks:
 
-* **Brute-force**: every possibility for a given character set and a given length \(i.e. aaa, aab, aac, ...\) is hashed and compared against the target hash.
+* **Brute-force**: every possibility for a given character set and a given length \(i.e. `aaa`, `aab`, `aac`, ...\) is hashed and compared against the target hash.
 * **Dictionary**: every word of a given list \(a.k.a. dictionary\) is hashed and compared against the target hash.
-* **Rainbow tables**: the hash is looked for in a precomputed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows cracking hashes faster, but costing a greater amount of memory than traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additional random value as prefix/suffix, making the precomputed table irrelevant\)
+* **Rainbow tables**: the hash is looked for in a pre-computed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows cracking hashes faster, but costing a greater amount of memory than traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted \(i.e. hashed with an additional random value as prefix/suffix, making the pre-computed table irrelevant\)
 
 There are many other and more complex types of attacks \(incremental, mask, rules, hybrid types, ...\) but the major/core ones are the three above.
 
@@ -31,10 +31,10 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | :--- | :--- |
 | LM hash | 3000 |
 | NT hash | 1000 |
-| [LM ChallengeResponse](../ntlm/capture.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
-| [LMv2 ChallengeResponse](../ntlm/capture.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
-| [NTLM ChallengeResponse](../ntlm/capture.md) | 5500 |
-| [NTLMv2 ChallengeResponse](../ntlm/capture.md) | 5600 |
+| [LM response](../ntlm/capture.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
+| [LMv2 response](../ntlm/capture.md) | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
+| [NTLM response](../ntlm/capture.md) | 5500 |
+| [NTLMv2 response](../ntlm/capture.md) | 5600 |
 | [\(DCC1\) Domain Cached Credentials](dumping/sam-and-lsa-secrets.md) | 1100 |
 | [\(DCC2\) Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100 |
 | [ASREProast](../kerberos/asreproast.md) | 18200 |
@@ -48,7 +48,13 @@ Below is an example of how to use hashcat for a dictionary attack.
 hashcat --attack-mode 0 --hash-type $number $hashes_file $wordlist_file
 ```
 
-### Dictionnary and rules attack
+### Dictionary and rules attack
+
+{% hint style="success" %}
+Hashcat has the ability to inject the plain passwords cracked into the dictionary and start the attack again, and this recursively until no new passwords are found. This can be done with the `--loopback` argument.
+
+_**Nota bene**: the new passwords are added to dictionnary caches that will be temporary and deleted after the bruteforce+rules+loopack attack ends._
+{% endhint %}
 
 Hashcat can also be used in a hybrid mode by combining a dictionary attack with rules that will operate transformations to the words of the list.
 
@@ -56,13 +62,13 @@ Hashcat can also be used in a hybrid mode by combining a dictionary attack with 
 * **Great rules**: [pantagrule](https://github.com/rarecoil/pantagrule), [OneRuleToRuleThemAll](https://notsosecure.com/one-rule-to-rule-them-all/) 
 
 ```bash
-hashcat --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file
+hashcat --loopback --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file
 ```
 
 ### Brute-force attack
 
 {% hint style="success" %}
-**TL; DR**: here is a hashcat command that bruteforce any password from 4 to 8 characters long. Each character can be any printable character.
+**TL; DR**: here is a hashcat command that bruteforces any password from 4 to 8 characters long. Each character can be any printable character.
 
 ```bash
 hashcat --attack-mode 3 --increment --increment-min 4 --increment-max 8 --hash-type $number $hashes_file "?a?a?a?a?a?a?a?a?a?a?a?a"
@@ -80,7 +86,7 @@ Hashcat has the following built-in charsets that can be used.
 ?b = 0x00 - 0xff
 ```
 
-Below are examples of hashcat beeing used with built-in charset.
+Below are examples of hashcat being used with built-in charset.
 
 ```bash
 # Passwords are like : 1 capital letter, 3 letters, 4 numbers, 1 special char
