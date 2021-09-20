@@ -245,6 +245,8 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 ## References
 
+{% embed url="https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/" %}
+
 {% embed url="https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/" caption="" %}
 
 {% embed url="https://blog.stealthbits.com/unconstrained-delegation-permissions/" caption="" %}
