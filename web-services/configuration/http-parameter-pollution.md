@@ -11,7 +11,7 @@ This attack could allow an attacker to bypass input validation and WAFs rules, m
 
 ## Practice
 
-### Before the test
+### Before the attack
 
 [Arjun](https://github.com/s0md3v/Arjun) can be used to find HTTP parameters in a website.
 
@@ -20,11 +20,29 @@ arjun -u $URL/endpoint
 ```
 
 {% hint style="info" %}
-It is possible to specify a delay between requests and handle rate limits.  
+It's possible to specify a delay between requests and handle rate limits.  
 Check out the [GitHub page](https://github.com/s0md3v/Arjun/wiki/Usage#scan-a-single-url).
 {% endhint %}
 
-### Manual testing
+After discovering a few HTTP parameters, one should know the server's behavior when presented with the same key multiple times.
 
-TODO.
+1. When presented with a query string in a URL, check the response the server gives with one key.
+
+   `http://example.com/search=result1`
+
+2. Repeat the first step with another value \(make sure to check the response\).
+
+   `http://example.com/search=result2`
+
+3. Once you are able to identify what kind of response the server returns for each value, try to combine both and see which one is used.
+
+   `http://example.com/page?search=result1&search=result2`
+
+   \*The result could be a combination of both, giving a new response.
+
+The payload that would be used to conduct a HPP will depend on the browser's behavior \(found previously\).
+
+## References
+
+{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/07-Input\_Validation\_Testing/04-Testing\_for\_HTTP\_Parameter\_Pollution" %}
 

@@ -72,7 +72,7 @@ This attack is not possible if:
 
 ### Cross-Site Request Forgery CSRF
 
-If the `state` parameter is not used in the authentification request, a CSRF attack is possible.
+If the `state` parameter is not used in the authentication request, a CSRF attack is possible.
 
 ## References
 
