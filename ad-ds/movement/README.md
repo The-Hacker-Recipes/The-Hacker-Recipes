@@ -4,7 +4,7 @@
 **This is a work-in-progress**
 {% endhint %}
 
-Below is a checklist to go through when conducting a pentest. Order is irrelevent and many tests require authenticated or admin access. This checklist answers "how to secure AD" rather than "how to pwn AD". A mindmap is in the works for that matter 😉 . 
+Below is a checklist to go through when conducting a pentest. Order is irrelevent and many tests require authenticated or admin access. This checklist answers "what to audit on AD?" rather than "how to pwn AD?". A mindmap is in the works for that matter 😉 . 
 
 ### NTLM configuration
 
