@@ -37,7 +37,7 @@ A manual testing workflow could be to check the cookies and response headers.
 **Cookies**: some WAF can be identified by the cookie's name.  
 **Response headers**: sometimes they are changed to apparently "confuse the attacker".
 
-## References
+## Resources
 
 {% embed url="https://nmap.org/nsedoc/scripts/http-waf-fingerprint.html" %}
 
