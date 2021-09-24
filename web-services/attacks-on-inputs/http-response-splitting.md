@@ -45,7 +45,7 @@ The following payload injects two headers and a `script` tag in the body.
 ?language=fr%0D%0AContent-Length:%2040%0D%0AContent-Type:%20text/html%0D%0A%0D%0A<script>alert('XSS')</script>
 ```
 
-## References
+## Resources
 
 {% embed url="https://www.netsparker.com/blog/web-security/crlf-http-header/" caption="" %}
 

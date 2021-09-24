@@ -105,7 +105,7 @@ bhqc.py -u $neo4juser -p $neo4jpassword
 ```
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://blog.riccardoancarani.it/bloodhound-tips-and-tricks/" %}
 

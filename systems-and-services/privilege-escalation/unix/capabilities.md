@@ -1,6 +1,6 @@
 # Capabilities
 
-### Theory
+## Theory
 
 Linux capabilities are a way to improve permission granularity in unix-like systems. It allows to follow the least-privilege principle by defining fine-grained permissions that can be attributed to threads and files. It works by splitting kernel calls in groups of similar functionalities.
 
@@ -39,7 +39,7 @@ Capabilities are in separated in 5 sets :
 | `CAP_NET_RAW` | Open raw and packet sockets  |
 | `CAP_NET_BIND_SERVICE` | Bind a socket to Internet domain privileged ports  |
 
-### Practice
+## Practice
 
 **Setting a file's capabilities :**
 
@@ -97,7 +97,7 @@ When copied from one place to another, a binary will lose its capabilities. In o
 cp --preserve=all /origin/path /dest/path
 ```
 
-### References
+## Resources
 
 {% embed url="https://blog.container-solutions.com/linux-capabilities-why-they-exist-and-how-they-work" caption="" %}
 

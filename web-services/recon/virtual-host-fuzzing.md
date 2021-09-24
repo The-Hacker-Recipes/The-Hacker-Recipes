@@ -51,7 +51,7 @@ site:<url> -www
 
 With `-www`, the response avoids printing searches related to our main domain so it is easier to focus on interesting subdomains.
 
-## References
+## Resources
 
 {% embed url="https://www.ssl.com/article/sni-virtual-hosting-for-https/" %}
 

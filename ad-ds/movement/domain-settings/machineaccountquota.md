@@ -87,7 +87,7 @@ Disable-MachineAccount -MachineAccount 'PENTEST01' -Verbose
 Testers need to be aware that the MAQ attribute set to a non-zero value doesn't necessarily mean the users can create machine accounts. The right to add workstations to a domain can in fact be changed in the Group Policies. `Group Policy Management Console (gpmc.msc) > Domain Controllers OU > Domain Controllers Policy > Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > User Rights Assigments > Add workstations to domain`
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://blog.netspi.com/machineaccountquota-is-useful-sometimes/" %}
 

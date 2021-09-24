@@ -61,7 +61,7 @@ When the `vuln` program will be run, the malicious `ls` program will be called a
 
 In some cases, the binary that have SUID/SGID permissions can be reverse-engineered and attackers find ways to change the execution flow of that program to make it run something else \(e.g. [buffer overflow](../../../binary-exploitation/buffer-overflow.md), [use-after-free](../../../binary-exploitation/use-after-free.md), ...\).
 
-## References
+## Resources
 
 {% embed url="https://www.hackingarticles.in/linux-privilege-escalation-using-suid-binaries/" caption="" %}
 

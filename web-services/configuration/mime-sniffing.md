@@ -17,7 +17,7 @@ Two steps to follow for the mitigation:
 1. Include a valid `Content-Type` header.
 2. Include a `X-Content-Type-Options` with the directive `nosniff`. 
 
-## References
+## Resources
 
 {% embed url="https://www.keycdn.com/support/what-is-mime-sniffing" %}
 

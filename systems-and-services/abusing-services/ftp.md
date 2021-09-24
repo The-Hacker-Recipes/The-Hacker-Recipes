@@ -190,7 +190,7 @@ quote "retr instrs"
 
 * The attacker should have received on his server the file 'file.tar.Z' renamed as 'dump'. 
 
-## References
+## Resources
 
 {% embed url="https://book.hacktricks.xyz/pentesting/pentesting-ftp" caption="" %}
 

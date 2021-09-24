@@ -103,7 +103,7 @@ This vulnerability can be exploited with [this exploit](https://github.com/r4j0x
 
 More info about this vulnerability can be found [here](https://nvd.nist.gov/vuln/detail/CVE-2021-3156) and [here](https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit).
 
-## References
+## Resources
 
 {% embed url="https://gtfobins.github.io/\#+sudo" caption="" %}
 

@@ -74,7 +74,7 @@ This attack is not possible if:
 
 If the `state` parameter is not used in the authentication request, a CSRF attack is possible.
 
-## References
+## Resources
 
 {% embed url="https://tools.ietf.org/id/draft-ietf-oauth-security-topics-15.html\#name-access-token-injection" %}
 

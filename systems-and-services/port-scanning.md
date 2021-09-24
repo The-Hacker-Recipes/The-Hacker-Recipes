@@ -4,5 +4,5 @@
 
 ## Practice
 
-## References
+## Resources
 

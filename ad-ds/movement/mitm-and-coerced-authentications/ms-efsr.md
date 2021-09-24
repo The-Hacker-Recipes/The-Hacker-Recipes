@@ -32,7 +32,7 @@ Petitpotam.py $ATTACKER_IP $TARGET_IP
 ```
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://www.exploit-db.com/exploits/47115" %}
 
