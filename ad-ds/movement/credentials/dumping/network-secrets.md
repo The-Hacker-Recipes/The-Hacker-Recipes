@@ -1,4 +1,4 @@
-# Network secrets
+# 🛠️ Network secrets
 
 post-arp spoofing, or when in control of a server or something
 

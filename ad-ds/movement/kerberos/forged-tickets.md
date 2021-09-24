@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-techniques T1558.001 and T1558.002
 
 ## Theory
 
-Silver and golden tickets are forged Kerberos tickets that can be used with [pass-the-ticket](pass-the-ticket.md) to access services in an Active Directory domain.
+Silver and Golden tickets are forged Kerberos tickets that can be used with [pass-the-ticket](pass-the-ticket.md) to access services in an Active Directory domain.
 
 * **Golden ticket**: The NT hash \(when the RC4 etype is not disabled, or any other Kerberos DES or AES key when it is\) of the special account `krbtgt` can be used to forge a special TGT \(Ticket Granting Ticket\) that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access any resource within the AD domain. In practice, the `krbtgt`'s key is used to encrypt, among other things, the PAC \(Privilege Authentication Certificate\), a special set of information about the requesting user that the KDC \(Key Distribution Center\) will copy/paste in the ST the users requests.
 * **Silver ticket**: The NT hash \(when the RC4 etype is not disabled, or any other Kerberos DES or AES key when it is\) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access that service. In practice, the key is used to encrypt, among other things, the PAC \(Privilege Authentication Certificate\), a special set of information about the requesting user that the target service will decrypt and read to decide if the user can have access.
