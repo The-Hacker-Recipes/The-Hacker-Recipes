@@ -1,8 +1,8 @@
 # Targeted Kerberoasting
 
-This abuse can be carried out when controlling an object that has `WriteProperty`, `GenericWrite` or `GenericAll` over a target user.
+This abuse can be carried out when controlling an object that has `WriteProperty`, `GenericWrite` or `GenericAll` over a target user \(i.e. member of the [Account Operator](../privileged-groups.md) group\).
 
-The attacker can add an SPN \(ServicePrincipalName\) to that account. Once the account has an SPN, it becomes vulnerable to [Kerberoasting](../kerberos/kerberoast.md). This technique is called Targeted Kerberoasting. 
+The attacker can add an SPN \(`ServicePrincipalName`\) to that account. Once the account has an SPN, it becomes vulnerable to [Kerberoasting](../kerberos/kerberoast.md). This technique is called Targeted Kerberoasting. 
 
 {% tabs %}
 {% tab title="UNIX-like" %}

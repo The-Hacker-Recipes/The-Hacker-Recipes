@@ -73,6 +73,10 @@ john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 
 If an attacker controls an account with the rights to add an SPN to another \([`GenericAll`](../access-control-entries/#genericall), [`GenericWrite`](../access-control-entries/#genericwrite)\), it can be abused to make that other account vulnerable to Kerberoast \(see [exploitation](../access-control-entries/targeted-kerberoasting.md)\).
 
+{% hint style="info" %}
+Controlling a member of the [Account Operators](../privileged-groups.md) group, targeted Kerberoasting can be conducted for the whole domain \(see [exploitation](../access-control-entries/targeted-kerberoasting.md)\).
+{% endhint %}
+
 ## Resources
 
 {% embed url="https://en.hackndo.com/kerberos" caption="" %}
