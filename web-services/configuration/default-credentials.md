@@ -1,4 +1,4 @@
-# 🛠️ Default credentials
+# Default credentials
 
 ## Theory
 
@@ -13,32 +13,18 @@ Default credentials are a really simple and extremely common way to get initial 
 
 ## Practice
 
-### Lists
+Default passwords can be found through the following means
 
-You can find a bunch of default passwords related to a wide range of brands in these resources:
-
-* [https://cirt.net/passwords](https://cirt.net/passwords)
-* [https://datarecovery.com/rd/default-passwords/](https://datarecovery.com/rd/default-passwords/)
-* [https://github.com/danielmiessler/SecLists/tree/master/Passwords/Default-Credentials](https://github.com/danielmiessler/SecLists/tree/master/Passwords/Default-Credentials)
-* [https://github.com/ihebski/DefaultCreds-cheat-sheet/blob/main/DefaultCreds-Cheat-Sheet.csv](https://github.com/ihebski/DefaultCreds-cheat-sheet/blob/main/DefaultCreds-Cheat-Sheet.csv)
-
-You can also pick passwords from the list of the most common passwords :
-
-* [https://en.wikipedia.org/wiki/List\_of\_the\_most\_common\_passwords](https://en.wikipedia.org/wiki/List_of_the_most_common_passwords)
-
-### Alternatives to lists
-
-You can also find them using Google Dorks:
-
-```text
-intext:'password' intext:'default' Application Name
-```
-
-Another way would be to check the manual or vendor documentation.
-
-The source code can contain the default credentials in comments, often left out in production by developers.
-
-On physical hardware, a sticker could be present, containing the default credentials.
+* Password lists
+  * [SecLists Default-Credentials](https://github.com/danielmiessler/SecLists/tree/master/Passwords/Default-Credentials)
+  * [Default Creds Cheatsheet](https://github.com/ihebski/DefaultCreds-cheat-sheet/blob/main/DefaultCreds-Cheat-Sheet.csv)
+  * [CIRT.net passwords](https://cirt.net/passwords)
+  * [Datarecovery default password](https://datarecovery.com/rd/default-passwords/)
+* [Wikipedia's list of most common passwords](https://en.wikipedia.org/wiki/List_of_the_most_common_passwords)
+* Google Dorks: `intext:'password' intext:'default' Application Name`
+* Manual or vendor documentation
+* Source code
+* Physically \(e.g. a sticker indicating the default credentials\)
 
 ## References
 

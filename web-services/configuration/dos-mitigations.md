@@ -1,13 +1,15 @@
-# 🛠️ DoS \(Denial of Service\)
+# 🛠️ Denial of Service \(DoS\)
 
 ## Theory
 
-**Denial of Service \(DoS\)**: using a single machine, a DoS attack reduces or prevents accessibility of service for its users. It does so by flooding the targeted machine with a consequent amount of requests to overload the system.  
-**Distributed Denial of Service \(DDoS\)**: a DDoS attack has the same goal as the DoS attack. Except it uses a multitude of compromised machines to cause a denial of service.
+There are two distinct types of denial of service:
 
-There are various ways to cause a denial of service such as:
+* **Denial of Service \(DoS\)**: using a single machine, a DoS attack reduces or prevents accessibility of service for its users. It usually does so by flooding the targeted machine with a consequent amount of requests to overload the system or by exploiting logic flaws that make the target server compute way too much.
+* **Distributed Denial of Service \(DDoS\)**: a DDoS attack has the same goal as the DoS attack. Except it uses a multitude of compromised machines to cause a denial of service and usually relies on flooding rather than finding and exploiting logical flaws.
 
-* **MAC flooding**: flooding a switch with packets using differents source MAC addresses.
+There are various ways to cause a denial of service by flooding such as:
+
+* **MAC flooding**: flooding a switch with packets using different source MAC addresses.
 * **ARP poisoning/spoofing**: linking multiple IP addresses with a single MAC address \(to a target\).
 * **Slow HTTP**: sending HTTP requests in a slow and fragmented way, one at a time.
 * **File upload**: exhausting the back-end system's disk space and network bandwidth by uploading lengthy files. Also, uploading a file that will be interpreted in the back-end could cause a DoS, if the file uploaded is malicious and its goal is to overload the system.
@@ -21,28 +23,22 @@ Testing for DoS in engagements can be useful for detecting applications and conf
 
 ### Websites
 
-#### DoS specific tools
-
-[hping3 ](https://github.com/antirez/hping)is a Kali Linux tool for firewall testing, OS fingerprinting, port scanning, etc. \([manual](https://linux.die.net/man/8/hping3)\).  
+{% tabs %}
+{% tab title="Stress testing" %}
+[hping3 ](https://github.com/antirez/hping)is a tool for firewall testing, OS fingerprinting, port scanning, etc. \(see [manual](https://linux.die.net/man/8/hping3)\).  
 What's interesting is its DoS testing capabilities. [More examples on hping3.](https://linuxhint.com/hping3/)
 
-{% tabs %}
-{% tab title="Random source address" %}
 The command sends a huge amount of packets with random source addresses to stress firewall state tables and other dynamic tables \(IP based\) within the TCP/IP stacks and firewall software.
 
 ```bash
 hping3 --rand-source --flood $TARGET_IP
 ```
-{% endtab %}
 
-{% tab title="SYN packets flooding" %}
 The command sends a huge amount of SYN packets with a specified port.
 
 ```bash
 hping3 -S --flood -V -p $TARGET_PORT $TARGET_IP
 ```
-{% endtab %}
-{% endtabs %}
 
 Other specialized tools can be used such as [Hulk ](https://github.com/grafov/hulk)and [GoldenEye](https://github.com/jseidl/GoldenEye).
 
@@ -50,23 +46,25 @@ Other specialized tools can be used such as [Hulk ](https://github.com/grafov/hu
 [hping3](https://github.com/antirez/hping), [Hulk, ](https://github.com/grafov/hulk)and [GoldenEye ](https://github.com/jseidl/GoldenEye)should be used with care and in specific cases.   
 The number of requests they can send could crash the targeted system.
 {% endhint %}
+{% endtab %}
 
-#### DoS via directory fuzzing
-
+{% tab title="Directory fuzzing" %}
 Directory fuzzing is a key step during the reconnaissance phase. Depending on the number of threads used, a DoS could happen. Here's an example using [Feroxbuster](https://github.com/epi052/feroxbuster#threads-and-connection-limits-at-a-high-level).
 
 ```bash
 feroxbuster -H "User-Agent: PENTEST" -w $WORDLIST -u $TARGET_IP -t $THREADS
 ```
+{% endtab %}
 
-#### File upload
-
+{% tab title="File upload" %}
 Unrestricted file upload in a website can lead to DoS by uploading lengthy files.  
 If the back-end server interprets any file uploaded \(PHP, JSP...\), a DoS could occur depending on the goal of the file's code.
+{% endtab %}
 
-#### Long password
-
+{% tab title="Input length" %}
 By sending a very long password, a DoS attack can be possible. The password hashing implementation may exhaust its CPU and memory resources.
+{% endtab %}
+{% endtabs %}
 
 ## References
 
