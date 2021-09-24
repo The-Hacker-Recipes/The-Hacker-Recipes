@@ -4,6 +4,8 @@
 **This is a work-in-progress**
 {% endhint %}
 
+Below is a checklist to go through when conducting a pentest. Order is irrelevent and many tests require authenticated or admin access. This checklist answers "how to secure AD" rather than "how to pwn AD". A mindmap is in the works for that matter 😉 . 
+
 ### NTLM configuration
 
 * [ ] Obsolete versions of this protocol LM, LMv2 and NTLM\(v1\) are disabled and NTLM \(all versions\) is disabled when possible. This allows to stay safe from [NTLM relay](ntlm/relay.md), [NTLM capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) and [pass-the-hash](ntlm/pass-the-hash.md) attacks.
