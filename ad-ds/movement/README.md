@@ -4,7 +4,7 @@
 **This is a work-in-progress**
 {% endhint %}
 
-Below is a checklist to go through when conducting a pentest. Order is irrelevent and many tests require authenticated or admin access. This checklist answers "what to audit on AD?" rather than "how to pwn AD?". A mindmap is in the works for that matter 😉 . 
+Below is a checklist to go through when conducting a pentest. Order is irrelevant and many tests require authenticated or admin access. This checklist answers "what to audit on AD?" rather than "how to pwn AD?". A mindmap is in the works for that matter 😉 . 
 
 ### NTLM configuration
 
@@ -22,14 +22,14 @@ Below is a checklist to go through when conducting a pentest. Order is irreleven
 * [ ] Domain Controllers are patched against [ZeroLogon](netlogon/zerologon.md).
 * [ ] [MS14-068](kerberos/forged-tickets.md#ms-14-068-cve-2014-6324) is patched, preventing forging of powerful Kerberos tickets.
 * [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse.md), and [ACE abuse](access-control-entries/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
-* [ ] Patches for NTLM tampering vulnerabilites \(e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166\) are applied to limit [NTLM relay](ntlm/relay.md) attacks.
+* [ ] Patches for NTLM tampering vulnerabilities \(e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166\) are applied to limit [NTLM relay](ntlm/relay.md) attacks.
 * [ ] Latest security patched are applied \(e.g. for ProxyLogon, ProxyShell, PrintNightmare, ...\).
 
 ### Access Management \(IAM/PAM\)
 
 * [ ] Local administrators have a unique, random, complex and rotating password on every server/workstation \(e.g. use of LAPS\). This can be checked by dumping a local admin password or hash and attempting [credential stuffing](credentials/bruteforcing/stuffing.md) \(i.e. trying to log in on other resources with that password/hash\).
 * [ ] Strong [password and lockout policies](../recon/password-policy.md) exist and are applied \(complexity enabled, at least 12 chars, 16 for admins, must change every 6 months\) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
-* [ ] Tier cloisoning is applied \(administrative personnel have multiple accounts, one for each tier, with different passwords and security requirements for each one\) and a "least requirement" policy is followed \(i.e. service accounts don't have domain admin \(or equivalent\) privileges, ACEs are carefully set\) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
+* [ ] Tier Model is applied \(administrative personnel have multiple accounts, one for each tier, with different passwords and security requirements for each one\) and a "least requirement" policy is followed \(i.e. service accounts don't have domain admin \(or equivalent\) privileges, ACEs are carefully set\) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
 * [ ] Sensitive network shares are not readable by all users. A "need to know" policy is followed, preventing data leak and other [credential-based attacks](credentials/).
 * [ ] No account is configured with [Kerberos Unconstrained Delegation](kerberos/delegations.md#unconstrained-delegations) capabilities.
 * [ ] No computer account has admin privileges over another one. This limits [NTLM relay](ntlm/relay.md) attacks.
