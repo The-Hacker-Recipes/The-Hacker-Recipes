@@ -8,7 +8,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 ### NTLM configuration
 
-* [ ] Obsolete versions of this protocol LM, LMv2 and NTLM\(v1\) are disabled and NTLM \(all versions\) is disabled when possible. This allows to stay safe from [NTLM relay](ntlm/relay.md), [NTLM capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) and [pass-the-hash](ntlm/pass-the-hash.md) attacks.
+* [ ] Obsolete versions of this protocol \(LM, LMv2 and NTLM\(v1\)\) are disabled and NTLM \(all versions\) is disabled when possible. This allows to stay safe from [NTLM relay](ntlm/relay.md), [NTLM capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) and [pass-the-hash](ntlm/pass-the-hash.md) attacks.
 
 ### Kerberos configuration
 
@@ -68,6 +68,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * Use of physical tokens \(U2F, access cards, ...\)
 * Avoiding the use of plaintext protocols \(limit ARP poisoning results\)
 * Forest and domain trusts
+* sidfilter, sidhistory, etc.
 
 
 
