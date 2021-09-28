@@ -29,7 +29,7 @@ The `ProxySrv` variable \(in red in the following screenshot\) needs to be repla
 
 ![](../../../.gitbook/assets/responder_conf_dhcp_poisoning.png)
 
-The attack can then be started with the `-d/--NBTNSdomain` argument.
+The attack can then be started with the `-d/--DHCP` argument.
 
 The `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes.
 
