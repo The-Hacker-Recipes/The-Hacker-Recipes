@@ -138,15 +138,19 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object \(e.g. the `GenericWrite` ACE, see [Abusing ACLs](../access-control-entries/)\), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
+{% hint style="success" %}
+Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor. Hence allowing RBCD attacks on relayed machine accounts authentications.
+{% endhint %}
+
 For this attack to work, the attacker needs to populate the target attribute with an account having a `ServicePrincipalName` set \(needed for Kerberos delegation operations\). The usual way to conduct these attacks is to create a computer account, which comes with an SPN set. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts. While this "computer account creation + RBCD attack" is the most common exploitation path, doing so with a user account \(having at least one SPN\) is perfectly feasible.
 
-Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with \(i.e. the account that has an SPN\). Using that account's credentials, the attacker can obtain a ticket through S4U2Self and S4U2Proxy requests, just like constrained delegation with protocol transition.
+Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with \(i.e. the account that has an SPN\). Using that account's credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
 **1 - Edit the target's security descriptor** ✏ ****
 
-The [rbcd.py](https://github.com/ShutdownRepo/impacket/blob/rbcd/examples/rbcd.py) script \(Python\) \(still in a Pull Request process at the time of writing - 29th Sept. 2021\) can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
+The [rbcd.py](https://github.com/ShutdownRepo/impacket/blob/rbcd/examples/rbcd.py) script \(Python\) _\(still in a Pull Request process at the time of writing - 29th Sept. 2021\)_ can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
 ```bash
 # Read the security descriptor
