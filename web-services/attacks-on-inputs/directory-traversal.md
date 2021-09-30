@@ -75,7 +75,7 @@ Then, to construct a payload, it's interesting to have a set of important files 
 
 Various filters could be set for a web application \(using a Web Application Firewall for example\). A set of bypass payloads can be found in [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#basic-exploitation).
 
-### Privilege
+### User privilege
 
 [soffensive.com](https://www.soffensive.com/posts/web-app-sec/2018-06-19-exploiting-blind-file-reads-path-traversal-vulnerabilities-on-microsoft-windows-operating-systems/):
 
