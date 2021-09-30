@@ -32,6 +32,7 @@ In Windows environments, passwords are stored in a hashed format in registry hiv
         <p>LM or NT hashes</p>
         <p>Kerberos keys (DES, AES)</p>
         <p>Domain Cached Credentials (DCC1 and DCC2)</p>
+        <p>security questions</p>
         </td>
     </tr>
     <tr>
@@ -141,6 +142,10 @@ lsadump::secrets /security:'C:\path\to\security.save' /system:'C:\path\to\system
 ```
 {% endtab %}
 {% endtabs %}
+
+{% hint style="info" %}
+**Nota bene** secretsdump and crackmapexec both extract security questions, if any, from the LSA. They are json formatted, UTF-16-LE encoded, and hex encoded on top of that.
+{% endhint %}
 
 ## References
 
