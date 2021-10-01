@@ -32,7 +32,7 @@ In Windows environments, passwords are stored in a hashed format in registry hiv
         <p>LM or NT hashes</p>
         <p>Kerberos keys (DES, AES)</p>
         <p>Domain Cached Credentials (DCC1 and DCC2)</p>
-        <p>security questions</p>
+        <p>Security Questions (<code>L$_SQSA_&lt;SID&gt;</code>)</p>
         </td>
     </tr>
     <tr>
