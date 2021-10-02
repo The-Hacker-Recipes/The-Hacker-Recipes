@@ -2,7 +2,7 @@
 
 ## Theory
 
-The Kerberos authentication protocol works with tickets in order to grant access. A ST \(Service Ticket\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can only be obtained by validating a first step named "pre-authentication".
+The Kerberos authentication protocol works with tickets in order to grant access. A ST \(Service Ticket\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can only be obtained by validating a first step named "pre-authentication" \(except if that requirement is explicitly removed for some accounts, making them vulnerable to [ASREProast](asreproast.md)\).
 
 The pre-authentication requires the requesting user to supply its secret key \(DES, RC4, AES128 or AES256\) derived from his password. An attacker knowing that secret key doesn't need knowledge of the actual password to obtain tickets. This is called [pass-the-key](pass-the-key.md).
 

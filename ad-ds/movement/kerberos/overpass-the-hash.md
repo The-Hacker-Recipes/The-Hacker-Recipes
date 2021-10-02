@@ -1,6 +1,6 @@
 # Overpass the hash
 
-This technique is a type of [pass the key](pass-the-key.md). 
+This technique is a form of [pass the key](pass-the-key.md). 
 
 Kerberos offers 4 different key types: DES, RC4, AES-128 and AES-256. 
 

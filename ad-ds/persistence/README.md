@@ -1,2 +1,2 @@
-# 🛠️ Persistence
+# Persistence
 
