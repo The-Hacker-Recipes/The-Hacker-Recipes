@@ -8,7 +8,7 @@ Plaintext protocols \(like HTTP, FTP, SNMP, SMTP\) are widely used within organi
 
 Once network traffic is hijacked and goes through an attacker-controlled equipement, valuable information can searched through captured or live traffic.
 
-[PCredz ](https://github.com/lgandx/PCredz)\(Python\) is a good example and allows extraction of credit card numbers, NTLM\(DCE-RPC, HTTP, SQL, LDAP, etc\), Kerberos \(AS-REQ Pre-Auth etype 23\), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, etc from a pcap file or from a live interface.
+[PCredz ](https://github.com/lgandx/PCredz)\(Python\) is a good example and allows extraction of credit card numbers, NTLM \(DCE-RPC, HTTP, SQL, LDAP, etc\), Kerberos \(AS-REQ Pre-Auth etype 23\), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, etc from a pcap file or from a live interface.
 
 ```bash
 # extract credentials from a pcap file
