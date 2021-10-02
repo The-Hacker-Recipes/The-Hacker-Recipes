@@ -24,7 +24,7 @@
       * [LSASS.exe secrets](ad-ds/movement/credentials/dumping/lsass.exe.md)
       * [DCSync](ad-ds/movement/credentials/dumping/dcsync.md)
       * [Group Policy Preferences](ad-ds/movement/credentials/dumping/group-policies-preferences.md)
-      * [🛠️ Network secrets](ad-ds/movement/credentials/dumping/network-secrets.md)
+      * [Network secrets](ad-ds/movement/credentials/dumping/network-secrets.md)
       * [Web browsers](ad-ds/movement/credentials/dumping/web-browsers.md)
       * [Passwords in files](ad-ds/movement/credentials/dumping/passwords-in-files.md)
       * [Passwords in memory](ad-ds/movement/credentials/dumping/passwords-in-memory.md)
