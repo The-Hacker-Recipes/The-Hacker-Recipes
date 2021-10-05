@@ -2,7 +2,7 @@
 
 ## Theory
 
-The banana, chocolate, oatmeal and peanut butter cake is the ultimate reward after owning system or company. Its composition features simple yet powerful elements.
+The banana, chocolate, oatmeal and peanut butter cake is the ultimate reward after owning a system or company. Its composition features simple yet powerful elements.
 
 The following elements are needed for this recipe to work \(for 2 to 3 attackers\):
 
