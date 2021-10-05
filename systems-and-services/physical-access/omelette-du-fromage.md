@@ -2,58 +2,37 @@
 
 ## Theory
 
-Hello my friends, today we are going to see how to make the famously known, French dish, Omelette du fromage.
+The French dish "Omelette du fromage" is famously known for its ability to convey strength and resistance to its eaters. Its preparation and consumption is common for fast-paced attackers in need of daily nutrients.
 
-{% hint style="info" %}
-The amount required for each ingredient \(written below\) will allow you to make an omelette for **1 person**.
+The requirements for this omelette are as follow \(for 1 attacker\):
+
+* 2 to 3 eggs 🥚 
+* grated cheese 🧀 \(the type of cheese is to be set depending on the attacker's mood and local resources\)
+* butter
+* **option**: parsley can be added for improved taste 🌿 
+
+A salad bowl, a spatula, a frying pan and a fourchette will be needed to conduct this technique. 
+
+{% hint style="success" %}
+During pentesting engagements, cooking and eating an Omelette du fromage will help _HACK_ with ease! 🏴☠ 
 {% endhint %}
-
-So, let see what we need.
-
-{% tabs %}
-{% tab title="Ingredients" %}
-We'll need only 3 ingredients:
-
-* Eggs \(2, or 3 depending on how hungry you are\)
-* Grated cheese \(as for the type of cheese, I'll let you choose\)
-* Butter
-
-**Bonus**: you can add some parsley when the omelette is cooked.
-{% endtab %}
-
-{% tab title="Utensils" %}
-Let us pick basic utensils:
-
-* Salad bowl
-* Spatula
-* Frying pan
-{% endtab %}
-{% endtabs %}
 
 ## Practice
 
-We'll follow through with each step to create the perfect omelette.
+The technique can be operated as follows:
 
-{% hint style="info" %}
-The process will take around 2 to 3 minutes.
-{% endhint %}
-
-### Steps
-
-1. Break the eggs into the salad bowl
-2. Put the grated cheese with it
-3. Season and salt
-4. Mix the whole content with a spatula
-5. Put the whole content you mixed in the salad bowl onto the frying pan
-6. When the omelette appears cooked, try to close it for the presentation
-7. Add some parsley if you'd like
-8. Savor the **Omelette du fromage** now!
+1. The eggs \(2-3\) must be broken and "poured" into a salad bowl
+2. Grated cheese can be added \(unlimited amount\)
+3. Season and salt are then needed for tasting purposes
+4. Mixing the whole content with a spatula will allow to obtain a real omelette
+5. The mixed content from the salad bowl onto the frying pan shall then be operated
+6. Once cooked, closing the omelette will improve presentation but is a risky process and might require experimented attackers to take the lead on this step
+7. Adding parsley is optionnal but can greatly improve taste
+8. Savoring the **Omelette du fromage** is then possible.
 
 ![Photograph: Vicky Wasik. Video: Serious Eats Video](../../.gitbook/assets/image%20%281%29.png)
 
-{% hint style="info" %}
-During pentesting engagements, cooking and eating an Omelette du fromage can help you _hack_ with ease!
-{% endhint %}
+This technique can be combined with the [banana & chocolate cake](banana-and-chocolate-cacke.md) one for a whole meal.
 
 ## Reference
 
