@@ -1,4 +1,4 @@
-# 🍌 Banana & chocolate cacke
+# 🍌 Banana & chocolate cake
 
 ## Theory
 
