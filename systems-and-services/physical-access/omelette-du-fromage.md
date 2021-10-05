@@ -32,7 +32,7 @@ The technique can be operated as follows:
 
 ![Photograph: Vicky Wasik. Video: Serious Eats Video](../../.gitbook/assets/image%20%281%29.png)
 
-This technique can be combined with the [banana & chocolate cake](banana-and-chocolate-cacke.md) one for a whole meal.
+This technique can be combined with the [banana & chocolate cake](banana-and-chocolate-cake.md) one for a whole meal.
 
 ## Reference
 

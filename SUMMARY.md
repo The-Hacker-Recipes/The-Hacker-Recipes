@@ -157,7 +157,7 @@
   * [Encryption](systems-and-services/physical-access/encryption.md)
   * [Airstrike attack](systems-and-services/physical-access/airstrike-attack.md)
   * [🍳 Omelette du fromage](systems-and-services/physical-access/omelette-du-fromage.md)
-  * [🍌 Banana & chocolate cake](systems-and-services/physical-access/banana-and-chocolate-cacke.md)
+  * [🍌 Banana & chocolate cake](systems-and-services/physical-access/banana-and-chocolate-cake.md)
 * [Port scanning](systems-and-services/port-scanning.md)
 * [Abusing services](systems-and-services/abusing-services/README.md)
   * [🛠️ \(21\) FTP](systems-and-services/abusing-services/ftp.md)
