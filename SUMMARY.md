@@ -61,6 +61,7 @@
     * [Pass the key](ad-ds/movement/kerberos/pass-the-key.md)
     * [Overpass the hash](ad-ds/movement/kerberos/overpass-the-hash.md)
     * [Pass the ticket](ad-ds/movement/kerberos/pass-the-ticket.md)
+    * [UnPAC-the-hash](ad-ds/movement/kerberos/unpac-the-hash.md)
     * [Pass the cache](ad-ds/movement/kerberos/pass-the-cache.md)
     * [Forged tickets](ad-ds/movement/kerberos/forged-tickets.md)
     * [ASREProast](ad-ds/movement/kerberos/asreproast.md)
