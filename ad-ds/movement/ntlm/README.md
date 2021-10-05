@@ -1,6 +1,6 @@
 # NTLM
 
-![](../../../.gitbook/assets/pass-the-things-mindmap.png)
+![](../../../.gitbook/assets/pass-the-things.png)
 
 ## Theory
 
