@@ -48,7 +48,7 @@ When the public key has been set in the `msDs-KeyCredentialLink` of the target, 
 gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
 ```
 
-The ticket obtained can then be used to authenticate with [pass-the-cache](pass-the-cache.md) or a specific request can be made to the Key Distribution Center to recover the account's NT hash with [getnthash.py](https://github.com/dirkjanm/PKINITtools/blob/master/getnthash.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/).
+The ticket obtained can then be used to authenticate with [pass-the-cache](pass-the-cache.md) or an [UnPAC-the-hash](unpac-the-hash.md) attack can be conducted.
 {% endtab %}
 
 {% tab title="Windows" %}
