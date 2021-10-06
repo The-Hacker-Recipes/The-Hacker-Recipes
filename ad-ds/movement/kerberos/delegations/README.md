@@ -12,7 +12,9 @@ With constrained and unconstrained delegations, the delegation attributes are se
 
 Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges.
 
-![](../../../../.gitbook/assets/kerberos_delegation.png)
+{% hint style="info" %}
+A mindmap about this is in progress...
+{% endhint %}
 
 Some of the following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](../pass-the-ticket.md).
 

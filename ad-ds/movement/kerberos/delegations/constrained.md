@@ -10,19 +10,12 @@ Once the final "impersonating" ticket is obtained, it can be used with [Pass-the
 
 ### Without protocol transition
 
-If the service is configured with constrained delegation **without protocol transition \(which is the case by default\)**, then it works similarly to [unconstrained delegation](unconstrained.md). The attacker controlled service needs to receive a user's ST in order to use the embedded TGT as an identity proof. "Without protocol transition" means the Kerberos authentication protocol needs to be used all the way.
-
 ![](../../../../.gitbook/assets/kcd-without-proto-transition.png)
 
-Accounts configured with constrained delegation without protocol transition should be exploited just like [unconstrained delegations](unconstrained.md). The only difference being the final step. When passing the ticket, attackers can impersonate users on a set of specific services.
+{% hint style="info" %}
+In theory, adding the KDC capable service host to its own `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute \([RBCD attack](rbcd.md)\) could allow that host to operate S4U2Self, hence allowing the constrained delegation configured without protocol transition to be abused just like with protocol transition.
 
-{% hint style="warning" %}
-Attempting to exploit this technique like [Constrained Delegation with protocol transition](constrained.md#with-protocol-transition), getST will raise the following error. However, that error could also/instead mean that the user requested for delegation was protected against it.
-
-```text
-[-] Kerberos SessionError: KDC_ERR_BADOPTION(KDC cannot accommodate requested option)
-[-] Probably SPN is not allowed to delegate by user user1 or initial TGT not forwardable
-```
+This needs to be further checked.
 {% endhint %}
 
 ### With protocol transition
@@ -32,6 +25,18 @@ If the service is configured with constrained delegation **with protocol transit
 ![](../../../../.gitbook/assets/kcd-with-protocol-transition.png)
 
 Accounts configured with constrained delegation with protocol transition should be exploited just like [resource-based constrained delegations](rbcd.md). The main difference being the initial step: the attacker doesn't need to edit a target's attribute. Exploitation is limited to what services the delegation can be conducted.
+
+{% hint style="warning" %}
+When attempting to exploit that technique, if the following error triggers, it means that either
+
+* the account cannot be delegated
+* or the constrained delegations are configured [without protocol transition](constrained.md#without-protocol-transition)
+
+```text
+[-] Kerberos SessionError: KDC_ERR_BADOPTION(KDC cannot accommodate requested option)
+[-] Probably SPN is not allowed to delegate by user user1 or initial TGT not forwardable
+```
+{% endhint %}
 
 ## Resources
 

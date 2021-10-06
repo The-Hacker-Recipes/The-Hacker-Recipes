@@ -2,7 +2,7 @@
 
 ## Theory
 
-If an account \(user or computer\), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive a ST \(service ticket\) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
+If an account \(user or computer\), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive an ST \(service ticket\) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
 
 {% hint style="info" %}
 Unconstrained delegation abuses are usually combined with the [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
@@ -26,7 +26,10 @@ When attacking accounts able to delegate without constraints, there are two majo
 {% endhint %}
 
 {% hint style="success" %}
-By default, the salt is always `DOMAINusername`.
+By default, the salt is always
+
+* **For users**: uppercase realm + case sensitive username = `DOMAIN.LOCALuser`
+* **For computers**: uppercase realm + the word host + lowercase hostname without the trailing '$' + . + lowercase = `DOMAIN.LOCALmachine.domain.local`
 {% endhint %}
 
 ```bash
