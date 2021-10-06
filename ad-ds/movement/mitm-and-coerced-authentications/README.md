@@ -1,6 +1,6 @@
 # MITM and coerced auths
 
-In Active Directory domains, attackers often rely on coerced authentications and MitM \(man in the middle\) techniques to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../ntlm/relay.md)\) or when [abusing Kerberos delegations](../kerberos/delegations.md).
+In Active Directory domains, attackers often rely on coerced authentications and MitM \(man in the middle\) techniques to operate lateral movement, especially when attempting authentication relaying attacks \(e.g. [NTLM relay](../ntlm/relay.md)\) or when [abusing Kerberos delegations](../kerberos/delegations/).
 
 These techniques enable attackers to redirect traffic or redirect/force targets authentications. Attackers will then be able, in certain cases, to capture credentials or relay authentications. I'm using "coerce" instead of "force" in this category's title since some technique can rely on a bit of social engineering to work.
 

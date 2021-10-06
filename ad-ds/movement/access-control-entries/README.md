@@ -23,14 +23,14 @@ In order to navigate the notes, testers can use the mindmap below.
 All of the aforementioned attacks \(red blocks\) are detailed in the child notes, except:
 
 * **Shadow Credentials:** see [ADDS &gt; Movement &gt; Kerberos &gt; Shadow Credentials](../kerberos/shadow-credentials.md)
-* **Kerberos RBCD**: see [ADDS &gt; Movement &gt; Kerberos &gt; Kerberos Delegations &gt; RBCD](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd)
+* **Kerberos RBCD**: see [ADDS &gt; Movement &gt; Kerberos &gt; Kerberos Delegations &gt; RBCD](../kerberos/delegations/#resource-based-constrained-delegations-rbcd)
 * **GPO abuses**: see [ADDS &gt; Movement &gt; GPOs](../group-policy-objects.md)
 * **DCSync** : see [ADDS &gt; Movement &gt; Credential &gt; Dumping &gt; DCSync](../credentials/dumping/dcsync.md)
 
 {% hint style="success" %}
 **Self-attacks**
 
-* User and computers objects can conduct a [Kerberos RCD](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd) attack on themselves.
+* User and computers objects can conduct a [Kerberos RCD](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) attack on themselves.
 * Computer objects can conduct a [Shadow Credentials](../kerberos/shadow-credentials.md) attack on themselves.
 {% endhint %}
 

@@ -24,7 +24,7 @@ Below is a table summing up some groups' rights and abuse paths.
         <p>its members can create and manage users and groups, including its own
           membership and that of the Server Operators group (e.g. <a href="access-control-entries/addmember.md">add a member to a group</a>)</p>
         <p></p>
-        <p>its members can also be used to help abuse user accounts with <a href="kerberos/delegations.md#unconstrained-delegations">unconstrained delegations</a> since
+        <p>its members can also be used to help abuse user accounts with <a href="kerberos/delegations/#unconstrained-delegations">unconstrained delegations</a> since
           Account Operators can edit users SPNs.</p>
         <p></p>
         <p>&#x1F525;at the time of writing (12th, April 2021) members can sometimes

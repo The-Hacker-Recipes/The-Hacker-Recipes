@@ -151,7 +151,7 @@ This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivE
 {% endtab %}
 
 {% tab title="Delegation" %}
-The following command will [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
+The following command will [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET --escalate-user SHUTDOWN --delegate-access

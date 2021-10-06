@@ -82,7 +82,7 @@ Once the collection is over, the data can be uploaded and analysed in BloodHound
 * Find information about selected nodes: sessions, properties, group membership/members, local admin rights, Kerberos delegations, RDP rights, outbound/inbound control rights \(ACEs\), and so on
 * Find help about edges/attacks \(abuse, opsec considerations, references\)
 
-Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/access-control-entries/), [Kerberos delegations abuse](../movement/kerberos/delegations.md), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/group-policy-objects.md), [Kerberoast](../movement/kerberos/kerberoast.md), [ASREProast](../movement/kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
+Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/access-control-entries/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/group-policy-objects.md), [Kerberoast](../movement/kerberos/kerberoast.md), [ASREProast](../movement/kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
 
 ![](../../.gitbook/assets/screenshot-from-2020-12-08-15-29-30.png)
 
@@ -95,7 +95,7 @@ Here are some examples of quick wins to spot with BloodHound
 
 * **shadow admins**: users that are not members of privileged Active Directory groups but have sensitive privileges over the domain \(run graph queries like "find principals with [DCSync](../movement/credentials/dumping/dcsync.md) rights", "users with most local admin rights", or check "inbound control rights" in the domain and privileged groups node info panel\)
 * **other over-privileged users**: user that can control many objects \([ACEs](../movement/access-control-entries/)\) and that often leads to admins, shadow admins or sensitive servers \(check for "outbound control rights" in the node info panel\)
-* **over-privileged computers**: find computers that can do [\(un\)constrained Kerberos delegation](../movement/kerberos/delegations.md) \(run graph queries like "find computer with unconstrained delegations"\)
+* **over-privileged computers**: find computers that can do [\(un\)constrained Kerberos delegation](../movement/kerberos/delegations/) \(run graph queries like "find computer with unconstrained delegations"\)
 * **admin computers**: find computers \(A\) that have admin rights against other computers \(B\). This can be exploited as follows: computer A triggered with an [MS-RPRN abuse \(printerbug\),](../movement/mitm-and-coerced-authentications/ms-rprn.md) authentication is then [relayed](../movement/ntlm/relay.md), and credentials are [dumped](../movement/credentials/dumping/) on the computer B.
 
 Other quick wins can be easily found with the [bloodhound-quickwin](https://github.com/kaluche/bloodhound-quickwin) Python script

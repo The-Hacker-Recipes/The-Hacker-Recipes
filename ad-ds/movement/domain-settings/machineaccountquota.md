@@ -9,8 +9,8 @@
 There are multiple ways attackers can leverage that power.
 
 * [Force client authentications](../mitm-and-coerced-authentications/), [relay those authentications](../ntlm/relay.md) to domain controllers using LDAPS, and take advantage of authenticated sessions to create a domain computer account. This account can then be used as a foothold on the AD domain to operate authenticated recon \(i.e. [with BloodHound](../../recon/bloodhound.md) for example\)
-* Create a computer account and use it for [Kerberos RBCD attacks](../kerberos/delegations.md#resource-based-constrained-delegations-rbcd) when leveraging owned accounts with sufficient permissions \(i.e. ACEs like `GenericAll`, `GenericWrite` or `WriteProperty`\) against a target machine
-* Create a computer account and use it for a [Kerberos Unconstrained Delegation](../kerberos/delegations.md#unconstrained-delegations) attack when leveraging owned accounts with sufficient permissions \(i.e. the `SeEnableDelegationPrivilege` user right\)
+* Create a computer account and use it for [Kerberos RBCD attacks](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) when leveraging owned accounts with sufficient permissions \(i.e. ACEs like `GenericAll`, `GenericWrite` or `WriteProperty`\) against a target machine
+* Create a computer account and use it for a [Kerberos Unconstrained Delegation](../kerberos/delegations/#unconstrained-delegations) attack when leveraging owned accounts with sufficient permissions \(i.e. the `SeEnableDelegationPrivilege` user right\)
 * Profit from special rights that members of the Domain Computers group could inherit
 * Profit from special rights that could automatically be applied to new domain computers based on their account name
 

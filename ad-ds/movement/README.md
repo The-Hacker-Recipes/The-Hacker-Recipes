@@ -31,7 +31,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] Strong [password and lockout policies](../recon/password-policy.md) exist and are applied \(complexity enabled, at least 12 chars, 16 for admins, must change every 6 months\) and users know not to use simple and guessable passwords \(e.g. password == username\) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
 * [ ] Tier Model is applied \(administrative personnel have multiple accounts, one for each tier, with different passwords and security requirements for each one\) and a "least requirement" policy is followed \(i.e. service accounts don't have domain admin \(or equivalent\) privileges, ACEs are carefully set\) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
 * [ ] Sensitive network shares are not readable by all users. A "need to know" policy is followed, preventing data leak and other [credential-based attacks](credentials/).
-* [ ] No account is configured with [Kerberos Unconstrained Delegation](kerberos/delegations.md#unconstrained-delegations) capabilities.
+* [ ] No account is configured with [Kerberos Unconstrained Delegation](kerberos/delegations/#unconstrained-delegations) capabilities.
 * [ ] No computer account has admin privileges over another one. This limits [NTLM relay](ntlm/relay.md) attacks.
 
 ### Credentials Management
