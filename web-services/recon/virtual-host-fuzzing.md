@@ -2,10 +2,10 @@
 
 ## Theory
 
-A web server can host multiple domain names \(websites\). This is called virtual hosting. Two main mechanisms are used for a client to access a website on a virtual host:
+A web server can host multiple domain names (websites). This is called virtual hosting. Two main mechanisms are used for a client to access a website on a virtual host:
 
-* **HTTP**: the use of the `Host` request header. The client uses the **&lt;host&gt;** directive to connect to the domain name of the server. Optionally, it can use the **&lt;port&gt;** directive to specify a TCP port number on which the server is listening.
-* **HTTPS**: the use of the Server Name Indication \(SNI\) extension with TLS. The client indicates the hostname it wants to connect to at the start of the handshake process.
+* **HTTP**: the use of the `Host` request header. The client uses the **\<host>** directive to connect to the domain name of the server. Optionally, it can use the **\<port>** directive to specify a TCP port number on which the server is listening.
+* **HTTPS**: the use of the Server Name Indication (SNI) extension with TLS. The client indicates the hostname it wants to connect to at the start of the handshake process.
 
 Virtual hosting can be [based on](https://en.wikipedia.org/wiki/Virtual_hosting#Name-based) a name, an IP, or a port.
 
@@ -21,7 +21,7 @@ ffuf -w $wordlist -u $URL -H "Host: FUZZ.$URL"
 ```
 
 {% hint style="info" %}
-It is possible to filter the responses with a specific size using `-fs $size`.  
+It is possible to filter the responses with a specific size using `-fs $size`.\
 An example can be found [here](https://asciinema.org/a/211360) and more tips [here](https://codingo.io/tools/ffuf/bounty/2020/09/17/everything-you-need-to-know-about-ffuf.html).
 {% endhint %}
 
@@ -45,7 +45,7 @@ findomain -t $URL
 
 Using Google Dorks.
 
-```text
+```
 site:<url> -www
 ```
 
@@ -55,9 +55,8 @@ With `-www`, the response avoids printing searches related to our main domain so
 
 {% embed url="https://www.ssl.com/article/sni-virtual-hosting-for-https/" %}
 
-{% embed url="https://en.wikipedia.org/wiki/Server\_Name\_Indication\#cite\_note-rfc3546-1" %}
+{% embed url="https://en.wikipedia.org/wiki/Server_Name_Indication#cite_note-rfc3546-1" %}
 
 {% embed url="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Host" %}
 
 {% embed url="https://erev0s.com/blog/gobuster-directory-dns-and-virtual-hosts-bruteforcing/" %}
-

@@ -1,16 +1,16 @@
-# 🛠️ Denial of Service \(DoS\)
+# 🛠️ Denial of Service (DoS)
 
 ## Theory
 
 There are two distinct types of denial of service:
 
-* **Denial of Service \(DoS\)**: using a single machine, a DoS attack reduces or prevents accessibility of service for its users. It usually does so by flooding the targeted machine with a consequent amount of requests to overload the system or by exploiting logic flaws that make the target server compute way too much.
-* **Distributed Denial of Service \(DDoS\)**: a DDoS attack has the same goal as the DoS attack. Except it uses a multitude of compromised machines to cause a denial of service and usually relies on flooding rather than finding and exploiting logical flaws.
+* **Denial of Service (DoS)**: using a single machine, a DoS attack reduces or prevents accessibility of service for its users. It usually does so by flooding the targeted machine with a consequent amount of requests to overload the system or by exploiting logic flaws that make the target server compute way too much.
+* **Distributed Denial of Service (DDoS)**: a DDoS attack has the same goal as the DoS attack. Except it uses a multitude of compromised machines to cause a denial of service and usually relies on flooding rather than finding and exploiting logical flaws.
 
 There are various ways to cause a denial of service by flooding such as:
 
 * **MAC flooding**: flooding a switch with packets using different source MAC addresses.
-* **ARP poisoning/spoofing**: linking multiple IP addresses with a single MAC address \(to a target\).
+* **ARP poisoning/spoofing**: linking multiple IP addresses with a single MAC address (to a target).
 * **Slow HTTP**: sending HTTP requests in a slow and fragmented way, one at a time.
 * **File upload**: exhausting the back-end system's disk space and network bandwidth by uploading lengthy files. Also, uploading a file that will be interpreted in the back-end could cause a DoS, if the file uploaded is malicious and its goal is to overload the system.
 * **ICMP flood**: flooding the targeted machine with an overwhelming amount of ICMP requests.
@@ -25,10 +25,10 @@ Testing for DoS in engagements can be useful for detecting applications and conf
 
 {% tabs %}
 {% tab title="Stress testing" %}
-[hping3 ](https://github.com/antirez/hping)is a tool for firewall testing, OS fingerprinting, port scanning, etc. \(see [manual](https://linux.die.net/man/8/hping3)\).  
+[hping3 ](https://github.com/antirez/hping)is a tool for firewall testing, OS fingerprinting, port scanning, etc. (see [manual](https://linux.die.net/man/8/hping3)).\
 What's interesting is its DoS testing capabilities. [More examples on hping3.](https://linuxhint.com/hping3/)
 
-The command sends a huge amount of packets with random source addresses to stress firewall state tables and other dynamic tables \(IP based\) within the TCP/IP stacks and firewall software.
+The command sends a huge amount of packets with random source addresses to stress firewall state tables and other dynamic tables (IP based) within the TCP/IP stacks and firewall software.
 
 ```bash
 hping3 --rand-source --flood $TARGET_IP
@@ -43,7 +43,7 @@ hping3 -S --flood -V -p $TARGET_PORT $TARGET_IP
 Other specialized tools can be used such as [Hulk ](https://github.com/grafov/hulk)and [GoldenEye](https://github.com/jseidl/GoldenEye).
 
 {% hint style="danger" %}
-[hping3](https://github.com/antirez/hping), [Hulk, ](https://github.com/grafov/hulk)and [GoldenEye ](https://github.com/jseidl/GoldenEye)should be used with care and in specific cases.   
+[hping3](https://github.com/antirez/hping), [Hulk, ](https://github.com/grafov/hulk)and [GoldenEye ](https://github.com/jseidl/GoldenEye)should be used with care and in specific cases. \
 The number of requests they can send could crash the targeted system.
 {% endhint %}
 {% endtab %}
@@ -57,8 +57,8 @@ feroxbuster -H "User-Agent: PENTEST" -w $WORDLIST -u $TARGET_IP -t $THREADS
 {% endtab %}
 
 {% tab title="File upload" %}
-Unrestricted file upload in a website can lead to DoS by uploading lengthy files.  
-If the back-end server interprets any file uploaded \(PHP, JSP...\), a DoS could occur depending on the goal of the file's code.
+Unrestricted file upload in a website can lead to DoS by uploading lengthy files.\
+If the back-end server interprets any file uploaded (PHP, JSP...), a DoS could occur depending on the goal of the file's code.
 {% endtab %}
 
 {% tab title="Input length" %}
@@ -70,11 +70,10 @@ By sending a very long password, a DoS attack can be possible. The password hash
 
 {% embed url="https://www.netscout.com/what-is-ddos" %}
 
-{% embed url="https://ktflash.gitbooks.io/ceh\_v9/content/91\_dosddos\_concepts.html" %}
+{% embed url="https://ktflash.gitbooks.io/ceh_v9/content/91_dosddos_concepts.html" %}
 
-{% embed url="https://cheatsheetseries.owasp.org/cheatsheets/Denial\_of\_Service\_Cheat\_Sheet.html" %}
+{% embed url="https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html" %}
 
 {% embed url="https://www.vaadata.com/blog/dos-attack-testing-denial-of-service-pentest/" %}
 
 {% embed url="https://www.acunetix.com/vulnerabilities/web/long-password-denial-of-service/" %}
-

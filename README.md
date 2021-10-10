@@ -26,9 +26,8 @@ Cheatsheets are huge resources, but they sometimes lack simplicity or on the con
 
 Keep in mind that these guides are maintained by non-omniscient security enthusiasts in their spare time. You will probably find things missing or mistakes.
 
-📣 Please feel free to contribute, give feedback/suggestions or reach out to me on Twitter \([@\_nwodtuhs](https://twitter.com/_nwodtuhs)\), Discord \(Shutdown\#2539\), IRL or whatever you feel appropriate.
+:mega: Please feel free to contribute, give feedback/suggestions or reach out to me on Twitter ([@\_nwodtuhs](https://twitter.com/\_nwodtuhs)), Discord (Shutdown#2539), IRL or whatever you feel appropriate.
 
 {% hint style="success" %}
 Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://github.com/ShutdownRepo/Exegol), another project of mine of a docker environment ready to hack on day-to-day engagements. It's not much but I use it on all my engagements. Feel free to use it, to contribute, to give feedback etc.
 {% endhint %}
-

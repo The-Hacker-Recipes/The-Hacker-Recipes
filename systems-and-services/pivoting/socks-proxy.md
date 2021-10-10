@@ -2,7 +2,7 @@
 
 ## Theory
 
-SOCKS \(SOCKet Secure\) is a network protocol that allows users to route network traffic to a server on a client's behalf. SOCKS is between the application and the transport layer of the OSI model.
+SOCKS (SOCKet Secure) is a network protocol that allows users to route network traffic to a server on a client's behalf. SOCKS is between the application and the transport layer of the OSI model.
 
 This is especially useful for penetration testing engagements where a target is hiding behind one or multiple firewalls. A compromised server connected to two networks can be used as a SOCKS proxy server to pivot from a network to another.
 
@@ -12,7 +12,7 @@ In short, a SOCKS proxy can relay TCP and UDP connections and hence help bypass 
 
 There are two types of dynamic port forwarding used during penetration testing engagments.
 
-* **Dynamic port forwarding**: tunnel the whole attacker's network traffic \(instead of only one port\) through a remote machine.
+* **Dynamic port forwarding**: tunnel the whole attacker's network traffic (instead of only one port) through a remote machine.
 * **Reverse dynamic port forwarding**: tunnel the whole network traffic from a remote machine through the attacker's machine.
 
 ### Basic server setup
@@ -31,9 +31,9 @@ One of the most easy is by relying on SSH, however, it requires to have an SSH s
 ssh -N -D $PORT $CONTROLLED_TARGET
 ```
 
-Once the ssh command exits successful \(or once a session opens\) the tester can then proceed to [the usage part](socks-proxy.md#usage). 
+Once the ssh command exits successful (or once a session opens) the tester can then proceed to [the usage part](socks-proxy.md#usage). 
 
-A reverse dynamic port forwarding can be also put in place to tunnel a machine's traffic through the attacker machine. It is implemented entirely in the client \(i.e. the server does not need to be updated\) \([since OpenSSH 7.6](https://www.openssh.com/txt/release-7.6)\).
+A reverse dynamic port forwarding can be also put in place to tunnel a machine's traffic through the attacker machine. It is implemented entirely in the client (i.e. the server does not need to be updated) ([since OpenSSH 7.6](https://www.openssh.com/txt/release-7.6)).
 
 ```bash
 ssh -N -R $PORT $CONTROLLED_TARGET
@@ -73,7 +73,7 @@ msf > run
 
 ### Basic client usage
 
-Once the SOCKS proxy server is set up, network traffic can be tunneled through with [proxychains-ng](https://github.com/rofl0r/proxychains-ng) \(C\), a tool still maintained and more advanced based on the original [proxychains](https://github.com/haad/proxychains) \(that is not maintained anymore\). The port in use by the SOCKS proxy should be supplied in the configuration file \(`/etc/proxychains.conf`\) like in the following examples.
+Once the SOCKS proxy server is set up, network traffic can be tunneled through with [proxychains-ng](https://github.com/rofl0r/proxychains-ng) (C), a tool still maintained and more advanced based on the original [proxychains](https://github.com/haad/proxychains) (that is not maintained anymore). The port in use by the SOCKS proxy should be supplied in the configuration file (`/etc/proxychains.conf`) like in the following examples.
 
 ```bash
 # type    ip    port    [user    pass]
@@ -87,13 +87,11 @@ http    192.168.39.93    8080
 
 In certain scenarios, SOCKS proxies can be chained. This can easily be used with [proxychains](socks-proxy.md#client-usage). In the following example, SSH is used to turn compromised machines into SOCKS proxy servers.
 
-![](../../.gitbook/assets/multi-port-forwarding-dynamic-port-forwarding.png)
+![](<../../.gitbook/assets/multi-port-forwarding-Dynamic Port Forwarding.png>)
 
-![Setting up the SOCKS proxy servers \(with SSH\)](../../.gitbook/assets/carbon-3-%20%281%29.png)
+![Setting up the SOCKS proxy servers (with SSH)](<../../.gitbook/assets/carbon(3) (1).png>)
 
-![Setting up the SOCKS proxy client \(proxychains\)](../../.gitbook/assets/carbon-1-%20%281%29.png)
+![Setting up the SOCKS proxy client (proxychains)](<../../.gitbook/assets/carbon(1) (1).png>)
 
-![Attacking the target through the chain of SOCKS proxies](../../.gitbook/assets/carbon-4-%20%281%29.png)
-
-
+![Attacking the target through the chain of SOCKS proxies](<../../.gitbook/assets/carbon(4) (1).png>)
 

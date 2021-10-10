@@ -10,13 +10,13 @@
 
 ### Sniffing
 
-![](../../.gitbook/assets/carbon-23-.png)
+![](../../.gitbook/assets/carbon\(23\).png)
 
 
 
 ### De-authentication
 
-![](../../.gitbook/assets/carbon-25-.png)
+![](../../.gitbook/assets/carbon\(25\).png)
 
 ### WPA handshake capture & cracking
 
@@ -26,19 +26,19 @@ sniffing + deauth
 
 gives "WPA handshake" followed by AP MAC addr, possible to crack
 
-![](../../.gitbook/assets/carbon-24-.png)
+![](../../.gitbook/assets/carbon\(24\).png)
 
 either crack with aircrack directly or use aircrack to create a hashcat formatted file
 
-![](../../.gitbook/assets/carbon-27-.png)
+![](../../.gitbook/assets/carbon\(27\).png)
 
 preparing hashcat file
 
-![](../../.gitbook/assets/carbon-31-.png)
+![](../../.gitbook/assets/carbon\(31\).png)
 
 cracking
 
-![](../../.gitbook/assets/carbon-30-.png)
+![](../../.gitbook/assets/carbon\(30\).png)
 
 ### PMKID capture
 
@@ -49,6 +49,4 @@ cracking
 
 
 ## Resources
-
-
 

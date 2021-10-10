@@ -1,6 +1,6 @@
 # DNS
 
-AD-DS \(Active Directory Domain Services\) rely on DNS SRV RR \(service location resource records\). Those records can be queried to find the location of some servers: the global catalog, LDAP servers, the Kerberos KDC and so on. 
+AD-DS (Active Directory Domain Services) rely on DNS SRV RR (service location resource records). Those records can be queried to find the location of some servers: the global catalog, LDAP servers, the Kerberos KDC and so on. 
 
 {% tabs %}
 {% tab title="dnsutils" %}
@@ -26,7 +26,7 @@ The same commands can be operated the old way with nslookup.
 {% endtab %}
 
 {% tab title="nmap" %}
-The [nmap](https://nmap.org/) tool can be used with its [dns-srv-enum.nse](https://nmap.org/nsedoc/scripts/dns-srv-enum.html) script to operate those queries.
+The [nmap](https://nmap.org) tool can be used with its [dns-srv-enum.nse](https://nmap.org/nsedoc/scripts/dns-srv-enum.html) script to operate those queries.
 
 ```bash
 nmap --script dns-srv-enum --script-args dns-srv-enum.domain=$FQDN_DOMAIN
@@ -47,7 +47,5 @@ nmap -v -sV -sU -p 53 $SUBNET/$MASK
 The DNS service is usually offered by the domain controllers
 {% endhint %}
 
-{% embed url="https://petri.com/active\_directory\_srv\_records" %}
-
-
+{% embed url="https://petri.com/active_directory_srv_records" %}
 

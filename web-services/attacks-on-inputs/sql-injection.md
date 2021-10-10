@@ -8,17 +8,17 @@ SQL injection attacks can allow attackers to read, update, insert or delete data
 
 ## Practice
 
-Testers need to identify input vectors \(parts of the app that accept content from the users\) that could be used for database operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
+Testers need to identify input vectors (parts of the app that accept content from the users) that could be used for database operations. For each identified vector, testers need to check if malicious strings and values successfully exploit any vulnerability.
 
 ### Vulnerable input recon
 
-Using special SQL characters \(`'`, `"`, `#`, `;`, `)`, `*`,`%`\) in an input could lead to SQL errors sometimes echoed back to the users for debugging. This would indicate an entry point not sanitized enough and thus potentially vulnerable to SQL injection.
+Using special SQL characters (`'`, `"`, `#`, `;`, `)`, `*`,`%`) in an input could lead to SQL errors sometimes echoed back to the users for debugging. This would indicate an entry point not sanitized enough and thus potentially vulnerable to SQL injection.
 
 ### Manuel testing
 
 With `some.website/?parameter=value` some basic useful payload to detect vulnerable inputs are:
 
-```text
+```
 parameter=1
 parameter=1'
 parameter=1"
@@ -39,21 +39,21 @@ parameter='='
 ```
 
 {% hint style="warning" %}
-GET parameters are not the only ones that could be vulnerable to SQLi. Testers should thoroughly test all user inputs \(parameters, user-agents, cookies...\)
+GET parameters are not the only ones that could be vulnerable to SQLi. Testers should thoroughly test all user inputs (parameters, user-agents, cookies...)
 {% endhint %}
 
-The following payload is used for testing SQL injections, [XSS \(Cross-Site Scripting\)](xss-cross-site-scripting.md) and [SSTI \(Server-Side Template Injection\)](ssti-server-side-tempate-injection.md).
+The following payload is used for testing SQL injections, [XSS (Cross-Site Scripting)](xss-cross-site-scripting.md) and [SSTI (Server-Side Template Injection)](ssti-server-side-tempate-injection.md).
 
-```text
+```
 '"<svg/onload=prompt(5);>{{7*7}}
 ```
 
 ### Automated tests
 
-Tools like [SQLmap](https://github.com/sqlmapproject/sqlmap) \(Python\) or [SQLninja](https://github.com/xxgrunge/sqlninja) \(Perl\) can also be used to fuzz input vectors, find vulnerable entry points and automatically exploit them.
+Tools like [SQLmap](https://github.com/sqlmapproject/sqlmap) (Python) or [SQLninja](https://github.com/xxgrunge/sqlninja) (Perl) can also be used to fuzz input vectors, find vulnerable entry points and automatically exploit them.
 
 {% hint style="danger" %}
-Just like any fuzzing tool, these scans need to be slowed down when testing production instances as it could lead to an unintended denial of service. In addition to that, testers need to use those tools with the greatest care since creating issues with production instances databases \(like overwriting or deleting data\) could have a serious fallout.
+Just like any fuzzing tool, these scans need to be slowed down when testing production instances as it could lead to an unintended denial of service. In addition to that, testers need to use those tools with the greatest care since creating issues with production instances databases (like overwriting or deleting data) could have a serious fallout.
 {% endhint %}
 
 ```bash
@@ -66,7 +66,7 @@ It is also possible to load request files and let SQLmap do the heavy work of fu
 sqlmap -r $REQUEST_FILE --level 2 -v 2 --all
 ```
 
-The request file should look like a standard HTTP request \(line, headers, empty line, optional data\). It can be obtained by many ways like inspecting network operations in a browser, intercepting requests with a proxy \(like Burp Suite\), and so on.
+The request file should look like a standard HTTP request (line, headers, empty line, optional data). It can be obtained by many ways like inspecting network operations in a browser, intercepting requests with a proxy (like Burp Suite), and so on.
 
 ```http
 POST /login.php HTTP/1.1
@@ -86,13 +86,14 @@ username=testusername&password=testpassword
 
 ## References
 
-{% embed url="https://www.asafety.fr/mysql-injection-cheat-sheet/" caption="" %}
+{% embed url="https://www.asafety.fr/mysql-injection-cheat-sheet/" %}
 
-{% embed url="https://owasp.org/www-community/attacks/SQL\_Injection" caption="" %}
+{% embed url="https://owasp.org/www-community/attacks/SQL_Injection" %}
 
-{% embed url="https://portswigger.net/web-security/sql-injection" caption="" %}
+{% embed url="https://portswigger.net/web-security/sql-injection" %}
 
-{% embed url="http://pentestmonkey.net/category/cheat-sheet/sql-injection" caption="SQL injection cheatsheets \(MSSQL, MySQL, Oracle SQL, Postgres SQL, ...\)" %}
+{% embed url="http://pentestmonkey.net/category/cheat-sheet/sql-injection" %}
+SQL injection cheatsheets (MSSQL, MySQL, Oracle SQL, Postgres SQL, ...)
+{% endembed %}
 
-{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection" caption="" %}
-
+{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection" %}

