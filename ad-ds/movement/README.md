@@ -54,11 +54,11 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] IPv6 is either fully configured and used or disabled, preventing [DHCPv6 spoofing with DNS poisoning](mitm-and-coerced-authentications/dhcpv6-spoofing.md) attacks.
 * [ ] [LLMNR, NBT-NS and mDNS](mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md) are disabled, preventing MITM attacks relying on those multicast/broadcast domain name resolution protocols.
 * [ ] WPAD is disabled, preventing [WPAD spoofing](mitm-and-coerced-authentications/wpad-spoofing.md).
-* [ ] The `*` (wildcard) ADIDNS record is created (requirement) with a `TXT` set to `127.0.0.1` (optional, example only) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md#wildcard-records) attacks.
+* [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md#wildcard-records) attacks. Preferably, this is a `TXT` record.
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.
 * [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) attacks.
 * [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-secrets.md). 
-* [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress withing the network.
+* [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress within the network.
 
 
 
