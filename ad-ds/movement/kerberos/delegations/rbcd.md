@@ -12,13 +12,15 @@ For this attack to work, the attacker needs to populate the target attribute wit
 
 Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with (i.e. the account that has an SPN). Using that account's credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
+![](../../../../.gitbook/assets/Kerberos_delegations-rbcd.drawio.png)
+
 ## Practice
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-**1 - Edit the target's security descriptor **:pencil2:** **
+**1 - Edit the target's security descriptor (ACE abuse) **:pencil2:** **
 
-The [rbcd.py](https://github.com/ShutdownRepo/impacket/blob/rbcd/examples/rbcd.py) script (Python) _(still in a Pull Request process at the time of writing - 29th Sept. 2021)_ can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
+The [rbcd.py](https://github.com/ShutdownRepo/impacket/blob/rbcd/examples/rbcd.py) script (Python) _(_[_Pull Request pending_](https://github.com/SecureAuthCorp/impacket/pull/1108)_ at the time of writing - 29th Sept. 2021)_ can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
 ```bash
 # Read the security descriptor
@@ -32,7 +34,7 @@ rbcd.py -delegate-from 'accountwithSPN' -delegate-to 'target$' -dc-ip 'DomainCon
 Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option when conducting this attack from a [relayed authentication](../../ntlm/relay.md).
 {% endhint %}
 
-**2 - Obtain a ticket **:ticket:** **
+**2 - Obtain a ticket (delegation operation) **:ticket:** **
 
 Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can then perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated but it can be any user in the environment).
 
@@ -40,7 +42,7 @@ Once the security descriptor has been modified, the [Impacket](https://github.co
 getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'
 ```
 
-The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).
+The SPN (ServicePrincipalName) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).
 
 {% hint style="warning" %}
 In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
@@ -54,7 +56,7 @@ Once the ticket is obtained, it can be used with [pass-the-ticket](../pass-the-t
 {% tab title="Windows" %}
 In order to run the following commands and tools as other users, testers can check the [user impersonation](../../credentials/impersonation.md) part.
 
-**1 - Edit the target's security descriptor **:pencil2:** **
+**1 - Edit the target's security descriptor (ACE abuse)**:pencil2:** **
 
 The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Set-ADComputer and Get-ADComputer can be used to write and read the attributed of an object (in this case, to modify the delegation rights).
 
@@ -81,7 +83,7 @@ $SD.GetBinaryForm($SDBytes, 0)
 Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
 ```
 
-**2 - Obtain a ticket **:ticket:** **
+**2 - Obtain a ticket (delegation operation) **:ticket:** **
 
 [Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the TGT and "impersonation ST" and inject it for later use.
 

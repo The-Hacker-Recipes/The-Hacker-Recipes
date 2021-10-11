@@ -1,28 +1,30 @@
-# \(KUD\) Unconstrained
+# (KUD) Unconstrained
 
 ## Theory
 
-If an account \(user or computer\), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it \(or [force it](../../mitm-and-coerced-authentications/)\) using Kerberos. The attacker service will receive an ST \(service ticket\) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
+If an account (user or computer), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it (or [force it](../../mitm-and-coerced-authentications/)) using Kerberos. The attacker service will receive an ST (service ticket) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
 
 {% hint style="info" %}
 Unconstrained delegation abuses are usually combined with the [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 {% endhint %}
 
+![](../../../../.gitbook/assets/Kerberos_delegations-unconstrained.drawio.png)
+
 ## Practice
 
 {% tabs %}
-{% tab title="From the attacker machine \(UNIX-like\)" %}
-In order to abuse the unconstrained delegations privileges of an account, an attacker must add his machine to its SPNs \(i.e. of the compromised account\) and add a DNS entry for that name.
+{% tab title="From the attacker machine (UNIX-like)" %}
+In order to abuse the unconstrained delegations privileges of an account, an attacker must add his machine to its SPNs (i.e. of the compromised account) and add a DNS entry for that name.
 
-This allows targets \(e.g. Domain Controllers or Exchange servers\) to authenticate back to the attacker machine.
+This allows targets (e.g. Domain Controllers or Exchange servers) to authenticate back to the attacker machine.
 
-All of this can be done from UNIX-like systems with [addspn](https://github.com/dirkjanm/krbrelayx), [dnstool](https://github.com/dirkjanm/krbrelayx) and [krbrelayx](https://github.com/dirkjanm/krbrelayx) \(Python\).
+All of this can be done from UNIX-like systems with [addspn](https://github.com/dirkjanm/krbrelayx), [dnstool](https://github.com/dirkjanm/krbrelayx) and [krbrelayx](https://github.com/dirkjanm/krbrelayx) (Python).
 
 {% hint style="info" %}
 When attacking accounts able to delegate without constraints, there are two major scenarios
 
-* **the account is a computer**: computers can edit their own SPNs via the `msDS-AdditionalDnsHostName` attribute. Since ticket received by krbrelayx will be encrypted with AES256 \(by default\), attackers will need to either supply the right AES256 key for the unconstrained delegations account \(`--aesKey` argument\) or the salt and password \(`--krbsalt` and `--krbpass` arguments\).
-* **the account is a user**: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../../privileged-groups.md) \(or any other user that has the needed privileges\) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash \(`-hashes` argument\) or the salt and password \(`--krbsalt` and `--krbpass` arguments\)
+* **the account is a computer**: computers can edit their own SPNs via the `msDS-AdditionalDnsHostName` attribute. Since ticket received by krbrelayx will be encrypted with AES256 (by default), attackers will need to either supply the right AES256 key for the unconstrained delegations account (`--aesKey` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments).
+* **the account is a user**: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../../privileged-groups.md) (or any other user that has the needed privileges) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash (`-hashes` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments)
 {% endhint %}
 
 {% hint style="success" %}
@@ -47,20 +49,20 @@ krbrelayx.py --krbsalt 'DOMAINusername' --krbpass 'password'
 ```
 
 {% hint style="warning" %}
-In case, for some reason, attacking a Domain Controller doesn't work \(i.e. error saying`Ciphertext integrity failed.`\) try to attack others \(if you're certain the credentials you supplied were correct\). Some replication and propagation issues could get in the way.
+In case, for some reason, attacking a Domain Controller doesn't work (i.e. error saying`Ciphertext integrity failed.`) try to attack others (if you're certain the credentials you supplied were correct). Some replication and propagation issues could get in the way.
 {% endhint %}
 
-Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
+Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
 {% endtab %}
 
-{% tab title="From the compromised computer \(Windows\)" %}
-Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/Rubeus) can be used \(on the compromised host\) as a listener to wait for a user to authenticate, the ST to show up and to extract the TGT it contains.
+{% tab title="From the compromised computer (Windows)" %}
+Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/Rubeus) can be used (on the compromised host) as a listener to wait for a user to authenticate, the ST to show up and to extract the TGT it contains.
 
 ```bash
 Rubeus.exe monitor /interval:5
 ```
 
-Once the monitor is ready, a [forced authentication attack](../../mitm-and-coerced-authentications/) \(e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)\) can be operated. Rubeus will then receive an authentication \(hence a ST, containing a TGT\). The TGT can be used to request a ST for another service.
+Once the monitor is ready, a [forced authentication attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)) can be operated. Rubeus will then receive an authentication (hence a ST, containing a TGT). The TGT can be used to request a ST for another service.
 
 ```bash
 Rubeus.exe asktgs /ticket:$base64_extracted_TGT /service:$target_SPN /ptt
@@ -81,6 +83,4 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 {% embed url="https://exploit.ph/user-constrained-delegation.html" %}
 
 {% embed url="https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/" %}
-
-
 
