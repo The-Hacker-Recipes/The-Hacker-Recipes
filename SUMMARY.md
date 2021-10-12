@@ -122,7 +122,7 @@
   * [🛠️ HTTP methods abuse](web-services/configuration/http-methods.md)
   * [🛠️ HTTP parameter pollution](web-services/configuration/http-parameter-pollution.md)
   * [🛠️ CORS (Cross-Origin Resource Sharing)](web-services/configuration/cors-cross-origin-resource-sharing.md)
-  * [🛠️ CSP (Content Security Policy)](web-services/configuration/csp-content-security-policy.md)
+  * [��️ CSP (Content Security Policy)](web-services/configuration/csp-content-security-policy.md)
   * [🛠️ MIME sniffing](web-services/configuration/mime-sniffing.md)
   * [🛠️ OAuth 2.0](web-services/configuration/oauth-2.0.md)
 * [Accounts and sessions](web-services/accounts-and-sessions/README.md)
