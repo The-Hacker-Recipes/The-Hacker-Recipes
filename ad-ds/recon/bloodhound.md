@@ -12,7 +12,7 @@ BloodHound needs to be fed JSON files containing info on the objects and relatio
 
 {% tabs %}
 {% tab title="Windows" %}
-SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound3), [builds](https://github.com/BloodHoundAD/BloodHound/tree/master/Ingestors)) is designed targeting .Net 4.5. It can be used as a PowerShell module or as a compiled executable.
+SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound3), [builds](https://github.com/BloodHoundAD/BloodHound/tree/master/Collectors)) is designed targeting .Net 4.5. It can be used as a PowerShell module or as a compiled executable.
 
 It must be run from the context of a domain user, either directly through a logon or through another method such as runas (`runas /netonly /user:$DOMAIN\$USER`).
 
@@ -106,6 +106,8 @@ bhqc.py -u $neo4juser -p $neo4jpassword
 {% endhint %}
 
 ## Resources
+
+![https://github.com/SadProcessor/HandsOnBloodHound/blob/master/BH21/BH4\_SharpHound_Cheat.pdf](../../.gitbook/assets/BH4\_SharpHound_Cheat.png)
 
 {% embed url="https://blog.riccardoancarani.it/bloodhound-tips-and-tricks/" %}
 
