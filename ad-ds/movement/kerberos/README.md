@@ -13,12 +13,19 @@ Kerberos is an authentication protocol based on tickets. It basically works like
 
 A Service Ticket (ST) allows access to a specific service. The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following (read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii\_\_kerberos_cont/SSTIC2014-Article-secrets_dauthentification_pisode_ii\_\_kerberos_contre-attaque-bordes\_2.pdf)).
 
-| Key name (a.k.a. etype) | Details on key calculation                                    |
-| ----------------------- | ------------------------------------------------------------- |
-| DES                     | Key derivated from user's password (`DOMAINusername` as salt) |
-| RC4                     | **Key == NT hash**                                            |
-| AES128                  | Key derivated from user's password (`DOMAINusername` as salt) |
-| AES256                  | Key derivated from user's password (`DOMAINusername` as salt) |
+| Key name (a.k.a. etype) | Details on key calculation                     |
+| ----------------------- | ---------------------------------------------- |
+| DES                     | Key derivated from user's password             |
+| RC4                     | **Key == NT hash**                             |
+| AES128                  | Key derivated from user's password (with salt) |
+| AES256                  | Key derivated from user's password (with salt) |
+
+{% hint style="info" %}
+By default, the salt is always
+
+* **For users**: uppercase FQDN + case sensitive username = `DOMAIN.LOCALuser`
+* **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.local`
+{% endhint %}
 
 Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT (if RC4 key is accepted). This is called [Overpass-the-hash](pass-the-key.md).
 

@@ -30,8 +30,8 @@ When attacking accounts able to delegate without constraints, there are two majo
 {% hint style="success" %}
 By default, the salt is always
 
-* **For users**: uppercase realm + case sensitive username = `DOMAIN.LOCALuser`
-* **For computers**: uppercase realm + the word host + lowercase hostname without the trailing '$' + . + lowercase = `DOMAIN.LOCALmachine.domain.local`
+* **For users**: uppercase FQDN + case sensitive username = `DOMAIN.LOCALuser`
+* **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.local`
 {% endhint %}
 
 ```bash

@@ -7,7 +7,7 @@ The authentication protocol "Kerberos" features delegation capabilities describe
 * **Resource based constrained delegations (RBCD)** : a set of services can impersonate users on a service
 
 {% hint style="info" %}
-With constrained and unconstrained delegations, the delegation attributes are set on the impersonating service (requires domain admin privileges) whereas with RBCD, these attributes are set on the target service account itself (requires lower privileges).
+With constrained and unconstrained delegations, the delegation attributes are set on the impersonating service (requires `SeEnableDelegationPrivilege` in the domain) whereas with RBCD, these attributes are set on the target service account itself (requires lower privileges).
 {% endhint %}
 
 Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges.
