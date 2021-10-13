@@ -41,14 +41,24 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 From UNIX-like systems, Impacket's findDelegation (Python) script can be used to find unconstrained, constrained (with or without protocol transition) and rbcd.
 
 ```bash
-findDelegation "DOMAIN"/"USER":"PASSWORD"
+findDelegation.py "DOMAIN"/"USER":"PASSWORD"
 ```
 {% endtab %}
 
 {% tab title="Windows" %}
 From Windows systems, [BloodHound](../../../recon/bloodhound.md) can be used to identify unconstrained and constrained delegation but at the time of writing (13th October 2021) RBCD and the state of Protocol Transition (for constrained delegation) are not identified.
 
-The Powershell Active Directory module also has a cmdlet that can be used for that purpose.
+The Powershell Active Directory module also has a cmdlet that can be used to find delegation for a specific account.
+
+```powershell
+Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDelegation,msDS-AllowedToDelegateTo,PrincipalsAllowedToDelegateToAccount
+```
+
+| `TrustedForDelegation`                 | Unconstrained Delegation                                            |   |   |
+| -------------------------------------- | ------------------------------------------------------------------- | - | - |
+| `TrustedToAuthForDelegation`           | Constrained Delegation with Protocol Transition                     |   |   |
+| `AllowedToDelegateTo`                  | Constrained Delegation, and list of services allowed to delegate to |   |   |
+| `PrincipalsAllowedToDelegateToAccount` | RBCD, list of services that can delegate to the account             |   |   |
 {% endtab %}
 {% endtabs %}
 
