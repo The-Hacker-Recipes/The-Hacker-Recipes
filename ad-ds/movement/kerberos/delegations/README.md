@@ -2,6 +2,8 @@
 
 ## Theory
 
+Kerberos delegations allow services to access other services on behalf of domain users.
+
 ### Types of delegation
 
 The authentication protocol "Kerberos" features delegation capabilities described as follows. There are three types of Kerberos delegations
