@@ -43,6 +43,7 @@
     * [DNS spoofing](ad-ds/movement/mitm-and-coerced-authentications/dns-spoofing.md)
     * [DHCP poisoning](ad-ds/movement/mitm-and-coerced-authentications/dhcp-poisoning.md)
     * [DHCPv6 spoofing](ad-ds/movement/mitm-and-coerced-authentications/dhcpv6-spoofing.md)
+    * [WSUS spoofing](systems-and-services/privilege-escalation/windows/wsus-attacks.md)
     * [LLMNR, NBT-NS, mDNS spoofing](ad-ds/movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md)
     * [ADIDNS poisoning](ad-ds/movement/mitm-and-coerced-authentications/adidns-spoofing.md)
     * [WPAD spoofing](ad-ds/movement/mitm-and-coerced-authentications/wpad-spoofing.md)
