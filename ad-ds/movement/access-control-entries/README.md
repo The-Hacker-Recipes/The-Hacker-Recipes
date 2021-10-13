@@ -4,17 +4,19 @@
 
 Access privileges for resources in Active Directory Domain Services are usually granted through the use of an Access Control Entry (ACE). Access Control Entries describe the allowed and denied permissions for a principal in Active Directory against a securable object (user, group, computer, container, organization unit (OU), GPO and so on)
 
-DACLs (Active Directory Discretionary Access Control Lists) are lists made of ACEs (Access Control Entries).
+DACLs (Active Directory Discretionary Access Control Lists) are lists made of ACEs (Access Control Entries) that identify the users and groups that are allowed or denied access on an object.
 
 When misconfigured, ACEs can be abused to operate lateral movement or privilege escalation within an AD domain.
 
 ## Practice
 
-### Requirements
+If an object (called **objectA**) DACL features an ACE stating that another object (called **objectB**) has a spefic right (e.g. `GenericAll`) over it (i.e. over **objectA**), attackers need to be in control of **objectB** to take control of **objectA**. The following abuses can only be carried out when running commands as the user mentioned in the ACE (**objectB**) (see [impersonation techniques](../credentials/impersonation.md)).
 
-The attacker needs to be in control of the object the ACE is set on to abuse it and possibly gain control over what this ACE applies to. The following abuses can only be carried out when running commands as the user the ACE is set on (see [impersonation techniques](../credentials/impersonation.md)).
+### Recon
 
-### Exploitation paths
+ACE abuse potential paths can be identified by [BloodHound](../../recon/bloodhound.md) from UNIX-like (using the Python ingestor [bloodhound.py](https://github.com/fox-it/BloodHound.py)) and Windows (using the [SharpHound](https://github.com/BloodHoundAD/SharpHound3) ingestor) systems.
+
+### Abuse
 
 In order to navigate the notes, testers can use the mindmap below.
 
