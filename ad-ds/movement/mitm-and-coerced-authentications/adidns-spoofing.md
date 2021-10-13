@@ -19,7 +19,7 @@ ADIDNS zones can be remotely edited
 
 :bulb: In some scenarios, adding a wildcard record the the proper ADIDNS zone won't work. This is usually due to the **WINS forward lookup** being enabled on that zone. WINS forward lookup makes the DNS server send a NBT-NS Query Request to a predefined WINS server when it receives an address record query for which it doesn't know the answer. In short, it serves the same purpose as the wildcard record. This feature needs to be disabled for the wildcard record to be used.
 
-![](../../../.gitbook/assets/WINS_lookup.png)
+![Domain Controller > DNS Manager > zone properties > WINS](../../../.gitbook/assets/WINS_lookup.png)
 
 ## Practice
 

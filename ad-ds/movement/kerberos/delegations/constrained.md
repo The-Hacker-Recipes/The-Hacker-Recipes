@@ -16,7 +16,7 @@ Constrained delegation can be configured with or without protocol transition. Ab
 
 If a service is configured with constrained delegation **with protocol transition**, then it can obtain a service ticket on behalf of a user by combining S4U2Self and S4U2Proxy requests, as long as the user is not sensitive for delegation, or a member of the "Protected Users" group. The service ticket can then be used with [pass-the-ticket](../pass-the-ticket.md). This process is similar to [resource-based contrained delegation](rbcd.md) exploitation.
 
-![](<../../../../.gitbook/assets/kcd with protocol transition.png>)
+![Domain Controller > Active Directory Users and Computers > delegation properties of a user](<../../../../.gitbook/assets/kcd with protocol transition.png>)
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -50,10 +50,10 @@ If a service is configured with constrained delegation **without protocol transi
 
 This means the service cannot, by itself, obtain a ticket for a user to itself (i.e. what S4U2Self is used for). There are two known ways attackers can use to bypass this.
 
-1. Obtain a forwardable ticket from a user to the service by operating and RBCD attack on the service.
+1. Obtain a forwardable ticket from a user to the service by operating and RBCD attack on the service (preferred).
 2. Obtain a forwardable ticket from a user to the service by forcing or waiting for a user to authenticate to the service while a "Kerberos listener" is running. 
 
-![](<../../../../.gitbook/assets/kcd without proto transition.png>)
+![Domain Controller > Active Directory Users and Computers > delegation properties of a user](<../../../../.gitbook/assets/kcd without proto transition.png>)
 
 #### RBCD approach
 
@@ -97,7 +97,7 @@ getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "admini
 Computer accounts have SPNs set at their creation and can edit their own "rbcd attribute" (i.e. `msDS-AllowedToActOnBehalfOfOtherIdentity`). If the account configured with KCD without protocol transition is a computer, controlling another account to operate the RBCD approach is not needed. In this case, **serviceB **= **serviceA**, the computer account can be configured for a "self-rbcd".
 {% endhint %}
 
-#### Ticket capture approach
+#### (Alternative path) ticket capture approach
 
 {% hint style="danger" %}
 Work in progress
