@@ -34,14 +34,20 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 
 ## Practice
 
-### Finding
+### Recon
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, Impacket's findDelegation (Python) script can be used to find unconstrained, constrained (with or without protocol transition) and rbcd.
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [findDelegation](https://github.com/SecureAuthCorp/impacket/blob/master/examples/findDelegation.py) (Python) script can be used to find unconstrained, constrained (with or without protocol transition) and rbcd.
 
 ```bash
 findDelegation.py "DOMAIN"/"USER":"PASSWORD"
+```
+
+At the time of writing (13th October 2021), [a Pull Request](https://github.com/SecureAuthCorp/impacket/pull/1184) is pending to feature a `-user` filter to list delegations for a specific account.
+
+```bash
+findDelegation.py -user "account" "DOMAIN"/"USER":"PASSWORD"
 ```
 {% endtab %}
 
@@ -62,7 +68,7 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 {% endtab %}
 {% endtabs %}
 
-### Abusing
+### Abuse
 
 {% content-ref url="unconstrained.md" %}
 [unconstrained.md](unconstrained.md)
