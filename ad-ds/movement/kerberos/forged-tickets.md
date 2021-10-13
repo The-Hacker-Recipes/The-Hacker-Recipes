@@ -6,10 +6,10 @@ description: MITRE ATT&CK™ Sub-techniques T1558.001 and T1558.002
 
 ## Theory
 
-Silver and Golden tickets are forged Kerberos tickets that can be used with [pass-the-ticket](pass-the-ticket.md) to access services in an Active Directory domain.
+Silver and Golden tickets are forged Kerberos tickets that can be used with [pass-the-ticket](ptt.md) to access services in an Active Directory domain.
 
-* **Golden ticket**: The NT hash (when the RC4 etype is not disabled, or any other Kerberos DES or AES key when it is) of the special account `krbtgt` can be used to forge a special TGT (Ticket Granting Ticket) that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access any resource within the AD domain. In practice, the `krbtgt`'s key is used to encrypt, among other things, the PAC (Privilege Authentication Certificate), a special set of information about the requesting user that the KDC (Key Distribution Center) will copy/paste in the ST the users requests.
-* **Silver ticket**: The NT hash (when the RC4 etype is not disabled, or any other Kerberos DES or AES key when it is) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](pass-the-ticket.md) to access that service. In practice, the key is used to encrypt, among other things, the PAC (Privilege Authentication Certificate), a special set of information about the requesting user that the target service will decrypt and read to decide if the user can have access.
+* **Golden ticket**: The NT hash (when the RC4 etype is not disabled, or any other Kerberos DES or AES key when it is) of the special account `krbtgt` can be used to forge a special TGT (Ticket Granting Ticket) that can later be used with [Pass-the-ticket](ptt.md) to access any resource within the AD domain. In practice, the `krbtgt`'s key is used to encrypt, among other things, the PAC (Privilege Authentication Certificate), a special set of information about the requesting user that the KDC (Key Distribution Center) will copy/paste in the ST the users requests.
+* **Silver ticket**: The NT hash (when the RC4 etype is not disabled, or any other Kerberos DES or AES key when it is) of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](ptt.md) to access that service. In practice, the key is used to encrypt, among other things, the PAC (Privilege Authentication Certificate), a special set of information about the requesting user that the target service will decrypt and read to decide if the user can have access.
 
 The **Bronze bit** vulnerability (CVE-2020-17049) introduced the possibility of forwarding service tickets when it shouldn't normally be possible (protected users, unconstrained delegation, constrained delegation configured with protocol transition).
 
@@ -17,7 +17,7 @@ The **Bronze bit** vulnerability (CVE-2020-17049) introduced the possibility of 
 
 ## Practice
 
-The following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](pass-the-ticket.md).
+The following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](ptt.md).
 
 {% hint style="success" %}
 For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-\~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups (i.e. group ids 513, 512, 520, 518, 519). There are scenarios where these groups are not enough (special machines where even Domain Admins don't have local admin rights). 
@@ -72,7 +72,7 @@ kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes128:$krbtgt_aes128_key /use
 kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes256:$krbtgt_aes256_key /user:randomuser /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](pass-the-ticket.md#injecting-the-ticket).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](ptt.md#injecting-the-ticket).
 {% endtab %}
 {% endtabs %}
 
@@ -114,7 +114,7 @@ kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes128:$krbtgt_aes128_key /use
 kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes256:$krbtgt_aes256_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](pass-the-ticket.md#injecting-the-ticket).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](ptt.md#injecting-the-ticket).
 {% endtab %}
 {% endtabs %}
 
@@ -144,7 +144,7 @@ This vulnerability allows attackers to forge a TGT with unlimited power (i.e. wi
 
 {% tabs %}
 {% tab title="pykek" %}
-This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../ntlm/pass-the-hash.md).
+This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14-068](https://github.com/mubix/pykek/blob/master/ms14-068.py) Python script. The script can carry out the attack with a cleartext password or with [pass-the-hash](../ntlm/pth.md).
 
 Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60) `when trying to use the generated `.ccache` ticket mean the target is patched.
 
@@ -176,14 +176,14 @@ ms14-068.py -u 'USER'@'DOMAIN_FQDN' -p 'PASSWORD' -s 'USER_SID' -d 'DOMAIN_CONTR
 ms14-068.py -u 'USER'@'DOMAIN_FQDN' --rc4 'NThash' -s 'USER_SID' -d 'DOMAIN_CONTROLLER'
 ```
 
-Once the `.ccache` TGT is obtained, if the attack is successful, the ticket will be usable with [pass-the-ticket](pass-the-ticket.md). An easy way to check if the TGT works is to use it and ask for a service ticket. This can be done with Impacket's [getST.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python).
+Once the `.ccache` TGT is obtained, if the attack is successful, the ticket will be usable with [pass-the-ticket](ptt.md). An easy way to check if the TGT works is to use it and ask for a service ticket. This can be done with Impacket's [getST.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python).
 
 ```bash
 getST.py -k -no-pass -spn 'any_valid_spn' $DOMAIN_FQDN/$USER
 ```
 
 {% hint style="warning" %}
-In some scenarios, I personally have had trouble using the `.ccache` ticket on UNIX-like systems. What I did was [convert it](pass-the-ticket.md#practice) to `.kirbi`, switch to a Windows system, inject the ticket with mimikatz's `kerberos:ptt` command, and then create a new user and add it to the domain admins group.
+In some scenarios, I personally have had trouble using the `.ccache` ticket on UNIX-like systems. What I did was [convert it](ptt.md#practice) to `.kirbi`, switch to a Windows system, inject the ticket with mimikatz's `kerberos:ptt` command, and then create a new user and add it to the domain admins group.
 
 ```bash
 net user "hacker" "132Pentest!!!" /domain /add

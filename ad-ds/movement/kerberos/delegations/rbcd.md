@@ -12,6 +12,12 @@ For this attack to work, the attacker needs to populate the target attribute wit
 
 Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with (i.e. the account that has an SPN). Using that account's credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
+In the end, an RBCD abuse results in a Service Ticket to authenticate on a target service on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service. 
+
+{% hint style="success" %}
+On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+{% endhint %}
+
 ![](../../../../.gitbook/assets/Kerberos_delegations-rbcd.drawio.png)
 
 ## Practice
@@ -42,15 +48,17 @@ Once the security descriptor has been modified, the [Impacket](https://github.co
 getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'
 ```
 
-The SPN (ServicePrincipalName) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).
-
 {% hint style="warning" %}
 In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 
+{% hint style="info" %}
+The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
+{% endhint %}
+
 **3 - Pass-the-ticket **:passport_control:** **
 
-Once the ticket is obtained, it can be used with [pass-the-ticket](../pass-the-ticket.md).
+Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -103,7 +111,7 @@ Rubeus.exe hash /password:$password
 
 **3 - Pass-the-ticket **:passport_control:** **
 
-Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../pass-the-ticket.md)).
+Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../ptt.md)).
 {% endtab %}
 {% endtabs %}
 

@@ -1,11 +1,11 @@
 # Impersonation
 
-When credentials are found \(through [dumping](dumping/) or [cracking](cracking.md) for instance\), attackers try to use them to obtain access to new resources. Depending on the harvested credential material type, the impersonation can be done in different ways.
+When credentials are found (through [dumping](dumping/) or [cracking](cracking.md) for instance), attackers try to use them to obtain access to new resources. Depending on the harvested credential material type, the impersonation can be done in different ways.
 
-* **LM or NT password hash**: [pass-the-hash](../ntlm/pass-the-hash.md)
-* **RC4 Kerberos key \(i.e. NT hash\)**: [overpass-the-hash](../kerberos/pass-the-key.md)
-* **non-RC4 Kerberos key \(i.e. DES or AES\)**: [pass-the-key](../kerberos/pass-the-key.md) \(alias for overpass-the-hash\)
-* **Kerberos ticket**: [pass-the-ticket](../kerberos/pass-the-ticket.md)
+* **LM or NT password hash**: [pass-the-hash](../ntlm/pth.md)
+* **RC4 Kerberos key (i.e. NT hash)**: [overpass-the-hash](../kerberos/ptk.md)
+* **non-RC4 Kerberos key (i.e. DES or AES)**: [pass-the-key](../kerberos/ptk.md) (alias for overpass-the-hash)
+* **Kerberos ticket**: [pass-the-ticket](../kerberos/ptt.md)
 * **plaintext password**: the techniques listed below
 
 {% tabs %}
@@ -52,4 +52,3 @@ $User | Get-DomainSPNTicket -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Dom
 ```
 {% endtab %}
 {% endtabs %}
-

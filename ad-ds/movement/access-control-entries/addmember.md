@@ -4,7 +4,7 @@ This abuse can be carried out when controlling an object that has `AllExtendedRi
 
 {% tabs %}
 {% tab title="Windows" %}
-The attacker can add a user/group/computer to a group. This can be achieved with a native command line, with the Active Directory PowerShell module, or with [Add-DomainGroupMember](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainGroupMember/) \([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module\).
+The attacker can add a user/group/computer to a group. This can be achieved with a native command line, with the Active Directory PowerShell module, or with [Add-DomainGroupMember](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainGroupMember/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module).
 
 ```bash
 # Command line
@@ -19,7 +19,7 @@ Add-DomainGroupMember -Identity 'Domain Admins' -Members 'user'
 {% endtab %}
 
 {% tab title="UNIX-like" %}
-It can also be achieved from UNIX-like system with [net](https://linux.die.net/man/8/net), a tool for the administration of samba and cifs/smb clients. The [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) can also be used to run net commands with [pass-the-hash](../ntlm/pass-the-hash.md).
+It can also be achieved from UNIX-like system with [net](https://linux.die.net/man/8/net), a tool for the administration of samba and cifs/smb clients. The [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) can also be used to run net commands with [pass-the-hash](../ntlm/pth.md).
 
 ```bash
 # With net and cleartext credentials (will be prompted)
@@ -33,4 +33,3 @@ pth-net rpc group addmem $TargetGroup $TargetUser -U $DOMAIN/$ControlledUser%fff
 ```
 {% endtab %}
 {% endtabs %}
-

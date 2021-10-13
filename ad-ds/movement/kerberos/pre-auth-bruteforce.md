@@ -2,9 +2,9 @@
 
 ## Theory
 
-The Kerberos authentication protocol works with tickets in order to grant access. A ST \(Service Ticket\) can be obtained by presenting a TGT \(Ticket Granting Ticket\). That prior TGT can only be obtained by validating a first step named "pre-authentication" \(except if that requirement is explicitly removed for some accounts, making them vulnerable to [ASREProast](asreproast.md)\).
+The Kerberos authentication protocol works with tickets in order to grant access. A ST (Service Ticket) can be obtained by presenting a TGT (Ticket Granting Ticket). That prior TGT can only be obtained by validating a first step named "pre-authentication" (except if that requirement is explicitly removed for some accounts, making them vulnerable to [ASREProast](asreproast.md)).
 
-The pre-authentication requires the requesting user to supply its secret key \(DES, RC4, AES128 or AES256\) derived from his password. An attacker knowing that secret key doesn't need knowledge of the actual password to obtain tickets. This is called [pass-the-key](pass-the-key.md).
+The pre-authentication requires the requesting user to supply its secret key (DES, RC4, AES128 or AES256) derived from his password. An attacker knowing that secret key doesn't need knowledge of the actual password to obtain tickets. This is called [pass-the-key](ptk.md).
 
 Sometimes, the pre-authentication is disabled on some accounts. The attacker can then obtain information encrypted with the account's key. While the obtained TGT cannot be used since it's encrypted with a key the attacker has no knowledge of, the encrypted information can be used to bruteforce the account's password. This is called [ASREProast](asreproast.md).
 
@@ -12,7 +12,7 @@ Last but not least, the pre-authentication step can be bruteforced. This type of
 
 ## Practice
 
-Tools like [kerbrute](https://github.com/ropnop/kerbrute) \(Go\) and [smartbrute](https://github.com/ShutdownRepo/smartbrute) \(Python\) can be used to bruteforce credentials through the Kerberos pre-authentication. The smartbrute utility can be used in a `brute` mode \(standard bruteforcing features\) or in a `smart` mode \(requires prior knowledge of a low-priv user credentials, but operates LDAP enumeration and avoid locking out accounts, fetches the users list and so on\).
+Tools like [kerbrute](https://github.com/ropnop/kerbrute) (Go) and [smartbrute](https://github.com/ShutdownRepo/smartbrute) (Python) can be used to bruteforce credentials through the Kerberos pre-authentication. The smartbrute utility can be used in a `brute` mode (standard bruteforcing features) or in a `smart` mode (requires prior knowledge of a low-priv user credentials, but operates LDAP enumeration and avoid locking out accounts, fetches the users list and so on).
 
 ```bash
 # brute mode, users and passwords lists supplied
@@ -32,6 +32,4 @@ In its default setup, smartbrute will attack Kerberos pre-authentication with th
 ## Resources
 
 {% embed url="https://github.com/ropnop/kerbrute" %}
-
-
 

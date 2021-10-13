@@ -48,10 +48,10 @@ This is meant to protect the user's password from eavesdropping by implementing 
 [cracking.md](../credentials/cracking.md)
 {% endcontent-ref %}
 
-The problem is that Microsoft has poorly implemented the zero-knowledge proof concept in the LM and NTLM protocols. The LM or NT hash is used "as is" to compute the response. This means an attacker knowing an LM or NT hash could use it to authenticate as a user without knowing the user's password. This technique is called [Pass the hash](pass-the-hash.md#pass-the-hash-ntlm).
+The problem is that Microsoft has poorly implemented the zero-knowledge proof concept in the LM and NTLM protocols. The LM or NT hash is used "as is" to compute the response. This means an attacker knowing an LM or NT hash could use it to authenticate as a user without knowing the user's password. This technique is called [Pass the hash](pth.md#pass-the-hash-ntlm).
 
-{% content-ref url="pass-the-hash.md" %}
-[pass-the-hash.md](pass-the-hash.md)
+{% content-ref url="pth.md" %}
+[pth.md](pth.md)
 {% endcontent-ref %}
 
 Attackers could also rely on [forced authentications and phishing](../mitm-and-coerced-authentications/) to [relay incoming authentications](relay.md).

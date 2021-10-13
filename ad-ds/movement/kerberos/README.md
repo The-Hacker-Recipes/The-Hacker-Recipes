@@ -27,10 +27,10 @@ By default, the salt is always
 * **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.local`
 {% endhint %}
 
-Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT (if RC4 key is accepted). This is called [Overpass-the-hash](pass-the-key.md).
+Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT (if RC4 key is accepted). This is called [Overpass-the-hash](ptk.md).
 
-{% content-ref url="pass-the-key.md" %}
-[pass-the-key.md](pass-the-key.md)
+{% content-ref url="ptk.md" %}
+[ptk.md](ptk.md)
 {% endcontent-ref %}
 
 Users are not the only ones whose NT hashes can be used to abuse Kerberos.
@@ -42,10 +42,10 @@ Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 [forged-tickets.md](forged-tickets.md)
 {% endcontent-ref %}
 
-[Overpass-the-hash](pass-the-key.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the-ticket.md).
+[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](ptt.md).
 
-{% content-ref url="pass-the-ticket.md" %}
-[pass-the-ticket.md](pass-the-ticket.md)
+{% content-ref url="ptt.md" %}
+[ptt.md](ptt.md)
 {% endcontent-ref %}
 
 ## Roasting

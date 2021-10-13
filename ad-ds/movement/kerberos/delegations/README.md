@@ -30,7 +30,7 @@ Kerberos delegations can be abused by attackers to obtain valuable assets and so
 
     S4U2Proxy always results in a forwardable ST, even when the ticket used as evidence wasn't forwardable.
 
-Some of the following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](../pass-the-ticket.md).
+Some of the following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](../ptt.md).
 
 ## Practice
 
@@ -44,7 +44,7 @@ Some of the following parts allow to obtain modified or crafted Kerberos tickets
 [constrained.md](constrained.md)
 {% endcontent-ref %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-constrained.drawio.png)
+![](../../../../.gitbook/assets/Kerberos_delegations-constrained\(1\).png)
 
 {% content-ref url="rbcd.md" %}
 [rbcd.md](rbcd.md)

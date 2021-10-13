@@ -8,12 +8,12 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 ### NTLM configuration
 
-* [ ] Obsolete versions of this protocol (LM, LMv2 and NTLM(v1)) are disabled and NTLM (all versions) is disabled when possible. This allows to stay safe from [NTLM relay](ntlm/relay.md), [NTLM capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) and [pass-the-hash](ntlm/pass-the-hash.md) attacks.
+* [ ] Obsolete versions of this protocol (LM, LMv2 and NTLM(v1)) are disabled and NTLM (all versions) is disabled when possible. This allows to stay safe from [NTLM relay](ntlm/relay.md), [NTLM capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) and [pass-the-hash](ntlm/pth.md) attacks.
 
 ### Kerberos configuration
 
 * [ ] `krbtgt`'s password has been changed in the last 6 months to prevent [Golden Ticket](../persistence/silver-and-golden-tickets.md) persistence attacks. From UNIX-like systems, this can be checked with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [Get-ADUsers.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetADUsers.py) script.
-* [ ] The RC4 `etype` is disabled for Kerberos to prevent [overpass-the-hash](kerberos/overpass-the-hash.md) and [NTLMv1 capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) to [Silver Ticket](../persistence/silver-and-golden-tickets.md) attacks. This can be checked by attempting to obtain a TGT with an NT hash.
+* [ ] The RC4 `etype` is disabled for Kerberos to prevent [overpass-the-hash](kerberos/opth.md) and [NTLMv1 capture](ntlm/capture.md) and [cracking](credentials/cracking.md#tips-and-tricks) to [Silver Ticket](../persistence/silver-and-golden-tickets.md) attacks. This can be checked by attempting to obtain a TGT with an NT hash.
 * [ ] No account is configured with `Do not require Kerberos Pre-Authentication` allowing for [ASREProast](kerberos/asreproast.md) attacks, or make sure those account have strong password resistant to [cracking](credentials/cracking.md).
 * [ ] User accounts that have at least one `ServicePrincipalName`, hence vulnerable to [Kerberoast](kerberos/kerberoast.md), have a strong password, resistant to [cracking.](credentials/cracking.md)
 
