@@ -64,7 +64,7 @@ When attackers have a foothold in the domain (i.e. valid domain credentials), th
 
 ## Delegations
 
-Kerberos delegations allow services to impersonate users on other services. For instance, this allows services to require access to other services' data on the authenticated user's behalf.
+Kerberos delegations allow services to access other services on behalf of domain users. For instance, this allows services to require access to other services' data on the authenticated user's behalf in order to pull data that only the said user is supposed to have access to.
 
 In some situations, Kerberos delegations can be abused by attackers to operate lateral movement or privilege escalation.
 
