@@ -8,34 +8,34 @@ description: MITRE ATT&CK™ Sub-technique T1557.001
 
 After successfully [forcing a victim to authenticate](../mitm-and-coerced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
 
-The chart below sums up the expected behavior of cross-protocols NTLMv2 relay attacks depending on the mitigations in place \([original here](https://beta.hackndo.com/ntlm-relay/)\).
+The chart below sums up the expected behavior of cross-protocols NTLMv2 relay attacks depending on the mitigations in place ([original here](https://beta.hackndo.com/ntlm-relay/)).
 
-![](../../../.gitbook/assets/ntlm_relay_mitigation_chart.png)
+![](../../../.gitbook/assets/ntlm\_relay\_mitigation\_chart.png)
 
 The following mindmap sums up the overall attack paths of NTLMv2 relay.
 
-![](../../../.gitbook/assets/ntlm_relay.png)
+![](<../../../.gitbook/assets/NTLM relay.drawio.png>)
 
 ### Session signing
 
 Session signing is a powerful but limited mitigation against NTLM relay that only SMB and LDAP can use.
 
-* **SMB signing** works in a "least requirements" way. If neither the client or the server require signing, the session will not be signed \(because of performance issues\)
+* **SMB signing** works in a "least requirements" way. If neither the client or the server require signing, the session will not be signed (because of performance issues)
 * **LDAP signing** works in a "most requirements" way. If both the client and the server support signing, then they will sign the session
 
-For this mitigation to protect against NTLM relay, it has to be enabled on the target server side. Session signing protects the session's integrity, not the authentication's integrity. If session signing fails on the relayed victim side, the session `victim <-> attacker` will be killed AFTER the authentication, hence allowing an attacker to relay that authentication and get a valid session `attacker <-> target` \(if the target is not requiring signing\).
+For this mitigation to protect against NTLM relay, it has to be enabled on the target server side. Session signing protects the session's integrity, not the authentication's integrity. If session signing fails on the relayed victim side, the session `victim <-> attacker` will be killed AFTER the authentication, hence allowing an attacker to relay that authentication and get a valid session `attacker <-> target` (if the target is not requiring signing).
 
 Since the session signing is negotiated during the NTLM authentication, why couldn't attackers tamper with the messages and unset the signing negotiation flags? Because there is a protection called [MIC](relay.md#mic-message-integrity-code) that prevents this.
 
 {% hint style="info" %}
-There is a strange behavior when doing **cross-protocols relay** \(like relaying an SMB auth to an LDAP auth\). When attackers try to relay NTLM blobs including signing negotiation flags to a protocol not supporting session signing \(like LDAPS\), the target server usually glitches and kills the authentication negotiation.
+There is a strange behavior when doing **cross-protocols relay** (like relaying an SMB auth to an LDAP auth). When attackers try to relay NTLM blobs including signing negotiation flags to a protocol not supporting session signing (like LDAPS), the target server usually glitches and kills the authentication negotiation.
 
 Attackers that want to avoid glitches like this need to operate an **cross-protocols unsigning relay** where they relay the NTLM blobs and remove the signing negotiation flags.
 {% endhint %}
 
-### MIC \(Message Integrity Code\)
+### MIC (Message Integrity Code)
 
-MIC \(Message Integrity Code\) is an optional mitigation that garantess the NTLM messages integrity. MIC prevents attackers from tampering with NTLM messages when relaying them \(i.e. cross-protocols unsigning relays\). With this mitigation, attackers can't remove the session signing negotiation flags. Unlike session signing, MIC protects the authentication.
+MIC (Message Integrity Code) is an optional mitigation that garantess the NTLM messages integrity. MIC prevents attackers from tampering with NTLM messages when relaying them (i.e. cross-protocols unsigning relays). With this mitigation, attackers can't remove the session signing negotiation flags. Unlike session signing, MIC protects the authentication.
 
 On a side note, NTLMv2 responses are computed against multiples values including
 
@@ -47,41 +47,41 @@ On the other hand, NTLMv1 responses do not include the `AvPairs` in their calcul
 
 In conclusion, session signing is protected by the MIC, which is enabled with the `msAvFlags`, which is protected by the NTLMv2 response, which can not be modified when not knowing the user's NT hash.
 
-\(Un\)fortunately, there are vulnerabilities that exist that allow attackers to operate cross-protocols unsigning relays on unpatched targets.
+(Un)fortunately, there are vulnerabilities that exist that allow attackers to operate cross-protocols unsigning relays on unpatched targets.
 
-* Drop the MIC \(CVE-2019-1040\)
-* Drop the MIC 2 \(CVE-2019-1166\)
-* Stealing the session key \(CVE-2019-1019\)
+* Drop the MIC (CVE-2019-1040)
+* Drop the MIC 2 (CVE-2019-1166)
+* Stealing the session key (CVE-2019-1019)
 
 {% hint style="warning" %}
-As of november 2020, MIC was optional, but unofficial channels suggest it might've become mandatory \([source](https://twitter.com/decoder_it/status/1347976999567032321)\).
+As of november 2020, MIC was optional, but unofficial channels suggest it might've become mandatory ([source](https://twitter.com/decoder\_it/status/1347976999567032321)).
 {% endhint %}
 
 {% hint style="info" %}
-Windows Server 2019 ISOs seem to be patched against \(at least\) CVE-2019-1040.
+Windows Server 2019 ISOs seem to be patched against (at least) CVE-2019-1040.
 {% endhint %}
 
-### EPA \(Extended Protection for Auth.\) <a id="EPA-Extended-Protection-for-Authentication"></a>
+### EPA (Extended Protection for Auth.) <a href="epa-extended-protection-for-authentication" id="epa-extended-protection-for-authentication"></a>
 
-In short, EPA \(Extended Protection for Authentication\) can use one or both of the following two mitigations to provide mitigation against NTLM relay for protocols that don't support session signing such HTTPS and LDAPS:
+In short, EPA (Extended Protection for Authentication) can use one or both of the following two mitigations to provide mitigation against NTLM relay for protocols that don't support session signing such HTTPS and LDAPS:
 
-* A Channel Binding Token \(CBT\) when there is a TLS channel to bind to \(HTTPS, LDAPS\)
-* A Service Binding information in the form of a Service Principal Name \(SPN\), usually when there is no TLS channel to bind to \(HTTP\)
+* A Channel Binding Token (CBT) when there is a TLS channel to bind to (HTTPS, LDAPS)
+* A Service Binding information in the form of a Service Principal Name (SPN), usually when there is no TLS channel to bind to (HTTP)
 
 {% hint style="info" %}
-For more details on how NTLM works, testers can read [the MS-NLMP doc](https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-NLMP/%5BMS-NLMP%5D.pdf). 
+For more details on how NTLM works, testers can read [the MS-NLMP doc](https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-NLMP/\[MS-NLMP].pdf).&#x20;
 {% endhint %}
 
 ## Practice
 
 The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The LM and NTLM authentication protocols are "application protocol-independent". It means one can relay LM or NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called **cross-protocols LM/NTLM relay**. It also means the relays and attacks possible depend on the application protocol the authentication messages are embedded in.
 
-[ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) \(Python\), [MultiRelay](https://github.com/lgandx/Responder/blob/master/tools/MultiRelay.py) \(Python\) and [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) \(Powershell\) are great tools for relaying NTLM authentications. Those tools setup relay clients and relay servers waiting for incoming authentications. Once the servers are up and ready, the tester can initiate a [forced authentication attack](../mitm-and-coerced-authentications/).
+[ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), [MultiRelay](https://github.com/lgandx/Responder/blob/master/tools/MultiRelay.py) (Python) and [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for relaying NTLM authentications. Those tools setup relay clients and relay servers waiting for incoming authentications. Once the servers are up and ready, the tester can initiate a [forced authentication attack](../mitm-and-coerced-authentications/).
 
 {% hint style="warning" %}
 When combining NTLM relay with Responder for [name poisoning](../mitm-and-coerced-authentications/#llmnr-nbt-ns-mdns-name-poisoning), testers need to make sure that Responder's servers are deactivated, otherwise they will interfere with ntlmrelayx ones.
 
-```text
+```
 sed -i 's/SMB = On/SMB = Off/g' /PATH/TO/Responder/Responder.conf
 sed -i 's/HTTP = On/HTTP = Off/g' /PATH/TO/Responder/Responder.conf
 ```
@@ -121,7 +121,7 @@ ntlmrelayx.py -t ldap://$DC_TARGET
 {% endtab %}
 
 {% tab title="Creation" %}
-The following command will abuse the default value \(i.e. 10\) of `ms-DS-MachineAccountQuota` to create a domain machine account. The tester will then be able to use it for AD operations.
+The following command will abuse the default value (i.e. 10) of `ms-DS-MachineAccountQuota` to create a domain machine account. The tester will then be able to use it for AD operations.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET --add-computer SHUTDOWN
@@ -134,30 +134,30 @@ ntlmrelayx.py -t ldaps://$DC_TARGET
 ```
 
 {% hint style="info" %}
-In most cases, the `--remove-mic` option will be needed when relaying to LDAP\(S\) because of the [MIC protection](relay.md#mic-message-integrity-code).
+In most cases, the `--remove-mic` option will be needed when relaying to LDAP(S) because of the [MIC protection](relay.md#mic-message-integrity-code).
 {% endhint %}
 {% endtab %}
 
 {% tab title="Promotion" %}
-The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group \(`--escalate-user`\) if the relayed account has sufficient privileges.
+The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group (`--escalate-user`) if the relayed account has sufficient privileges.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 ```
 
 {% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse \(a.k.a. PrivExchange\)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains \(`WriteDACL` over domain object, see [Abusing ACEs](../access-control-entries/)\) to escalate a domain user privileges \(`--escalate-user`\).
+This technique is usually combined with a [PushSubscription abuse (a.k.a. PrivExchange)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains (`WriteDACL` over domain object, see [Abusing ACEs](../access-control-entries/)) to escalate a domain user privileges (`--escalate-user`).
 {% endhint %}
 {% endtab %}
 
 {% tab title="Delegation" %}
-The following command will [abuse Resource Based Kerberos Constrained Delegations \(RBCD\)](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
+The following command will [abuse Resource Based Kerberos Constrained Delegations (RBCD)](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET --escalate-user SHUTDOWN --delegate-access
 ```
 
-If successful, the attacker will then be able to get a service ticket with the created domain machine account for the relayed victim and impersonate any account \(e.g. the domain admin\) on it.
+If successful, the attacker will then be able to get a service ticket with the created domain machine account for the relayed victim and impersonate any account (e.g. the domain admin) on it.
 
 ```bash
 getST.py -spn host/$RELAYED_VICTIM '$DOMAIN/$NEW_MACHINE_ACCOUNT$:$PASSWORD' -dc-ip $DOMAIN_CONTROLLER_IP -impersonate $USER_TO_IMPERSONATE
@@ -183,16 +183,16 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 
 The ntlmrelayx tool offers features making it a very valuable asset when pentesting an Active Directory domain:
 
-* It can work with mitm6 \(for [DHCPv6 + DNS poisoning](../mitm-and-coerced-authentications/#ipv6-dns-poisoning)\) by enabling IPv6 support with the `-6` option \(IPv6 support is not required since most hosts will send IPv4 but using this option is recommended since it will allow relay servers to work with IPv4 and IPv6\)
+* It can work with mitm6 (for [DHCPv6 + DNS poisoning](../mitm-and-coerced-authentications/#ipv6-dns-poisoning)) by enabling IPv6 support with the `-6` option (IPv6 support is not required since most hosts will send IPv4 but using this option is recommended since it will allow relay servers to work with IPv4 and IPv6)
 * It supports SMB2. It can be enabled with the `-smb2support` option
-* It implements **CVE-2019-1040** with the `--remove-mic` option, usually needed when attempting "cross-protocols unsigning relays" \(e.g. **SMB to SMB-with-required-signing, or SMB to LDAP/S\)**
+* It implements **CVE-2019-1040** with the `--remove-mic` option, usually needed when attempting "cross-protocols unsigning relays" (e.g. **SMB to SMB-with-required-signing, or SMB to LDAP/S)**
 * It has the ability to attack multiple targets with the `-tf` option instead of `-t`, and the `-w` option can be set to watch the target file for changes and update target list automatically
-* It has the ability to dump domain info when relaying to LDAP\(S\)
+* It has the ability to dump domain info when relaying to LDAP(S)
 * It has the ability to relay connections for specific target users to be defined in the targets file
-* It has the ability to relay a single connection \(SMB only for now\) to multiple targets, see below
+* It has the ability to relay a single connection (SMB only for now) to multiple targets, see below
 
 {% hint style="info" %}
-Thanks to [the "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a response \(i.e. LM or NTLM hash\) with a custom challenge on an interface/machine, while relaying on another.
+Thanks to [the "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a response (i.e. LM or NTLM hash) with a custom challenge on an interface/machine, while relaying on another.
 {% endhint %}
 
 The targets file used with the `-tf` option can contain the following
@@ -207,7 +207,7 @@ ldaps://someserver.domain.lan
 someserver.domain.lan
 ```
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\) has the ability to generate the list of possible targets for relay to SMB \(hosts with SMB signing disabled\).
+[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) has the ability to generate the list of possible targets for relay to SMB (hosts with SMB signing disabled).
 
 ```bash
 crackmapexec smb --gen-relay-list targets.txt $SUBNET
@@ -215,15 +215,14 @@ crackmapexec smb --gen-relay-list targets.txt $SUBNET
 
 ## References
 
-{% embed url="https://en.hackndo.com/ntlm-relay/" caption="" %}
+{% embed url="https://en.hackndo.com/ntlm-relay/" %}
 
-{% embed url="https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html" caption="" %}
+{% embed url="https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html" %}
 
-{% embed url="https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire" caption="" %}
+{% embed url="https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire" %}
 
-{% embed url="https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/" caption="" %}
+{% embed url="https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/" %}
 
-{% embed url="https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/" caption="" %}
+{% embed url="https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/" %}
 
-{% embed url="http://davenport.sourceforge.net/ntlm.html" caption="" %}
-
+{% embed url="http://davenport.sourceforge.net/ntlm.html" %}
