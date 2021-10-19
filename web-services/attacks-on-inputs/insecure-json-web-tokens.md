@@ -2,13 +2,13 @@
 
 ## Theory
 
-Some web applications rely on JSON Web Tokens \(JWTs\) for stateless authentication and access control instead of stateful ones with traditional session cookies. Some implementations are insecure and allow attackers to bypass controls, impersonate users, or retrieve secrets.
+Some web applications rely on JSON Web Tokens (JWTs) for stateless authentication and access control instead of stateful ones with traditional session cookies. Some implementations are insecure and allow attackers to bypass controls, impersonate users, or retrieve secrets.
 
 ## Practice
 
-Testers need to find if, and where, the tokens are used. A JWT is a base64 string of at least 100 characters, made of three parts \(header, payload, signature\) separated by dot, and usually located in `Authorization` headers with the `Bearer` keyword. See the the following example.
+Testers need to find if, and where, the tokens are used. A JWT is a base64 string of at least 100 characters, made of three parts (header, payload, signature) separated by dot, and usually located in `Authorization` headers with the `Bearer` keyword. See the the following example.
 
-```text
+```
 Authorization: Bearer eyJ0eXAiOiJKV1Q[...].eyJpc3MiOiJodHRwO[...].HAveF7AqeKj-4[...]
 ```
 
@@ -20,7 +20,7 @@ JWTs are just base64 encoded data. They may contain sensitive unencrypted inform
 
 ### Signature attack - None algorithm
 
-Testers need to decode the token, change the algorithm to `None` \(or `none`, `NONE`, `nOnE`\) in the header, remove the signature, and send the modified token. Some applications are vulnerable to this attack since some support a None algorithm for signature.
+Testers need to decode the token, change the algorithm to `None` (or `none`, `NONE`, `nOnE`) in the header, remove the signature, and send the modified token. Some applications are vulnerable to this attack since some support a None algorithm for signature.
 
 This can be done in Python.
 
@@ -80,9 +80,9 @@ print(token)
 
 ### Cracking the secret
 
-When JWT use HMAC-SHA256/384/512 algorithms to sign the payload, tester can try to find the secret used if it weak enough. [JWT cracker](https://github.com/lmammino/jwt-cracker) \(JavaScript\) and [JWT tool](https://github.com/ticarpi/jwt_tool) \(Python\) are tools that testers can use to bruteforce JWT secrets.
+When JWT use HMAC-SHA256/384/512 algorithms to sign the payload, tester can try to find the secret used if it weak enough. [JWT cracker](https://github.com/lmammino/jwt-cracker) (JavaScript) and [JWT tool](https://github.com/ticarpi/jwt\_tool) (Python) are tools that testers can use to bruteforce JWT secrets.
 
-JWT secrets can also be cracked using hashcat \(see the [AD credential cracking](../../ad-ds/movement/credentials/cracking.md) page for more detailed info on how to use it\).
+JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../ad/movement/credentials/cracking.md) page for more detailed info on how to use it).
 
 ```bash
 hashcat --hash-type 16500 --attack-mode 0 $JWTs_file $wordlist_file
@@ -90,19 +90,18 @@ hashcat --hash-type 16500 --attack-mode 0 $JWTs_file $wordlist_file
 
 ### Recovering the public key
 
-In certain scenarios, public keys can be recovered when knowing one \(for algos ES256, ES384, ES512\) or two \(for algos RS256, RS384, RS512\) tokens.
+In certain scenarios, public keys can be recovered when knowing one (for algos ES256, ES384, ES512) or two (for algos RS256, RS384, RS512) tokens.
 
 This can be achieved with the following Python script : [JWT-Key-Recover](https://github.com/FlorianPicca/JWT-Key-Recovery)
 
 ## References
 
-{% embed url="https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/" caption="" %}
+{% embed url="https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/" %}
 
-{% embed url="https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/" caption="" %}
+{% embed url="https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/" %}
 
-{% embed url="https://blog.imaginea.com/stateless-authentication-using-jwt-2/" caption="" %}
+{% embed url="https://blog.imaginea.com/stateless-authentication-using-jwt-2/" %}
 
-{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token" caption="" %}
+{% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token" %}
 
-{% embed url="https://jwt.io/" caption="" %}
-
+{% embed url="https://jwt.io/" %}

@@ -1,0 +1,3 @@
+# Certificate templates
+
+certipy certify

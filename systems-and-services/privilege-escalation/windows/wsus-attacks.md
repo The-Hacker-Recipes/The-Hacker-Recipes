@@ -16,11 +16,11 @@ reg query HKML\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
 
 The WSUS spoofing attack can be conducted as follows
 
-1. Obtain a Man-in-the-Middle position between clients and the update server with [ARP poisoning](../../../ad-ds/movement/mitm-and-coerced-authentications/arp-poisoning.md).
+1. Obtain a Man-in-the-Middle position between clients and the update server with [ARP poisoning](../../../ad/movement/mitm-and-coerced-authentications/arp-poisoning.md).
 2. Redirect traffic from `clients -> legitimate WSUS` to `clients -> attacker's WSUS`
 3. Have a custom WSUS server running able to send evil updates to clients
 
-In a scenario where the clients and the attacker are on the same subnet, and the update server is on another one, the steps below can be followed. For other scenarios or more info on ARP poisoning, have a look at : [ARP poisoning](../../../ad-ds/movement/mitm-and-coerced-authentications/arp-poisoning.md).
+In a scenario where the clients and the attacker are on the same subnet, and the update server is on another one, the steps below can be followed. For other scenarios or more info on ARP poisoning, have a look at : [ARP poisoning](../../../ad/movement/mitm-and-coerced-authentications/arp-poisoning.md).
 
 ### Preparing the evil WSUS
 
@@ -75,7 +75,7 @@ bettercap --iface $interface --caplet wsus_spoofing.cap
 
 ### Triggering Windows update
 
-The search for Windows updates can be manually triggered when having access to the target computer by going to `Settings > Update & Security > Windows Update > Check for updates`. 
+The search for Windows updates can be manually triggered when having access to the target computer by going to `Settings > Update & Security > Windows Update > Check for updates`.&#x20;
 
 {% hint style="info" %}
 By default, the automatic updates interval is 22 hours ([source](https://docs.microsoft.com/en-us/windows/deployment/update/waas-wu-settings)).
