@@ -93,7 +93,7 @@
     * [Certificate templates](ad/movement/certificate-services-ad-cs/certificate-templates.md)
     * [Configuration data](ad/movement/certificate-services-ad-cs/configuration-data.md)
     * [Access controls](ad/movement/certificate-services-ad-cs/access-controls.md)
-    * [HTTP endpoints](ad/movement/certificate-services-ad-cs/http-endpoints.md)
+    * [Web endpoints](ad/movement/certificate-services-ad-cs/web-endpoints.md)
     * [CA Shadow](ad/movement/certificate-services-ad-cs/cashadow.md)
   * [Exchange services](ad/movement/exchange-services/README.md)
     * [🛠️ PrivExchange](ad/movement/exchange-services/privexchange.md)
