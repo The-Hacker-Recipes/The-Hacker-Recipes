@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1558.003
 
 ## Theory
 
-When asking the KDC \(Key Distribution Center\) for a Service Ticket \(ST\), the requesting user needs to send a valid TGT \(Ticket Granting Ticket\) and the SPN \(Service Principal Name\) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the ST to the requesting user.
+When asking the KDC (Key Distribution Center) for a Service Ticket (ST), the requesting user needs to send a valid TGT (Ticket Granting Ticket) and the SPN (Service Principal Name) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the ST to the requesting user.
 
 The ST is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a SPN for a service, he can request a ST for this service and crack it offline later in an attempt to retrieve that service account's password.
 
@@ -15,12 +15,12 @@ In most situations, services accounts are machine accounts, which have very comp
 ## Practice
 
 {% hint style="warning" %}
-Unlike [ASREProasting](asreproast.md), this attack can only be carried out with a prior foothold \(valid domain credentials\).
+Unlike [ASREProasting](asreproast.md), this attack can only be carried out with a prior foothold (valid domain credentials).
 {% endhint %}
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) \(Python\) can perform all the necessary steps to request a ST for a service given its SPN and valid domain credentials.
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN and valid domain credentials.
 
 ```bash
 # with a password
@@ -30,7 +30,7 @@ GetUserSPNs.py -outputfile kerberoastables.txt -dc-ip $KeyDistributionCenter 'DO
 GetUserSPNs.py -outputfile kerberoastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
-This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\).
+This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python).
 
 ```bash
 crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter
@@ -71,15 +71,14 @@ john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 
 ### Targeted Kerberoasting
 
-If an attacker controls an account with the rights to add an SPN to another \([`GenericAll`](../access-control-entries/#genericall), [`GenericWrite`](../access-control-entries/#genericwrite)\), it can be abused to make that other account vulnerable to Kerberoast \(see [exploitation](../access-control-entries/targeted-kerberoasting.md)\).
+If an attacker controls an account with the rights to add an SPN to another ([`GenericAll`](../access-controls/#genericall), [`GenericWrite`](../access-controls/#genericwrite)), it can be abused to make that other account vulnerable to Kerberoast (see [exploitation](../access-controls/targeted-kerberoasting.md)).
 
 {% hint style="info" %}
-Controlling a member of the [Account Operators](../privileged-groups.md) group, targeted Kerberoasting can be conducted for the whole domain \(see [exploitation](../access-control-entries/targeted-kerberoasting.md)\).
+Controlling a member of the [Account Operators](../builtin-groups.md) group, targeted Kerberoasting can be conducted for the whole domain (see [exploitation](../access-controls/targeted-kerberoasting.md)).
 {% endhint %}
 
 ## Resources
 
-{% embed url="https://en.hackndo.com/kerberos" caption="" %}
+{% embed url="https://en.hackndo.com/kerberos" %}
 
-{% embed url="https://adsecurity.org/?p=2011" caption="" %}
-
+{% embed url="https://adsecurity.org/?p=2011" %}

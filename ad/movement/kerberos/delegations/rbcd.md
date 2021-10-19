@@ -2,7 +2,7 @@
 
 ## Theory
 
-If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object (e.g. the `GenericWrite` ACE, see [Abusing ACLs](../../access-control-entries/)), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
+If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object (e.g. the `GenericWrite` ACE, see [Abusing ACLs](../../access-controls/)), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
 {% hint style="success" %}
 Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor. Hence allowing RBCD attacks on relayed machine accounts authentications.
@@ -12,13 +12,13 @@ For this attack to work, the attacker needs to populate the target attribute wit
 
 Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with (i.e. the account that has an SPN). Using that account's credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
-In the end, an RBCD abuse results in a Service Ticket to authenticate on a target service on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service. 
+In the end, an RBCD abuse results in a Service Ticket to authenticate on a target service on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service.&#x20;
 
 {% hint style="success" %}
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-rbcd.drawio.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.drawio.png)
 
 ## Practice
 
@@ -53,10 +53,10 @@ In [some cases](./#theory), the delegation will not work. Depending on the conte
 {% endhint %}
 
 {% hint style="info" %}
-The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
+The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
 {% endhint %}
 
-**3 - Pass-the-ticket **:passport_control:** **
+**3 - Pass-the-ticket **:passport\_control:** **
 
 Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
 {% endtab %}
@@ -109,7 +109,7 @@ The NT hash can be computed as follows.
 Rubeus.exe hash /password:$password
 ```
 
-**3 - Pass-the-ticket **:passport_control:** **
+**3 - Pass-the-ticket **:passport\_control:** **
 
 Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../ptt.md)).
 {% endtab %}

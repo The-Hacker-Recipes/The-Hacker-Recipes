@@ -8,7 +8,7 @@ If an account (user or computer), with unconstrained delegations privileges, is 
 Unconstrained delegation abuses are usually combined with the [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-unconstrained.drawio.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
 
 ## Practice
 
@@ -24,7 +24,7 @@ All of this can be done from UNIX-like systems with [addspn](https://github.com/
 When attacking accounts able to delegate without constraints, there are two major scenarios
 
 * **the account is a computer**: computers can edit their own SPNs via the `msDS-AdditionalDnsHostName` attribute. Since ticket received by krbrelayx will be encrypted with AES256 (by default), attackers will need to either supply the right AES256 key for the unconstrained delegations account (`--aesKey` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments).
-* **the account is a user**: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../../privileged-groups.md) (or any other user that has the needed privileges) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash (`-hashes` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments)
+* **the account is a user**: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../../builtin-groups.md) (or any other user that has the needed privileges) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash (`-hashes` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments)
 {% endhint %}
 
 {% hint style="success" %}

@@ -1,3 +1,0 @@
-# CA Shadow
-
-forgecert

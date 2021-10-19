@@ -14,7 +14,7 @@ The chart below sums up the expected behavior of cross-protocols NTLMv2 relay at
 
 The following mindmap sums up the overall attack paths of NTLMv2 relay.
 
-![](<../../../.gitbook/assets/NTLM relay.drawio.png>)
+![](../../../.gitbook/assets/ntlm\_relay.png)
 
 ### Session signing
 
@@ -121,7 +121,7 @@ ntlmrelayx.py -t ldap://$DC_TARGET
 {% endtab %}
 
 {% tab title="Creation" %}
-The following command will abuse the default value (i.e. 10) of `ms-DS-MachineAccountQuota` to create a domain machine account. The tester will then be able to use it for AD operations.
+The following command will abuse the default value (i.e. 10) of [`ms-DS-MachineAccountQuota`](../domain-settings/machineaccountquota.md) to create a domain machine account. The tester will then be able to use it for AD operations.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET --add-computer SHUTDOWN
@@ -146,12 +146,12 @@ ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 ```
 
 {% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse (a.k.a. PrivExchange)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains (`WriteDACL` over domain object, see [Abusing ACEs](../access-control-entries/)) to escalate a domain user privileges (`--escalate-user`).
+This technique is usually combined with a [PushSubscription abuse (a.k.a. PrivExchange)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains (`WriteDACL` over domain object, see [Abusing ACEs](../access-controls/)) to escalate a domain user privileges (`--escalate-user`).
 {% endhint %}
 {% endtab %}
 
 {% tab title="Delegation" %}
-The following command will [abuse Resource Based Kerberos Constrained Delegations (RBCD)](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
+The following command will [abuse Resource Based Kerberos Constrained Delegations (RBCD)](../kerberos/delegations/rbcd.md) to gain admin access to the relayed machine. The `--escalate-user` option must be supplied with a controlled machine account name. If no machine account is controlled, the `--add-computer` option can be supplied instead like the "Account creation" tab before, and by targeting LDAPS instead of LDAP.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DC_TARGET --escalate-user SHUTDOWN --delegate-access
@@ -207,7 +207,7 @@ ldaps://someserver.domain.lan
 someserver.domain.lan
 ```
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) has the ability to generate the list of possible targets for relay to SMB (hosts with SMB signing disabled).
+[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) has the ability to generate the list of possible targets for relay to SMB (hosts with SMB signing not required).
 
 ```bash
 crackmapexec smb --gen-relay-list targets.txt $SUBNET

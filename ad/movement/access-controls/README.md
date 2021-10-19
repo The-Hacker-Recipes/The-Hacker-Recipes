@@ -1,4 +1,4 @@
-# Access Control Entries (ACEs)
+# Access controls
 
 ## Theory
 
@@ -26,7 +26,7 @@ All of the aforementioned attacks (red blocks) are detailed in the child notes, 
 
 * **Shadow Credentials: **see [ADDS > Movement > Kerberos > Shadow Credentials](../kerberos/shadow-credentials.md)
 * **Kerberos RBCD**: see [ADDS > Movement > Kerberos > Kerberos Delegations > RBCD](../kerberos/delegations/#resource-based-constrained-delegations-rbcd)
-* **GPO abuses**: see [ADDS > Movement > GPOs](../group-policy-objects.md)
+* **GPO abuses**: see [ADDS > Movement > GPOs](../group-policies.md)
 * **DCSync** : see [ADDS > Movement > Credential > Dumping > DCSync](../credentials/dumping/dcsync.md)
 
 {% hint style="success" %}

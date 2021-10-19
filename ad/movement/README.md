@@ -4,7 +4,7 @@
 **This is a work-in-progress**
 {% endhint %}
 
-Below is a checklist to go through when conducting a pentest. Order is irrelevant and many tests require authenticated or admin access. This checklist answers "what to audit on AD?" rather than "how to pwn AD?". A mindmap is in the works for that matter :wink: . 
+Below is a checklist to go through when conducting a pentest. Order is irrelevant and many tests require authenticated or admin access. This checklist answers "what to audit on AD?" rather than "how to pwn AD?". A mindmap is in the works for that matter :wink: .&#x20;
 
 ### NTLM configuration
 
@@ -21,7 +21,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 * [ ] Domain Controllers are patched against [ZeroLogon](netlogon/zerologon.md).
 * [ ] [MS14-068](kerberos/forged-tickets.md#ms-14-068-cve-2014-6324) is patched, preventing forging of powerful Kerberos tickets.
-* [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse.md), and [ACE abuse](access-control-entries/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
+* [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse.md), and [ACE abuse](access-controls/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
 * [ ] Patches for NTLM tampering vulnerabilities (e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166) are applied to limit [NTLM relay](ntlm/relay.md) attacks.
 * [ ] Latest security patched are applied (e.g. for ProxyLogon, ProxyShell, PrintNightmare, ...).
 
@@ -44,7 +44,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 ### Domain-level configuration and best-practices
 
 * [ ] The [Machine Account Quota](domain-settings/machineaccountquota.md) domain-level attribute is set to 0, preventing domain users from creating domain-joined computer accounts.
-* [ ] Default [special groups](privileged-groups.md) are empty limiting, among other things, out-of-box ACE abuses.
+* [ ] Default [special groups](builtin-groups.md) are empty limiting, among other things, out-of-box ACE abuses.
 
 ### Networking, protocols and services
 
@@ -57,12 +57,12 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md#wildcard-records) attacks. Preferably, this is a `TXT` record.
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.
 * [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) attacks.
-* [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-secrets.md). 
+* [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-secrets.md).&#x20;
 * [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress within the network.
 
 
 
-:hammer_pick: Things to add 
+:hammer\_pick: Things to add&#x20;
 
 * ADCS
 * Use of physical tokens (U2F, access cards, ...)
