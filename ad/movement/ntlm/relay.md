@@ -14,7 +14,7 @@ The chart below sums up the expected behavior of cross-protocols NTLMv2 relay at
 
 The following mindmap sums up the overall attack paths of NTLMv2 relay.
 
-![](../../../.gitbook/assets/ntlm\_relay.png)
+![](<../../../.gitbook/assets/NTLM relay.drawio.png>)
 
 ### Session signing
 
