@@ -72,6 +72,7 @@
       * [(RBCD) Resource-based constrained](ad-ds/movement/kerberos/delegations/rbcd.md)
     * [Shadow Credentials](ad-ds/movement/kerberos/shadow-credentials.md)
     * [UnPAC-the-hash](ad-ds/movement/kerberos/unpac-the-hash.md)
+    * [🛠️ Pass the Certificate](ad-ds/movement/kerberos/pass-the-certificate.md)
   * [Access Control Entries (ACEs)](ad-ds/movement/access-control-entries/README.md)
     * [AddMember](ad-ds/movement/access-control-entries/addmember.md)
     * [ForceChangePassword](ad-ds/movement/access-control-entries/forcechangepassword.md)
