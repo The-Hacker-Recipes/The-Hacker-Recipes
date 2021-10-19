@@ -37,7 +37,7 @@ The NT hash can be used for [pass-the-hash](../ntlm/pth.md), [silver ticket](for
 {% endtab %}
 {% endtabs %}
 
-## Resources
+## Resource
 
 {% embed url="https://shenaniganslabs.io/2021/06/21/Shadow-Credentials.html" %}
 
