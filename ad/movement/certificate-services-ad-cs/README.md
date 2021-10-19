@@ -40,12 +40,30 @@ In [that blogpost](https://posts.specterops.io/certified-pre-owned-d95910965cd2)
 
 While AD CS offers attackers a wide range of exploitation and persistence scenarios, this set of services is not always installed, and when it is, it is a requirement to identify its different parts in the domain.
 
-An initial indicator is the "Cert Publishers" built-in group whose members usually are the CA/servers where AD CS is installed.
+An initial indicator is the "Cert Publishers" built-in group whose members usually are the servers where AD CS is installed (i.e. PKI/CA).
 
 * From UNIX-like systems: `rpc net group members "Cert Publishers" -U "DOMAIN"/"User"%"Password" -S "DomainController"`
 * From Windows systems: `net group "Cert Publishers" /domain`
 
-From a domain-joined Windows system, the `certutil.exe` executable can also be used to quickly identify the Certificate Authority/PKI Server: `.\certutil.exe`.
+Alternatively, information like the PKI's CA and DNS names can be gathered through LDAP.
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, the [Certipy](https://github.com/ly4k/Certipy) (Python) tool can be used to operate multiple attacks and enumeration operations.
+
+```bash
+certipy 'domain.local'/'user':'password'@'domaincontroller' find
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to operate multiple attacks and enumeration operations.
+
+```batch
+Certify.exe cas
+```
+{% endtab %}
+{% endtabs %}
 
 ### Abuse
 
