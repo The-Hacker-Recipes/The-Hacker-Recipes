@@ -91,7 +91,7 @@
     * [ZeroLogon](ad/movement/netlogon/zerologon.md)
   * [Certificate Services (AD-CS)](ad/movement/certificate-services-ad-cs/README.md)
     * [🛠️ Certificate templates](ad/movement/certificate-services-ad-cs/certificate-templates.md)
-    * [🛠️ Configuration data](ad/movement/certificate-services-ad-cs/configuration-data.md)
+    * [🛠️ CA configuration](ad/movement/certificate-services-ad-cs/ca-configuration.md)
     * [🛠️ Access controls](ad/movement/certificate-services-ad-cs/access-controls.md)
     * [🛠️ Web endpoints](ad/movement/certificate-services-ad-cs/web-endpoints.md)
   * [Exchange services](ad/movement/exchange-services/README.md)

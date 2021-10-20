@@ -1,6 +1,6 @@
 # NTLM
 
-![](<../../../.gitbook/assets/Pass the things.drawio.png>)
+![](<../../../.gitbook/assets/Pass the things.drawio(1).png>)
 
 ## Theory
 
@@ -11,7 +11,7 @@ A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things cl
 * LM(v1), LMv2, NTLM(v1), NTLMv2, will refer to the authentication protocols
 * LM(v1/v2) and NTLM(v1/v2) response will refer to the secret exchanged during an authentication on LM or NTLM.
 
-Yes.. this is confusing, but hey go tell this to Microsoft :triumph: 
+Yes.. this is confusing, but hey go tell this to Microsoft :triumph:&#x20;
 {% endhint %}
 
 The LM (LAN Manager) and NTLM (New Technology LM) authentication protocols are widely used in today's Microsoft environments (but mostly NTLM). It relies on a challenge-response scheme based on three messages to authenticate. In order to prove its identity, the authenticating client is asked to compute a response based on multiple variables including:

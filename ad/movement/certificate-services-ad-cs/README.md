@@ -1,26 +1,22 @@
 # Certificate Services (AD-CS)
 
-{% hint style="danger" %}
-**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
-{% endhint %}
-
 ## Theory
 
 > AD CS is Microsoft’s PKI implementation that provides everything from encrypting file systems, to digital signatures, to user authentication (a large focus of our research), and more. While AD CS is not installed by default for Active Directory environments, from our experience in enterprise environments it is widely deployed, and the security ramifications of misconfigured certificate service instances are enormous. ([specterops.io](https://posts.specterops.io/certified-pre-owned-d95910965cd2))
 
-In [that blogpost](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) shared their research on AD CS and identified multiple theft, escalation and persistence vectors.
+In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) shared their research on AD CS and identified multiple theft, escalation and persistence vectors.
 
-* Credential theft (THEFT1 to THEFT5)
-* Account persistence (PERSIST1 to PERSIST3)
-* Domain escalation (ESC1 to ESC8)
-  * based on [misconfigured certificate templates](certificate-templates.md) (ESC1, ESC2 and ESC3)
-  * based on [vulnerable configuration data](configuration-data.md) (ESC6)
-  * related to [access control vulnerabilities](access-controls.md) (ESC4, ESC5 and ESC7)
-  * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md) (ESC8)
-* Domain persistence (DPERSIST1 to DPERSIST3)
-  * by [forging certificates with a stolen CA certificates](../../persistence/ca-shadow.md) (DPERSIST1)
-  * by trusting rogue CA certificates (DPERSIST2)
-  * by [maliciously creating vulnerable access controls](../../persistence/access-controls.md) (DPERSIST3)
+* Credential theft
+* Account persistence
+* Domain escalation
+  * based on [misconfigured certificate templates](certificate-templates.md)
+  * based on [dangerous CA configuration](ca-configuration.md)
+  * related to [access control vulnerabilities](access-controls.md)
+  * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
+* Domain persistence
+  * by [forging certificates with a stolen CA certificates](../../persistence/ca-shadow.md)
+  * by trusting rogue CA certificates
+  * by [maliciously creating vulnerable access controls](../../persistence/access-controls.md)
 
 ## Practice
 
@@ -54,6 +50,12 @@ From UNIX-like systems, the [Certipy](https://github.com/ly4k/Certipy) (Python) 
 ```bash
 certipy 'domain.local'/'user':'password'@'domaincontroller' find
 ```
+
+
+
+{% hint style="info" %}
+By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The -scheme flag can be used to set whether to use LDAP or LDAPS.
+{% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -73,12 +75,12 @@ The different domain escalation scenarios are detailed in the following parts.
 [certificate-templates.md](certificate-templates.md)
 {% endcontent-ref %}
 
-{% content-ref url="configuration-data.md" %}
-[configuration-data.md](configuration-data.md)
+{% content-ref url="ca-configuration.md" %}
+[ca-configuration.md](ca-configuration.md)
 {% endcontent-ref %}
 
-{% content-ref url="../access-controls/" %}
-[access-controls](../access-controls/)
+{% content-ref url="../../persistence/access-controls.md" %}
+[access-controls.md](../../persistence/access-controls.md)
 {% endcontent-ref %}
 
 {% content-ref url="web-endpoints.md" %}

@@ -1,6 +1,6 @@
 # Kerberos
 
-![](<../../../.gitbook/assets/Pass the things.drawio.png>)
+![](<../../../.gitbook/assets/Pass the things.drawio(1).png>)
 
 ## Tickets
 
@@ -9,9 +9,9 @@ Kerberos is an authentication protocol based on tickets. It basically works like
 1. Client asks the KDC (Key Distribution Center, usually is a domain controller) for a TGT (Ticket Granting Ticket). One of the requesting user's keys is used for pre-authentication. The TGT is provided by the Authentication Service (AS).
 2. Client uses the TGT to ask the KDC for a ST (Service Ticket). That ticket is provided by the Ticket Granting Service (TGS).
 3. Client uses the ST (Service Ticket) to access a service
-4. Both tickets (TGT and ST) contain the PAC (Privilege Authentication Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on). Only one very special and sensitive service account can write the PAC : `krbtgt`. 
+4. Both tickets (TGT and ST) contain the PAC (Privilege Authentication Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on). Only one very special and sensitive service account can write the PAC : `krbtgt`.&#x20;
 
-A Service Ticket (ST) allows access to a specific service. The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following (read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii\_\_kerberos_cont/SSTIC2014-Article-secrets_dauthentification_pisode_ii\_\_kerberos_contre-attaque-bordes\_2.pdf)).
+A Service Ticket (ST) allows access to a specific service. The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following (read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets\_dauthentification\_pisode\_ii\_\_kerberos\_cont/SSTIC2014-Article-secrets\_dauthentification\_pisode\_ii\_\_kerberos\_contre-attaque-bordes\_2.pdf)).
 
 | Key name (a.k.a. etype) | Details on key calculation                     |
 | ----------------------- | ---------------------------------------------- |
