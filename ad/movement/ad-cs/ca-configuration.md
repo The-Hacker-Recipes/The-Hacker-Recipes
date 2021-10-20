@@ -7,7 +7,9 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 When the flag is set on the CA, templates configured for authentication (i.e. EKUs like Client Authentication, PKINIT Client Authentication, Smart Card Logon, Any Purpose (`OID 2.5.29.37.0`), or no EKU (`SubCA`)) and allowing low-priv users to enroll can be abused to authenticate as any other user/machine/admin.
 
 {% hint style="success" %}
-The default **User** template checks all the template requirements stated above. If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins tend to enable that flag without knowing the security implications), and the **User** template is enabled (which is very often), any user can escalate to domain admin.
+The default **User** template checks all the template requirements stated above.&#x20;
+
+If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins tend to enable that flag without knowing the security implications), and the **User** template is enabled (which is very often), any user can escalate to domain admin.
 {% endhint %}
 
 ## Practice

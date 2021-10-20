@@ -2,7 +2,7 @@
 
 ## Theory
 
-In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) found a domain escalation vector based on web endpoints vulnerable to NTLM relay attacks. The escalation vector was dubbed [ESC8](https://posts.specterops.io/certified-pre-owned-d95910965cd2#48bd).
+In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) found a domain escalation vector based on web endpoints vulnerable to [NTLM relay attacks](../ntlm/relay.md). The escalation vector was dubbed [ESC8](https://posts.specterops.io/certified-pre-owned-d95910965cd2#48bd).
 
 > AD CS supports several HTTP-based enrollment methods via additional server roles that administrators can optionally install \[(The certificate enrollment web interface, Certificate Enrollment Service (CES), Network Device Enrollment Service (NDES)).]
 >
@@ -12,11 +12,15 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 >
 > ([specterops.io](https://posts.specterops.io/certified-pre-owned-d95910965cd2#5c3c))
 
-This attack, like all NTLM relay attacks, requires a victim account to authenticate to an attacker-controlled machine. An attacker can coerce authentication by many means, see MITM and coerced authentication coercion techniques. Once the incoming authentication is received by the attacker, it can be relayed to an AD CS web endpoint.
+This attack, like all [NTLM relay attacks](../ntlm/relay.md), requires a victim account to authenticate to an attacker-controlled machine. An attacker can coerce authentication by many means, see [MITM and coerced authentication coercion techniques](../mitm-and-coerced-authentications/). Once the incoming authentication is received by the attacker, it can be relayed to an AD CS web endpoint.
 
-Once the relayed session is obtained, the attacker poses as the relayed account and can request a client authentication certificate (e.g. using the default **User** or **Machine/Computer **templates, usually enabled).
+Once the relayed session is obtained, the attacker poses as the relayed account and can request a client authentication certificate. The certificate template used needs to be configured for authentication (i.e. EKUs like Client Authentication, PKINIT Client Authentication, Smart Card Logon, Any Purpose (`OID 2.5.29.37.0`), or no EKU (`SubCA`)) and allowing low-priv users to enroll can be abused to authenticate as any other user/machine/admin.
 
-This allows for lateral movement, and in some cases privilege escalation if the relayed user had powerful privileges (e.g., domain controllers or Exchange servers, domain admins etc.).
+{% hint style="success" %}
+The default **User** and **Machine/Computer **templates match those criteria and are very often enabled.
+{% endhint %}
+
+This allows for lateral movement, account persistence, and in some cases privilege escalation if the relayed user had powerful privileges (e.g., domain controllers or Exchange servers, domain admins etc.).
 
 ## Practice
 
