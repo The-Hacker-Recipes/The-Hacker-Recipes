@@ -30,7 +30,7 @@ ADIDNS zones can be remotely edited
 The state of WINS forward lookup can be enumerated with [dnstool.py](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py) (Python). The entry type 65281 (i.e. "WINS") will exist if WINS forward lookup is enabled.
 
 ```bash
-dnstool.py -u 'DOMAIN\USER' -p 'PASSWORD' --record '@' 'DomainController'
+dnstool.py -u 'DOMAIN\USER' -p 'PASSWORD' --record '@' --action 'query' 'DomainController'
 ```
 {% endtab %}
 
