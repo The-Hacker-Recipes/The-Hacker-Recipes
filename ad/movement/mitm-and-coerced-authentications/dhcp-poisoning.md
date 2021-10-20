@@ -16,7 +16,7 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 * sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds)
 * wait the lease to expire so that the poisoned client asks for a new lease
 * let the client obtain a legitimate lease from the real DHCP server, allowing the client to obtain the right network settings and have connectivity
-* the injected WPAD server address will stay until the client reboots (that's how Windows works :man_shrugging: )
+* the injected WPAD server address will stay until the client reboots (that's how Windows works :man\_shrugging: )
 * with the injected WPAD server address, the Windows client will try to obtain the wpad.dat file on the rogue WPAD. Responder will then require the client to authenticate.
 
 In order to start DHCP poisoning for WPAD spoofing with Responder, the `Responder.conf` file needs to be tweaked.
@@ -27,14 +27,14 @@ WPADScript = function FindProxyForURL(url, host){if ((host == "localhost") || sh
 
 The `ProxySrv` variable (in red in the following screenshot) needs to be replace by the rogue WPAD server (i.e. Responder IP address).
 
-![](../../../.gitbook/assets/responder_conf_dhcp_poisoning.png)
+![](../../../.gitbook/assets/responder\_conf\_dhcp\_poisoning.png)
 
 The attack can then be started with the `-d/--DHCP` argument.
 
 The `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes.
 
 ```bash
-responder --interface "eth0" --wredir --ProxyAuth --NBTNSdomain --verbose
+responder --interface "eth0" --DHCP --wredir --ProxyAuth --verbose
 ```
 
 The proxy auth NTLM authentication can either be [captured](../ntlm/capture.md) with Responder with the command line above or [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument. The `--wredir` and `--ProxyAuth` arguments need to be removed from Responder's command line.).
