@@ -30,27 +30,17 @@ ntlmrelayx -t "http://CA/certsrv/certfnsh.asp" --asp --template "Template name"
 
 The certificate template flag (i.e. `--template`) can either be left blank (default to **Machine** at the time of writing, October 20th 2012) or chosen among the certificate templates that fill the requirements.&#x20;
 
-
-
-{% tabs %}
-{% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate info about the CAs, including the "User Specified SAN" flag state.
+[Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
 
 ```python
-certipy 'domain.local'/'user':'password'@'domaincontroller' find | grep "User Specified SAN"
+certipy 'domain.local'/'user':'password'@'domaincontroller' find
 ```
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 
-The same "find" command can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
-
-```bash
-certipy 'domain.local'/'user':'password'@'domaincontroller' findhttps://github.com/SecureAuthCorp/impacket
-```
-{% endtab %}
-{% endtabs %}
+Once a&#x20;
 {% endtab %}
 
 {% tab title="Windows" %}
