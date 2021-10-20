@@ -1,4 +1,4 @@
-# Configuration data
+# 🛠️ CA configuration
 
 ## Theory
 

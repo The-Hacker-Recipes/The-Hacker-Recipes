@@ -1,4 +1,4 @@
-# 🛠️ Certificate templates
+# Certificate templates
 
 ## Theory
 
@@ -25,7 +25,7 @@ certipy 'domain.local'/'user':'password'@'domaincontroller' find -vulnerable
 ```
 
 {% hint style="info" %}
-By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The -scheme flag can be used to set whether to use LDAP or LDAPS.
+By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 {% endtab %}
 
@@ -33,7 +33,7 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used.
 
 ```batch
-Certify.exe 
+Certify.exe find /vulnerable
 ```
 {% endtab %}
 {% endtabs %}
