@@ -22,13 +22,17 @@ This allows for lateral movement, and in some cases privilege escalation if the 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
+**1 - Setting up the relay servers **:tools:****
+
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used to conduct the ESC8 escalation scenario.
 
 ```python
 ntlmrelayx -t "http://CA/certsrv/certfnsh.asp" --asp --template "Template name"
 ```
 
+{% hint style="info" %}
 The certificate template flag (i.e. `--template`) can either be left blank (default to **Machine** at the time of writing, October 20th 2012) or chosen among the certificate templates that fill the requirements.&#x20;
+{% endhint %}
 
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
 
@@ -40,7 +44,17 @@ certipy 'domain.local'/'user':'password'@'domaincontroller' find
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 
-Once a&#x20;
+**2 - Authentication coercion **:chains:****
+
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../mitm-and-coerced-authentications/pushsubscription-abuse.md)) to force accounts/machines to authenticate to the relay servers.
+
+{% content-ref url="../mitm-and-coerced-authentications/" %}
+[mitm-and-coerced-authentications](../mitm-and-coerced-authentications/)
+{% endcontent-ref %}
+
+**3 - Loot **:tada:
+
+Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -51,7 +65,7 @@ Certify.exe cas
 ```
 
 {% hint style="warning" %}
-If web endpoints are enabled, switch to UNIX because at the time of writing (October 20th, 2021), I don't know how to conduct the ESC8 abuse from Windows.
+If web endpoints are enabled, switch to UNIX because at the time of writing (October 20th, 2021), I don't know how to easily conduct the ESC8 abuse from Windows.
 {% endhint %}
 {% endtab %}
 {% endtabs %}
