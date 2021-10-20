@@ -10,7 +10,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 * Account persistence
 * Domain escalation
   * based on [misconfigured certificate templates](certificate-templates.md)
-  * based on [dangerous CA configuration](configuration-data.md)
+  * based on [dangerous CA configuration](ca-configuration.md)
   * related to [access control vulnerabilities](access-controls.md)
   * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
 * Domain persistence
@@ -75,8 +75,8 @@ The different domain escalation scenarios are detailed in the following parts.
 [certificate-templates.md](certificate-templates.md)
 {% endcontent-ref %}
 
-{% content-ref url="configuration-data.md" %}
-[configuration-data.md](configuration-data.md)
+{% content-ref url="ca-configuration.md" %}
+[ca-configuration.md](ca-configuration.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../persistence/access-controls.md" %}

