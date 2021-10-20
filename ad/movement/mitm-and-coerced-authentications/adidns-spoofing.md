@@ -13,15 +13,35 @@ ADIDNS zones can be remotely edited
 * with **dynamic updates **(a DNS specific protocol used by machine accounts to add and update their own DNS records). Users can create records if they don't exist, and they will have full control over it. By default, users that don't own a record will not be able to edit it, or to add another one with the same name, even if the type is different (A, AAAA, CNAME, MX, and so on).
 * by **using LDAP **to create dnsNode objects. While dynamic updates can't be used to inject a wildcard DNS record, LDAP can be (only if the record doesn't already exist, which is the case by default).
 
-### Wildcard records
+### Wildcard records & WINS
 
 > Wildcard records allow DNS to function in a very similar fashion to LLMNR/NBNS spoofing. Once you create a wildcard record, the DNS server will use the record to answer name requests that do not explicitly match records contained in the zone. ([source](https://blog.netspi.com/exploiting-adidns/#wildcard))
 
 :bulb: In some scenarios, adding a wildcard record the the proper ADIDNS zone won't work. This is usually due to the **WINS forward lookup** being enabled on that zone. WINS forward lookup makes the DNS server send a NBT-NS Query Request to a predefined WINS server when it receives an address record query for which it doesn't know the answer. In short, it serves the same purpose as the wildcard record. This feature needs to be disabled for the wildcard record to be used.
 
-![Domain Controller > DNS Manager > zone properties > WINS](../../../.gitbook/assets/WINS_lookup.png)
+![Domain Controller > DNS Manager > zone properties > WINS](../../../.gitbook/assets/WINS\_lookup.png)
 
 ## Practice
+
+### WINS forward lookup
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+The state of WINS forward lookup can be enumerated with [dnstool.py](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py) (Python). The entry type 65281 (i.e. "WINS") will exist if WINS forward lookup is enabled.
+
+```bash
+dnstool.py -u 'DOMAIN\USER' -p 'PASSWORD' --record '@' 'DomainController'
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+The state of WINS forward lookup can be enumerated with [dnstool.py](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py) (Python). The entry type 65281 (i.e. "WINS") will exist if WINS forward lookup is enabled.
+
+```powershell
+Get-DNSServerResourceRecord -ZoneName "DOMAIN.FQDN" -RRType "WINS"
+```
+{% endtab %}
+{% endtabs %}
 
 ### Manual record manipulation
 
@@ -90,12 +110,12 @@ This can be set with the `--legacy` or `--forest` option on dnstool.py, or with 
 
 ### Dynamic spoofing
 
-Using [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell), the following command will 
+Using [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell), the following command will&#x20;
 
 * operate [LLMNR, NBT-NS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md)
 * operate ADIDNS spoofing
   * `combo` looks at LLMNR/NBNS requests and adds a record to DNS if the same request is received from multiple systems
-  * `ns` injects an NS record and if needed, a target record. This is primarily for the GQBL bypass for wpad. 
+  * `ns` injects an NS record and if needed, a target record. This is primarily for the GQBL bypass for wpad.&#x20;
   * `wildcard` injects a wildcard record
 * set the threshold at which the combo ADIDNS spoofing mode will take effect
 * enable showing NTLM challenge/response captures from machine accounts
