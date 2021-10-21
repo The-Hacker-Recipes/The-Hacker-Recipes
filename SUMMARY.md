@@ -214,6 +214,7 @@
 * [Keylogging](physical/keylogging.md)
 * [HID injection](physical/hid-injection.md)
 * [Lockpicking](physical/lockpicking.md)
+* [networking](physical/networking.md)
 
 ## 🛠️ Intelligence gathering
 

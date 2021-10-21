@@ -43,7 +43,9 @@ Certify.exe find
 {% endtabs %}
 
 {% hint style="warning" %}
-If sensitive access entries are identified, creativity will be the best ally. Not much public research or tooling is availble at the time of writing (October 21st, 2021).
+If sensitive access entries are identified, creativity will be the best ally. Not much public research or tooling is available at the time of writing (October 21st, 2021).
+
+Currently, the best resource for abusing this is [https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates](https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates)
 {% endhint %}
 
 ### Certificate Authority (ESC7)
@@ -89,3 +91,5 @@ This can be enumerated and abused like regulard AD access control abuses. Once c
 ## Resources
 
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
+
+{% embed url="https://github.com/daem0nc0re/Abusing_Weak_ACL_on_Certificate_Templates" %}

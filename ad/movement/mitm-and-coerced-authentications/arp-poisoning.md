@@ -40,7 +40,7 @@ Since spoofing every address in a subnet can cause temporary but severe disrupti
 
 The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
 
-### Networking
+### Network filter
 
 In order to forward packets, the system has to be prepared accordingly. The first step is to make sure the system firewall can effectively forward packets. The easiest way of achieving this is to write an `ACCEPT` policy in the `FORWARD` chain.
 
@@ -80,7 +80,7 @@ Bettercap's logging can be controlled so that only essential information is show
 * Make sure the attacker and the victim client are on the same subnet, I don't know how to operate when they are not
 * tracert on the client to make sure packets are forwarded if possible
 * make sure it's not the DNS
-* make sure the iptables rules are ok and allow forwarding --> [networking](arp-poisoning.md#network-filter)
+* make sure the iptables rules are ok and allow forwarding ne
 * make sure to run bettercap in a privileged container with network host
 * options can be written in a `.cap` file and launched with bettercap with the following command and options`bettercap --iface $interface --caplet caplet.cap`
 
