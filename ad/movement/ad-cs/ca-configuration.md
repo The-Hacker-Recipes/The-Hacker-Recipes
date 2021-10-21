@@ -26,6 +26,10 @@ certipy 'domain.local'/'user':'password'@'domaincontroller' find | grep "User Sp
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 
+{% hint style="success" %}
+Certipy's `auto` mode can also be used to automatically abuse a misconfigured CA.
+{% endhint %}
+
 The same "find" command can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
 
 ```bash

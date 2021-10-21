@@ -93,7 +93,7 @@
   * [Certificate Services (AD-CS)](ad/movement/ad-cs/README.md)
     * [Certificate templates](ad/movement/ad-cs/certificate-templates.md)
     * [CA configuration](ad/movement/ad-cs/ca-configuration.md)
-    * [🛠️ Access controls](ad/movement/ad-cs/access-controls.md)
+    * [Access controls](ad/movement/ad-cs/access-controls.md)
     * [Web endpoints](ad/movement/ad-cs/web-endpoints.md)
   * [Exchange services](ad/movement/exchange-services/README.md)
     * [🛠️ PrivExchange](ad/movement/exchange-services/privexchange.md)
