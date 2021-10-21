@@ -21,7 +21,7 @@ There are multiple scenarios where ARP spoofing can be used to operate lateral m
 
 1. [NTLM capture](../ntlm/capture.md) and [NTLM relay](../ntlm/relay.md) : spoof an SMB server and reroute received SMB packets to internal capture or relay servers **(rerouting technique)**.
 2. [DNS spoofing](dns-spoofing.md) : spoof an internal DNS server, so that DNS queries can be answered with fake resolutions **(rerouting technique)**.
-3. [WSUS spoofing](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) : spoof the WSUS server and deliver evil configurations to Windows clients. This can either be done by intercepting all update request and running a fully functional WSUS server **(rerouting technique)** or by intercepting, forwarding and tampering packets between clients and the legitimate WSUS server **(proxy technique)**. 
+3. [WSUS spoofing](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) : spoof the WSUS server and deliver evil configurations to Windows clients. This can either be done by intercepting all update request and running a fully functional WSUS server **(rerouting technique)** or by intercepting, forwarding and tampering packets between clients and the legitimate WSUS server **(proxy technique)**.&#x20;
 4. [Dumping network secrets](../credentials/dumping/network-secrets.md) : reroute any traffic and dump secrets that were insecurely sent (i.e. FTP, HTTP,  SMTP, ...). In this scenario, both outgoing and incoming traffic should be captured. This implies the poisoning of both the client's and the server's ARP tables **(proxy technique)**.
 
 ### Network topology
@@ -29,8 +29,8 @@ There are multiple scenarios where ARP spoofing can be used to operate lateral m
 Besides the scenarios mentioned above, many network topologies exist and ARP poisoning attacks need to be carefully prepared based on that topology. Below are some common examples.
 
 1. **One segment**: the client, the server, and the attacker are on the same network segment. The ARP tables can be poisoned with the attacker spoofing either the client or the server.
-2. **Two segments**: the client and the attacker are on the same network segment but the server is on another one. For a hijacking attack, the client's ARP table can be poisoned with the attacker posing as the client's gateway. For a relaying attack, the gateway's ARP table also has to be poisoned with the attacker posing as the client. 
-3. **Three segments**: all three machines are on different network segments. For both hijacking and relaying attacks, I'm not sure what can be done... :man_shrugging: 
+2. **Two segments**: the client and the attacker are on the same network segment but the server is on another one. For a hijacking attack, the client's ARP table can be poisoned with the attacker posing as the client's gateway. For a relaying attack, the gateway's ARP table also has to be poisoned with the attacker posing as the client.&#x20;
+3. **Three segments**: all three machines are on different network segments. For both hijacking and relaying attacks, I'm not sure what can be done... :man\_shrugging:&#x20;
 
 ## Practice
 
@@ -62,7 +62,7 @@ Bettercap's [arp.spoof](https://www.bettercap.org/modules/ethernet/spoofers/arp.
 Bettercap also has the [any.proxy](https://www.bettercap.org/modules/ethernet/proxies/any.proxy/) module that has multiple options to allows multiple scenarios
 
 * `any.proxy.iface` allows to set the interface to redirect packets from
-* `any.proxy.protocol` can be set to `UDP` or `TCP` to specify on which transport protocol the packets to reroute will transit 
+* `any.proxy.protocol` can be set to `UDP` or `TCP` to specify on which transport protocol the packets to reroute will transit&#x20;
 * `any.proxy.src_address` refers to the destination address of the packets to reroute. This usally has to be set to the spoofed server IP address. Packets that were originally sent to that server will be rerouted and sent to another one. This option has to be set when doing the rerouting technique.This option can be blank. Bettercap will then reroute every packet received without filtering on the address. For instance, this is useful when doing a WSUS or DNS spoofing attack on multiple victims at the same time.
 * `any.proxy.src_port` refers to the destination port of the packets to reroute. This usally has to be set to the spoofed service port. Packets that were originally sent to that server will be rerouted and sent to another one. This option has to be set when doing the rerouting technique.
 * `any.proxy.dst_address` refers to the IP address the matched packets are to be sent to. For instance, when doing WSUS or DNS spoofing attacks in a rerouting technique mode, this option has to be set to the IP address of the attacker's server.
@@ -80,7 +80,7 @@ Bettercap's logging can be controlled so that only essential information is show
 * Make sure the attacker and the victim client are on the same subnet, I don't know how to operate when they are not
 * tracert on the client to make sure packets are forwarded if possible
 * make sure it's not the DNS
-* make sure the iptables rules are ok and allow forwarding
+* make sure the iptables rules are ok and allow forwarding iptables —policy FORWARD ACCEPT
 * make sure to run bettercap in a privileged container with network host
 * options can be written in a `.cap` file and launched with bettercap with the following command and options`bettercap --iface $interface --caplet caplet.cap`
 
