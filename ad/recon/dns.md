@@ -1,6 +1,6 @@
 # DNS
 
-AD-DS (Active Directory Domain Services) rely on DNS SRV RR (service location resource records). Those records can be queried to find the location of some servers: the global catalog, LDAP servers, the Kerberos KDC and so on. 
+AD-DS (Active Directory Domain Services) rely on DNS SRV RR (service location resource records). Those records can be queried to find the location of some servers: the global catalog, LDAP servers, the Kerberos KDC and so on.&#x20;
 
 {% tabs %}
 {% tab title="dnsutils" %}
@@ -34,7 +34,7 @@ nmap --script dns-srv-enum --script-args dns-srv-enum.domain=$FQDN_DOMAIN
 {% endtab %}
 {% endtabs %}
 
-In order to function properly, the tools need to know the domain name and which nameservers to query. That information is usually [sent through DHCP offers](dhcp.md) and stored in the `/etc/resolv.conf` file in UNIX-like systems. 
+In order to function properly, the tools need to know the domain name and which nameservers to query. That information is usually [sent through DHCP offers](dhcp.md) and stored in the `/etc/resolv.conf` or `/run/systemd/resolve/resolv.conf` file in UNIX-like systems.&#x20;
 
 If needed, the nameservers may be found with a port scan on the network by looking for DNS ports 53/TCP and 53/UDP.
 

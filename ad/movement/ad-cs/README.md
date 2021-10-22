@@ -92,3 +92,7 @@ The different domain escalation scenarios are detailed in the following parts.
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
 
 {% embed url="https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment" %}
+
+{% embed url="https://http418infosec.com/ad-cs-what-can-be-misconfigured" %}
+
+{% embed url="https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks" %}

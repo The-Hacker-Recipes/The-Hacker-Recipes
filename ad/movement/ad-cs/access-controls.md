@@ -43,9 +43,12 @@ Certify.exe find
 {% endtabs %}
 
 {% hint style="warning" %}
-If sensitive access entries are identified, creativity will be the best ally. Not much public research or tooling is available at the time of writing (October 21st, 2021).
+If sensitive access entries are identified, creativity will be the best ally. Not much public tooling is available at the time of writing (October 21st, 2021).
 
-Currently, the best resource for abusing this is [https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates](https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates)
+Currently, the best resources for manually abusing this are&#x20;
+
+* [Abusing weak ACL on Certificate Templates (by daemon0cc0re)](https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates)
+* [AD-CS The Certified Pre Owned Attacks (by HTTP418)](https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks#esc4)
 {% endhint %}
 
 ### Certificate Authority (ESC7)
@@ -61,10 +64,6 @@ certipy 'domain.local'/'user':'password'@'domaincontroller' find
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
-
-{% hint style="warning" %}
-If sensitive rights are identified, switch to Windows because at the time of writing (October 21st, 2021), I don't know how to easily conduct the ESC7 abuse from UNIX.
-{% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -73,16 +72,22 @@ From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) t
 ```batch
 Certify.exe cas
 ```
-
-{% hint style="warning" %}
-If sensitive rights are identified, follow the ~~white rabbit~~ [whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf) for practical exploitation.
-{% endhint %}
 {% endtab %}
 {% endtabs %}
 
+{% hint style="warning" %}
+If sensitive rights are identified, creativity will be the best ally. Not much public tooling is available at the time of writing (October 21st, 2021).
+
+Currently, the best resources for manually abusing this are&#x20;
+
+* [the whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf) (PDF)
+* [Abusing weak ACL on Certificate Templates (by daemon0cc0re)](https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates)
+* [AD-CS The Certified Pre Owned Attacks (by HTTP418)](https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks#esc4)
+{% endhint %}
+
 ### Other objects (ESC5)
 
-This can be enumerated and abused like regulard AD access control abuses. Once control over an AD-CS-related is gained, creativity will be the attacker's best ally.
+This can be enumerated and abused like regular AD access control abuses. Once control over an AD-CS-related is gained, creativity will be the attacker's best ally.
 
 {% content-ref url="../access-controls/" %}
 [access-controls](../access-controls/)
