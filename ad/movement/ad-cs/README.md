@@ -79,8 +79,8 @@ The different domain escalation scenarios are detailed in the following parts.
 [ca-configuration.md](ca-configuration.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../persistence/access-controls.md" %}
-[access-controls.md](../../persistence/access-controls.md)
+{% content-ref url="access-controls.md" %}
+[access-controls.md](access-controls.md)
 {% endcontent-ref %}
 
 {% content-ref url="web-endpoints.md" %}
