@@ -12,7 +12,7 @@ Cracking is an operation that can be carried out through different types of atta
 
 * **Brute-force**: every possibility for a given character set and a given length (i.e. `aaa`, `aab`, `aac`, ...) is hashed and compared against the target hash.
 * **Dictionary**: every word of a given list (a.k.a. dictionary) is hashed and compared against the target hash.
-* **Rainbow tables**: the hash is looked for in a pre-computed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff) that allows cracking hashes faster, but costing a greater amount of memory than traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted (i.e. hashed with an additional random value as prefix/suffix, making the pre-computed table irrelevant)
+* **Rainbow tables**: the hash is looked for in a pre-computed table. It is a [time-memory trade-off](https://en.wikipedia.org/wiki/Space%E2%80%93time\_tradeoff) that allows cracking hashes faster, but costing a greater amount of memory than traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted (i.e. hashed with an additional random value as prefix/suffix, making the pre-computed table irrelevant)
 
 There are many other and more complex types of attacks (incremental, mask, rules, hybrid types, ...) but the major/core ones are the three above.
 
@@ -59,7 +59,7 @@ _**Nota bene**: the new passwords are added to dictionnary caches that will be t
 Hashcat can also be used in a hybrid mode by combining a dictionary attack with rules that will operate transformations to the words of the list.
 
 * **Great wordlists**: [weakpass](https://weakpass.com), [packetstorm](https://packetstormsecurity.com/Crackers/wordlists/)
-* **Great rules**: [pantagrule](https://github.com/rarecoil/pantagrule), [OneRuleToRuleThemAll](https://notsosecure.com/one-rule-to-rule-them-all/) 
+* **Great rules**: [pantagrule](https://github.com/rarecoil/pantagrule), [OneRuleToRuleThemAll](https://notsosecure.com/one-rule-to-rule-them-all/)&#x20;
 
 ```bash
 hashcat --loopback --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file
@@ -124,7 +124,7 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 * Google offers services like [Colab](https://colab.research.google.com) and [Cloud Shell](https://console.cloud.google.com/home/dashboard?cloudshell=true) that can be used for "cloud cracking". There are projects like [penglab](https://github.com/mxrch/penglab), [google-colab-hashcat](https://github.com/ShutdownRepo/google-colab-hashcat) and [cloudtopolis](https://github.com/JoelGMSec/Cloudtopolis) that can help testers to setup a cracking session on such resources
 * Other solutions, cloud-based or not, can be used to improve cracking speed: [setting up a rig](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig) for instance.
 * LM and NTLM ChallengeResponses can be cracked really fast (and for free depending on the hash) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables ([here's how to capture those hashes](../ntlm/capture.md#practice)).
-* Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.exe.md) to create a custom wordlist for a dictionary attack
+* Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.md) to create a custom wordlist for a dictionary attack
 {% endhint %}
 
 {% embed url="https://hashcat.net/wiki/doku.php?id=example_hashes" %}

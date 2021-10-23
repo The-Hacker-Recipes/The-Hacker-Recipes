@@ -38,8 +38,8 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 * [ ] Caching of domain users is limited on workstations and avoided on servers to prevent [credential dumping](credentials/dumping/) of LSA secrets from registry.
 * [ ] [Group Policy Preferences Passwords](credentials/dumping/group-policies-preferences.md) are not used.
-* [ ] LSA protection are enabled to prevent [LSASS dumping](credentials/dumping/lsass.exe.md).
-* [ ] Network shares readable by all domain users don't contain sensitive data like passwords or certificates limiting [credential dumping](credentials/dumping/passwords-in-files.md).
+* [ ] LSA protection are enabled to prevent [LSASS dumping](credentials/dumping/lsass.md).
+* [ ] Network shares readable by all domain users don't contain sensitive data like passwords or certificates limiting [credential dumping](credentials/dumping/network-shares.md).
 
 ### Domain-level configuration and best-practices
 
@@ -57,7 +57,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md#wildcard-records) attacks. Preferably, this is a `TXT` record.
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.
 * [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) attacks.
-* [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-secrets.md).&#x20;
+* [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-protocols.md).&#x20;
 * [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress within the network.
 
 

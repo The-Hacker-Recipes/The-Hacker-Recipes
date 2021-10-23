@@ -22,7 +22,7 @@ There are multiple scenarios where ARP spoofing can be used to operate lateral m
 1. [NTLM capture](../ntlm/capture.md) and [NTLM relay](../ntlm/relay.md) : spoof an SMB server and reroute received SMB packets to internal capture or relay servers **(rerouting technique)**.
 2. [DNS spoofing](dns-spoofing.md) : spoof an internal DNS server, so that DNS queries can be answered with fake resolutions **(rerouting technique)**.
 3. [WSUS spoofing](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) : spoof the WSUS server and deliver evil configurations to Windows clients. This can either be done by intercepting all update request and running a fully functional WSUS server **(rerouting technique)** or by intercepting, forwarding and tampering packets between clients and the legitimate WSUS server **(proxy technique)**.&#x20;
-4. [Dumping network secrets](../credentials/dumping/network-secrets.md) : reroute any traffic and dump secrets that were insecurely sent (i.e. FTP, HTTP,  SMTP, ...). In this scenario, both outgoing and incoming traffic should be captured. This implies the poisoning of both the client's and the server's ARP tables **(proxy technique)**.
+4. [Dumping network secrets](../credentials/dumping/network-protocols.md) : reroute any traffic and dump secrets that were insecurely sent (i.e. FTP, HTTP,  SMTP, ...). In this scenario, both outgoing and incoming traffic should be captured. This implies the poisoning of both the client's and the server's ARP tables **(proxy technique)**.
 
 ### Network topology
 
@@ -40,7 +40,7 @@ Since spoofing every address in a subnet can cause temporary but severe disrupti
 
 The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
 
-### Network filter
+### Networking
 
 In order to forward packets, the system has to be prepared accordingly. The first step is to make sure the system firewall can effectively forward packets. The easiest way of achieving this is to write an `ACCEPT` policy in the `FORWARD` chain.
 
@@ -80,13 +80,13 @@ Bettercap's logging can be controlled so that only essential information is show
 * Make sure the attacker and the victim client are on the same subnet, I don't know how to operate when they are not
 * tracert on the client to make sure packets are forwarded if possible
 * make sure it's not the DNS
-* make sure the iptables rules are ok and allow forwarding ne
+* make sure the iptables rules are ok and allow forwarding --> [networking](arp-poisoning.md#network-filter)
 * make sure to run bettercap in a privileged container with network host
 * options can be written in a `.cap` file and launched with bettercap with the following command and options`bettercap --iface $interface --caplet caplet.cap`
 
 ## Scenarios examples
 
-Below are examples or targetted ARP poisoning attacks where the attacker wants to hijack packets aimed at a specific server (SMB, DNS, WSUS, ...), to answer with evil responses. The "dumping network secrets" scenario is the one attackers use to [dump credentials on the network](../credentials/dumping/network-secrets.md) (usually in order to find an initial foothold).
+Below are examples or targetted ARP poisoning attacks where the attacker wants to hijack packets aimed at a specific server (SMB, DNS, WSUS, ...), to answer with evil responses. The "dumping network secrets" scenario is the one attackers use to [dump credentials on the network](../credentials/dumping/network-protocols.md) (usually in order to find an initial foothold).
 
 {% tabs %}
 {% tab title="SMB spoofing" %}

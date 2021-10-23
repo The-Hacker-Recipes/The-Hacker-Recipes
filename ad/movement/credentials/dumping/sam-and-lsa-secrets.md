@@ -45,7 +45,7 @@ When Windows is not running, the hives are not mounted and they can be copied ju
 ```
 
 {% hint style="info" %}
-Hives files can also be exfiltrated from live systems using [Volume Shadow Copy](ntds.dit.md#volume-shadow-copy-vssadmin).
+Hives files can also be exfiltrated from live systems using [Volume Shadow Copy](ntds.md#volume-shadow-copy-vssadmin).
 {% endhint %}
 
 ### Secrets dump
