@@ -26,7 +26,7 @@ On a side note, a technique called [AnySPN or "service class modification"](../p
 {% tab title="UNIX-like" %}
 **1 - Edit the target's security descriptor (ACE abuse) **:pencil2:** **
 
-The [rbcd.py](https://github.com/ShutdownRepo/impacket/blob/rbcd/examples/rbcd.py) script (Python) _(_[_Pull Request pending_](https://github.com/SecureAuthCorp/impacket/pull/1108)_ at the time of writing - 29th Sept. 2021)_ can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
+[Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) _c_an be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
 ```bash
 # Read the security descriptor

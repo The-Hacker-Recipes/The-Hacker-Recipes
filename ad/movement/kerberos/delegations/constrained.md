@@ -6,13 +6,13 @@ If a service account, configured with constrained delegation to another service,
 
 Constrained delegation can be configured with or without protocol transition. Abuse methodology differs for each scenario. The paths differ but the result is the same: a Service Ticket to authenticate on a target service on behalf of a user.
 
-Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service. 
+Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service.&#x20;
 
 {% hint style="success" %}
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-constrained\(1\).png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-constrained\(1\).png)
 
 ## Practice
 
@@ -56,7 +56,7 @@ If a service is configured with constrained delegation **without protocol transi
 
 This means the service cannot, by itself, obtain a ticket for a user to itself (i.e. what S4U2Self is used for). There are two known ways attackers can use to bypass this and obtain a forwardable ticket, on behalf of a user, to the requesting service (i.e. what S4U2Self would be used for):
 
-1.  By operating an RBCD attack on the service.
+1. &#x20;By operating an RBCD attack on the service.
 2. By forcing or waiting for a user to authenticate to the service while a "Kerberos listener" is running.
 
 While the "ticket capture" way would theoretically work, the RBCD approach is preferred since it doesn't require control over the service's SPN's host (needed to start a Kerberos listener). Consequently, only the RBCD approach is described here at the moment.
@@ -86,8 +86,6 @@ Once the ticket is obtained, it can be used in a S4U2Proxy request, made by **se
 {% tabs %}
 {% tab title="UNIX-like" %}
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) script can be used for that purpose.
-
-_(At the time of writing (11th of October, 2021) the feature needed for this to work is in a _[_pending Pull Request_](https://github.com/SecureAuthCorp/impacket/pull/1183)_.)_
 
 ```bash
 getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "administrator.ccache" "domain/serviceA:password"
