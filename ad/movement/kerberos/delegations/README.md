@@ -28,7 +28,7 @@ Kerberos delegations can be abused by attackers to obtain valuable assets and so
 *   **Service for User to Proxy (S4U2Proxy)**: allows a service to obtain a Service Ticket on behalf of a user to a different service. For this extension to work properly, the service needs to supply a Service Ticket as "additional-ticket" (i.e. used as an evidence that the service using S4U2Proxy has the authority to do it on behalf of a user). For S4U2Proxy to work, the ST used as "additional-ticket" must be:
 
     * either a forwardable ticket
-    * or a ticket with it's PA-PAC-OPTIONS padata type having the resource-based constrained delegation bit set
+    * or a ticket with it's PA-PAC-OPTIONS padata type having the resource-based constrained delegation bit set (n.b. this only applies if the resource-based constrained delegation is actually possible and authorized in the proper AD objects attributes).
 
     S4U2Proxy always results in a forwardable ST, even when the ticket used as evidence wasn't forwardable.
 
@@ -76,19 +76,19 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 [unconstrained.md](unconstrained.md)
 {% endcontent-ref %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-unconstrained.drawio.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
 
 {% content-ref url="constrained.md" %}
 [constrained.md](constrained.md)
 {% endcontent-ref %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-constrained\(1\).png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-constrained\(1\).png)
 
 {% content-ref url="rbcd.md" %}
 [rbcd.md](rbcd.md)
 {% endcontent-ref %}
 
-![](../../../../.gitbook/assets/Kerberos_delegations-rbcd.drawio.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.drawio.png)
 
 ## Resources
 
