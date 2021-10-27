@@ -66,6 +66,7 @@
     * [Pass the ticket](ad/movement/kerberos/ptt.md)
     * [Pass the cache](ad/movement/kerberos/ptc.md)
     * [Forged tickets](ad/movement/kerberos/forged-tickets.md)
+    * [ASREQroast](ad/movement/kerberos/asreqroast.md)
     * [ASREProast](ad/movement/kerberos/asreproast.md)
     * [Kerberoast](ad/movement/kerberos/kerberoast.md)
     * [Delegations](ad/movement/kerberos/delegations/README.md)

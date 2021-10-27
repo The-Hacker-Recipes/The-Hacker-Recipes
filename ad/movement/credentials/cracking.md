@@ -37,6 +37,7 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | [NTLMv2 response](../ntlm/capture.md)                                | 5600                                                                                 |
 | [(DCC1) Domain Cached Credentials](dumping/sam-and-lsa-secrets.md)   | 1100                                                                                 |
 | [(DCC2) Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100                                                                                 |
+| [ASREQroast](../kerberos/asreqroast.md)                              | 7500                                                                                 |
 | [ASREProast](../kerberos/asreproast.md)                              | 18200                                                                                |
 | [Kerberoast](../kerberos/kerberoast.md)                              | 13100                                                                                |
 
