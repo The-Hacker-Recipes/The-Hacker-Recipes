@@ -2,10 +2,10 @@
 
 ## Theory
 
-If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor of another object (e.g. the `GenericWrite` ACE, see [Abusing ACLs](../../access-controls/)), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
+If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object (e.g. the `GenericWrite` ACE, see [Abusing ACLs](../../access-controls/)), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
 {% hint style="success" %}
-Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor. Hence allowing RBCD attacks on relayed machine accounts authentications.
+Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute, hence allowing RBCD attacks on relayed machine accounts authentications.
 {% endhint %}
 
 For this attack to work, the attacker needs to populate the target attribute with an account having a `ServicePrincipalName` set (needed for Kerberos delegation operations). The usual way to conduct these attacks is to create a computer account, which comes with an SPN set. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts. While this "computer account creation + RBCD attack" is the most common exploitation path, doing so with a user account (having at least one SPN) is perfectly feasible.
@@ -20,19 +20,23 @@ On a side note, a technique called [AnySPN or "service class modification"](../p
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.drawio.png)
 
+{% hint style="info" %}
+The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Server 2012 implying that RBCD only works when the Domain Functional Level (DFL) is Windows Server 2012 or higher.
+{% endhint %}
+
 ## Practice
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-**1 - Edit the target's security descriptor (ACE abuse) **:pencil2:** **
+**1 - Edit the target's "rbcd" attribute (ACE abuse) **:pencil2:** **
 
 [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) _c_an be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
 ```bash
-# Read the security descriptor
+# Read the attribute
 rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action read 'DOMAIN'/'POWERFULUSER':'PASSWORD'
 
-# Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity SD
+# Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity
 rbcd.py -delegate-from 'accountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action write 'DOMAIN'/'POWERFULUSER':'PASSWORD'
 ```
 
@@ -42,7 +46,7 @@ Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blo
 
 **2 - Obtain a ticket (delegation operation) **:ticket:** **
 
-Once the security descriptor has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can then perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated but it can be any user in the environment).
+Once the attribute has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can then perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated but it can be any user in the environment).
 
 ```bash
 getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'

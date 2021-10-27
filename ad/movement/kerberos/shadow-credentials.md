@@ -14,9 +14,13 @@ There are multiple scenarios where an attacker can have control over an account 
 
 In order to exploit that technique, the attacker needs to:
 
-1. be in a domain with at least one Domain Controller running Windows Server 2016 or above
+1. be in a domain with a Domain Functionnal Level of Windows Server 2016 or above (or at least one Domain Controller running Windows Server 2016 or above). _At the time of writing, October 27th 2021, researchers still try fo figured which requirement is true: DFL>=2016 or DC>=2016._&#x20;
 2. be in a domain where the Domain Controller(s) has its own key pair (for the session key exchange) (e.g. happens when AD CS is enabled or when a certificate authority (CA) is in place).
 3. have control over an account that can edit the target object's `msDs-KeyCredentialLink` attribute.
+
+{% hint style="info" %}
+The `msDS-KeyCredentialLink` feature was introduced with Windows Server 2016.
+{% endhint %}
 
 If those per-requisites are met, an attacker can
 

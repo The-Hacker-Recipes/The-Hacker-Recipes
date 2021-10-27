@@ -1,6 +1,6 @@
 # LDAP
 
-A lot of information on an AD domain can be obtained through LDAP. Most of the information can only be obtained with an authenticated bind but metadata \(naming contexts, dns server name, domain functional level\) can be obtainable anonymously, even with anonymous binding disabled.
+A lot of information on an AD domain can be obtained through LDAP. Most of the information can only be obtained with an authenticated bind but metadata (naming contexts, DNS server name, Domain Functional Level (DFL)) can be obtainable anonymously, even with anonymous binding disabled.
 
 {% tabs %}
 {% tab title="ldapsearch-ad" %}
@@ -12,7 +12,7 @@ ldapsearch-ad --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --pa
 {% endtab %}
 
 {% tab title="windapsearch" %}
-The windapsearch script \([Go](https://github.com/ropnop/go-windapsearch) \(preferred\) or [Python](https://github.com/ropnop/windapsearch)\) can be used to enumerate basic but useful information.
+The windapsearch script ([Go](https://github.com/ropnop/go-windapsearch) (preferred) or [Python](https://github.com/ropnop/windapsearch)) can be used to enumerate basic but useful information.
 
 ```bash
 # enumerate users (authenticated bind)
@@ -36,15 +36,13 @@ ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump
 {% endtabs %}
 
 {% hint style="info" %}
-LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/asreproast.md) \(since this attack needs no authentication\).
+LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/asreproast.md) (since this attack needs no authentication).
 {% endhint %}
 
 {% hint style="success" %}
 **Automation and scripting**
 
-* A more advanced LDAP enumeration can be carried out with BloodHound \(see [this](bloodhound.md)\).
-* The enum4linux tool can also be used, among other things, for LDAP recon \(see [this page](enum4linux.md)\).
+* A more advanced LDAP enumeration can be carried out with BloodHound (see [this](bloodhound.md)).
+* The enum4linux tool can also be used, among other things, for LDAP recon (see [this page](enum4linux.md)).
 {% endhint %}
-
-
 
