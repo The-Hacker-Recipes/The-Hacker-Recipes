@@ -12,7 +12,7 @@ Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket]
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos\_delegations-constrained\(1\).png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-constrained.png)
 
 ## Practice
 
