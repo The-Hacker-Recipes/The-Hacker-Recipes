@@ -179,7 +179,7 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 {% endtab %}
 {% endtabs %}
 
-### Tips & tricks
+### Tips & tricks :bulb:
 
 The ntlmrelayx tool offers features making it a very valuable asset when pentesting an Active Directory domain:
 
@@ -192,8 +192,10 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 * It has the ability to relay a single connection (SMB only for now) to multiple targets, see below
 
 {% hint style="info" %}
-Thanks to [the "multi-relay" feature](https://www.secureauth.com/blog/what-old-new-again-relay-attack), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture a response (i.e. LM or NTLM hash) with a custom challenge on an interface/machine, while relaying on another.
+Thanks to [the "multi-relay" feature](https://github.com/SecureAuthCorp/impacket/pull/767), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture an NTLM response with a custom challenge on an interface/machine, while relaying on another.
 {% endhint %}
+
+![](../../../.gitbook/assets/capture\_and\_relay.png)
 
 The targets file used with the `-tf` option can contain the following
 
@@ -201,6 +203,10 @@ The targets file used with the `-tf` option can contain the following
 # User filter for SMB only (for now)
 smb://DOMAIN\User@192.168.1.101
 smb://User@192.168.1.101
+
+# Custom ports and paths can be specified
+smb://target:port
+http://target:port/somepath
 
 # Domain name can be used instead of the IP address
 ldaps://someserver.domain.lan
