@@ -1,6 +1,6 @@
 # Kerberos
 
-![](<../../../.gitbook/assets/Pass the things.png>)
+![](<../../../.gitbook/assets/Pass the things.drawio(1).png>)
 
 ## Tickets
 

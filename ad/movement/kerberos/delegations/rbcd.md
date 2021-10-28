@@ -18,7 +18,7 @@ In the end, an RBCD abuse results in a Service Ticket to authenticate on a targe
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.drawio.png)
 
 {% hint style="info" %}
 The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Server 2012 implying that RBCD only works when the Domain Functional Level (DFL) is Windows Server 2012 or higher.

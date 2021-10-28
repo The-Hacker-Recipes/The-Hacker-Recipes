@@ -51,7 +51,7 @@
     * [MS-EFSR abuse (PetitPotam)](ad/movement/mitm-and-coerced-authentications/ms-efsr.md)
     * [MS-RPRN abuse (PrinterBug)](ad/movement/mitm-and-coerced-authentications/ms-rprn.md)
     * [PushSubscription abuse](ad/movement/mitm-and-coerced-authentications/pushsubscription-abuse.md)
-    * [🛠️ WebDAV](ad/movement/mitm-and-coerced-authentications/webdav.md)
+    * [WebClient abuse (WebDAV)](ad/movement/mitm-and-coerced-authentications/webclient.md)
     * [🛠️ NBT Name Overwrite](ad/movement/mitm-and-coerced-authentications/nbt-name-overwrite.md)
     * [🛠️ ICMP Redirect](ad/movement/mitm-and-coerced-authentications/icmp-redirect.md)
     * [🛠️ Living off the land](ad/movement/mitm-and-coerced-authentications/living-off-the-land.md)
