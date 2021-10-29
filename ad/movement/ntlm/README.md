@@ -1,6 +1,6 @@
 # NTLM
 
-![](<../../../.gitbook/assets/Pass the things.drawio(1).png>)
+![](<../../../.gitbook/assets/Pass the things.png>)
 
 ## Theory
 

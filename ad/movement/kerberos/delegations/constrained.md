@@ -12,7 +12,7 @@ Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket]
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos\_delegations-constrained\(1\).png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-constrained.png)
 
 ## Practice
 
@@ -21,6 +21,10 @@ On a side note, a technique called [AnySPN or "service class modification"](../p
 ![Domain Controller > Active Directory Users and Computers > delegation properties of a user](<../../../../.gitbook/assets/kcd with protocol transition.png>)
 
 If a service is configured with constrained delegation **with protocol transition**, then it can obtain a service ticket on behalf of a user by combining S4U2Self and S4U2Proxy requests, as long as the user is not sensitive for delegation, or a member of the "Protected Users" group. The service ticket can then be used with [pass-the-ticket](../ptt.md). This process is similar to [resource-based contrained delegation](rbcd.md) exploitation.
+
+{% content-ref url="rbcd.md" %}
+[rbcd.md](rbcd.md)
+{% endcontent-ref %}
 
 {% tabs %}
 {% tab title="UNIX-like" %}
