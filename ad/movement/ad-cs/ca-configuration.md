@@ -16,7 +16,7 @@ If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate info about the CAs, including the "User Specified SAN" flag state.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate info about the CAs, including the "**User Specified SAN**" flag state which is an alias to the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag.
 
 ```python
 certipy 'domain.local'/'user':'password'@'domaincontroller' find | grep "User Specified SAN"
@@ -46,7 +46,7 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate info about the CAs, including the "UserSpecifiedSAN" flag state.
+From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate info about the CAs, including the "**UserSpecifiedSAN**" flag state which refers to the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag.
 
 ```batch
 Certify.exe cas
