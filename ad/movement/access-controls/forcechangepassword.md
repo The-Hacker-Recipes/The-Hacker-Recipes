@@ -32,5 +32,7 @@ The attacker can change the password of the user. This can be achieved with [Set
 $NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
 Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 ```
+
+Mimikatz's `lsadump::setntlm` can also be used for that purpose.
 {% endtab %}
 {% endtabs %}
