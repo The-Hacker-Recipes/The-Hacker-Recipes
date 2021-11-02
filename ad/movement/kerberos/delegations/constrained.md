@@ -58,7 +58,9 @@ When attempting to exploit that technique, if the following error triggers, it m
 
 If a service is configured with constrained delegation **without protocol transition** (i.e. set with "Kerberos only"), then S4U2Self requests won't result in forwardable service tickets, hence failing at providing the requirement for S4U2Proxy to work.
 
-This means the service cannot, by itself, obtain a ticket for a user to itself (i.e. what S4U2Self is used for). There are two known ways attackers can use to bypass this and obtain a forwardable ticket, on behalf of a user, to the requesting service (i.e. what S4U2Self would be used for):
+This means the service cannot, by itself, obtain a forwardable ticket for a user to itself (i.e. what S4U2Self is used for). A service ticket will be obtained, but it won't be forwardable. And S4U2Proxy usually needs an forwardable ST to work.
+
+There are two known ways attackers can use to bypass this and obtain a forwardable ticket, on behalf of a user, to the requesting service (i.e. what S4U2Self would be used for):
 
 1. &#x20;By operating an RBCD attack on the service.
 2. By forcing or waiting for a user to authenticate to the service while a "Kerberos listener" is running.

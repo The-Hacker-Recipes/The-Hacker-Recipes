@@ -36,12 +36,40 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 While AD CS offers attackers a wide range of exploitation and persistence scenarios, this set of services is not always installed, and when it is, it is a requirement to identify its different parts in the domain.
 
+#### Cert Publishers
+
 An initial indicator is the "Cert Publishers" built-in group whose members usually are the servers where AD CS is installed (i.e. PKI/CA).
 
 * From UNIX-like systems: `rpc net group members "Cert Publishers" -U "DOMAIN"/"User"%"Password" -S "DomainController"`
 * From Windows systems: `net group "Cert Publishers" /domain`
 
+#### `pKIEnrollmentService` objects
+
 Alternatively, information like the PKI's CA and DNS names can be gathered through LDAP.
+
+{% tabs %}
+{% tab title="CrackMapExec" %}
+[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)'s [adcs](https://github.com/byt3bl33d3r/CrackMapExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
+
+```bash
+crackmapexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
+```
+{% endtab %}
+
+{% tab title="windapsearch" %}
+[windapsearch ](https://github.com/ropnop/windapsearch)Ccccc(Python) can be used to manually to the LDAP query.
+
+```bash
+windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base 'CN=Configuration,DC=domain,DC=local' --attrs dn,dnshostname --dc 'domaincontroller' -d 'domain.local' -u 'user' -p 'password'
+```
+{% endtab %}
+{% endtabs %}
+
+#### Attack paths
+
+{% hint style="info" %}
+[Certipy](https://github.com/ly4k/Certipy) (Python) and [Certify](https://github.com/GhostPack/Certify) (C#) can also identify the PKI enrollment services and potential attack paths.
+{% endhint %}
 
 {% tabs %}
 {% tab title="UNIX-like" %}
