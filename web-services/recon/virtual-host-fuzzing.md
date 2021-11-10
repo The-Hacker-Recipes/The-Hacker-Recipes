@@ -7,7 +7,7 @@ A web server can host multiple domain names (websites). This is called virtual h
 * **HTTP**: the use of the `Host` request header. The client uses the **\<host>** directive to connect to the domain name of the server. Optionally, it can use the **\<port>** directive to specify a TCP port number on which the server is listening.
 * **HTTPS**: the use of the Server Name Indication (SNI) extension with TLS. The client indicates the hostname it wants to connect to at the start of the handshake process.
 
-Virtual hosting can be [based on](https://en.wikipedia.org/wiki/Virtual_hosting#Name-based) a name, an IP, or a port.
+Virtual hosting can be [based on](https://en.wikipedia.org/wiki/Virtual\_hosting#Name-based) a name, an IP, or a port.
 
 ## Practice
 
@@ -16,8 +16,8 @@ Virtual hosting can be [based on](https://en.wikipedia.org/wiki/Virtual_hosting#
 Fuzzing with [ffuf](https://github.com/ffuf/ffuf).
 
 ```bash
-# Example with a subdomain FUZZ.$URL
-ffuf -w $wordlist -u $URL -H "Host: FUZZ.$URL"
+# Example with a subdomain FUZZ.$DOMAIN
+ffuf -w $wordlist -u $URL -H "Host: FUZZ.$DOMAIN"
 ```
 
 {% hint style="info" %}
@@ -32,7 +32,7 @@ gobuster vhost -u $URL -w $wordlist
 ```
 
 {% hint style="warning" %}
-This [blog post](https://erev0s.com/blog/gobuster-directory-dns-and-virtual-hosts-bruteforcing/) highlights the fact that, if a website is behind Cloudflare, results given by Gobuster could be wrong. 
+This [blog post](https://erev0s.com/blog/gobuster-directory-dns-and-virtual-hosts-bruteforcing/) highlights the fact that, if a website is behind Cloudflare, results given by Gobuster could be wrong.&#x20;
 {% endhint %}
 
 Finding domains with [Findomain](https://github.com/Findomain/Findomain).
