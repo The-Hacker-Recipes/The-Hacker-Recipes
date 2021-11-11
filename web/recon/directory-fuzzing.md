@@ -2,7 +2,7 @@
 
 ## Theory
 
-While Crawling allows testers to build the indexed architecture of website, this technique can't find directories and files that are not referenced. Directory fuzzing (a.k.a. directory bruteforcing) is a technique that can find some of those "hidden" paths. Dictionaries of common paths are used to request the web app for each path until exhaustion of the list.
+While Crawling allows testers to build the indexed architecture of website, this technique can't find directories and files that are not referenced. Directory fuzzing (a.k.a. directory bruteforcing) is a technique that can find some of those "hidden" paths. Dictionaries of common paths are used to request the web app for each path until exhaustion of the list. This technique relies on the attacker using a dictionnary/wordlist. A request is made for every line of the wordlist to differentiate pages that exist and pages that don't
 
 ## Practice
 
@@ -25,7 +25,7 @@ ffuf -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.txt" -u $URL/FUZZ
 Another great tool named [feroxbuster](https://github.com/epi052/feroxbuster) (Rust) can do really fast recursive content discovery. The tools mentioned above don't recurse in found directories.
 
 ```bash
-feroxbuster -H "User-Agent: PENTEST" -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.10.10/
+feroxbuster -H "User-Agent: PENTEST" -w "/path/to/wordlist.txt" -u http://192.168.10.10/
 ```
 
 In order to fuzz more accurately, there are many dictionaries adapted for many situations, most of which can be downloaded from SecLists. SecLists can be installed (`apt install seclists` or downloaded directly from [the GitHub repo](https://github.com/danielmiessler/SecLists)).

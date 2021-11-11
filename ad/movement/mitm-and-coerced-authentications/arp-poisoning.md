@@ -21,7 +21,7 @@ There are multiple scenarios where ARP spoofing can be used to operate lateral m
 
 1. [NTLM capture](../ntlm/capture.md) and [NTLM relay](../ntlm/relay.md) : spoof an SMB server and reroute received SMB packets to internal capture or relay servers **(rerouting technique)**.
 2. [DNS spoofing](dns-spoofing.md) : spoof an internal DNS server, so that DNS queries can be answered with fake resolutions **(rerouting technique)**.
-3. [WSUS spoofing](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md) : spoof the WSUS server and deliver evil configurations to Windows clients. This can either be done by intercepting all update request and running a fully functional WSUS server **(rerouting technique)** or by intercepting, forwarding and tampering packets between clients and the legitimate WSUS server **(proxy technique)**.&#x20;
+3. [WSUS spoofing](../../../sys/privilege-escalation/windows/wsus-attacks.md) : spoof the WSUS server and deliver evil configurations to Windows clients. This can either be done by intercepting all update request and running a fully functional WSUS server **(rerouting technique)** or by intercepting, forwarding and tampering packets between clients and the legitimate WSUS server **(proxy technique)**.&#x20;
 4. [Dumping network secrets](../credentials/dumping/network-protocols.md) : reroute any traffic and dump secrets that were insecurely sent (i.e. FTP, HTTP,  SMTP, ...). In this scenario, both outgoing and incoming traffic should be captured. This implies the poisoning of both the client's and the server's ARP tables **(proxy technique)**.
 
 ### Network topology
@@ -156,7 +156,7 @@ net.sniff on
 {% endtab %}
 
 {% tab title="WSUS spoofing" %}
-ARP poisoning for [WSUS spoofing ](../../../systems-and-services/privilege-escalation/windows/wsus-attacks.md)in a two-subnets layout (attacker + client in the same segment, legitimate WSUS server in another one). Packets from the client to the WSUS server need to be hijacked and sent to the attacker's evil WSUS server. In order to do so, the attacker must pose as the client's gateway, route all traffic to the real gateway except the packets destined to the WSUS server.
+ARP poisoning for [WSUS spoofing ](../../../sys/privilege-escalation/windows/wsus-attacks.md)in a two-subnets layout (attacker + client in the same segment, legitimate WSUS server in another one). Packets from the client to the WSUS server need to be hijacked and sent to the attacker's evil WSUS server. In order to do so, the attacker must pose as the client's gateway, route all traffic to the real gateway except the packets destined to the WSUS server.
 
 The evil WSUS server needs to be started before doing ARP poisoning. The [pywsus ](https://github.com/GoSecure/pywsus)(Python) utility can be used for that matter.
 
