@@ -117,7 +117,7 @@
 * [Recon](web/recon/README.md)
   * [HTTP headers](web/recon/http-banners.md)
   * [Comments and metadata](web/recon/comments-and-metadata.md)
-  * [🛠️ CMS](web/recon/cms.md)
+  * [Content Management System (CMS)](web/recon/cms.md)
   * [🛠️ Web technologies](web/recon/web-technologies.md)
   * [🛠️ WAF fingerprinting](web/recon/waf-fingerprinting.md)
   * [Site crawling](web/recon/site-crawling.md)

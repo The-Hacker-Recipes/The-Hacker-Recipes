@@ -1,58 +1,58 @@
-# 🛠️ CMS
+# Content Management System (CMS)
 
 ## Theory
 
-Content Management System \(CMS\) is a software widely used for websites creation and management. It allows its users to create and manage websites such as blogs, forums, online stores, etc. Due to it's wide use by "non-tech" users, a lot of vulnerabilities can be found on websites using a CMS.
+A Content Management System (CMS) is a type of software widely used for websites creation and management. It the allows its users to easily create and manage websites such as blogs, forums and online stores. Among web applications, the large usage of CMS makes those software a huge target.
+
+Here is a shortlist of the most common CMS: [WordPress](https://wordpress.com), [Joomla](https://www.joomla.org), [Shopify](https://www.shopify.com), [Drupal](https://www.drupal.org), [Magento](https://magento.com), [Typo3](https://typo3.org).
 
 ## Practice
 
-### Tools
+The use of a CMS on a web application is usually quite easy to spot with visual elements:
 
-CMS scan for vulnerabilities on **WordPress** with [WPScan](https://github.com/wpscanteam/wpscan).
+* Credits at the bottom or corner of pages
+* HTTP headers
+* Common files (e.g. `robots.txt`, `sitemap.xml`)
+* Comments and metadata (HTML, CSS, JavaScript)
 
-Simple scan:
+Automated scanning tools can also help identify which technologies are used, and if known vulnerabilities may be present. Tools vary depending on the CMS technology to audit.
 
-```bash
-wpscan -url $URL
-```
+* [WPScan](https://github.com/wpscanteam/wpscan) (Ruby) can be used for sites that use WordPress
+* [droopescan](https://github.com/SamJoan/droopescan) (Python) supports Drupal, SilverStripe and WordPress and partially supports Joomla and Moodle.
+* [Wappalyzer](https://www.wappalyzer.com) is a browser extension that can detect the use of certain software including CMS
+* [Whatcms.org](https://whatcms.org) can help answering the question "What CMS is this site using?" but needs the target website to be accessible from the Internet.
 
 {% tabs %}
-{% tab title="Enumerate users" %}
+{% tab title="WPScan" %}
+For web applications built with WordPress, [WPScan](https://github.com/wpscanteam/wpscan) (Ruby) can be used to enumerate information and potential vulnerabilities. Appart from bruteforce and enumeration operations, WPScan doesn't implement exploits.
+
 ```bash
-wpscan -url $URL -enumerate u
+# simple scan (no exploitation)
+wpscan --url $URL
+
+# enumerate users
+wpscan --url $URL --enumerate u
+
+# enumerate a range of users
+wpscan --url $URL --enumerate u1-100
+
+# bruteforce a user
+wpscan --url $URL --username $username --wordlist "/path/to/wordlist.txt"
+
+# enumerate and bruteforce users
+wpscan --url $URL --enumerate u --wordlist "/path/to/wordlist.txt"
 ```
 {% endtab %}
 
-{% tab title="Brute-force a single user" %}
-```bash
-wpscan -url $URL -wordlist wordlist.txt -username $username
-```
-{% endtab %}
+{% tab title="droopescan" %}
+For web applications built with Drupal, SilverStripe, WordPress, Joomla or Moodle, [droopescan](https://github.com/SamJoan/droopescan) (Python) can be used to enumerate information and potential vulnerabilities. Apart from bruteforce and enumeration operations, WPScan doesn't implement exploits.
 
-{% tab title="Brute-force all the users" %}
 ```bash
-wpscan -url www.example.com -e u -wordlist wordlist.txt
+# CMS identification
+droopescan scan -u $URL
+
+# Basic scan (known CMS)
+droopescan scan $cms_name -u $URL
 ```
 {% endtab %}
 {% endtabs %}
-
-CMS scan for vulnerabilities with [droopescan](https://github.com/droope/droopescan).
-
-Simple scan:
-
-```bash
-droopescan scan -u $URL
-```
-
-For known CMS:
-
-```bash
-droopescan scan $cms_name -u $URL
-```
-
-### Other tools
-
-**Browser extension**: [Wappalyzer](https://www.wappalyzer.com/) allows its user to identify technologies on websites \(including CMS\).  
-**Website**: [Whatcms.org](https://whatcms.org/) which helps in answering the question "What CMS Is This Site Using?" by entering an URL.  
-**Source code and robots.txt**: information about the CMS used can be written in these files.
-
