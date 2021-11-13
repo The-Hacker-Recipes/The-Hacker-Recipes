@@ -14,11 +14,11 @@ Attackers can remotely enumerate systems on which the WebClient is running, whic
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, this can be achieved with [webclientservicescanner](https://github.com/Hackndo/WebclientServiceScanner) (Python) or using [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
+From UNIX-like systems, this can be achieved with [webclientservicescanner](https://github.com/Hackndo/WebclientServiceScanner) (Python) or using [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python).
 
 ```bash
 webclientservicescanner 'domain.local'/'user':'password'@'machine'
-crackmapexec smb targets -u user -p password -M webdav
+crackmapexec smb 'TARGETS' -d 'domain' -u 'user' -p 'password' -M webdav
 ```
 {% endtab %}
 
@@ -52,7 +52,7 @@ Making a remote system start the WebClient service can be done with a [searchCon
 
 ### Abuse
 
-&#x20;Regular coercion techniques rely on the attacker forcing a remote system to authenticate to another one. The "other" system is usually an IP address, a domain or NetBIOS name. With WebClient abuse, the other system needs to be supplied in a WebDAV Connection String format.
+Regular coercion techniques rely on the attacker forcing a remote system to authenticate to another one. The "other" system is usually an IP address, a domain or NetBIOS name. With WebClient abuse, the other system needs to be supplied in a WebDAV Connection String format.
 
 The WebDAV Connection String format is: `\\SERVER@PORT\PATH\TO\DIR`.
 
