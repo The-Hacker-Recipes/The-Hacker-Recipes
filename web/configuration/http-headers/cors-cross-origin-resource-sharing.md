@@ -1,8 +1,8 @@
-# 🛠️ CORS (Cross-Origin Resource Sharing)
+# CORS (Cross-Origin Resource Sharing)
 
 ## Theory
 
-Sometimes browsers need to load resources from another origin other than their own. The Same-Origin Policy mechanism (SOP) restricts access to resources on other origins. 
+Sometimes browsers need to load resources from another origin other than their own. The Same-Origin Policy mechanism (SOP) restricts access to resources on other origins.&#x20;
 
 {% hint style="info" %}
 The same-origin is defined for two URLs that have the same protocol, port (if specified), and host.
@@ -16,7 +16,7 @@ Cross-Origin Resource Sharing (CORS) is a header-based mechanism. It improves se
 
 The exploitation will depend on the misconfiguration. The next image shows a road that can be followed:
 
-![](../../.gitbook/assets/CORS_exploitation.png)
+![](../../../.gitbook/assets/CORS\_exploitation.png)
 
 #### Case 1
 
@@ -28,10 +28,10 @@ Misconfiguration:
 The origins are verified through a regex match.\
 The misconfiguration types can be better understood with this table:
 
-![https://github.com/chenjj/CORScanner](../../.gitbook/assets/misconfiguration_cors.PNG)
+![https://github.com/chenjj/CORScanner](../../../.gitbook/assets/misconfiguration\_cors.PNG)
 
 {% hint style="warning" %}
-The configuration below is [impossible](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#requests_with_credentials):
+The configuration below is [impossible](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#requests\_with\_credentials):
 
 * `Access-Control-Allow-Credentials: true`
 * `Access-Control-Allow-Origin: *`
@@ -65,7 +65,7 @@ Misconfiguration:
 * `Access-Control-Allow-Origin` is dynamically generated
 * `Vary: Origin` is absent
 
-In this case, it is a little bit difficult to exploit CORS misconfigurations. Check [James Kettle](https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)'s explanation for more information. 
+In this case, it is a little bit difficult to exploit CORS misconfigurations. Check [James Kettle](https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)'s explanation for more information.&#x20;
 
 ## Practice
 

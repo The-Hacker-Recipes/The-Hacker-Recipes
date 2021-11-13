@@ -14,6 +14,7 @@ The use of a CMS on a web application is usually quite easy to spot with visual 
 * HTTP headers
 * Common files (e.g. `robots.txt`, `sitemap.xml`)
 * Comments and metadata (HTML, CSS, JavaScript)
+* Stack traces and verbose error messages
 
 Automated scanning tools can also help identify which technologies are used, and if known vulnerabilities may be present. Tools vary depending on the CMS technology to audit.
 

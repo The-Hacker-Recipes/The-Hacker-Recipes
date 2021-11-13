@@ -2,38 +2,36 @@
 
 ## Theory
 
-Once all the useful information are gathered, it's time to find possible vulnerabilities associated with the components we found.
+This step ends the reconnaissance phase. The previous steps were aimed at gaining knowledge about the attack surface
+
+* Web server
+* [Content Management System (CMS)](cms.md)
+* [Web Application Firewall (WAF)](waf-fingerprinting.md)
+* JavaScript Frameworks
+* and other technologies
+
+Known vulnerabilities may then be identified depending on these information.
 
 ## Practice
 
-### Tool
+Known vulnerabilities can be found from the following resources
 
-Searching exploits with [searchsploit](https://github.com/offensive-security/exploitdb).
-
-```bash
-searchsploit $component_name
-```
-
-Two interesting commands related to searchsploit:
+* [exploit-db.com](https://www.exploit-db.com): an online exploit database
+* [searchsploit](https://www.exploit-db.com/searchsploit) is a command-line utility that allows to do offline searches through the exploit-db
+* [CVE Details](https://www.cvedetails.com), [NVD NIST](https://nvd.nist.gov/vuln/search) and [MITRE](https://cve.mitre.org/cve/search\_cve\_list.html) are online CVE (Common Vulnerabilities and Exposures) searches
 
 ```bash
-# Check what is inside a payload
-searchsploit -x $payload_name.txt
+# search exploits for a technology
+searchsploit $technology
+
+# Read an exploit
+searchsploit -x $exploit_path
+
+# Copy an exploit to the current directory
+searchsploit -m $exploit_path
+
 # Update the searchsploit database
 searchsploit -u
 ```
 
-{% hint style="info" %}
-Searchsploit gets its database directly from [exploit-db](https://www.exploit-db.com/).
-{% endhint %}
-
-### Manual research
-
-**CVE lists**:
-
-* [CVE Details](https://www.cvedetails.com/)
-* [NVD NIST](https://nvd.nist.gov/vuln/search)
-* [MITRE](https://cve.mitre.org/cve/search_cve_list.html)
-
-When a vulnerability is found, one can research a Proof-Of-Concept \(POC\) on the internet and more precisely, on [GitHub](https://github.com/).
-
+When a vulnerability is found, one can research a Proof-Of-Concept (PoC) to try at exploiting the vulnerability. Most public PoCs can be found on [GitHub](https://github.com).

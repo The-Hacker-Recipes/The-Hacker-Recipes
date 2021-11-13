@@ -2,7 +2,7 @@
 
 ## Theory
 
-A web server can host multiple websites for multiple domain names (websites). In order to choose what website to show for what domain, many use what is called "virtual hosting". Virtual hosting can be [based on](https://en.wikipedia.org/wiki/Virtual\_hosting#Name-based) a name, an IP, or a port.&#x20;
+A web server can host multiple websites for multiple domain names (websites). In order to choose what website to show for what domain, many use what is called "virtual hosting". Virtual hosting can be based on a name, an IP, or a port ([read more](https://en.wikipedia.org/wiki/Virtual\_hosting#Name-based)).&#x20;
 
 Two main mechanisms can be used to access a website on a virtual host:
 
@@ -34,6 +34,10 @@ wfuzz -H "Host: FUZZ.something.com" --hc 404,403 -H "User-Agent: PENTEST" -c -z 
 ```bash
 ffuf -H "Host: FUZZ.$DOMAIN" -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.txt" -u $URL
 ```
+
+{% hint style="info" %}
+Virtual host fuzzing is not the only to find subdomains. There are others means to that end: see [subdomains enumeration](domains-enumeration.md).
+{% endhint %}
 
 ## Resources
 

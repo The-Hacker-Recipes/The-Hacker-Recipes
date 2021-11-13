@@ -2,42 +2,14 @@
 
 ## Theory
 
-WAF stands for Web Application Firewall. Its goal is to protect the website behind it by filtering/monitoring the traffic. Fingerprinting is a method used to gather information \(about any WAF in this context\).
+Many web applications stand behind a WAF (Web Application Firewall) that aim the protecting app from different types of attacks ([XSS](../attacks-on-inputs/xss-cross-site-scripting.md), [SQLi](../attacks-on-inputs/sql-injection.md), etc.) by monitoring and filtering requests. Identifying if a WAF is used, and if so what type it is, can help bypass known filters.
 
 ## Practice
 
-### Tools
-
-Detecting WAFs with [WAFW00F](https://github.com/EnableSecurity/wafw00f).
+This can be done with tools like [WAFW00F](https://github.com/EnableSecurity/wafw00f) (Python), [WhatWaf](https://github.com/Ekultek/WhatWaf) (Python) or [nmap](https://nmap.org) or sometimes by manually looking at cookies and HTTP response headers.
 
 ```bash
 wafw00f $URL
-```
-
-Detecting WAFs with [WhatWaf](https://github.com/Ekultek/WhatWaf).
-
-```bash
 whatwaf -u $URL
+nmap -p $PORT --script=http-waf-fingerprint,http-waf-detect $URL
 ```
-
-Detecting WAFs with [nmap](https://nmap.org/).
-
-```bash
-nmap -p 80,443 --script=http-waf-fingerprint $URL
-```
-
-{% hint style="info" %}
-Another script called `http-waf-detect`can be used. It detects IDS/IPS/WAF but doesn't give information about the vendor, or version...
-{% endhint %}
-
-### Other examples
-
-A manual testing workflow could be to check the cookies and response headers.
-
-**Cookies**: some WAF can be identified by the cookie's name.  
-**Response headers**: sometimes they are changed to apparently "confuse the attacker".
-
-## Resources
-
-{% embed url="https://nmap.org/nsedoc/scripts/http-waf-fingerprint.html" %}
-
