@@ -1,21 +1,8 @@
-# 🛠️ MIME sniffing
+# MIME type sniffing
 
-## Theory
+MIME type sniffing is an operation conducted by many browsers. Each browser behaves differently on that matter, but overall, MIME sniffing is an action where they determine a page content type depending on that page content. This is can be dangerous as it could allow attackers to hide HTML code into a `.jpg` file, and have the visitor's browser interpret the page and execute client code (XSS) because the browser determined the file was HTML code instead of a JPG image.
 
-MIME sniffing represents the action that the browser does in retrieving a content type on its own \(even if the `Content-Type` header is present\).
-
-The simplest example involves a client sending a `file.jpg` containing malicious HTML code and the attacker uploading it on the server \(some websites would allow users to only upload `.jpg` extension files\). If the browser does MIME sniffing, it may render the `file.jpg` as a HTML MIME type \(allowing the attacker to execute an XSS for example\).
-
-{% hint style="info" %}
-Each browser has different behavior, check the browsers' specifications for more details.
-{% endhint %}
-
-### Mitigation
-
-Two steps to follow for the mitigation:
-
-1. Include a valid `Content-Type` header.
-2. Include a `X-Content-Type-Options` with the directive `nosniff`. 
+The XCTO ([`X-Content-Type-Options`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options)) security header can be used to indicate that the [MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics\_of\_HTTP/MIME\_types) advertised in the [`Content-Type`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) headers should be followed and not be changed by the browser depending on the pages content. Websites that implement that security header with the `nosniff` directive must also include a valid `Content-Type` header in their responses.
 
 ## Resources
 
@@ -26,4 +13,3 @@ Two steps to follow for the mitigation:
 {% embed url="https://blog.mozilla.org/security/2016/08/26/mitigating-mime-confusion-attacks-in-firefox/" %}
 
 {% embed url="https://mimesniff.spec.whatwg.org/" %}
-
