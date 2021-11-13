@@ -11,7 +11,7 @@ Tools like [dirb](http://dirb.sourceforge.net) (C), [dirbuster](https://sourcefo
 Directory fuzzing needs to be slowed down when testing production instances as it could lead to an unintended denial of service.
 
 ```bash
-gobuster dir --useragent "PENTEST" -w "/path/to/wordlist.txt" -u $URL
+gobuster dir --useragent "PENTEST" --wordlist "/path/to/wordlist.txt" --url $URL
 ```
 
 ```bash

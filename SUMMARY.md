@@ -134,7 +134,6 @@
     * [MIME type sniffing](web/configuration/http-headers/mime-sniffing.md)
     * [🛠️ CORS (Cross-Origin Resource Sharing)](web/configuration/http-headers/cors-cross-origin-resource-sharing.md)
     * [🛠️ CSP (Content Security Policy)](web/configuration/http-headers/csp-content-security-policy.md)
-  * [🛠️ User-Agent](web/configuration/user-agent-filtering.md)
   * [🛠️ Denial of Service (DoS)](web/configuration/dos-mitigations.md)
   * [🛠️ OAuth 2.0](web/configuration/oauth-2.0.md)
 * [Accounts and sessions](web/accounts-and-sessions/README.md)

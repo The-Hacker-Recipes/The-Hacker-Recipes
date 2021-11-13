@@ -12,7 +12,7 @@ Two main mechanisms can be used to access a website on a virtual host:
 When having a domain name as scope, operating virtual host (a.k.a. vhost) fuzzing is recommended to possibly find alternate domain names of subdomains that point to a virtual host, and thus have a better knowledge of the attack surface. This technique relies on the attacker using a dictionary/wordlist. A request is made for every line of the wordlist to differentiate pages that exist and pages that don't
 
 {% hint style="warning" %}
-This technique is not to be confused with DNS bruteforcing. Vhost fuzzing/bruteforcing requests are made over HTTP and rely on the virtual hosting feature that many web app profit from. DNS bruteforcing relies on domain name resolution requests made over DNS to a DNS server.
+This technique is not to be confused with [DNS bruteforcing](domains-enumeration.md#dns-bruteforcing). Vhost fuzzing/bruteforcing requests are made over HTTP and rely on the virtual hosting feature that many web app profit from. [DNS bruteforcing](domains-enumeration.md#dns-bruteforcing) relies on domain name resolution requests made over DNS to a DNS server.
 {% endhint %}
 
 ## Practice
@@ -24,7 +24,7 @@ Tools like [gobuster](https://github.com/OJ/gobuster) (Go), [wfuzz](https://gith
 Vhost fuzzing needs to be slowed down when testing production instances as it could lead to an unintended denial of service.
 
 ```bash
-gobuster vhost --useragent "PENTEST" -w "/path/to/wordlist.txt" -u $URL
+gobuster vhost --useragent "PENTEST" --wordlist "/path/to/wordlist.txt" --url $URL
 ```
 
 ```bash
@@ -36,7 +36,7 @@ ffuf -H "Host: FUZZ.$DOMAIN" -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.t
 ```
 
 {% hint style="info" %}
-Virtual host fuzzing is not the only to find subdomains. There are others means to that end: see [subdomains enumeration](domains-enumeration.md).
+Virtual host fuzzing is not the only technique to find subdomains. There are others means to that end: see [subdomains enumeration](domains-enumeration.md).
 {% endhint %}
 
 ## Resources

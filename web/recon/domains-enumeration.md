@@ -80,7 +80,7 @@ OWASP's [Amass](https://github.com/OWASP/Amass) (Go) tool can gather information
 amass enum --passive -d "domain.com"
 ```
 
-### DNSRecord
+### DNSRecon
 
 [DNSRecon](https://github.com/darkoperator/dnsrecon) (Python) can enumerate DNS information through the following techniques: check NS records for zone transfers, enumerate records, check for wildcard resolution, TLD expansion, bruteforce subdomain and host A and AAAA records given a wordlist, perform PTR lookup given an IP range, DNS cache snooping, etc.
 
@@ -93,6 +93,14 @@ dnsrecon -a -d "target.domain"
 
 # DNS bruteforcing/dictionnary attack
 dnsrecon -t brt -d "target.domain" -n "nameserver.com" -D "/path/to/wordlist"
+```
+
+### DNS bruteforcing
+
+Apart from [Amass](domains-enumeration.md#amass) and [DNSRecon](domains-enumeration.md#dnsrecord) mentioned above, [gobuster](https://github.com/OJ/gobuster) (go) can be used to do DNS bruteforcing.
+
+```bash
+gobuster dns --domain "target.domain" --resolver "nameserver" --wordlist "/path/to/wordlist" 
 ```
 
 ## Resources
