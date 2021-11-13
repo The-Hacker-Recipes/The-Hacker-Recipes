@@ -130,7 +130,7 @@
   * [Default credentials](web/configuration/default-credentials.md)
   * [HTTP methods](web/configuration/http-methods.md)
   * [HTTP security headers](web/configuration/http-headers/README.md)
-    * [🛠️ Clickjacking](web/configuration/http-headers/clickjacking.md)
+    * [Clickjacking](web/configuration/http-headers/clickjacking.md)
     * [🛠️ MIME type sniffing](web/configuration/http-headers/mime-sniffing.md)
     * [🛠️ CORS (Cross-Origin Resource Sharing)](web/configuration/http-headers/cors-cross-origin-resource-sharing.md)
     * [🛠️ CSP (Content Security Policy)](web/configuration/http-headers/csp-content-security-policy.md)
