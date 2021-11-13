@@ -36,7 +36,7 @@ ffuf -H "Host: FUZZ.$DOMAIN" -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.t
 ```
 
 {% hint style="info" %}
-Virtual host fuzzing is not the only to find subdomains. There are others means to that end: see [subdomains enumeration](./).
+Virtual host fuzzing is not the only to find subdomains. There are others means to that end: see [subdomains enumeration](domains-enumeration.md).
 {% endhint %}
 
 ## Resources
