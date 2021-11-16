@@ -106,6 +106,7 @@
     * [🛠️ PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
 * [Persistence](ad/persistence/README.md)
   * [Silver & Golden tickets](ad/persistence/silver-and-golden-tickets.md)
+  * [🛠️ Skeleton key](ad/persistence/skeleton-key.md)
   * [🛠️ SID History](ad/persistence/sid-history.md)
   * [🛠️ AdminSDHolder](ad/persistence/adminsdholder.md)
   * [🛠️ DC Shadow](ad/persistence/dcshadow.md)
