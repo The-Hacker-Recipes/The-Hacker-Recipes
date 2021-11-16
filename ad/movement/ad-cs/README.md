@@ -57,7 +57,7 @@ crackmapexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
 {% endtab %}
 
 {% tab title="windapsearch" %}
-[windapsearch ](https://github.com/ropnop/windapsearch)Ccccc(Python) can be used to manually to the LDAP query.
+[windapsearch ](https://github.com/ropnop/windapsearch)(Python) can be used to manually to the LDAP query.
 
 ```bash
 windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base 'CN=Configuration,DC=domain,DC=local' --attrs dn,dnshostname --dc 'domaincontroller' -d 'domain.local' -u 'user' -p 'password'

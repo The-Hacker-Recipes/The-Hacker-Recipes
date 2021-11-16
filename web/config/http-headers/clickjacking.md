@@ -4,7 +4,7 @@
 
 Lots of websites allow to browsers to render them in a [`<frame>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/frame), [`<iframe>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe), [`<embed>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) or [`<object>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object). This allows attackers to "load" the website in a transparent layer and trick users into thinking they are browsing the legitimate website. This allows attackers to "hijack" their clicks and make them do something else ([Twitter worm](https://shiflett.org/blog/2009/twitter-dont-click-exploit), [Facebook likes](https://www.netsparker.com/blog/web-security/clickjacking-attack-on-facebook-how-tiny-attribute-save-corporation/)).
 
-HTTP security headers like XFO and C
+[HTTP security headers](./) like XFO (`X-Frame-Options`) and CSP (`Content-Security-Policy`) mitigate clickjacking attacks.
 
 ## Practice
 
