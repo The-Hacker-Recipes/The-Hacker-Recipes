@@ -44,7 +44,7 @@
     * [DNS spoofing](ad/movement/mitm-and-coerced-authentications/dns-spoofing.md)
     * [DHCP poisoning](ad/movement/mitm-and-coerced-authentications/dhcp-poisoning.md)
     * [DHCPv6 spoofing](ad/movement/mitm-and-coerced-authentications/dhcpv6-spoofing.md)
-    * [WSUS spoofing](sys/privilege-escalation/windows/wsus-attacks.md)
+    * [WSUS spoofing](ad/movement/mitm-and-coerced-authentications/wsus-spoofing.md)
     * [LLMNR, NBT-NS, mDNS spoofing](ad/movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md)
     * [ADIDNS poisoning](ad/movement/mitm-and-coerced-authentications/adidns-spoofing.md)
     * [WPAD spoofing](ad/movement/mitm-and-coerced-authentications/wpad-spoofing.md)
@@ -190,7 +190,6 @@
   * [🛠️ (5985) WinRM](sys/abusing-services/winrm.md)
 * [Privilege escalation](sys/privilege-escalation/README.md)
   * [Windows](sys/privilege-escalation/windows/README.md)
-    *
     * [Credential dumping](sys/privilege-escalation/windows/credential-dumping.md)
     * [Unquoted path](sys/privilege-escalation/windows/unquoted-service-paths.md)
     * [Scheduled tasks](sys/privilege-escalation/windows/scheduled-tasks.md)

@@ -56,7 +56,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] WPAD is disabled, preventing [WPAD spoofing](mitm-and-coerced-authentications/wpad-spoofing.md).
 * [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md#wildcard-records) attacks. Preferably, this is a `TXT` record.
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.
-* [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](../../sys/privilege-escalation/windows/wsus-attacks.md) attacks.
+* [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](mitm-and-coerced-authentications/wsus-spoofing.md) attacks.
 * [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-protocols.md).&#x20;
 * [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress within the network.
 

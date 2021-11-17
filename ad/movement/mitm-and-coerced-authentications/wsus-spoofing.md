@@ -18,14 +18,14 @@ reg query HKML\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
 
 The WSUS spoofing attack can be conducted as follows
 
-1. Obtain a Man-in-the-Middle position between clients and the update server with [ARP poisoning](../../../ad/movement/mitm-and-coerced-authentications/arp-poisoning.md).
+1. Obtain a Man-in-the-Middle position between clients and the update server with [ARP poisoning](arp-poisoning.md).
 2. Redirect traffic from `clients -> legitimate WSUS` to `clients -> attacker's WSUS`
 3. Have a custom WSUS server running able to send evil updates to clients
 
 In a scenario where the clients and the attacker are on the same subnet, and the update server is on another one, the steps below can be followed. For other scenarios or more info on ARP poisoning, a recipe exists for it.
 
-{% content-ref url="../../../ad/movement/mitm-and-coerced-authentications/arp-poisoning.md" %}
-[arp-poisoning.md](../../../ad/movement/mitm-and-coerced-authentications/arp-poisoning.md)
+{% content-ref url="arp-poisoning.md" %}
+[arp-poisoning.md](arp-poisoning.md)
 {% endcontent-ref %}
 
 ### Preparing the evil WSUS
@@ -36,7 +36,7 @@ The evil WSUS server needs to be started before doing any ARP poisoning. The [py
 python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser somepassword /add && net localgroup Administrators testuser /add"'
 ```
 
-Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
+Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](../../../sys/privilege-escalation/windows/living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
 
 ### Poisoning and hijacking
 

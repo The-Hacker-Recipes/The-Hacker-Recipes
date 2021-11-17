@@ -21,7 +21,7 @@ On a side note, a technique called [AnySPN or "service class modification"](../p
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)
 
 {% hint style="info" %}
-The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Server 2012 implying that RBCD only works when the Domain Functional Level (DFL) is Windows Server 2012 or higher.
+The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Server 2012 implying that RBCD only works when the Domain Controller Functionality Level (DCFL) is Windows Server 2012 or higher.
 {% endhint %}
 
 ## Practice

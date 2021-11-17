@@ -7,7 +7,13 @@ A lot of information on an AD domain can be obtained through LDAP. Most of the i
 The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) Python script can also be used to enumerate essential information like domain admins that have their password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.
 
 ```bash
-ldapsearch-ad --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD --type all
+ldapsearch-ad --type all --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD
+```
+
+The FFL (Forest Functional Level), DFL (Domain Functional Level), DCFL (Domain Controller Functionality Level) and naming contexts can be listed with the following command.
+
+```bash
+ldapsearch-ad --type info --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD
 ```
 {% endtab %}
 
