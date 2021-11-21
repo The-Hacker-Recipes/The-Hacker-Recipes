@@ -10,26 +10,16 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 
 ## Practice
 
-[Responder](https://github.com/SpiderLabs/Responder) (Python) (from v3.0.7.0) can be used to operate DHCP poisoning in the following manner
+[Responder](https://github.com/SpiderLabs/Responder) (Python) can be used to operate DHCP poisoning in the following manner
 
 * race against the legit DHCP server to answer `DHCP REQUEST` messages
 * sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds)
 * wait the lease to expire so that the poisoned client asks for a new lease
 * let the client obtain a legitimate lease from the real DHCP server, allowing the client to obtain the right network settings and have connectivity
 * the injected WPAD server address will stay until the client reboots (that's how Windows works :man\_shrugging: )
-* with the injected WPAD server address, the Windows client will try to obtain the wpad.dat file on the rogue WPAD. Responder will then require the client to authenticate.
+* with the injected WPAD server address, the Windows client will try to obtain the `wpad.dat` file on the rogue WPAD. Responder will then require the client to authenticate.
 
-In order to start DHCP poisoning for WPAD spoofing with Responder, the `Responder.conf` file needs to be tweaked.
-
-```yaml
-WPADScript = function FindProxyForURL(url, host){if ((host == "localhost") || shExpMatch(host, "localhost.*") ||(host == "127.0.0.1") || isPlainHostName(host)) return "DIRECT"; if (dnsDomainIs(host, "ProxySrv")||shExpMatch(host, "(*.ProxySrv|ProxySrv)")) return "DIRECT"; return 'PROXY ProxySrv:3128; PROXY ProxySrv:3141; DIRECT';}
-```
-
-The `ProxySrv` variable (in red in the following screenshot) needs to be replaced by the rogue WPAD server (i.e. Responder IP address).
-
-![](../../../.gitbook/assets/responder\_conf\_dhcp\_poisoning.png)
-
-The attack can then be started with the `-d/--DHCP` argument.
+The attack can be started with the `-d/--DHCP` argument.
 
 The `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes.
 
