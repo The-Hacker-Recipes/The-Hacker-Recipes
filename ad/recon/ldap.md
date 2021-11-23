@@ -41,6 +41,27 @@ ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump
 {% endtab %}
 {% endtabs %}
 
+[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) also has useful modules that can be used to
+
+* map information regarding [AD-CS (Active Directory Certificate Services)](../movement/ad-cs/)
+* subnets listed in AD-SS (Active Directory Sites and Services)
+* users description
+* the [Machine Account Quota](../movement/domain-settings/machineaccountquota.md) domain-level attribute
+
+```bash
+# list PKIs/CAs
+cme ldap "domain_controller" -d "domain" -u "user" -p "password" -M adcs
+
+# list subnets referenced in AD-SS
+cme ldap "domain_controller" -d "domain" -u "user" -p "password" -M subnets
+
+# machine account quota
+cme ldap "domain_controller" -d "domain" -u "user" -p "password" -M maq
+
+# users description
+cme ldap "domain_controller" -d "domain" -u "user" -p "password" -M get-desc-users
+```
+
 {% hint style="info" %}
 LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/asreproast.md) (since this attack needs no authentication).
 {% endhint %}
@@ -49,6 +70,6 @@ LDAP anonymous binding is usually disabled but it's worth checking. It could be 
 **Automation and scripting**
 
 * A more advanced LDAP enumeration can be carried out with BloodHound (see [this](bloodhound.md)).
-* The enum4linux tool can also be used, among other things, for LDAP recon (see [this page](enum4linux.md)).
+* The enum4linux tool can also be used, among other things, for LDAP recon (see [this](enum4linux.md)).
 {% endhint %}
 
