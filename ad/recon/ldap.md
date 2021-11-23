@@ -44,9 +44,9 @@ ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump
 [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) also has useful modules that can be used to
 
 * map information regarding [AD-CS (Active Directory Certificate Services)](../movement/ad-cs/)
-* subnets listed in AD-SS (Active Directory Sites and Services)
-* users description
-* the [Machine Account Quota](../movement/domain-settings/machineaccountquota.md) domain-level attribute
+* show subnets listed in AD-SS (Active Directory Sites and Services)
+* list the users description
+* print the [Machine Account Quota](../movement/domain-settings/machineaccountquota.md) domain-level attribute's value
 
 ```bash
 # list PKIs/CAs

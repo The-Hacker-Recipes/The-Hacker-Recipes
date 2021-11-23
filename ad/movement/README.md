@@ -44,7 +44,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 ### Domain-level configuration and best-practices
 
 * [ ] The [Machine Account Quota](domain-settings/machineaccountquota.md) domain-level attribute is set to 0, preventing domain users from creating domain-joined computer accounts.
-* [ ] Default [special groups](builtin-groups.md) are empty limiting, among other things, out-of-box ACE abuses.
+* [ ] Default [special groups](builtin-groups.md) are empty, limiting, among other things, out-of-box ACE abuses.
 
 ### Networking, protocols and services
 
@@ -60,11 +60,16 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-protocols.md).&#x20;
 * [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress within the network.
 
+### Active Directory Certificate Services
+
+* [ ] The CA is configured correctly (the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag is not set). This prevents [the corresponding domain escalation attack](ad-cs/ca-configuration.md).
+* [ ] There are no certificate templates that are badly configured. This prevents [the corresponding domain escalation attack](ad-cs/certificate-templates.md).
+* [ ] AD-CS web endpoints are secured against [AD-CS NTLM relay attacks](ad-cs/web-endpoints.md) (HTTPS and EPA (Extended Protection for Authentication) enforced).
+
 
 
 :hammer\_pick: Things to add&#x20;
 
-* ADCS
 * Use of physical tokens (U2F, access cards, ...)
 * Avoiding the use of plaintext protocols (limit ARP poisoning results)
 * Forest and domain trusts
