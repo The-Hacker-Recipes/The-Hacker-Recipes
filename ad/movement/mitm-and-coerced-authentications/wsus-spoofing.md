@@ -13,7 +13,7 @@ When pulling an update from the WSUS server, clients are redirected to the execu
 The following command prints the WSUS server the client requests when searching for an update. If the path looks like `http://wsus.domain.local/`, showing the use of HTTP instead of HTTPS, the attacks can be attempted.
 
 ```
-reg query HKML\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
+reg query HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate /v wuserver
 ```
 
 The WSUS spoofing attack can be conducted as follows
