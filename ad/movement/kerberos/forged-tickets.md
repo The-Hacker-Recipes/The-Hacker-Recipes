@@ -33,7 +33,7 @@ When forging tickets, only the user-id and groups-ids are useful. The username s
 
 ### Golden ticket
 
-In order to craft a golden ticket, testers need to find the `krbtgt`'s NT hash or AES key (128 or 256 bits). In most cases, this can only be achieved with domain admin privileges through a [DCSync attack](../credentials/dumping/dcsync.md). Because of this, golden tickets only allow lateral movement and not privilege escalation.
+In order to craft a golden ticket, testers need to find the `krbtgt`'s RC4 key (i.e. NT hash) or AES key (128 or 256 bits). In most cases, this can only be achieved with domain admin privileges through a [DCSync attack](../credentials/dumping/dcsync.md). Because of this, golden tickets only allow lateral movement and not privilege escalation.
 
 {% hint style="info" %}
 Microsoft now uses AES 256 bits by default. Using this encryption algorithm (instead of giving the NThash) will be stealthier.
@@ -78,7 +78,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 
 ### Silver ticket
 
-In order to craft a silver ticket, testers need to find the target service account's NT hash or AES key (128 or 256 bits).
+In order to craft a silver ticket, testers need to find the target service account's RC4 key (i.e. NT hash) or AES key (128 or 256 bits). This can be done by [capture an NTLM response](../ntlm/capture.md) (preferably NTLMv1) and [cracking](../credentials/cracking.md) it, by [dumping LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md), by doing a [DCSync](../credentials/dumping/dcsync.md), etc.
 
 _"While the scope is more limited than Golden Tickets, the required hash is easier to get and there is no communication with a DC when using them, so detection is more difficult than Golden Tickets." (_[_adsecurity.org_](https://adsecurity.org/?p=2011)_)_
 
