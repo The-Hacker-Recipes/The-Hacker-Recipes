@@ -4,6 +4,12 @@
 
 ## Practice <a href="practice" id="practice"></a>
 
+shodan : net:"SUBNET/MASK"
+
+zoomeye : IP/MASK
+
+fofa.so
+
 Get the DNS servers, their records, and map the domain:\
 \-[https://dnsdumpster.com/](https://dnsdumpster.com)\
 IP énumération + response header from domain name:\
