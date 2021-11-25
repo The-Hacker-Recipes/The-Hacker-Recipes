@@ -25,7 +25,7 @@ When talking about AdminSdHolder, the AdminCount attribute is usually mentioned.
 
 ## Practice
 
-Attackers can abuse AdminSdHolder to obtain persistence on the domain by modifying the object's DACL. Let's say an attackers adds the following ACE to AdminSdHolder's DACL: `attackercontrolleduser: Full Control`.
+Once sufficient privileges are obtained, attackers can abuse AdminSdHolder to get persistence on the domain by modifying the object's DACL. Let's say an attackers adds the following ACE to AdminSdHolder's DACL: `attackercontrolleduser: Full Control`.
 
 At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` privilege over all protected objects (Domain Admins, Domain Controllers, and so on).
 
