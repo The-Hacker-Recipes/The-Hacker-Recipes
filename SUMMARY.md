@@ -169,11 +169,8 @@
 ## Systems & services <a href="sys" id="sys"></a>
 
 * [Reconnaissance](sys/recon/README.md)
+  * [🛠️ Hosts discovery](sys/recon/hosts-discovery.md)
   * [Port scanning](sys/recon/port-scanning.md)
-  * [🛠️ ICMP](sys/recon/icmp.md)
-  * [🛠️ ARP](sys/recon/arp.md)
-  * [🛠️ SCTP](sys/recon/sctp.md)
-  * [🛠️ NBT](sys/recon/nbt.md)
 * [Movement](sys/movement/README.md)
   * [🛠️ FTP](sys/movement/ftp.md)
   * [🛠️ SSH](sys/movement/ssh.md)
@@ -223,9 +220,9 @@
   * [BIOS security](physical/physical-access/bios-security.md)
   * [Encryption](physical/physical-access/encryption.md)
   * [Airstrike attack](physical/physical-access/airstrike-attack.md)
-* [Cooking](physical/cooking/README.md)
-  * [🍌 Banana & chocolate cake](physical/cooking/banana-and-chocolate-cake.md)
-  * [🍳 Omelette du fromage](physical/cooking/omelette-du-fromage.md)
+* [Super secret zones](physical/super-secret-zones/README.md)
+  * [🍌 Banana & chocolate cake](physical/super-secret-zones/banana-and-chocolate-cake.md)
+  * [🍳 Omelette du fromage](physical/super-secret-zones/omelette-du-fromage.md)
 
 ## 🛠️ Intelligence gathering
 

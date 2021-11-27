@@ -47,6 +47,11 @@ SCRIPT SCAN
 HOST DISCOVERY
   -Pn: Treat all hosts as online -- skip host discovery
 
+FIREWALL/IDS EVASION AND SPOOFING
+  -f; --mtu <val>: fragment packets (optionally w/given MTU)
+  -S <IP_Address>: Spoof source address
+  -e <iface>: Use specified interface
+
 OUTPUT
   -oN/-oX/-oS/-oG <file>: Output scan in normal, XML, s|<rIpt kIddi3,
      and Grepable format, respectively, to the given filename.
