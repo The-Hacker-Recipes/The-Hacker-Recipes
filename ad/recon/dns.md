@@ -36,7 +36,7 @@ nmap --script dns-srv-enum --script-args dns-srv-enum.domain=$FQDN_DOMAIN
 
 In order to function properly, the tools need to know the domain name and which nameservers to query. That information is usually [sent through DHCP offers](dhcp.md) and stored in the `/etc/resolv.conf` or `/run/systemd/resolve/resolv.conf` file in UNIX-like systems.&#x20;
 
-If needed, the nameservers may be found with a port scan on the network by looking for DNS ports 53/TCP and 53/UDP.
+If needed, the nameservers may be found with a port scan on the network by looking for DNS ports `53/TCP` and `53/UDP`.
 
 ```bash
 nmap -v -sV -p 53 $SUBNET/$MASK
