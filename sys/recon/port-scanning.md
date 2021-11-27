@@ -2,8 +2,6 @@
 
 ## Theory
 
-
-
 When targeting machines connected to a network, identifying which services are running and accessible remotely allows attackers to have a better understanding of the attack surface.
 
 Services open to the network usually rely on one of two transport protocols: TCP or UDP.
@@ -77,6 +75,10 @@ nmap -Pn --script vuln -sV -p "20-25,53,80,135,139,443,445" $TARGET
 # scan 20 most common UDP ports and enable service detection
 nmap -sU -sV --top-ports 20 $TARGET
 ```
+
+{% hint style="info" %}
+**SCTP (Stream Control Transmission Protocol)** is another transport protocol. Its main benfits are high reliability, congestion control and better error handling. This protocol is quite rare but is sometimes used and is worth scanning. Just like TCP and UDP, SCTP works with ports. The `-sY` option can be used in nmap to scan SCTP ports, similarly to `-sU` for UDP.
+{% endhint %}
 
 [MASSCAN](https://github.com/robertdavidgraham/masscan) (C) is an alternative to nmap, mostly known for its speed. Its usage is similar to nmap but focuses essentially on port scanning. Services, versions and scripts scans should be conducted with nmap. Below is an example of masscan being used to scan all TCP and UDP ports of a host with a high rate.
 
