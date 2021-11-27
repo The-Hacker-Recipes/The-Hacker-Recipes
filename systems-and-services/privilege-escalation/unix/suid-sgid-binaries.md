@@ -9,7 +9,7 @@ The setuid/setgid (SUID/SGID) bits allows the binary to run with the privileges 
 {% hint style="warning" %}
 **Limitations**
 
-* Just like capabilities, setuid and setgid bits are unset when a file is copied with `cp`.
+* Just like capabilities, setuid and setgid bits are unset when a file is copied with `cp` or when its content changes.
 * Some partitions of the UNIX file system can be mounted with the `nosuid` option. In this case the setuid and setgid bits are ignored for binaries placed inside those partitions. It is a common good practice for tmpfs partitions like `/tmp `or`/run`. Searching the `/proc/mounts` pseudo-file for a `nosuid` flag can help find these partitions.
 {% endhint %}
 
@@ -24,7 +24,7 @@ find $starting_path -perm -u=s -type f 2>/dev/null
 find $starting_path -perm -4000 -type f 2>/dev/null
 ```
 
-Vulnerable programs with these permissions are often targeted by attacker to obtain the user (for setuid) or group (for setgid) privileges. There are many techniques that attackers can use to hijack these binaries and obtain thet associated rights.
+Vulnerable programs with these permissions are often targeted by attacker to obtain the user (for setuid) or group (for setgid) privileges. There are many techniques that attackers can use to hijack these binaries and obtain the associated rights.
 
 ### Living of the land
 
@@ -57,11 +57,11 @@ chmod +x /tmp/attacker/ls
 PATH=/tmp/attacker:$PATH ./vuln
 ```
 
-When the `vuln` program will be run, the malicious `ls` program will be called and a shell will be opened !&#x20;
+When the `vuln` program will be executed, the malicious `ls` program will be called and a shell will be opened.&#x20;
 
 ### Binary exploitation
 
-In some cases, the binary that have SUID/SGID permissions can be reverse-engineered and attackers find ways to change the execution flow of that program to make it run something else (e.g. [buffer overflow](../../../binary-exploitation/buffer-overflow.md), [use-after-free](../../../binary-exploitation/use-after-free.md), ...).
+In some cases, the binary that has SUID/SGID permissions can be reverse-engineered and attackers find ways to change the execution flow of that program to make it run something else (e.g. [buffer overflow](../../../binary-exploitation/buffer-overflow.md), [use-after-free](../../../binary-exploitation/use-after-free.md), ...).
 
 ## Resources
 
