@@ -1,5 +1,7 @@
 # DNS
 
+## Finding Domain Controllers
+
 AD-DS (Active Directory Domain Services) rely on DNS SRV RR (service location resource records). Those records can be queried to find the location of some servers: the global catalog, LDAP servers, the Kerberos KDC and so on.&#x20;
 
 {% tabs %}
@@ -49,3 +51,17 @@ The DNS service is usually offered by the domain controllers
 
 {% embed url="https://petri.com/active_directory_srv_records" %}
 
+## Reverse lookups
+
+In Active Directory Integrated DNS, reverse lookup zones are used to resolve IP addresses to hostnames. This operation relies on DNS PTR records. This allows to find the names of the hosts in a network. The presence of reverse lookup zones is not mandatory in Active Directory, hence limiting reverse lookup capabilities.
+
+```bash
+# standard lookup
+host $hostname
+
+# reverse lookup
+host $IP_address
+
+# manual PTR resolution request
+nslookup -type=ptr $IP_address
+```
