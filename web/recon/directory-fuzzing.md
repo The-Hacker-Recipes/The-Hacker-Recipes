@@ -6,9 +6,9 @@ While Crawling allows testers to build the indexed architecture of website, this
 
 ## Practice
 
-Tools like [dirb](http://dirb.sourceforge.net) (C), [dirbuster](https://sourceforge.net/projects/dirbuster/) (Java), [gobuster](https://github.com/OJ/gobuster) (Go), [wfuzz](https://github.com/xmendez/wfuzz) (Python) and [ffuf](https://github.com/ffuf/ffuf) (Go) can do directory fuzzing/bruteforcing. Burp Suite can do it too. Depending on the web application, one will be better suited than another and additional options will be needed.
+### Fuzzing tools
 
-Directory fuzzing needs to be slowed down when testing production instances as it could lead to an unintended denial of service.
+Tools like [dirb](http://dirb.sourceforge.net) (C), [dirbuster](https://sourceforge.net/projects/dirbuster/) (Java), [gobuster](https://github.com/OJ/gobuster) (Go), [wfuzz](https://github.com/xmendez/wfuzz) (Python), [ffuf](https://github.com/ffuf/ffuf) (Go) and [feroxbuster](https://github.com/epi052/feroxbuster) (Rust) can do directory fuzzing/bruteforcing. Burp Suite can do it too. Depending on the web application, one will be better suited than another and additional options will be needed.
 
 ```bash
 gobuster dir --useragent "PENTEST" --wordlist "/path/to/wordlist.txt" --url $URL
@@ -18,15 +18,21 @@ gobuster dir --useragent "PENTEST" --wordlist "/path/to/wordlist.txt" --url $URL
 wfuzz --hc 404,403 -H "User-Agent: PENTEST" -c -z file,"/path/to/wordlist.txt" $URL/FUZZ
 ```
 
-```bash
-ffuf -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.txt" -u $URL/FUZZ
-```
+[ffuf](https://github.com/ffuf/ffuf) (Go) and [feroxbuster](https://github.com/epi052/feroxbuster) (Rust) are two awesome alternatives that can do recursive fuzzing unlike [gobuster](https://github.com/OJ/gobuster) (Go) and [wfuzz](https://github.com/xmendez/wfuzz) (Python) mentioned above.
 
-Another great tool named [feroxbuster](https://github.com/epi052/feroxbuster) (Rust) can do really fast recursive content discovery. The tools mentioned above don't recurse in found directories.
+```bash
+ffuf -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.txt" -maxtime-job 60 -recursion -recursion-depth 2 -u $URL/FUZZ
+```
 
 ```bash
 feroxbuster -H "User-Agent: PENTEST" -w "/path/to/wordlist.txt" -u http://192.168.10.10/
 ```
+
+{% hint style="warning" %}
+Directory fuzzing needs to be slowed down when testing production instances as it could lead to an unintended denial of service, especially when using [feroxbuster](https://github.com/epi052/feroxbuster), a tool known for it's high speed.
+{% endhint %}
+
+### Wordlists
 
 In order to fuzz more accurately, there are many dictionaries adapted for many situations, most of which can be downloaded from SecLists. SecLists can be installed (`apt install seclists` or downloaded directly from [the GitHub repo](https://github.com/danielmiessler/SecLists)).
 
