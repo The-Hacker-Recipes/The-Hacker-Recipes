@@ -11,5 +11,5 @@ nmap --script broadcast-dhcp-discover
 ```
 
 {% hint style="info" %}
-In many cases, there will be MAC address filtering, static IP addressing, VLANs or other [NAC (Network Access Control) and 802.1x](../../physical/physical-access/network-access-control.md) that can prevent testers from obtaining this information. In those situations, [Wireshark](https://www.wireshark.org) can be used to manually inspect broadcast and multicast packets that travel on the network and find valuable information that could help bypass those mitigations.
+In many cases, there will be MAC address filtering, static IP addressing, VLANs or other [NAC (Network Access Control) and 802.1x](../../physical/networking/network-access-control.md) that can prevent testers from obtaining this information. In those situations, [Wireshark](https://www.wireshark.org) can be used to manually inspect broadcast and multicast packets that travel on the network and find valuable information that could help bypass those mitigations.
 {% endhint %}

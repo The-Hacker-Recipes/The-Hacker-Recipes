@@ -213,11 +213,11 @@
 ## 🛠️ Physical
 
 * [Locks](physical/lockpicking.md)
-* [Networking](physical/networking.md)
+* [Networking](physical/networking/README.md)
+  * [🛠️ Network Access Control](physical/networking/network-access-control.md)
 * [Machines](physical/physical-access/README.md)
   * [HID injection](physical/physical-access/hid-injection.md)
   * [Keylogging](physical/physical-access/keylogging.md)
-  * [🛠️ Network Access Control](physical/physical-access/network-access-control.md)
   * [BIOS security](physical/physical-access/bios-security.md)
   * [Encryption](physical/physical-access/encryption.md)
   * [Airstrike attack](physical/physical-access/airstrike-attack.md)
