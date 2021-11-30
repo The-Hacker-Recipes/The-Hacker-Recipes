@@ -97,4 +97,6 @@ This can be enumerated and abused like regular AD access control abuses. Once co
 
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
 
+{% embed url="https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment#section-3-6" %}
+
 {% embed url="https://github.com/daem0nc0re/Abusing_Weak_ACL_on_Certificate_Templates" %}
