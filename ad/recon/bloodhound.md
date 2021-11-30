@@ -14,7 +14,7 @@ BloodHound needs to be fed JSON files containing info on the objects and relatio
 {% tab title="Windows" %}
 SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound3), [builds](https://github.com/BloodHoundAD/BloodHound/tree/master/Collectors)) is designed targeting .Net 4.5. It can be used as a PowerShell module or as a compiled executable.
 
-It must be run from the context of a domain user, either directly through a logon or through another method such as runas (`runas /netonly /user:$DOMAIN\$USER`) (see [Impersonation](../movement/credentials/impersonation.md)). Alternatively, SharpHound can be used with the `LdapUsername `and `LdapPassword` flags for that matter.
+It must be run from the context of a domain user, either directly through a logon or through another method such as runas (`runas /netonly /user:$DOMAIN\$USER`) (see [Impersonation](../movement/credentials/impersonation.md)). Alternatively, SharpHound can be used with the `LdapUsername` and `LdapPassword` flags for that matter.
 
 ```bash
 # Use the PowerShell module
@@ -47,7 +47,7 @@ Invoke-BloodHound -SecureLdap -IgnoreLdapCert
 ```
 
 {% hint style="success" %}
-Here are a few **tips and tricks **on the collection process
+Here are a few **tips and tricks** on the collection process
 
 * Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context (e.g. with runas, [pass-the-hash](../movement/ntlm/pth.md) or [overpass-the-hash](../movement/kerberos/ptk.md)). This is useful when domain computers have antivirus or other protections preventing (or slowing) testers from using enumerate or exploitation tools.
 * When obtaining a foothold on an AD domain, testers should first run SharpHound with all collection methods, and then start a loop collection to enumerate more sessions.

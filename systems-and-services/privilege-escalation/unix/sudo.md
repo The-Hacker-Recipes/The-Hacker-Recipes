@@ -6,7 +6,7 @@
 
 Unlike the similar command `su`, users must, by default, supply their own password for authentication, rather than the password of the target user. After authentication, and if the configuration file, which is typically located at `/etc/sudoers`, permits the user access, the system invokes the requested command with the target user's privileges.
 
-Sudo users are called sudoers ( 😯 _I know right, big brains here  _🧠 ). What sudoers are allowed to do is defined in the `/etc/sudoers` configuration file. This file, owned by `root`, is supposed to be 440 (read-only) and should only be edited with `visudo`, `sudoedit` or `sudo -e`.
+Sudo users are called sudoers ( 😯 _I know right, big brains here_  🧠 ). What sudoers are allowed to do is defined in the `/etc/sudoers` configuration file. This file, owned by `root`, is supposed to be 440 (read-only) and should only be edited with `visudo`, `sudoedit` or `sudo -e`.
 
 ![](../../../.gitbook/assets/sudoers\_config.png)
 

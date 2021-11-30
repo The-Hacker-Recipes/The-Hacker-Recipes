@@ -14,7 +14,7 @@ The requirements for this omelette are as follow (for 1 attacker):
 A salad bowl, a spatula, a frying pan and a fourchette will be needed to conduct this technique.&#x20;
 
 {% hint style="success" %}
-During pentesting engagements, cooking and eating an Omelette du fromage will help _HACK _with ease! :pirate\_flag:&#x20;
+During pentesting engagements, cooking and eating an Omelette du fromage will help _HACK_ with ease! :pirate\_flag:&#x20;
 {% endhint %}
 
 ## Practice

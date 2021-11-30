@@ -104,7 +104,7 @@ getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "admini
 {% endtabs %}
 
 {% hint style="info" %}
-Computer accounts have SPNs set at their creation and can edit their own "rbcd attribute" (i.e. `msDS-AllowedToActOnBehalfOfOtherIdentity`). If the account configured with KCD without protocol transition is a computer, controlling another account to operate the RBCD approach is not needed. In this case, **serviceB **= **serviceA**, the computer account can be configured for a "self-rbcd".
+Computer accounts have SPNs set at their creation and can edit their own "rbcd attribute" (i.e. `msDS-AllowedToActOnBehalfOfOtherIdentity`). If the account configured with KCD without protocol transition is a computer, controlling another account to operate the RBCD approach is not needed. In this case, **serviceB** = **serviceA**, the computer account can be configured for a "self-rbcd".
 {% endhint %}
 
 ## Resources

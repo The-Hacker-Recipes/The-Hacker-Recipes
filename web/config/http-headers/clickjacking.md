@@ -8,7 +8,7 @@ Lots of websites allow to browsers to render them in a [`<frame>`](https://devel
 
 ## Practice
 
-![(left) vulnerable | not vulnerable (right)](<../../../.gitbook/assets/image (5).png>)
+![(left) vulnerable | not vulnerable (right)](<../../../.gitbook/assets/image (5) (1).png>)
 
 The following HTML code can be used in a browser to attempt a clickjacking on a target URL.
 

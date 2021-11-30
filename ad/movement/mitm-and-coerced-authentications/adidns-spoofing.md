@@ -10,8 +10,8 @@ Since ADIDNS zone DACL (Discretionary Access Control List) enables regular users
 
 ADIDNS zones can be remotely edited
 
-* with **dynamic updates **(a DNS specific protocol used by machine accounts to add and update their own DNS records). Users can create records if they don't exist, and they will have full control over it. By default, users that don't own a record will not be able to edit it, or to add another one with the same name, even if the type is different (A, AAAA, CNAME, MX, and so on).
-* by **using LDAP **to create dnsNode objects. While dynamic updates can't be used to inject a wildcard DNS record, LDAP can be (only if the record doesn't already exist, which is the case by default).
+* with **dynamic updates** (a DNS specific protocol used by machine accounts to add and update their own DNS records). Users can create records if they don't exist, and they will have full control over it. By default, users that don't own a record will not be able to edit it, or to add another one with the same name, even if the type is different (A, AAAA, CNAME, MX, and so on).
+* by **using LDAP** to create dnsNode objects. While dynamic updates can't be used to inject a wildcard DNS record, LDAP can be (only if the record doesn't already exist, which is the case by default).
 
 ### Wildcard records & WINS
 
