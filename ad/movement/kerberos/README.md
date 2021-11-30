@@ -24,7 +24,9 @@ A Service Ticket (ST) allows access to a specific service. The TGT is used to as
 By default, the salt is always
 
 * **For users**: uppercase FQDN + case sensitive username = `DOMAIN.LOCALuser`
-* **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.local`
+* **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.loca`
+
+_(_[_Kerberos keys calculation_](https://snovvcrash.rocks/2021/05/21/calculating-kerberos-keys.html)_)_
 {% endhint %}
 
 Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT (if RC4 key is accepted). This is called [Overpass-the-hash](ptk.md).

@@ -62,6 +62,12 @@ cme ldap "domain_controller" -d "domain" -u "user" -p "password" -M maq
 cme ldap "domain_controller" -d "domain" -u "user" -p "password" -M get-desc-users
 ```
 
+The PowerShell equivalent to CrackMapExec's `subnets` modules is the following
+
+```powershell
+[System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest().Sites.Subnets
+```
+
 {% hint style="info" %}
 LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/asreproast.md) (since this attack needs no authentication).
 {% endhint %}
