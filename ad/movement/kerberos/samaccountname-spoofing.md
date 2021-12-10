@@ -22,7 +22,7 @@ When requesting a Service Ticket, presenting a TGT is required first. When the n
 
 ## Practice
 
-The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../domain-settings/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account becomes its owner and has enough privileges to edit its attributes. Alternatively, taking control over the owner of a computer account will do the job.
+The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../domain-settings/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account has enough privileges to edit its attributes. Alternatively, taking control over the owner/creator of a computer account should do the job.
 
 The attack can then be conducted as follows.
 
