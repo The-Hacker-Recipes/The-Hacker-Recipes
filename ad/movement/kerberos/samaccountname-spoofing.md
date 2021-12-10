@@ -2,7 +2,7 @@
 description: CVE-2021-42278 and CVE-2021-42287
 ---
 
-# 🛠️ sAMAccountName spoofing
+# sAMAccountName spoofing
 
 ## Theory
 
@@ -22,7 +22,7 @@ When requesting a Service Ticket, presenting a TGT is required first. When the n
 
 ## Practice
 
-The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../domain-settings/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account becomes its owner and has enough privileges to edit its attributes.
+The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../domain-settings/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account becomes its owner and has enough privileges to edit its attributes. Alternatively, taking control over the owner of a computer account will do the job.
 
 The attack can then be conducted as follows.
 
@@ -42,8 +42,8 @@ At the time of writing (10th of December, 2021), the tools and features that all
 
 * Rubeus: [https://github.com/GhostPack/Rubeus/tree/pac](https://github.com/GhostPack/Rubeus/tree/pac)
 * Impacket's getST: [https://github.com/SecureAuthCorp/impacket/pull/1202](https://github.com/SecureAuthCorp/impacket/pull/1202)
-* Impacket's renameMachine:&#x20;
-* krbrelayx's addspn:&#x20;
+* Impacket's renameMachine: [https://github.com/SecureAuthCorp/impacket/pull/1224](https://github.com/SecureAuthCorp/impacket/pull/1224)
+* krbrelayx's addspn: [https://github.com/dirkjanm/krbrelayx/pull/20](https://github.com/dirkjanm/krbrelayx/pull/20)
 {% endhint %}
 
 {% tabs %}
@@ -75,8 +75,6 @@ KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -
 # 6. DCSync by presenting the service ticket
 KRB5CCNAME='DomainAdmin.ccache' secretsdump.py -just-dc-user 'krbtgt' -k -no-pass -dc-ip 'DomainController.domain.local' @'DomainController.domain.local'
 ```
-
-![](<../../../.gitbook/assets/Screenshot from 2021-12-10 22-21-10.png>)
 
 {% hint style="success" %}
 When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs, which allows to skip step #1.
@@ -115,6 +113,8 @@ Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"cifs/DomainCont
 ```
 {% endtab %}
 {% endtabs %}
+
+![](<../../../.gitbook/assets/samaccountname spoofing.png>)
 
 ## Resources
 

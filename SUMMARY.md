@@ -60,7 +60,7 @@
     * [Relay](ad/movement/ntlm/relay.md)
     * [Pass the hash](ad/movement/ntlm/pth.md)
   * [Kerberos](ad/movement/kerberos/README.md)
-    * [🛠️ sAMAccountName spoofing](ad/movement/kerberos/samaccountname-spoofing.md)
+    * [sAMAccountName spoofing](ad/movement/kerberos/samaccountname-spoofing.md)
     * [Pre-auth bruteforce](ad/movement/kerberos/pre-auth-bruteforce.md)
     * [Pass the key](ad/movement/kerberos/ptk.md)
     * [Overpass the hash](ad/movement/kerberos/opth.md)
