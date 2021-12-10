@@ -20,8 +20,8 @@ The AdminSdHolder object is located at `CN=AdminSdHolder,CN=SYSTEM,DC=DOMAIN,DC=
 
 The default protected objects are the following.
 
-* members (possibly nested) of the following groups: Account Operators Administrator Administrators Backup Operators Domain Admins Domain Controllers Enterprise Admins Print Operators Read-only Domain Controllers Replicator Schema Admins Server Operators
-* the `krbtgt` user
+* members (possibly nested) of the following groups: `Account Operators`, `Administrators`, `Backup Operators`, `Domain Admins`, `Domain Controllers`, `Enterprise Admins`, `Print Operators`, `Read-only Domain Controllers`, `Replicator`, `Schema Admins`, `Server Operators`
+* the following users: `Administrator`, `krbtgt`
 
 {% hint style="info" %}
 When talking about AdminSdHolder, the **AdminCount** attribute is usually mentioned. This attribute is automatically set on an object when adding it to a protected group. Originally, the purpose was to improved SDProp's performance. AdminCount cannot be used for malicious purposes and is now mainly informative.
@@ -35,10 +35,21 @@ Let's say an attackers adds the following ACE to AdminSdHolder's DACL: `attacker
 
 At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` privilege over all protected objects (Domain Admins, Domain Controllers, and so on).
 
-This can be done in PowerShell
+This can be done in PowerShell with `Add-DomainObjectAcl` from [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module.
 
+```powershell
+Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,CN=DOMAIN,CN=LOCAL' -PrincipalIdentity spotless -Verbose -Rights All
 ```
-Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName spotless -Verbose -Rights All
+
+AdminSdHolder's DACL can be inspected with `Get-DomainObjectAcl` as well.
+
+```powershell
+# Inspect all AdminSdHolder's DACL
+Get-DomainObjectAcl -SamAccountName "AdminSdHolder" -ResolveGUIDs
+
+# Inspect specific rights an object has on AdminSdHolder (example with a user)
+sid = Get-DomainUser "someuser" | Select-Object -ExpandProperty objectsid
+Get-DomainObjectAcl -SamAccountName "AdminSdHolder" -ResolveGUIDs | Where-Object {$_.SecurityIdentifier -eq $sid}
 ```
 
 ## Resources
