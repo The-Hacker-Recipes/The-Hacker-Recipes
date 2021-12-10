@@ -2,15 +2,15 @@
 
 ## Theory
 
-> MachineAccountQuota \(MAQ\) is a domain level attribute that by default permits unprivileged users to attach up to 10 computers to an Active Directory \(AD\) domain \([source](https://blog.netspi.com/machineaccountquota-is-useful-sometimes/)\)
+> MachineAccountQuota (MAQ) is a domain level attribute that by default permits unprivileged users to attach up to 10 computers to an Active Directory (AD) domain ([source](https://blog.netspi.com/machineaccountquota-is-useful-sometimes/))
 
 ## Practice
 
 There are multiple ways attackers can leverage that power.
 
-* [Force client authentications](../mitm-and-coerced-authentications/), [relay those authentications](../ntlm/relay.md) to domain controllers using LDAPS, and take advantage of authenticated sessions to create a domain computer account. This account can then be used as a foothold on the AD domain to operate authenticated recon \(i.e. [with BloodHound](../../recon/bloodhound.md) for example\)
-* Create a computer account and use it for [Kerberos RBCD attacks](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) when leveraging owned accounts with sufficient permissions \(i.e. ACEs like `GenericAll`, `GenericWrite` or `WriteProperty`\) against a target machine
-* Create a computer account and use it for a [Kerberos Unconstrained Delegation](../kerberos/delegations/#unconstrained-delegations) attack when leveraging owned accounts with sufficient permissions \(i.e. the `SeEnableDelegationPrivilege` user right\)
+* [Force client authentications](../mitm-and-coerced-authentications/), [relay those authentications](../ntlm/relay.md) to domain controllers using LDAPS, and take advantage of authenticated sessions to create a domain computer account. This account can then be used as a foothold on the AD domain to operate authenticated recon (i.e. [with BloodHound](../../recon/bloodhound.md) for example)
+* Create a computer account and use it for [Kerberos RBCD attacks](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) when leveraging owned accounts with sufficient permissions (i.e. ACEs like `GenericAll`, `GenericWrite` or `WriteProperty`) against a target machine
+* Create a computer account and use it for a [Kerberos Unconstrained Delegation](../kerberos/delegations/#unconstrained-delegations) attack when leveraging owned accounts with sufficient permissions (i.e. the `SeEnableDelegationPrivilege` user right)
 * Profit from special rights that members of the Domain Computers group could inherit
 * Profit from special rights that could automatically be applied to new domain computers based on their account name
 
@@ -18,7 +18,7 @@ There are multiple ways attackers can leverage that power.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [MachineAccountQuota](https://github.com/ShutdownRepo/CrackMapExec-MachineAccountQuota) module \(for [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)\) can be used to check the value of the MachineAccountQuota attribute.
+The [MachineAccountQuota](https://github.com/ShutdownRepo/CrackMapExec-MachineAccountQuota) module (for [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)) can be used to check the value of the MachineAccountQuota attribute.
 
 ```bash
 cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD -M maq
@@ -46,7 +46,7 @@ print(connection.entries[0])
 {% tab title="Windows" %}
 In order to run the following commands and tools as other users, testers can check the [user impersonation](../credentials/impersonation.md) part.
 
-The following command, using the [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Get-ADDomain and Get-ADObject, will help testers make sure the controlled domain user can create computer accounts \(the MachineAccountQuota domain-level attribute needs to be set higher than 0. It is set to 10 by default\).
+The following command, using the [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Get-ADDomain and Get-ADObject, will help testers make sure the controlled domain user can create computer accounts (the MachineAccountQuota domain-level attribute needs to be set higher than 0. It is set to 10 by default).
 
 ```bash
 Get-ADDomain | Select-Object -ExpandProperty DistinguishedName | Get-ADObject -Properties 'ms-DS-MachineAccountQuota'
@@ -58,17 +58,21 @@ Get-ADDomain | Select-Object -ExpandProperty DistinguishedName | Get-ADObject -P
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) \(Python\) can be used to create a computer account, using the credentials of a domain user the the MachineAccountQuota domain-level attribute is set higher than 0 \(10 by default\).
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) (Python) can be used to create a computer account, using the credentials of a domain user the the MachineAccountQuota domain-level attribute is set higher than 0 (10 by default).
 
 ```bash
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass 'SomePassword' -dc-host $DomainController -domain-netbios $DOMAIN 'DOMAIN\anonymous:anonymous'
 ```
 
 Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the `--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
+
+{% hint style="info" %}
+When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs.
+{% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
-The [Powermad](https://github.com/Kevin-Robertson/Powermad) module \(PowerShell\) can be used to create a domain computer account.
+The [Powermad](https://github.com/Kevin-Robertson/Powermad) module (PowerShell) can be used to create a domain computer account.
 
 ```bash
 $password = ConvertTo-SecureString 'SomePassword' -AsPlainText -Force
@@ -94,4 +98,3 @@ Testers need to be aware that the MAQ attribute set to a non-zero value doesn't 
 {% embed url="https://www.harmj0y.net/blog/activedirectory/the-most-dangerous-user-right-you-probably-have-never-heard-of/" %}
 
 {% embed url="https://social.technet.microsoft.com/wiki/contents/articles/5446.active-directory-how-to-prevent-authenticated-users-from-joining-workstations-to-a-domain.aspx" %}
-
