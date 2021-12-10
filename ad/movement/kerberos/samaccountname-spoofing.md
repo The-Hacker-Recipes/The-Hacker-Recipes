@@ -119,5 +119,3 @@ Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"cifs/DomainCont
 ## Resources
 
 {% embed url="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html" %}
-
-{% embed url="https://support.microsoft.com/en-us/topic/kb5008102-active-directory-security-accounts-manager-hardening-changes-cve-2021-42278-5975b463-4c95-45e1-831a-d120004e258e" %}
