@@ -53,7 +53,7 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets.md#golden-ticket) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md)).
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets.md#golden-ticket) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md)).
 
 ```bash
 # Extract a specific user, in this case the krbtgt
@@ -64,6 +64,10 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /all /csv
 ```
 {% endtab %}
 {% endtabs %}
+
+{% hint style="info" %}
+For an undocumented reason, Impacket's secretsdump relies on SMB before doing a DCSync (hence requiring a `CIFS/domaincontroller` SPN when using Kerberos tickets) while Mimikatz relies on LDAP before doing the DCSync (hence requiring a `LDAP/domaincontroller` SPN when using Kerberos tickets)
+{% endhint %}
 
 ## Resources
 
