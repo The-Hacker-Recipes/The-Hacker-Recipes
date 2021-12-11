@@ -26,6 +26,8 @@ As Elad Shamir said in his article [Wagging the Dog](https://shenaniganslabs.io/
 
 ## Practice
 
+### Machine Account
+
 The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../domain-settings/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account has enough privileges to edit its attributes. Alternatively, taking control over the owner/creator of a computer account should do the job.
 
 The attack can then be conducted as follows.
@@ -116,6 +118,14 @@ Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainCont
 
 ![](<../../../.gitbook/assets/samaccountname spoofing.png>)
 
+### User account
+
+An alternative to using computer accounts is to have a `GenericAll` permission (cf. [Access Controls abuse](../access-controls/)) against a user account. This attack path also requires knowledge of the user account password or hash (to obtain a TGT), which can be obtained (or set) in many ways (e.g. [Targeted Kerberoasting](../access-controls/targeted-kerberoasting.md), [Shadow Credentials](shadow-credentials.md), [Forced Password Change](../access-controls/forcechangepassword.md)).
+
+Appart from the computer account creation, the exploitation steps are the same as with a [machine account](samaccountname-spoofing.md#machine-account).
+
 ## Resources
 
 {% embed url="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html" %}
+
+{% embed url="https://exploit.ph/more-samaccountname-impersonation.html" %}
