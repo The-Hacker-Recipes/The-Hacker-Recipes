@@ -18,7 +18,11 @@ Computer accounts should have a trailing `$` in their name (i.e. `sAMAccountName
 
 ### CVE-2021-42287 - KDC bamboozling
 
-When requesting a Service Ticket, presenting a TGT is required first. When the name listed in the TGT is not found by the KDC, the KDC automatically searches again with a trailing `$`. What happens is that if a TGT is obtained for `bob`, and the `bob` user gets removed, using that TGT to request a service ticket will result in the KDC looking for `bob$` in AD. If the domain controller account `bob$` exists, then `bob` (the user) just obtained a service ticket with `bob$` (the domain controller account) privileges :exploding\_head:.
+When requesting a Service Ticket, presenting a TGT is required first. When the service ticket is asked for is not found by the KDC, the KDC automatically searches again with a trailing `$`. What happens is that if a TGT is obtained for `bob`, and the `bob` user gets removed, using that TGT to request a service ticket for another user to himself (S4U2self) will result in the KDC looking for `bob$` in AD. If the domain controller account `bob$` exists, then `bob` (the user) just obtained a service ticket for `bob$` (the domain controller account) as any other user :exploding\_head:.
+
+{% hint style="success" %}
+As Elad Shamir said in his article [Wagging the Dog](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#solving-a-sensitive-problem), "S4U2Self works for a user marked as sensitive for delegation and a member of the Protected Users group".
+{% endhint %}
 
 ## Practice
 
@@ -32,10 +36,6 @@ The attack can then be conducted as follows.
 4. Reset the controlled machine account `sAMAccountName` to its old value (or anything else different than the Domain Controller's name without the trailing `$`)
 5. Request a service ticket with S4U2self by presenting the TGT obtained before -> [CVE-2021-42287](samaccountname-spoofing.md#cve-2021-42287-kdc-lookup)
 6. Get access to the domain controller (i.e. [DCSync](../credentials/dumping/dcsync.md))
-
-{% hint style="success" %}
-As Elad Shamir said in his article [Wagging the Dog](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#solving-a-sensitive-problem), "S4U2Self works for a user marked as sensitive for delegation and a member of the Protected Users group".
-{% endhint %}
 
 {% hint style="warning" %}
 At the time of writing (10th of December, 2021), the tools and features that allow exploitation of these vulnerabilities are in development
