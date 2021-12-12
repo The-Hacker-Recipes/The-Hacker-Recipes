@@ -131,3 +131,5 @@ Appart from the computer account creation and SPNs manipulation, the exploitatio
 {% embed url="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html" %}
 
 {% embed url="https://exploit.ph/more-samaccountname-impersonation.html" %}
+
+{% embed url="https://cloudbrothers.info/en/exploit-kerberos-samaccountname-spoofing" %}
