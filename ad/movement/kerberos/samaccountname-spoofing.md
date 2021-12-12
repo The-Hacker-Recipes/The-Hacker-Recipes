@@ -120,9 +120,11 @@ Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainCont
 
 ### User account
 
-An alternative to using computer accounts is to have a `GenericAll` permission (cf. [Access Controls abuse](../access-controls/)) against a user account. This attack path also requires knowledge of the user account password or hash (to obtain a TGT), which can be obtained (or set) in many ways (e.g. [Targeted Kerberoasting](../access-controls/targeted-kerberoasting.md), [Shadow Credentials](shadow-credentials.md), [Forced Password Change](../access-controls/forcechangepassword.md)).
+An alternative to using computer accounts is to have enough permissions against a user account (cf. [Access Controls abuse](../access-controls/)) to edit its `sAMAccountName` attribute (i.e. `WriteProperty` on the attribute, or on the « general information » or « public information » property sets, or `GenericWrite`, or `GenericAll`).&#x20;
 
-Appart from the computer account creation, the exploitation steps are the same as with a [machine account](samaccountname-spoofing.md#machine-account).
+This attack path also requires knowledge of the user account password or hash (to obtain a TGT), which can be obtained (or set) in many ways (e.g. [Targeted Kerberoasting](../access-controls/targeted-kerberoasting.md), [Shadow Credentials](shadow-credentials.md), [Forced Password Change](../access-controls/forcechangepassword.md)).
+
+Appart from the computer account creation and SPNs manipulation, the exploitation steps are the same as with a [machine account](samaccountname-spoofing.md#machine-account). If the account has SPNs that point to its name, they will have to be removed for the renaming operation to work.
 
 ## Resources
 
