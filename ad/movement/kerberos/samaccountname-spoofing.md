@@ -32,7 +32,7 @@ The ability to edit a machine account's `sAMAccountName` and `servicePrincipalNa
 
 The attack can then be conducted as follows.
 
-1. Clear the controlled machine account `servicePrincipalName` attribute
+1. Clear the controlled machine account `servicePrincipalName` attribute of any value that points to its name (e.g. `host/machine.domain.local`, `RestrictedKrbHost/machine.domain.local`)&#x20;
 2. Change the controlled machine account `sAMAccountName` to a Domain Controller's name without the trailing `$` -> [CVE-2021-42278](samaccountname-spoofing.md#cve-2021-42278-name-impersonation)
 3. Request a TGT for the controlled machine account
 4. Reset the controlled machine account `sAMAccountName` to its old value (or anything else different than the Domain Controller's name without the trailing `$`)
