@@ -156,9 +156,11 @@ ifup eth0
 ```
 {% endhint %}
 
-### Authentication only
+### Authentication only <a href="#mac-address-used-as-only-authentication-feature" id="mac-address-used-as-only-authentication-feature"></a>
 
-/// WIP
+Same thing as [MAC-based + authentication](network-access-control.md#mac-address-needs-to-be-authorized-and-authentication-required-1), without the MAC-based verification bypass.
+
+A regular authentication to 802.1x (and others) systems can be conducted with [xsupplicant](https://github.com/Zero3K/xsupplicant) (C).
 
 ### MAC-based + authentication <a href="#mac-address-needs-to-be-authorized-and-authentication-required" id="mac-address-needs-to-be-authorized-and-authentication-required"></a>
 
@@ -166,7 +168,7 @@ In this case, access to the network is granted if the supplicant's MAC address i
 
 Just like with [MAC-based](network-access-control.md#mac-address-used-as-only-authentication-feature) bypass, the first step is to find an authorized MAC address.
 
-The second step is to access the port without authentication, which leaves at least to possible ways, both relying on [the dropbox](network-access-control.md#offensive-tooling-dropbox).
+The second step is to access the port without authentication, which leaves at least two possible ways, both relying on [the dropbox](network-access-control.md#offensive-tooling-dropbox).
 
 #### Using a Hub
 
@@ -235,9 +237,19 @@ Here are some general guidelines for keeping things as secure as possible:
 {% embed url="https://www.gremwell.com/marvin-mitm-tapping-dot1x-links" %}
 
 {% embed url="https://github.com/Orange-Cyberdefense/fenrir-ocd" %}
+802.1x bypass tool
+{% endembed %}
 
 {% embed url="https://github.com/nccgroup/phantap" %}
+An "invisible" network tap aimed at red teams
+{% endembed %}
 
 {% embed url="https://github.com/s0lst1c3/silentbridge" %}
+802.1x-2010 and 802.1x-2004 bypass toolkit
+{% endembed %}
 
 {% embed url="https://github.com/SySS-Research/Lauschgeraet" %}
+
+{% embed url="https://github.com/Zero3K/xsupplicant" %}
+802.1X/WPA/WPA2/IEEE802.11i implementation for GNU/Linux/BSD/Windows
+{% endembed %}
