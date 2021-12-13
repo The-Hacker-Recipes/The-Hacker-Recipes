@@ -215,7 +215,7 @@
 
 * [Locks](physical/lockpicking.md)
 * [Networking](physical/networking/README.md)
-  * [🛠️ Network Access Control](physical/networking/network-access-control.md)
+  * [Network Access Control](physical/networking/network-access-control.md)
 * [Machines](physical/physical-access/README.md)
   * [HID injection](physical/physical-access/hid-injection.md)
   * [Keylogging](physical/physical-access/keylogging.md)
