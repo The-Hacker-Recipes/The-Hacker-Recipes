@@ -17,9 +17,10 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] No account is configured with `Do not require Kerberos Pre-Authentication` allowing for [ASREProast](kerberos/asreproast.md) attacks, or make sure those account have strong password resistant to [cracking](credentials/cracking.md).
 * [ ] User accounts that have at least one `ServicePrincipalName`, hence vulnerable to [Kerberoast](kerberos/kerberoast.md), have a strong password, resistant to [cracking.](credentials/cracking.md)
 
-### Security patches
+### Patch management
 
 * [ ] Domain Controllers are patched against [ZeroLogon](netlogon/zerologon.md).
+* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](kerberos/samaccountname-spoofing.md).
 * [ ] [MS14-068](kerberos/forged-tickets.md#ms-14-068-cve-2014-6324) is patched, preventing forging of powerful Kerberos tickets.
 * [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse.md), and [ACE abuse](access-controls/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
 * [ ] Patches for NTLM tampering vulnerabilities (e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166) are applied to limit [NTLM relay](ntlm/relay.md) attacks.
@@ -58,20 +59,12 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.
 * [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](mitm-and-coerced-authentications/wsus-spoofing.md) attacks.
 * [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-protocols.md).&#x20;
-* [ ] Set-up VLANs, 802.1X, NAC (Network Access Control) to limit the attackers progress within the network.
+* [ ] Set-up VLANs, 802.1X or other [NAC (Network Access Control)](../../physical/networking/network-access-control.md) securities to limit the attackers progress within the network.
+* [ ] Plaintext protocols are avoided when using credentials (HTTP, FTP, ...), in order to minimize the risks of the [capture of credentials transiting on the network](credentials/dumping/network-protocols.md).
 
 ### Active Directory Certificate Services
 
 * [ ] The CA is configured correctly (the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag is not set). This prevents [the corresponding domain escalation attack](ad-cs/ca-configuration.md).
 * [ ] There are no certificate templates that are badly configured. This prevents [the corresponding domain escalation attack](ad-cs/certificate-templates.md).
 * [ ] AD-CS web endpoints are secured against [AD-CS NTLM relay attacks](ad-cs/web-endpoints.md) (HTTPS and EPA (Extended Protection for Authentication) enforced).
-
-
-
-:hammer\_pick: Things to add&#x20;
-
-* Use of physical tokens (U2F, access cards, ...)
-* Avoiding the use of plaintext protocols (limit ARP poisoning results)
-* Forest and domain trusts
-* sidfilter, sidhistory, etc.
 
