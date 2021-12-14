@@ -40,13 +40,10 @@ The attack can then be conducted as follows.
 6. Get access to the domain controller (i.e. [DCSync](../credentials/dumping/dcsync.md))
 
 {% hint style="warning" %}
-At the time of writing (10th of December, 2021), the tools and features that allow exploitation of these vulnerabilities are in development
+Some of the tools and features that allow exploitation of these vulnerabilities are still in development
 
-* Rubeus: [https://github.com/GhostPack/Rubeus/tree/pac](https://github.com/GhostPack/Rubeus/tree/pac)
 * Impacket's getST: [https://github.com/SecureAuthCorp/impacket/pull/1202](https://github.com/SecureAuthCorp/impacket/pull/1202)
 * Impacket's renameMachine: [https://github.com/SecureAuthCorp/impacket/pull/1224](https://github.com/SecureAuthCorp/impacket/pull/1224)
-* krbrelayx's addspn: [https://github.com/dirkjanm/krbrelayx/pull/20](https://github.com/dirkjanm/krbrelayx/pull/20)
-* noPac (from cube0x0): [https://github.com/cube0x0/noPac](https://github.com/cube0x0/noPac)
 {% endhint %}
 
 {% tabs %}
@@ -115,7 +112,7 @@ Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainCont
 (mimikatz) lsadump::dcsync /domain:domain.local /kdc:DomainController.domain.local /user:krbtgt 
 ```
 
-[noPac](https://github.com/cube0x0/noPac) (C#) is an automated alternative
+[noPac](https://github.com/cube0x0/noPac) (C#) is an automated alternative that can be used to scan and abuse unpatched targets.
 
 ```powershell
 noPac.exe scan -domain domain.local -user "lowpriv" -pass "lowpriv"
