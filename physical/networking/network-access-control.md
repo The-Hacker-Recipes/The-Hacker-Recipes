@@ -2,7 +2,7 @@
 description: Bypassing Network Access Control Systems
 ---
 
-# 🛠️ Network Access Control
+# Network Access Control
 
 ## Theory
 
@@ -28,8 +28,7 @@ _\*IT/OT network: Information Technology (workstations, users, shares, ...) and_
 
 ### Infrastructure & auth flow
 
-Most commonly your NAC solution will be based on [802.1x](https://en.wikipedia.org/wiki/IEEE\_802.1X) which is a standard for port based network access. It will interact with the switches (most likely and mainly via SNMP) and allow or block ports based on the preset rules.\
-There are 3 actors involved:
+Most commonly, NAC solution are based on [802.1x](https://en.wikipedia.org/wiki/IEEE\_802.1X) which is a standard for port based network access. It will interact with the switches (most likely and mainly via SNMP) and allow or block ports based on the preset rules. There are 3 actors involved:
 
 1. **The supplicant**: the client that is asking for network access
 2. **The authenticator**: the device that acts as the gatekeeper and to which the clients connects - most likely a switch.

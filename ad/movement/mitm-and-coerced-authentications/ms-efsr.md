@@ -9,7 +9,7 @@ In 2019, Google's Project Zero research team found and reported a bug on MS-EFSR
 While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Gilles LIONEL](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication. **The coerced authentications are made over SMB**. But MS-EFSR abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heighten [NTLM relay](../ntlm/relay.md) capabilities.
 
 {% hint style="warning" %}
-At the time of writing (11th August 2021), this bug has not been [fully addressed](https://blog.0patch.com/2021/08/free-micropatches-for-petitpotam.html) by Microsoft.
+At the time of writing (14th December 2021), this bug has not been [fully addressed](https://blog.0patch.com/2021/08/free-micropatches-for-petitpotam.html) by Microsoft as other functions of the same protocol were detected vulnerable.
 {% endhint %}
 
 ## Practice

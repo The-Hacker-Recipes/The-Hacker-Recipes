@@ -10,7 +10,7 @@ When misconfigured, ACEs can be abused to operate lateral movement or privilege 
 
 ## Practice
 
-If an object (called **objectA**) DACL features an ACE stating that another object (called **objectB**) has a spefic right (e.g. `GenericAll`) over it (i.e. over **objectA**), attackers need to be in control of **objectB** to take control of **objectA**. The following abuses can only be carried out when running commands as the user mentioned in the ACE (**objectB**) (see [impersonation techniques](../credentials/impersonation.md)).
+If an object's (called **objectA**) DACL features an ACE stating that another object (called **objectB**) has a specific right (e.g. `GenericAll`) over it (i.e. over **objectA**), attackers need to be in control of **objectB** to take control of **objectA**. The following abuses can only be carried out when running commands as the user mentioned in the ACE (**objectB**) (see [impersonation techniques](../credentials/impersonation.md)).
 
 ### Recon
 
