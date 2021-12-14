@@ -12,17 +12,17 @@ description: Bypassing Network Access Control Systems
 
 NAC is a principle. It can be setup with several measures.
 
-1. Filtering of MAC addresses
-2. Authentication with username & password
-3. Authentication with certificates
-4. Fingerprinting&#x20;
-5. Host checks
+* Filtering of MAC addresses
+* Authentication with username & password
+* Authentication with certificates
+* Fingerprinting&#x20;
+* Host checks
 
 NAC aims at protecting against the including, but not limited to, scenarios.
 
-1. Employees bringing rogue devices (willingly or not)
-2. Service providers acting inside the IT / OT network\*
-3. Attackers trying to gain access to the internal network
+* Employees bringing rogue devices (willingly or not)
+* Service providers acting inside the IT / OT network\*
+* Attackers trying to gain access to the internal network
 
 _\*IT/OT network: Information Technology (workstations, users, shares, ...) and_ [_Operational Technology_](https://en.wikipedia.org/wiki/Operational\_technology) _(machines, productionl lines, ...)._
 
@@ -30,9 +30,9 @@ _\*IT/OT network: Information Technology (workstations, users, shares, ...) and_
 
 Most commonly, NAC solution are based on [802.1x](https://en.wikipedia.org/wiki/IEEE\_802.1X) which is a standard for port based network access. It will interact with the switches (most likely and mainly via SNMP) and allow or block ports based on the preset rules. There are 3 actors involved:
 
-1. **The supplicant**: the client that is asking for network access
-2. **The authenticator**: the device that acts as the gatekeeper and to which the clients connects - most likely a switch.
-3. **The authentication server**: something in the background that validates the requests and grants or denies access to the supplicant.
+* **The supplicant**: the client that is asking for network access
+* **The authenticator**: the device that acts as the gatekeeper and to which the clients connects - most likely a switch.
+* **The authentication server**: something in the background that validates the requests and grants or denies access to the supplicant.
 
 By default, the ports are in an unauthorized state and will only be allowed to transmit and receive [EAPOL](https://www.vocal.com/secure-communication/eapol-extensible-authentication-protocol-over-lan/) frames (Extensible Authentication Protocol Over LAN), which basically is encapsulated [EAP](https://en.wikipedia.org/wiki/Extensible\_Authentication\_Protocol).
 
