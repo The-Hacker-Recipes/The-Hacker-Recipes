@@ -19,12 +19,16 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 * the injected WPAD server address will stay until the client reboots (that's how Windows works :man\_shrugging: ). If the injected field was a DNS server, it will be overwritten with the new legit DHCP lease.
 * with the injected WPAD server address, the Windows client will try to obtain the `wpad.dat` file on the rogue WPAD. Responder will then require the client to authenticate.
 
-The attack can be started with the `-d/--DHCP` (WPAD injection) or `-D/--DHCP-DNS` (DNS injection) arguments (either or the other, if both options are set, `-D` will take the precedence).
+The attack can be started with the `-D/--DHCP-DNS` (DNS injection, **preferred**) or `-d/--DHCP` (WPAD injection) arguments (either or the other, if both options are set, `-D` will take the precedence).
 
-When using the `-d/--DHCP` argument, the `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes.
+When using the `-d/--DHCP` argument, the `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes. Those options can also be used along `-D/--DHCP-DNS` since the wpad DNS entry will be one of the first queries mby the poisoned machine.
 
 ```bash
-responder --interface "eth0" --DHCP --wredir --ProxyAuth --verbose
+# DNS injection
+responder --interface "eth0" --DHCP-DNS --wredir --ProxyAuth
+
+# WPAD injection
+responder --interface "eth0" --DHCP --wredir --ProxyAuth
 ```
 
 The proxy auth NTLM authentication can either be [captured](../ntlm/capture.md) with Responder with the command line above or [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument. The `--wredir` and `--ProxyAuth` arguments need to be removed from Responder's command line.).
