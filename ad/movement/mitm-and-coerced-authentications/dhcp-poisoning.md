@@ -13,15 +13,15 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 [Responder](https://github.com/SpiderLabs/Responder) (Python) can be used to operate DHCP poisoning in the following manner
 
 * race against the legit DHCP server to answer `DHCP REQUEST` messages
-* sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds)
+* sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds). Responder can also be used to attempt at injecting a DNS server instead.
 * wait the lease to expire so that the poisoned client asks for a new lease
 * let the client obtain a legitimate lease from the real DHCP server, allowing the client to obtain the right network settings and have connectivity
-* the injected WPAD server address will stay until the client reboots (that's how Windows works :man\_shrugging: )
+* the injected WPAD server address will stay until the client reboots (that's how Windows works :man\_shrugging: ). If the injected field was a DNS server, it will be overwritten with the new legit DHCP lease.
 * with the injected WPAD server address, the Windows client will try to obtain the `wpad.dat` file on the rogue WPAD. Responder will then require the client to authenticate.
 
-The attack can be started with the `-d/--DHCP` argument.
+The attack can be started with the `-d/--DHCP` (WPAD injection) or `-D/--DHCP-DNS` (DNS injection) arguments (either or the other, if both options are set, `-D` will take the precedence).
 
-The `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes.
+When using the `-d/--DHCP` argument, the `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes.
 
 ```bash
 responder --interface "eth0" --DHCP --wredir --ProxyAuth --verbose
