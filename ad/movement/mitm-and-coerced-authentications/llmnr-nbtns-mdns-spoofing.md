@@ -15,15 +15,13 @@ Attackers can then answer those multicast or broadcast queries. The victims are 
 The following command will make Responder analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
 
 ```bash
-responder --interface "eth0" --analyze
-responder -I "eth0" -A
+responder --interface eth0 --analyze
 ```
 
 The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md).
 
 ```bash
-responder --interface "eth0"
-responder -I "eth0" -A
+responder --interface eth0
 ```
 {% endtab %}
 
