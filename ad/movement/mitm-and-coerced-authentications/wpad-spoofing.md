@@ -9,10 +9,14 @@ The Web Proxy Automatic Discovery (WPAD) protocol allows clients to obtain proxy
 WPAD spoofing can be combined with&#x20;
 
 * [LLMNR and NBT-NS spoofing](llmnr-nbtns-mdns-spoofing.md)
-* [ARP spoofing](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-spoofing.md), followed by [DNS spoofing](dns-spoofing.md)
+* [DHCP poisoning](dhcp-poisoning.md) combined, combined (or not) with DNS spoofing
+* [ARP poisoning](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-spoofing.md), followed by [DNS spoofing](dns-spoofing.md)
 
 {% hint style="info" %}
-Proxy auth NTLM authentication can either be [captured](../ntlm/capture.md) with Responder with `--wredir` and `--ProxyAuth` or [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) by using the `--http-port 3128` argument.
+Proxy auth NTLM authentication can either be
+
+* forced and [captured](../ntlm/capture.md) with Responder with `--wredir` and `--ProxyAuth`&#x20;
+* or forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) by using the `--http-port 3128` argument
 {% endhint %}
 
 ### through LLMNR, NBT-NS spoofing
@@ -25,11 +29,13 @@ On old Windows systems (i.e. lacking the MS16-077 security update), the WPAD loc
 {% tab title="UNIX-like" %}
 The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md).
 
-* The `--wpad` option will make Responder start the WPAD rogue server so that fake `wpad.dat` file can be served to requesting clients.
-* The `--ForceWpadAuth` option is needed on servers that applied the MS16-077 security patch. This patch introduced a mitigation that now prevents clients from automatically authenticating. This option forces the authentication request, hence potentially causing a login prompt.
+* The `-w/--wpad` option will make Responder start the WPAD rogue server so that fake `wpad.dat` file can be served to requesting clients.
+* The `-r/--wredir` option to resolve NetBIOS requests
+* The `-P/--ProxyAuth` option to force the Windows client to authenticate after the `wpad.dat` is accessed and when the client starts using the proxy
 
 ```bash
-responder --interface eth0 --wpad --ForceWpadAuth
+responder --interface "eth0" --wpad --ProxyAuth --wredir
+responder -I "eth0" -wrP
 ```
 {% endtab %}
 
@@ -54,7 +60,7 @@ On up-to-date machines (i.e. with the MS17-066 security update applied), WPAD ca
 On machines that are not patched against [CVE-2018-8320](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2018-8320), there are two ways to bypass the GQBL: by [registering a wildcard record](adidns-spoofing.md#manuel-record-addition) or by registering a domain alias (DNAME) record, which can be conducted as follows with [Powermad](https://github.com/Kevin-Robertson/Powermad) (Powershell).
 
 ```bash
-New-ADIDNSNode -Node 'pentester01' -Data 'Pentest_IP_Address'
+New-ADIDNSNode -Node '*' -Data 'Pentest_IP_Address'
 New-ADIDNSNode -Node wpad -Type DNAME -Data 'pentester01.TARGETDOMAIN.LOCAL'
 ```
 
@@ -63,7 +69,6 @@ New-ADIDNSNode -Node wpad -Type DNAME -Data 'pentester01.TARGETDOMAIN.LOCAL'
 On machines that are patched against that CVE, registering a name server (NS) record could still work.&#x20;
 
 ```bash
-New-ADIDNSNode -Node 'pentester01' -Data 'Pentest_IP_Address'
 New-ADIDNSNode -Node wpad -Type NS -Data 'pentester01.TARGETDOMAIN.LOCAL'
 ```
 
