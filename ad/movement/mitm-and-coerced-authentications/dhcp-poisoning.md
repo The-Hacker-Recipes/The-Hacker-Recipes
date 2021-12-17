@@ -16,22 +16,37 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 * sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds). Responder can also be used to attempt at injecting a DNS server instead.
 * wait the lease to expire so that the poisoned client asks for a new lease
 * let the client obtain a legitimate lease from the real DHCP server, allowing the client to obtain the right network settings and have connectivity
-* the injected WPAD server address will stay until the client reboots (that's how Windows works :man\_shrugging: ). If the injected field was a DNS server, it will be overwritten with the new legit DHCP lease.
+* the injected WPAD server address will stay until the client reboots. If the injected field was a DNS server, it will be overwritten with the new legit DHCP lease.
 * with the injected WPAD server address, the Windows client will try to obtain the `wpad.dat` file on the rogue WPAD. Responder will then require the client to authenticate.
 
-The attack can be started with the `-D/--DHCP-DNS` (DNS injection, **preferred**) or `-d/--DHCP` (WPAD injection) arguments (either or the other, if both options are set, `-D` will take the precedence).
+The attack can be started with the `-d/--DHCP` (WPAD injection) argument. By default, a rogue WPAD server will be injected in the configuration. If the additional`-D/--DHCP-DNS` argument is set, a rogue DNS server address will be injected in the configuration instead of a WPAD.
 
-When using the `-d/--DHCP` argument, the `--wredir` and `--ProxyAuth` need to be added to force the Windows client to authenticate once the `wpad.dat` is accessed in order to capture hashes. Those options can also be used along `-D/--DHCP-DNS` since the wpad DNS entry will be one of the first queries mby the poisoned machine.
+Additional arguments and options should be used when doing DHCP poisoning with the `-d/--DHCP` argument. Those options can also be used along `-D/--DHCP-DNS` since the WPAD DNS entry will be one of the first queries by the poisoned machine.
+
+* The `-w/--wpad` option to start the WPAD rogue server so that fake `wpad.dat` file can be served to requesting clients (i.e. [WPAD spoofing](wpad-spoofing.md))
+* The `-P/--ProxyAuth` option to force the Windows client to authenticate after the `wpad.dat` is accessed and when the client starts using the proxy
 
 ```bash
 # DNS injection
-responder --interface "eth0" --DHCP-DNS --wredir --ProxyAuth
+responder --interface "eth0" --DHCP --DHCP-DNS --wpad --ProxyAuth
+responder -I "eth0" -wPdD
 
 # WPAD injection
-responder --interface "eth0" --DHCP --wredir --ProxyAuth
+responder --interface "eth0" --DHCP --wpad --ProxyAuth
+responder -I "eth0" -wPd
 ```
 
-The proxy auth NTLM authentication can either be [captured](../ntlm/capture.md) with Responder with the command line above or [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument. The `--wredir` and `--ProxyAuth` arguments need to be removed from Responder's command line.).
+{% hint style="info" %}
+The proxy auth NTLM authentication can either be
+
+* forced and [captured](../ntlm/capture.md) with Responder with the command line above (with `--wredir` and `--ProxyAuth`)
+* or forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument
+
+```bash
+responder --interface "eth0" --DHCP --DHCP-DNS --wpad
+ntlmrelayx -t $target --http-port 3128
+```
+{% endhint %}
 
 ## Resources
 
