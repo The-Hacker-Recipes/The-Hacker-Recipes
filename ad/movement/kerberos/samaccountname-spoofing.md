@@ -139,3 +139,7 @@ Appart from the computer account creation and SPNs manipulation, the exploitatio
 {% embed url="https://exploit.ph/more-samaccountname-impersonation.html" %}
 
 {% embed url="https://cloudbrothers.info/en/exploit-kerberos-samaccountname-spoofing" %}
+
+{% embed url="https://twitter.com/snovvcrash/status/1471829627765239816" %}
+sAMAccountName exploitation through assembly execution
+{% endembed %}
