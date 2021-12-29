@@ -30,8 +30,8 @@ In my tests, the coercion needed to be attempted twice in order to work when the
 
 ## Resources
 
+Topotam's tweet: [https://twitter.com/topotam77/status/1475701014204461056](https://twitter.com/topotam77/status/1475701014204461056)
+
+Topotam's slides: [https://fr.slideshare.net/LionelTopotam/petit-potam-slidesrtfmossir](https://fr.slideshare.net/LionelTopotam/petit-potam-slidesrtfmossir)
+
 {% embed url="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fsrvp/dae107ec-8198-4778-a950-faa7edad125b" %}
-
-{% embed url="https://twitter.com/topotam77/status/1475701014204461056" %}
-
-{% embed url="https://fr.slideshare.net/LionelTopotam/petit-potam-slidesrtfmossir" %}
