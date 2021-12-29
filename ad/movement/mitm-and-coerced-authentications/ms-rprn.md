@@ -4,7 +4,7 @@
 
 Microsoft’s Print Spooler is a service handling the print jobs and other various tasks related to printing. An attacker controling a domain user/computer can, with a specific RPC call, trigger the spooler service of a target running it and make it authenticate to a target of the attacker's choosing. This flaw is a "won't fix" and enabled by default on all Windows environments ([more info on the finding](https://fr.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/47)).
 
-**The coerced authentications are made over SMB**. But MS-RPRN abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heighten [NTLM relay](../ntlm/relay.md) capabilities.
+**The coerced authentications are made over SMB**. But MS-RPRN abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../ntlm/relay.md) capabilities.
 
 The "specific call" mentioned above is the `RpcRemoteFindFirstPrinterChangeNotificationEx` notification method, which is part of the MS-RPRN protocol. MS-RPRN is Microsoft’s Print System Remote Protocol. It defines the communication of print job processing and print system management between a print client and a print server.
 

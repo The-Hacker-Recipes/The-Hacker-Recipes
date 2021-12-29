@@ -50,6 +50,7 @@
     * [WPAD spoofing](ad/movement/mitm-and-coerced-authentications/wpad-spoofing.md)
     * [MS-EFSR abuse (PetitPotam)](ad/movement/mitm-and-coerced-authentications/ms-efsr.md)
     * [MS-RPRN abuse (PrinterBug)](ad/movement/mitm-and-coerced-authentications/ms-rprn.md)
+    * [MS-FSRVP abuse (ShadowCoerce)](ad/movement/mitm-and-coerced-authentications/ms-fsrvp.md)
     * [PushSubscription abuse](ad/movement/mitm-and-coerced-authentications/pushsubscription-abuse.md)
     * [WebClient abuse (WebDAV)](ad/movement/mitm-and-coerced-authentications/webclient.md)
     * [🛠️ NBT Name Overwrite](ad/movement/mitm-and-coerced-authentications/nbt-name-overwrite.md)
