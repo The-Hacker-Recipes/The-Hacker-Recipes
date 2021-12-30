@@ -4,7 +4,7 @@
 
 In order to function properly, Active Directory services need DNS. In that matter, Active Directory Domain Services (AD-DS) offer an integrated storage and replication service for DNS records. This is called Active Directory Integrated DNS (ADIDNS).
 
-Just like any other domain name resolution spoofing attack, if an attacker is able to resolve requests with an arbitrary IP address, traffic gets hijacked, the attacker becomes a man-in-the-middle and further attacks can be operated.
+Just like any other domain name resolution spoofing attack, if an attacker is able to resolve requests with an arbitrary IP address, traffic gets hijacked, the attacker becomes a Man-in-the-Middle and further attacks can be operated.
 
 Since ADIDNS zone DACL (Discretionary Access Control List) enables regular users to create child objects by default, attackers can leverage that and hijack traffic.
 
@@ -17,7 +17,7 @@ ADIDNS zones can be remotely edited
 
 > Wildcard records allow DNS to function in a very similar fashion to LLMNR/NBNS spoofing. Once you create a wildcard record, the DNS server will use the record to answer name requests that do not explicitly match records contained in the zone. ([source](https://blog.netspi.com/exploiting-adidns/#wildcard))
 
-:bulb: In some scenarios, adding a wildcard record the the proper ADIDNS zone won't work. This is usually due to the **WINS forward lookup** being enabled on that zone. WINS forward lookup makes the DNS server send a NBT-NS Query Request to a predefined WINS server when it receives an address record query for which it doesn't know the answer. In short, it serves the same purpose as the wildcard record. This feature needs to be disabled for the wildcard record to be used.
+:bulb: In some scenarios, adding a wildcard record to the proper ADIDNS zone won't work. This is usually due to the **WINS forward lookup** being enabled on that zone. WINS forward lookup makes the DNS server send a NBT-NS Query Request to a predefined WINS server when it receives an address record query for which it doesn't know the answer. In short, it serves the same purpose as the wildcard record. This feature needs to be disabled for the wildcard record to be used.
 
 ![Domain Controller > DNS Manager > zone properties > WINS](../../../.gitbook/assets/WINS\_lookup.png)
 

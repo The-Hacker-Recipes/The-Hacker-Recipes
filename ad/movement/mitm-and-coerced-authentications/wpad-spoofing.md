@@ -2,21 +2,28 @@
 
 ## Theory
 
-The Web Proxy Automatic Discovery (WPAD) protocol allows clients to obtain proxy configurations for Internet access through a `wpad.dat` file hosted on a server which address is usually resolved through DNS. This allows corporations to easily manage web proxy configs through a single file.
+A proxy can be used to handle clients requests (for example to access the Internet). In a network in which the topology changes frequently, adaptive configurations are needed. A type of proxies called "Adaptive proxies" uses a configuration script.
+
+The Web Proxy Automatic Discovery (WPAD) protocol helps clients in finding a proxy configuration script (`wpad.dat`). This script gives a set of proxies that can be used, and can be located with an hostname or an URL. Various mechanisms can be used to find its location (by order of resolution):
+
+1. WinHTTP/WinINET
+2. DHCP
+3. DNS
+4. Internet Explorer's LAN settings, or configuration file&#x20;
 
 ## Practice
 
 WPAD spoofing can be combined with&#x20;
 
 * [LLMNR and NBT-NS spoofing](llmnr-nbtns-mdns-spoofing.md)
-* [DHCP poisoning](dhcp-poisoning.md) combined, combined (or not) with DNS spoofing
+* [DHCP poisoning](dhcp-poisoning.md) combined (or not) with DNS spoofing
 * [ARP poisoning](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-spoofing.md), followed by [DNS spoofing](dns-spoofing.md)
 
 {% hint style="info" %}
 Proxy auth NTLM authentication can either be
 
 * forced and [captured](../ntlm/capture.md) with Responder with `--wredir` and `--ProxyAuth`&#x20;
-* or forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) by using the `--http-port 3128` argument
+* forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) by using the `--http-port 3128` argument
 {% endhint %}
 
 ### through LLMNR, NBT-NS spoofing
@@ -52,7 +59,7 @@ Invoke-Inveigh -ConsoleOutput Y -LLMNR Y -NBNS Y -mDNS Y -Challenge 112233445566
 
 ### through ADIDNS spoofing
 
-On up-to-date machines (i.e. with the MS17-066 security update applied), WPAD can still be abused through [ADIDNS spoofing](adidns-spoofing.md) if the WPAD record does not exist. There is however a DNS block list mitigation called GQBL (Global Query Block List) preventing names like WPAD and ISATAP (default entries) to be resolved. This block list exists to reduce vulnerabilities associated with dynamic DNS updates but [it can be edited](https://docs.microsoft.com/en-us/previous-versions/tn-archive/cc995158\(v=technet.10\)) when [implementing WPAD](https://docs.microsoft.com/en-us/previous-versions/tn-archive/cc995261\(v=technet.10\)).
+On up-to-date machines (i.e. with the MS16-077 security update applied), WPAD can still be abused through [ADIDNS spoofing](adidns-spoofing.md) if the WPAD record does not exist. There is however a DNS block list mitigation called GQBL (Global Query Block List) preventing names like WPAD and ISATAP (default entries) to be resolved. This block list exists to reduce vulnerabilities associated with dynamic DNS updates but [it can be edited](https://docs.microsoft.com/en-us/previous-versions/tn-archive/cc995158\(v=technet.10\)) when [implementing WPAD](https://docs.microsoft.com/en-us/previous-versions/tn-archive/cc995261\(v=technet.10\)).
 
 #### Pre CVE-2018-8320
 
@@ -79,7 +86,7 @@ dnschef --fakeip 'Pentest_IP_Address' --interface 'Pentest_IP_Address' --port 53
 
 ### through DHCPv6 spoofing
 
-On up-to-date machines (i.e. with the MS17-066 security update applied), WPAD can still be abused through [ADIDNS spoofing](adidns-spoofing.md), **even if the WPAD record does exist**. With DNS poisoning through DHCPv6 spoofing, an attacker can reply to DHCPv6 requests, and then reply to DNS queries.
+On up-to-date machines (i.e. with the MS16-077 security update applied), WPAD can still be abused through [ADIDNS spoofing](adidns-spoofing.md), **even if the WPAD record does exist**. With DNS poisoning through DHCPv6 spoofing, an attacker can reply to DHCPv6 requests, and then reply to DNS queries.
 
 This attack can be conducted with [mitm6](https://github.com/fox-it/mitm6) (Python), see the [DHCPv6 spoofing](dhcpv6-spoofing.md) page for exploitation notes.
 
