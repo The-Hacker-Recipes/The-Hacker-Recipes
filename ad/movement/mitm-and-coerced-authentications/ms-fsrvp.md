@@ -4,7 +4,7 @@
 
 MS-FSRVP is Microsoft's File Server Remote VSS Protocol. It's used for creating shadow copies of file shares on a remote computer, and for facilitating backup applications in performing application-consistent backup and restore of data on SMB2 shares ([docs.microsoft.com](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-fsrvp/dae107ec-8198-4778-a950-faa7edad125b)).
 
-In late 2021, [Gilles LIONEL](https://twitter.com/topotam77) published [slides](https://twitter.com/topotam77/status/1475701014204461056) showcasing [PetitPotam](ms-efsr.md) and demonstrating the possibility of abusing the protocol to coerce authentications on the last two slides.
+In late 2021, [Lionel GILLES](https://twitter.com/topotam77) published [slides](https://twitter.com/topotam77/status/1475701014204461056) showcasing [PetitPotam](ms-efsr.md) and demonstrating the possibility of abusing the protocol to coerce authentications on the last two slides.
 
 Similarly to other MS-RPC abuses, this works by using a specific method relying on remote UNC paths. In this case, at the time of writing, two methods were detected as vulnerable: `IsPathSupported` and `IsPathShadowCopied`.
 

@@ -6,7 +6,7 @@ MS-EFSR is Microsoft's Encrypting File System Remote protocol. It performs maint
 
 In 2019, Google's Project Zero research team found and reported a bug on MS-EFSR that could be combined with a [NTLM Reflection attack](https://bugs.chromium.org/p/project-zero/issues/detail?id=222) leading to a Local Privilege Elevation. An insufficient path check in MS-EFSR's `EfsRpcOpenFileRaw` method allowed attackers to force the `SYSTEM` account into creating an executable file of the attacker's choosing, hence providing the attacker with local admin rights.
 
-While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Gilles LIONEL](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication. **The coerced authentications are made over SMB**. But MS-EFSR abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../ntlm/relay.md) capabilities.
+While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Lionel GILLES](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication. **The coerced authentications are made over SMB**. But MS-EFSR abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../ntlm/relay.md) capabilities.
 
 The following MS-EFSR's methods were detected vulnerable
 
