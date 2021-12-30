@@ -8,7 +8,7 @@ In late 2021, [Gilles LIONEL](https://twitter.com/topotam77) published [slides](
 
 Similarly to other MS-RPC abuses, this works by using a specific method relying on remote UNC paths. In this case, at the time of writing, two methods were detected as vulnerable: `IsPathSupported` and `IsPathShadowCopied`.
 
-**The coerced authentications are made over SMB**. But MS-FSRVP abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../ntlm/relay.md) capabilities (_<mark style="color:orange;">just a theory at the time of writing, 29th December 2021, not tested yet</mark>_).
+**The coerced authentications are made over SMB**. Unlike other similar coercion methods (MS-RPRN printerbug, MS-EFSR petitpotam) I doubt MS-FSRVP abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP. <mark style="color:orange;">This is just a theory at the time of writing, 29th December 2021, I didn't test it tested yet.</mark>
 
 A requirement to the abuse is to have the "File Server VSS Agent Service" enabled on the target server.
 
@@ -33,5 +33,7 @@ In my tests, the coercion needed to be attempted twice in order to work when the
 Topotam's tweet: [https://twitter.com/topotam77/status/1475701014204461056](https://twitter.com/topotam77/status/1475701014204461056)
 
 Topotam's slides: [https://fr.slideshare.net/LionelTopotam/petit-potam-slidesrtfmossir](https://fr.slideshare.net/LionelTopotam/petit-potam-slidesrtfmossir)
+
+{% file src="../../../.gitbook/assets/PetitPotam-SLIDES-RTFM_OSSIR.pdf" %}
 
 {% embed url="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fsrvp/dae107ec-8198-4778-a950-faa7edad125b" %}
