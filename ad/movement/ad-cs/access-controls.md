@@ -156,7 +156,7 @@ DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~
 #### ManageCertificates Rights
 
 {% tabs %}
-{% tab title="First Tab" %}
+{% tab title="UNIX-like" %}
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object.
 
 ```python
