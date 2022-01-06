@@ -17,28 +17,17 @@ The following HTML code can be used in a browser to attempt a clickjacking on a 
 <html>
     <head>
         <title>Clickjacking / framing test</title>
-        <script type="text/javascript">function frameIt() {
-           var url = document.getElementById("url").value;
-           var iframe = document.getElementById("iframe");
-           iframe.src = url;
-        }
-
-document.addEventListener('DOMContentLoaded', function () {
-   document.getElementById('submit-test').addEventListener('click',
-       function() {
-           frameIt();
-   });
-});
-
-</script>
-    </head>
+    ​</head>
     <body>
         <h1>Test a page for clickjacking/framing vulnerability</h1>
         <p>Enter the URL to frame:</p>
         <input id="url" type="text" value="http://TARGET.com"></input>
-        <button id="submit-test">Test it!</button>
+        <button id="submit-test" onclick='document.getElementById("iframe").src=document.getElementById("url").value'>Test it!</button>
         <br />
-        <iframe src="about:blank" id="iframe" width="800px" height="600px"></iframe>
+        <br />
+        <hr>
+        <br />
+        <iframe src="about:blank" id="iframe" width="100%" height="75%"></iframe>
     </body>
 </html>
 ```
