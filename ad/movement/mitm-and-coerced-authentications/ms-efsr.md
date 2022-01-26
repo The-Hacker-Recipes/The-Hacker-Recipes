@@ -52,3 +52,7 @@ For the proof of concept to work, using a proper security provider (`RPC_C_AUTHN
 {% embed url="https://github.com/ly4k/PetitPotam" %}
 &#x20;
 {% endembed %}
+
+{% embed url="https://blog.compass-security.com/2020/05/relaying-ntlm-authentication-over-rpc" %}
+Understand RPC better
+{% endembed %}

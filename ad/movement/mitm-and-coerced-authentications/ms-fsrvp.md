@@ -41,3 +41,7 @@ Topotam's slides: [https://fr.slideshare.net/LionelTopotam/petit-potam-slidesrtf
 {% file src="../../../.gitbook/assets/PetitPotam-SLIDES-RTFM_OSSIR.pdf" %}
 
 {% embed url="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fsrvp/dae107ec-8198-4778-a950-faa7edad125b" %}
+
+{% embed url="https://blog.compass-security.com/2020/05/relaying-ntlm-authentication-over-rpc" %}
+Understand RPC better
+{% endembed %}
