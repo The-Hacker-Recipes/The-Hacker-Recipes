@@ -40,7 +40,7 @@ Petitpotam.py $ATTACKER_IP $TARGET_IP
 {% endhint %}
 
 {% hint style="success" %}
-For the proof of concept to work, using a proper security provider (`RPC_C_AUTHN_WINNT`) and authentication level (`RPC_C_AUTHN_LEVEL_PKT_PRIVACY`) can  required, especially if the target is patched against MS-EFSR abuse (which doesn't completely mitigate the vulnerability). In both tools mentioned above, this is not enabled by default.
+For the proof of concept to work, using a proper security provider (`RPC_C_AUTHN_WINNT`) and authentication level (`RPC_C_AUTHN_LEVEL_PKT_PRIVACY`) can be required, especially if the target is patched against MS-EFSR abuse (which doesn't completely mitigate the vulnerability). In both tools mentioned above, this is enabled by default only on topotam's one.
 {% endhint %}
 
 ## Resources
