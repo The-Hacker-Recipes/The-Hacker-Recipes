@@ -61,7 +61,7 @@ As of november 2020, MIC was optional, but unofficial channels suggest it might'
 Windows Server 2019 ISOs seem to be patched against (at least) CVE-2019-1040.
 {% endhint %}
 
-### EPA (Extended Protection for Auth.) <a href="epa-extended-protection-for-authentication" id="epa-extended-protection-for-authentication"></a>
+### EPA (Extended Protection for Auth.) <a href="#epa-extended-protection-for-authentication" id="epa-extended-protection-for-authentication"></a>
 
 In short, EPA (Extended Protection for Authentication) can use one or both of the following two mitigations to provide mitigation against NTLM relay for protocols that don't support session signing such HTTPS and LDAPS:
 
@@ -232,3 +232,5 @@ crackmapexec smb --gen-relay-list targets.txt $SUBNET
 {% embed url="https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/" %}
 
 {% embed url="http://davenport.sourceforge.net/ntlm.html" %}
+
+{% embed url="https://www.trustedsec.com/blog/a-comprehensive-guide-on-relaying-anno-2022" %}
