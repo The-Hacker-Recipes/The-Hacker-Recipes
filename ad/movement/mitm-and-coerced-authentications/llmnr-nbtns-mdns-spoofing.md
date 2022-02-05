@@ -8,7 +8,7 @@ In some environments (like Windows ones), multicast name resolution protocols ar
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
-[Responder](https://github.com/SpiderLabs/Responder) (Python) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers (listeners) that will [capture authentications](../ntlm/capture.md) and echo the NTLM hashes to the attacker.
+[Responder](https://github.com/lgandx/Responder) (Python) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers (listeners) that will [capture authentications](../ntlm/capture.md) and echo the NTLM hashes to the attacker.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
