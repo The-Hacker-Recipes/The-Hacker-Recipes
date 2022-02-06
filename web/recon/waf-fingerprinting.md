@@ -2,7 +2,7 @@
 
 ## Theory
 
-Many web applications stand behind a WAF (Web Application Firewall) that aim the protecting app from different types of attacks ([XSS](../../web-services/attacks-on-inputs/xss-cross-site-scripting.md), [SQLi](../../web-services/attacks-on-inputs/sql-injection.md), etc.) by monitoring and filtering requests. Identifying if a WAF is used, and if so what type it is, can help bypass known filters.
+Many web applications stand behind a WAF (Web Application Firewall) that aim the protecting app from different types of attacks ([XSS](../inputs/xss-cross-site-scripting.md), [SQLi](../inputs/sql-injection.md), etc.) by monitoring and filtering requests. Identifying if a WAF is used, and if so what type it is, can help bypass known filters.
 
 ## Practice
 
