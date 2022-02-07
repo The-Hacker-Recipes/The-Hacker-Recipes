@@ -52,3 +52,10 @@ $User | Get-DomainSPNTicket -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Dom
 ```
 {% endtab %}
 {% endtabs %}
+
+[SharpLdapWhoami](https://github.com/bugch3ck/SharpLdapWhoami) can then be used to make sure the user is correctly impersonated. A standard whoami command will only return the local user rights, not the users impersonated during remote operations (like LDAP queries to the DC).
+
+```powershell
+.\SharpLdapWhoami.exe
+.\SharpLdapWhoami.exe /method:kerberos /all
+```
