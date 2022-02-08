@@ -11,7 +11,7 @@ In organization networks, it is common to find passwords in random files (logs, 
 From UNIX-like systems, the [manspider](https://github.com/blacklanternsecurity/MANSPIDER) (Python) tool can be used to find sensitive information across a number of shares.
 
 ```bash
-manspider.py --threads 50 $IP_RANGE/$MASK -d $DOMAIN -u $USER -p $PASSWORD --content passw login username secret
+manspider.py --threads 50 $IP_RANGE/$MASK -d $DOMAIN -u $USER -p $PASSWORD --content "set sqlplus" "password ="
 ```
 
 Manually, shares can be mounted and grepped for interesting information.
