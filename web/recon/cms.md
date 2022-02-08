@@ -38,10 +38,10 @@ wpscan --url $URL --enumerate u
 wpscan --url $URL --enumerate u1-100
 
 # bruteforce a user
-wpscan --url $URL --username $username --wordlist "/path/to/wordlist.txt"
+wpscan --url $URL --username $username --passwords "/path/to/wordlist.txt"
 
 # enumerate and bruteforce users
-wpscan --url $URL --enumerate u --wordlist "/path/to/wordlist.txt"
+wpscan --url $URL --enumerate u --passwords "/path/to/wordlist.txt"
 ```
 {% endtab %}
 
