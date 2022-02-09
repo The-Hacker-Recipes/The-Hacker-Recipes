@@ -24,7 +24,7 @@ A Service Ticket (ST) allows access to a specific service. The TGT is used to as
 By default, the salt is always
 
 * **For users**: uppercase FQDN + case sensitive username = `DOMAIN.LOCALuser`
-* **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.loca`
+* **For computers**: uppercase FQDN + `host` + lowercase FQDN hostname without the trailing `$` = `DOMAIN.LOCALhostcomputer.domain.local`
 
 _(_[_Kerberos keys calculation_](https://snovvcrash.rocks/2021/05/21/calculating-kerberos-keys.html)_)_
 {% endhint %}
