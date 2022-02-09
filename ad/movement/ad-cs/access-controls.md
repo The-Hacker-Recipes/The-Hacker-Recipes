@@ -11,7 +11,7 @@ Active Directory Certificate Services add multiple objects to AD, including secu
   * If an attacker gains control over a principal that has the ManageCA right over the CA, he can remotely flip the `EDITF_ATTRIBUTESUBJECTALTNAME2` bit to allow SAN specification in any template (c.f. [CA misconfiguration](ca-configuration.md)).
   * If an attacker gains control over a principal that has the ManageCertificates right over the CA, he can remotely approve pending certificate requests, subvertnig the "CA certificate manager approval" protection (referred to as PREVENT4 in [the research whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf)).
 * **Several other objects (ESC5):** abuse standard [AD access control abuse](../access-controls/) over regulard AD objects.
-  * The CA server’s AD computer object (i.e., compromise through [RBCD abuse](../kerberos/s4u2self-abuse/rbcd.md), [Shadow Credentials](../kerberos/shadow-credentials.md), [UnPAC-the-hash](../kerberos/unpac-the-hash.md), ...).
+  * The CA server’s AD computer object (i.e., compromise through [RBCD abuse](../kerberos/delegations/rbcd.md), [Shadow Credentials](../kerberos/shadow-credentials.md), [UnPAC-the-hash](../kerberos/unpac-the-hash.md), ...).
   * The CA server’s RPC/DCOM server
   * Any descendant AD object or container in the container `CN=Public Key Services,CN=Services,CN=Configuration,DC=DOMAIN,DC=LOCAL` (e.g., the Certificate Templates container, Certification Authorities container, the `NTAuthCertificates` object, the `Enrollment Services` Container, etc.) If a low-privileged attacker can gain control over any of these, the attack can likely compromise the PKI system.
   * ...

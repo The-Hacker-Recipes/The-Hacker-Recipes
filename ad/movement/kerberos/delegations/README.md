@@ -77,14 +77,14 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
 
-{% content-ref url="../s4u2self-abuse/constrained.md" %}
-[constrained.md](../s4u2self-abuse/constrained.md)
+{% content-ref url="constrained.md" %}
+[constrained.md](constrained.md)
 {% endcontent-ref %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-constrained.png)
 
-{% content-ref url="../s4u2self-abuse/rbcd.md" %}
-[rbcd.md](../s4u2self-abuse/rbcd.md)
+{% content-ref url="rbcd.md" %}
+[rbcd.md](rbcd.md)
 {% endcontent-ref %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)
