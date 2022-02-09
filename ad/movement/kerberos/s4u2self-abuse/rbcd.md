@@ -53,7 +53,7 @@ getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'D
 ```
 
 {% hint style="warning" %}
-In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
+In [some cases](../delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 
 {% hint style="info" %}

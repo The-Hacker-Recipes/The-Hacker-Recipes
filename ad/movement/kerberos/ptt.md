@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1550.003
 
 ## Theory
 
-There are ways to come across ([cached Kerberos tickets](../credentials/dumping/cached-kerberos-tickets.md)) or forge ([overpass the hash](ptk.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks) Kerberos tickets. A ticket can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass the ticket](ptt.md). Another name for this is Pass the Cache (when using tickets from, or found on, UNIX-like systems). 
+There are ways to come across ([cached Kerberos tickets](../credentials/dumping/cached-kerberos-tickets.md)) or forge ([overpass the hash](ptk.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks) Kerberos tickets. A ticket can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass the ticket](ptt.md). Another name for this is Pass the Cache (when using tickets from, or found on, UNIX-like systems).&#x20;
 
 ## Practice
 
@@ -127,8 +127,8 @@ When requesting access to a service, a Service Ticket is used. In contains enoug
 
 Another information stored in the ST, outside of the PAC, and unprotected, called `sname`, indicates what service the ticket is destined to be used for. This information is basically the SPN (Service Principal Name) of the target service. It's split into two elements: the service class, and the hostname.
 
-Their are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
+Their are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](s4u2self-abuse/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
 
-This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket. Impacket calls this "AnySPN". 
+This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket. Impacket calls this "AnySPN".&#x20;
 
 ## Resources

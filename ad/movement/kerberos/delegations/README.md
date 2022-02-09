@@ -6,7 +6,7 @@ Kerberos delegations allow services to access other services on behalf of domain
 
 ### Types of delegation
 
-The authentication protocol "Kerberos" features delegation capabilities described as follows. There are three types of Kerberos delegations
+The "Kerberos" authentication protocol features delegation capabilities described as follows. There are three types of Kerberos delegations
 
 * **Unconstrained delegations (KUD)**: a service can impersonate users on any other service.
 * **Constrained delegations (KCD)**: a service can impersonate users on a set of services
@@ -18,13 +18,13 @@ With constrained and unconstrained delegations, the delegation attributes are se
 
 ### Extensions
 
-Kerberos delegations can be abused by attackers to obtain valuable assets and sometimes even domain admin privileges. Regarding constrained delegations and rbcd, those types of delegation rely on Kerberos extensions called S4U2Self and S4U2Proxy.
+Kerberos delegations can be abused by attackers to obtain access to valuable assets and sometimes even escalate to domain admin privileges. Regarding constrained delegations and rbcd, those types of delegation rely on Kerberos extensions called S4U2Self and S4U2Proxy.
 
-* **Service for User to Self (S4U2Self)**: allows a service to obtain a Service Ticket, on behalf of a user (called "principal"), to itself. This extension can be used by any account that has at least one SPN. The resulting Service Ticket is forwardable (i.e. can be used with S4U2Proxy to access another service) if and only if:
+* **Service for User to Self (S4U2self)**: allows a service to obtain a Service Ticket, on behalf of a user (called "principal"), to itself. This extension can be used by any account that has at least one SPN. The resulting Service Ticket is forwardable (i.e. can be used with S4U2Proxy to access another service) if and only if:
   * the service is configured for **constrained delegation (KCD)** **with protocol transition**
   * the principal is **not "sensitive for delegation"**
   * the principal is **not a member of the Protected Users** group
-*   **Service for User to Proxy (S4U2Proxy)**: allows a service to obtain a Service Ticket, on behalf of a user to a different service. For this extension to work properly, the service needs to supply a Service Ticket as "additional-ticket" (i.e. used as an evidence that the service using S4U2Proxy has the authority to do it on behalf of a user). For S4U2Proxy to work, the ST used as "additional-ticket" must either be:
+*   **Service for User to Proxy (S4U2proxy)**: allows a service to obtain a Service Ticket, on behalf of a user to a different service. For this extension to work properly, the service needs to supply a Service Ticket as "additional-ticket" (i.e. used as an evidence that the service using S4U2Proxy has the authority to do it on behalf of a user). For S4U2Proxy to work, the ST used as "additional-ticket" must either be:
 
     * a **forwardable** ticket
     * or a ticket with it's `PA-PAC-OPTIONS` padata type having the resource-based constrained delegation bit set (n.b. this only applies if the **resource-based constrained delegation (RBCD)** is actually possible and authorized in the proper AD objects attributes).
@@ -77,14 +77,14 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
 
-{% content-ref url="constrained.md" %}
-[constrained.md](constrained.md)
+{% content-ref url="../s4u2self-abuse/constrained.md" %}
+[constrained.md](../s4u2self-abuse/constrained.md)
 {% endcontent-ref %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-constrained.png)
 
-{% content-ref url="rbcd.md" %}
-[rbcd.md](rbcd.md)
+{% content-ref url="../s4u2self-abuse/rbcd.md" %}
+[rbcd.md](../s4u2self-abuse/rbcd.md)
 {% endcontent-ref %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)

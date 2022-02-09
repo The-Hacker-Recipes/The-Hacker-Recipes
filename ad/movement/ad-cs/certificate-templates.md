@@ -12,7 +12,7 @@
 
 In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) found multiple vectors of domain escalation based on certificate template misconfigurations (dubbed [ESC1](https://posts.specterops.io/certified-pre-owned-d95910965cd2#180f), [ESC2](https://posts.specterops.io/certified-pre-owned-d95910965cd2#dfa4) and [ESC3](https://posts.specterops.io/certified-pre-owned-d95910965cd2#c08e)).
 
-![Vulnerable configurations for ESC1, ESC2 and ESC3](../../../.gitbook/assets/ad-cs\_cert\_templates\_vuln\_confs.png)
+![Vulnerable configurations for ESC1, ESC2 and ESC3](<../../../.gitbook/assets/AD CS cert templates vuln confs.png>)
 
 ## Practice
 
