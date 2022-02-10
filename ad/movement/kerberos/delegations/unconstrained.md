@@ -2,10 +2,10 @@
 
 ## Theory
 
-If an account (user or computer), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it (or [force it](../../mitm-and-coerced-authentications/)) using Kerberos. The attacker service will receive an ST (service ticket) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user.
+If an account (user or computer), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it (or [force it](../../mitm-and-coerced-authentications/)) using Kerberos. The attacker service will receive an ST (service ticket) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user. Alternatively, the TGT can be used with [S4U2self abuse](../s4u2self-abuse.md) in order to gain local admin privileges over the TGT's owner.
 
 {% hint style="info" %}
-Unconstrained delegation abuses are usually combined with the [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug) or [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
+Unconstrained delegation abuses are usually combined with an [MS-RPRN abuse (printerbug)](../../mitm-and-coerced-authentications/ms-rprn.md), [MS-EFSR abuse (petitpotam)](../../mitm-and-coerced-authentications/ms-efsr.md), [MS-FSRVP abuse (shadowcoerce)](../../mitm-and-coerced-authentications/ms-fsrvp.md), r [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 {% endhint %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
@@ -53,6 +53,8 @@ In case, for some reason, attacking a Domain Controller doesn't work (i.e. error
 {% endhint %}
 
 Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md)) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
+
+The TGT will then be usable with [Pass the Ticket](../ptt.md) (to act as the victim) or with [S4U2self abuse](../s4u2self-abuse.md) (to obtain local admin privileges over the victim).
 {% endtab %}
 
 {% tab title="From the compromised computer (Windows)" %}
@@ -62,13 +64,21 @@ Once the KUD capable host is compromised, [Rubeus](https://github.com/GhostPack/
 Rubeus.exe monitor /interval:5
 ```
 
-Once the monitor is ready, a [forced authentication attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)) can be operated. Rubeus will then receive an authentication (hence a ST, containing a TGT). The TGT can be used to request a ST for another service.
+Once the monitor is ready, a [forced authentication attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)) can be operated. Rubeus will then receive an authentication (hence a Service Ticket, containing a TGT). The TGT can be used to request a Service Ticket for another service.
 
 ```bash
-Rubeus.exe asktgs /ticket:"base64 | file.kirbi" /service:$target_SPN /ptt
+Rubeus.exe asktgs /ticket:$base64_extracted_TGT /service:$target_SPN /ptt
 ```
 
-Once the ticket is injected, it can natively be used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash.
+Alternatively, the TGT can be used with [S4U2self abuse](../s4u2self-abuse.md) in order to gain local admin privileges over the TGT's owner.
+
+Once the TGT is injected, it can natively be
+
+
+
+
+
+&#x20;used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash.
 
 ```bash
 lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
