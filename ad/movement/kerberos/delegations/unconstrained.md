@@ -65,7 +65,7 @@ Rubeus.exe monitor /interval:5
 Once the monitor is ready, a [forced authentication attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange)) can be operated. Rubeus will then receive an authentication (hence a ST, containing a TGT). The TGT can be used to request a ST for another service.
 
 ```bash
-Rubeus.exe asktgs /ticket:$base64_extracted_TGT /service:$target_SPN /ptt
+Rubeus.exe asktgs /ticket:"base64 | file.kirbi" /service:$target_SPN /ptt
 ```
 
 Once the ticket is injected, it can natively be used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash.

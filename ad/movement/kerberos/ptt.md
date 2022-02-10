@@ -52,7 +52,7 @@ kerberos::ptt $ticket_ccache_file
 ```
 
 ```bash
-Rubeus.exe ptt /ticket:$ticket_kirbi_file
+Rubeus.exe ptt /ticket:"base64 | file.kirbi"
 ```
 
 It is then possible to list the tickets in memory using the `klist` command.
@@ -129,6 +129,4 @@ Another information stored in the ST, outside of the PAC, and unprotected, calle
 
 Their are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
 
-This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket. Impacket calls this "AnySPN".&#x20;
-
-## Resources
+This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket. Impacket calls this "AnySPN". With [Rubeus](https://github.com/GhostPack/Rubeus), it can be conducted by supplying the `/altservice` flag when using the `s4u` or the `tgssub` modules.
