@@ -6,7 +6,7 @@
 
 Kerberos delegations allow services to access other services on behalf of domain users.
 
-The "Kerberos" authentication protocol features delegation capabilities explained [here](delegations/). Kerberos delegations can be abused by attackers to obtain access to valuable assets and sometimes even escalate to domain admin privileges. Regarding [constrained delegations](delegations/constrained.md) and [rbcd](delegations/rbcd.md), those types of delegation rely on **Kerberos extensions called S4U2Self and S4U2Proxy**.
+The "Kerberos" authentication protocol features delegation capabilities explained [here](./). Kerberos delegations can be abused by attackers to obtain access to valuable assets and sometimes even escalate to domain admin privileges. Regarding [constrained delegations](constrained.md) and [rbcd](rbcd.md), those types of delegation rely on **Kerberos extensions called S4U2Self and S4U2Proxy**.
 
 **Service for User to Self (S4U2self)** allows a service to obtain a Service Ticket, on behalf of a user (called "principal"), to itself. This extension can be used by any account that has at least one SPN. Depending on the service and principal configurations, the resulting Service Ticket may or may not be forwardable but either way, the ticket can be used for authentication.
 
@@ -18,7 +18,7 @@ Since machine accounts have their own set of SPNs by default at their creation, 
 
 ### OPSEC considerations
 
-The S4U2self abuse is not only a great way to perform Local Privilege Escalation or a lateral move, it's also an way more stealthier alternative to [Silver Tickets](forged-tickets.md#silver-ticket) when an attackers has knowledge of a machine account's Kerberos keys. While a Silver Ticket is a Service Ticket featuring a forged PAC, the Service Ticket issued after an S4U2self request will be legitimate and will feature a valid PAC.
+The S4U2self abuse is not only a great way to perform Local Privilege Escalation or a lateral move, it's also an way more stealthier alternative to [Silver Tickets](../forged-tickets.md#silver-ticket) when an attackers has knowledge of a machine account's Kerberos keys. While a Silver Ticket is a Service Ticket featuring a forged PAC, the Service Ticket issued after an S4U2self request will be legitimate and will feature a valid PAC.
 
 ## Practice
 
@@ -36,7 +36,7 @@ This step revolves around the `tgtdeleg` feature from [Rubeus](https://github.co
 Rubeus.exe tgtdeleg /nowrap
 ```
 
-The TGT can then be used with [Pass the Ticket](ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step
+The TGT can then be used with [Pass the Ticket](../ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -62,7 +62,7 @@ The TGT can then be used along with S4U2self to obtain a Service Ticket imperson
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](ptt.md)).
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](../ptt.md)).
 
 ```bash
 export KRB5CCNAME="/path/to/ticket.ccache"
@@ -79,10 +79,10 @@ Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /ticket:"base64ticke
 {% endtab %}
 {% endtabs %}
 
-Once a Service Ticket is received, it can be used with [pass-the-ticket](ptt.md)/[pass-the-cache](ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
+Once a Service Ticket is received, it can be used with [pass-the-ticket](../ptt.md)/[pass-the-cache](../ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
 
 {% hint style="info" %}
-This technique can also be used when receiving TGTs during a [Kerberos Unconstrained Delegation abuse](delegations/unconstrained.md) in order to gain local admin privileges over the victims.
+This technique can also be used when receiving TGTs during a [Kerberos Unconstrained Delegation abuse](unconstrained.md) in order to gain local admin privileges over the victims.
 {% endhint %}
 
 ## Resources

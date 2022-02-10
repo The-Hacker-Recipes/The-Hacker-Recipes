@@ -119,7 +119,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 {% endtabs %}
 
 {% hint style="info" %}
-A great, stealthier, alternative is to [abuse S4U2self](s4u2self-abuse.md) in order to impersonate a domain user with local admin privileges on the target machine by relying on Kerberos delegation.
+A great, stealthier, alternative is to [abuse S4U2self](delegations/s4u2self-abuse.md) in order to impersonate a domain user with local admin privileges on the target machine by relying on Kerberos delegation.
 {% endhint %}
 
 ### Bronze bit (CVE-2020-17049)
