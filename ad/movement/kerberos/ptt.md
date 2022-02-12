@@ -129,4 +129,18 @@ Another information stored in the ST, outside of the PAC, and unprotected, calle
 
 Their are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
 
-This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket (Impacket tries to change the service class to something else, and calls this "AnySPN"). With [Rubeus](https://github.com/GhostPack/Rubeus), it can be conducted by supplying the `/altservice` flag when using the `s4u` or the `tgssub` modules and the whole SPN can be changed (service class and/or hostname).
+This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket (Impacket tries to change the service class to something else, and calls this "AnySPN").&#x20;
+
+Impacket's tgssub.py script can also be used for manual manipulation of the service name value. _At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding this script is pending._
+
+```bash
+tgssub.py -in ticket.ccache -out newticket.ccache -altservice "cifs/target"
+```
+
+With [Rubeus](https://github.com/GhostPack/Rubeus), it can be conducted by supplying the `/altservice` flag when using the `s4u` or the `tgssub` modules and the whole SPN can be changed (service class and/or hostname).
+
+## Resources
+
+{% embed url="https://www.secureauth.com/blog/kerberos-delegation-spns-and-more" %}
+Understand the AnySPN technique
+{% endembed %}

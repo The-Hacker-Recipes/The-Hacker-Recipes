@@ -28,7 +28,7 @@ In this scenario (following [Elad](https://twitter.com/elad\_shamir)'s [post](ht
 {% tab title="UNIX-like" %}
 From UNIX-like machines, [Impacket](https://github.com/SecureAuthCorp/impacket) example scripts (Python) can be used to conduct the different steps (manipulate SPNs, obtain and manipulate tickets).
 
-__:warning: _At the time of writing, 12th Feb. 2022, the tgssub.py script is in development._
+_At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding the `tgssub.py` is pending._ [_The pull request_](https://github.com/SecureAuthCorp/impacket/pull/1184) _modifying the `findDelegation.py` is pending._
 
 ```python
 # 1. show SPNs listed in the KCD configuration
