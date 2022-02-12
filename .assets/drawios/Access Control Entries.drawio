@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-02-12T11:12:43.176Z" agent="5.0 (X11)" etag="d82w9uJmz_yjkEBe1eBM" version="16.5.3" type="github">
+<mxfile host="app.diagrams.net" modified="2022-02-12T11:13:32.907Z" agent="5.0 (X11)" etag="mddzDe9V4sD4bae9PPav" version="16.5.3" type="github">
   <diagram id="hH7pEeF3YHhmBUNXaw4B" name="Page-1">
-    <mxGraphModel dx="978" dy="1433" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="-569" dy="573" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -457,12 +457,6 @@
         </mxCell>
         <mxCell id="1uZMwYcroioLVXyT7ZDU-105" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;strokeColor=#666666;strokeWidth=2;fontSize=8;fontColor=#333333;" parent="1uZMwYcroioLVXyT7ZDU-109" source="1uZMwYcroioLVXyT7ZDU-48" target="1uZMwYcroioLVXyT7ZDU-97" edge="1">
           <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="Fi5JWoc4d5yJ6a0upWqG-6" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Tux-simple.svg/154px-Tux-simple.svg.png;" vertex="1" parent="1">
-          <mxGeometry x="2706.89" y="650" width="34.22" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="Fi5JWoc4d5yJ6a0upWqG-7" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.alfun.fr/wp-content/uploads/2018/05/window-logo.png;" vertex="1" parent="1">
-          <mxGeometry x="2905" y="655" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="Fi5JWoc4d5yJ6a0upWqG-8" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Tux-simple.svg/154px-Tux-simple.svg.png;" vertex="1" parent="1">
           <mxGeometry x="2523.89" y="1330" width="34.22" height="40" as="geometry" />
