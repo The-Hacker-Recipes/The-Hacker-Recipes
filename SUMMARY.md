@@ -79,6 +79,7 @@
     * [UnPAC the hash](ad/movement/kerberos/unpac-the-hash.md)
     * [Pass the Certificate](ad/movement/kerberos/pass-the-certificate.md)
     * [sAMAccountName spoofing](ad/movement/kerberos/samaccountname-spoofing.md)
+    * [SPN-jacking](ad/movement/kerberos/spn-jacking.md)
   * [Access controls](ad/movement/access-controls/README.md)
     * [AddMember](ad/movement/access-controls/addmember.md)
     * [ForceChangePassword](ad/movement/access-controls/forcechangepassword.md)
