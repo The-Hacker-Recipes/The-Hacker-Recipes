@@ -91,7 +91,9 @@ Below are different use-cases of ntlmrelayx. The last "**+**" tab lists other in
 
 {% tabs %}
 {% tab title="Cred dump" %}
-The following command will try to relay the authentication over SMB and attempt to dump the hashes from the remote target’s SAM if the relayed victim has the right privileges.
+The following command will try to relay the authentication over SMB and attempt a remote [dump of the SAM & LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md) from the target if the relayed victim has the right privileges.
+
+At the time of this article update (12th Feb. 2022), [a pull request](https://github.com/SecureAuthCorp/impacket/pull/1253) adding LSA dump to the existing SAM dump is pending.
 
 ```bash
 ntlmrelayx.py -t smb://$TARGET
@@ -139,7 +141,7 @@ In most cases, the `--remove-mic` option will be needed when relaying to LDAP(S)
 {% endtab %}
 
 {% tab title="Promotion" %}
-The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group (`--escalate-user`) if the relayed account has sufficient privileges.
+The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group or doing some [ACE abuse](../access-controls/) (`--escalate-user`) if the relayed account has sufficient privileges.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
