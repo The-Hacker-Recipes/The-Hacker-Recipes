@@ -24,6 +24,7 @@ In order to navigate the notes, testers can use the mindmap below.
 
 All of the aforementioned attacks (red blocks) are detailed in the child notes, except:
 
+* **SPN-jacking:** very specific scenario, requires lots of access: see [ADDS > Movement > Kerberos > SPN-jacking](../kerberos/spn-jacking.md)
 * **Shadow Credentials:** see [ADDS > Movement > Kerberos > Shadow Credentials](../kerberos/shadow-credentials.md)
 * **Kerberos RBCD**: see [ADDS > Movement > Kerberos > Kerberos Delegations > RBCD](../kerberos/delegations/#resource-based-constrained-delegations-rbcd)
 * **GPO abuses**: see [ADDS > Movement > GPOs](../group-policies.md)
