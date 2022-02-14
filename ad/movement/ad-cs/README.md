@@ -6,14 +6,14 @@
 
 In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) shared their research on AD CS and identified multiple theft, escalation and persistence vectors.
 
-* Credential theft
-* Account persistence
-* Domain escalation
+* **Credential theft** (dubbed THEFT1 to THEFT5)
+* **Account persistence** (dubbed PERSIST1 to PERSIST3)
+* **Domain escalation** (dubbed ESC1 to ESC8)
   * based on [misconfigured certificate templates](certificate-templates.md)
   * based on [dangerous CA configuration](ca-configuration.md)
   * related to [access control vulnerabilities](access-controls.md)
   * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
-* Domain persistence
+* **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
   * by [forging certificates with a stolen CA certificates](../../persistence/ca-shadow.md)
   * by trusting rogue CA certificates
   * by [maliciously creating vulnerable access controls](../../persistence/access-controls.md)
@@ -107,17 +107,25 @@ Certify.exe cas
 
 The different domain escalation scenarios are detailed in the following parts.
 
+#### Techniques dubbed ESC1 to ESC3
+
 {% content-ref url="certificate-templates.md" %}
 [certificate-templates.md](certificate-templates.md)
 {% endcontent-ref %}
+
+#### Technique dubbed ESC6
 
 {% content-ref url="ca-configuration.md" %}
 [ca-configuration.md](ca-configuration.md)
 {% endcontent-ref %}
 
+#### Techniques dubbed ESC4, ESC5 & ESC7
+
 {% content-ref url="access-controls.md" %}
 [access-controls.md](access-controls.md)
 {% endcontent-ref %}
+
+#### Technique dubbed ESC8
 
 {% content-ref url="web-endpoints.md" %}
 [web-endpoints.md](web-endpoints.md)
