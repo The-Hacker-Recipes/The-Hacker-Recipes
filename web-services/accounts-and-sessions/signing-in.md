@@ -6,6 +6,6 @@ When creating an account the presence of a captcha is important. It helps to dif
 
 This visual test is a security measure to prevent a website or forum from being flooded with spam, advertising messages and fake users for example.
 
-## Practice <a href="practice" id="practice"></a>
+## Practice <a href="#practice" id="practice"></a>
 
 Check for the presence of captcha and others security mechanisms such as email verification.

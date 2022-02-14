@@ -1,4 +1,4 @@
-# Capabilities
+# 🛠️ Capabilities
 
 ## Theory
 
@@ -33,7 +33,7 @@ Capabilities are in separated in 5 sets :
 | Capability              | Description                                        |
 | ----------------------- | -------------------------------------------------- |
 | `CAP_AUDIT_CONTROL`     | Toggle kernel auditing                             |
-| `CAP_AUDIT_WRITE `      | Write to kernel audit log                          |
+| `CAP_AUDIT_WRITE`       | Write to kernel audit log                          |
 | `CAP_CHOWN`             | Change file owners                                 |
 | `CAP_SETUID/CAP_SETGID` | Change UID/GID                                     |
 | `CAP_NET_RAW`           | Open raw and packet sockets                        |

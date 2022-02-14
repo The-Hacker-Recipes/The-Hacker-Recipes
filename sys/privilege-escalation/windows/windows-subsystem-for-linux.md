@@ -1,2 +1,0 @@
-# Windows Subsystem for Linux
-
