@@ -53,6 +53,15 @@ PEM certificates can be exported to a PFX format with openssl. Rubeus doesn't ha
 openssl pkcs12 -in "cert.pem" -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out "cert.pfx"
 ```
 {% endhint %}
+{% hint style="info" %}
+Certipy uses DER encryption. To generate a PFX for Rubes openssl can be used.
+
+```bash
+openssl rsa -inform DER -in key.key -out key-pem.key
+openssl x509 -inform DER -in cert.crt -out cert.pem -outform PEM
+openssl pkcs12 -in cert.pem -inkey key-pem.key -export -out cert.pfx
+```
+{% endhint %}
 
 The ticket obtained can then be used to
 
