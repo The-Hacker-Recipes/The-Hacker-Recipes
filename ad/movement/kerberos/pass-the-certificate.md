@@ -2,7 +2,7 @@
 
 ## Theory
 
-The Kerberos authentication protocol works with tickets in order to grant access. An ST (Service Ticket) can be obtained by presenting a TGT (Ticket Granting Ticket). That prior TGT can only be obtained by validating a first step named "pre-authentication" (except if that requirement is explicitly removed for some accounts, making them vulnerable to [ASREProast](asreproast.md)). The pre-authentication can be validated symmetrically (with a DES, RC4, AES128 or AES256 key) or asymmetrically (with certificates). The asymmetrical way of pre-authenticating is called PKINIT.&#x20;
+The Kerberos authentication protocol works with tickets in order to grant access. An ST (Service Ticket) can be obtained by presenting a TGT (Ticket Granting Ticket). That prior TGT can only be obtained by validating a first step named "pre-authentication" (except if that requirement is explicitly removed for some accounts, making them vulnerable to [ASREProast](asreproast.md)). The pre-authentication can be validated symmetrically (with a DES, RC4, AES128 or AES256 key) or asymmetrically (with certificates). The asymmetrical way of pre-authenticating is called PKINIT.
 
 Pass the Certificate is the fancy name given to the pre-authentication operation relying on a certificate (i.e. key pair) to pass in order to obtain a TGT. This operation is often conducted along [shadow credentials](shadow-credentials.md), [AD CS escalation](../ad-cs/) and [UnPAC-the-hash attacks](unpac-the-hash.md).
 
@@ -53,8 +53,9 @@ PEM certificates can be exported to a PFX format with openssl. Rubeus doesn't ha
 openssl pkcs12 -in "cert.pem" -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out "cert.pfx"
 ```
 {% endhint %}
+
 {% hint style="info" %}
-Certipy uses DER encryption. To generate a PFX for Rubes openssl can be used.
+Certipy uses DER encryption. To generate a PFX for Rubeus, [openssl](https://www.openssl.org) can be used.
 
 ```bash
 openssl rsa -inform DER -in key.key -out key-pem.key
