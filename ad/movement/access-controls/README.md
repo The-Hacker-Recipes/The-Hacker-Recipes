@@ -20,7 +20,7 @@ ACE abuse potential paths can be identified by [BloodHound](../../recon/bloodhou
 
 In order to navigate the notes, testers can use the mindmap below.
 
-![](<../../../.gitbook/assets/Abusing ACEs.png>)
+![](<../../../.gitbook/assets/Access Control Entries.png>)
 
 All of the aforementioned attacks (red blocks) are detailed in the child notes, except:
 
