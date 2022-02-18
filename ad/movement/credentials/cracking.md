@@ -126,6 +126,7 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 * Other solutions, cloud-based or not, can be used to improve cracking speed: [setting up a rig](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig) for instance.
 * LM and NTLM ChallengeResponses can be cracked really fast (and for free depending on the hash) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables ([here's how to capture those hashes](../ntlm/capture.md#practice)).
 * Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.md) to create a custom wordlist for a dictionary attack
+* Cracking LM and NT hash can be optimized by following [these advice](https://blog.didierstevens.com/2016/07/25/practice-ntds-dit-file-overview/).
 {% endhint %}
 
 {% embed url="https://hashcat.net/wiki/doku.php?id=example_hashes" %}
