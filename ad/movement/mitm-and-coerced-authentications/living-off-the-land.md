@@ -169,6 +169,12 @@ IconFile=\\$ATTACKER_IP\something\something.ico
 
 ### MS Word documents
 
+### Lock screen wallpaper
+
+{% embed url="https://github.com/nccgroup/Change-Lockscreen" %}
+
+{% embed url="https://research.nccgroup.com/2019/08/20/kerberos-resource-based-constrained-delegation-when-an-image-change-leads-to-a-privilege-escalation" %}
+
 ## Resources
 
 {% embed url="https://hatching.io/blog/lnk-hta-polyglot/" %}
