@@ -22,9 +22,9 @@ The following parts allow to obtain modified or crafted Kerberos tickets. Once o
 {% hint style="success" %}
 For Golden and Silver tickets, it's important to remember that, by default, [ticketer](https://github.com/SecureAuthCorp/impacket/blob/a16198c3312d8cfe25b329907b16463ea3143519/examples/ticketer.py#L740-L741) and [mimikatz](https://github.com/gentilkiwi/mimikatz/wiki/module-\~-kerberos) forge tickets containing PACs that say the user belongs to some well-known administrators groups (i.e. group ids 513, 512, 520, 518, 519). There are scenarios where these groups are not enough (special machines where even Domain Admins don't have local admin rights).&#x20;
 
-In these situations, testers can either look for the domain groups that have local administrator privileges on the target machine, or specify all the groups ids when creating the ticket.
+In these situations, testers can specify all the groups ids when creating the ticket. However, deny ACEs could actually prevent this from working. Encountering a Deny ACE preventing domain admins to log on could be an issue when having all groups ids in the ticket, including the domain admin group id. This solution can also be reall inconvenient in domains that have lots of groups.&#x20;
 
-_**Nota bene**: Deny ACEs could actually prevent the second solution from working. Encountering a Deny ACE preventing domain admins to log on could be an issue when having all groups ids in the ticket, including the domain admin group id._
+Another solution to this is to look for a specific user with appropriate rights to impersonate and use [GoldenCopy](https://github.com/Dramelac/GoldenCopy) to generate a command that allows to forge a ticket with specific values corresponding to the target user (sid, group ids, etc.). The values are gathered from a neo4j database.
 {% endhint %}
 
 {% hint style="info" %}
@@ -205,3 +205,4 @@ kekeo
 
 {% embed url="https://labs.f-secure.com/archive/digging-into-ms14-068-exploitation-and-defence/" %}
 
+{% embed url="https://github.com/Dramelac/GoldenCopy" %}
