@@ -8,11 +8,11 @@ description: MITRE ATT&CK™ Sub-technique T1557.001
 
 After successfully [forcing a victim to authenticate](../mitm-and-coerced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
 
-The chart below sums up the expected behavior of cross-protocols NTLMv2 relay attacks depending on the mitigations in place ([original here](https://beta.hackndo.com/ntlm-relay/)).
+The chart below sums up the expected behavior of cross-protocols relay attacks depending on the mitigations in place ([original here](https://beta.hackndo.com/ntlm-relay/)). All the tests and results listed in the chart were made using [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python). :warning: _As of 25th Feb. 2022, this chart is a work in progress._
 
-![](../../../.gitbook/assets/ntlm\_relay\_mitigation\_chart.png)
+![](../../../.gitbook/assets/ntlm\_relau\_mitigation\_chart.png)
 
-The following mindmap sums up the overall attack paths of NTLMv2 relay.
+The following mindmap sums up the overall attack paths of NTLM relay.
 
 ![](<../../../.gitbook/assets/NTLM relay.drawio.png>)
 
@@ -222,6 +222,8 @@ crackmapexec smb --gen-relay-list targets.txt $SUBNET
 ```
 
 ## References
+
+{% embed url="https://docs.microsoft.com/en-us/archive/blogs/josebda/the-basics-of-smb-signing-covering-both-smb1-and-smb2" %}
 
 {% embed url="https://en.hackndo.com/ntlm-relay/" %}
 
