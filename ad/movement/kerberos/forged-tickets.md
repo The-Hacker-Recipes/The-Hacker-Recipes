@@ -30,7 +30,7 @@ Another solution to this is to look for a specific user with appropriate rights 
 ![Using GoldenCopy for specific user impersonation](<../../../.gitbook/assets/image (6).png>)
 
 {% hint style="info" %}
-When forging tickets, only the user-id and groups-ids are useful. The username supplied is mostly useless.
+When forging tickets, before November 2021 updates, the user-id and groups-ids were useful but the username supplied was mostly useless. As of Nov. 2021 updates, if the username supplied doesn't exist in Active Directory, the ticket gets rejected. This also applies to Silver Tickets.
 {% endhint %}
 
 ### Golden ticket
