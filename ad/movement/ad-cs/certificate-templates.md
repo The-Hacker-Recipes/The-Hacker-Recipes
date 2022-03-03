@@ -16,7 +16,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 ## Practice
 
-### Certificate template allows SAN (ESC1 & ESC2)
+### Template allows SAN (ESC1)
 
 When a certificate template allows to specify a `subjectAltName`, it is possible to request a certificate for another user. It can be used for privileges escalation if the EKU specifies `Client Authentication` or `ANY`.
 
@@ -66,7 +66,11 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 {% endtab %}
 {% endtabs %}
 
-### Misconfigured Enrollment Agent Templates (ESC3)
+### Any purpose EKU (ESC2)
+
+When a certificate template specifies the **Any Purpose** EKU, or no EKU at all, the certificate can be used for anything. ESC2 can't be abused like ESC1 if the requester can't specify a SAN, however, it can be abused like ESC3 to use the certificate as requirement to request another one on behalf of any user.
+
+### Certificate Agent EKU (ESC3)
 
 When a certificate template specifies the **Certificate Request Agent** EKU, it is possible to use the issued certificate from this template to request another certificate on behalf of any user.
 
