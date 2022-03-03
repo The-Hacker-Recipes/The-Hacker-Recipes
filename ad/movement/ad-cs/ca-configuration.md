@@ -74,3 +74,5 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
 
 {% embed url="https://www.keyfactor.com/blog/hidden-dangers-certificate-subject-alternative-names-sans" %}
+
+{% embed url="https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6" %}

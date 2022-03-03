@@ -140,3 +140,5 @@ The different domain escalation scenarios are detailed in the following parts.
 {% embed url="https://http418infosec.com/ad-cs-what-can-be-misconfigured" %}
 
 {% embed url="https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks" %}
+
+{% embed url="https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6" %}

