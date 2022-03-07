@@ -1,4 +1,4 @@
-# 🛠️ (KCD) Constrained
+# (KCD) Constrained
 
 ## Theory
 
@@ -130,3 +130,5 @@ Computer accounts have SPNs set at their creation and can edit their own "rbcd a
 {% embed url="https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-theory/" %}
 
 {% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-accounts-collude---trustedtoauthfordelegation-who" %}
+
+{% embed url="https://snovvcrash.rocks/2022/03/06/abusing-kcd-without-protocol-transition.html" %}
