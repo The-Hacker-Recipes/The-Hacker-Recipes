@@ -88,8 +88,6 @@ Using BloodHound can help find attack paths and abuses like [ACEs abuse](../move
 
 For detailed and official documentation on the analysis process, testers can check the following resources: [the BloodHound GUI](https://bloodhound.readthedocs.io/en/latest/data-analysis/bloodhound-gui.html), [nodes](https://bloodhound.readthedocs.io/en/latest/data-analysis/nodes.html) and [edges](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html).
 
-### Quick wins
-
 {% hint style="success" %}
 Here are some examples of quick wins to spot with BloodHound
 
@@ -103,6 +101,10 @@ Other quick wins can be easily found with the [bloodhound-quickwin](https://gith
 ```bash
 bhqc.py -u $neo4juser -p $neo4jpassword
 ```
+{% endhint %}
+
+{% hint style="success" %}
+[CrackHound](https://github.com/trustedsec/CrackHound) (Python) can be used to populate BloodHound's database with password obtained during a pentest. This can help sort and report attack paths.&#x20;
 {% endhint %}
 
 ## Resources
