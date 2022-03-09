@@ -8,6 +8,8 @@ description: MITRE ATT&CK™ Sub-technique T1557.001
 
 After successfully [forcing a victim to authenticate](../mitm-and-coerced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
 
+The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The LM and NTLM authentication protocols are "application protocol-independent". It means one can relay LM or NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called **cross-protocols LM/NTLM relay**. It also means the relays and attacks possible depend on the application protocol the authentication messages are embedded in.
+
 The chart below sums up the expected behavior of cross-protocols relay attacks depending on the mitigations in place ([original here](https://beta.hackndo.com/ntlm-relay/)). All the tests and results listed in the chart were made using [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python). :warning: _As of 25th Feb. 2022, this chart is a work in progress._
 
 ![](../../../.gitbook/assets/ntlm\_relau\_mitigation\_chart.png)
@@ -74,7 +76,16 @@ For more details on how NTLM works, testers can read [the MS-NLMP doc](https://w
 
 ## Practice
 
-The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The LM and NTLM authentication protocols are "application protocol-independent". It means one can relay LM or NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called **cross-protocols LM/NTLM relay**. It also means the relays and attacks possible depend on the application protocol the authentication messages are embedded in.
+### Detection
+
+From UNIX-like systems, [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) and [LdapRelayScan](https://github.com/zyn3rgy/LdapRelayScan) (Python) can be used to identify [signing](relay.md#session-signing) and [channel binding](relay.md#epa-extended-protection-for-authentication) requirements for SMB, LDAP and LDAPS.
+
+```bash
+crackmapexec smb $target
+LdapRelayScan.py -u "user" -p "password" -dc-ip "DC_IP_address" -method BOTH
+```
+
+### Abuse
 
 [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), [MultiRelay](https://github.com/lgandx/Responder/blob/master/tools/MultiRelay.py) (Python) and [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for relaying NTLM authentications. Those tools setup relay clients and relay servers waiting for incoming authentications. Once the servers are up and ready, the tester can initiate a [forced authentication attack](../mitm-and-coerced-authentications/).
 
