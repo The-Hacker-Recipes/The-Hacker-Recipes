@@ -108,10 +108,6 @@ When adding records has no impact on name resolution or when the tools throw err
 This can be set with the `--legacy` or `--forest` option on dnstool.py, or with the `-Partition` argument for Powermad.
 {% endhint %}
 
-{% hint style="warning" %}
-:warning: When adding records in ADIDNS using dnstool.py, some issues have been encountered when attempting to remove those entries later on.
-{% endhint %}
-
 ### Dynamic spoofing
 
 Using [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell), the following command will&#x20;
