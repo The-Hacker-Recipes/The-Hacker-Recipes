@@ -38,7 +38,11 @@ Regular coercion techniques rely on the attacker forcing a remote system to auth
 The WebDAV Connection String format is: `\\SERVER@PORT\PATH\TO\DIR`.
 
 {% hint style="info" %}
-To retrieve an authenticated connection, the remote server that attacker wants to victim to be relayed to should be considered in the intranet zone. One way to do it is to use the NetBIOS name of the attacker machine instead of its IP address.
+To retrieve an authenticated connection, the remote server that attacker wants to victim to be relayed to should be considered in the intranet zone. One way to do it is to use the NetBIOS or DNS name of the attacker machine instead of its IP address.
+
+In order to have a valid NetBIOS name, [Responder](https://github.com/lgandx/Responder) can be used.
+
+A heftier alternative is to do some [ADIDNS poisoning](adidns-spoofing.md) to create and use a valid DNS entry.
 {% endhint %}
 
 Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-service/printerbug.md) and [PetitPotam](ms-efsr.md).
