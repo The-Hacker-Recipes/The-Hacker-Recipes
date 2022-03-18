@@ -26,8 +26,8 @@ Kerberos delegations can be abused by attackers to obtain access to valuable ass
   * the principal is **not a member of the Protected Users** group
 *   **Service for User to Proxy (S4U2proxy)**: allows a service to obtain a Service Ticket, on behalf of a user to a different service. For this extension to work properly, the service needs to supply a Service Ticket as "additional-ticket" (i.e. used as an evidence that the service using S4U2Proxy has the authority to do it on behalf of a user). For S4U2Proxy to work, the ST used as "additional-ticket" must either be:
 
-    * a **forwardable** ticket
-    * or a ticket with it's `PA-PAC-OPTIONS` padata type having the resource-based constrained delegation bit set (n.b. this only applies if the **resource-based constrained delegation (RBCD)** is actually possible and authorized in the proper AD objects attributes).
+    * the service ticket used as additional ticket must have the **forwardable** flag set
+    * alternatively, in the TGS-REQ, in the pre-authentication data, the `PA-PAC-OPTIONS` structure must contains a padata value with the resource-based constrained delegation bit set _(nota bene 1: this only applies if the **resource-based constrained delegation (RBCD)** is actually possible and authorized in the proper AD objects attributes) (nota bene 2: Rubeus and Impacket's getST set that bit when doing S4U2proxy)._
 
     S4U2Proxy always results in a forwardable ST, even when the ticket used as evidence wasn't forwardable.
 
