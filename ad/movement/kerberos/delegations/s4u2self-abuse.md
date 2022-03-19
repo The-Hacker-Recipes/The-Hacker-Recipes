@@ -36,11 +36,13 @@ This step revolves around the `tgtdeleg` feature from [Rubeus](https://github.co
 Rubeus.exe tgtdeleg /nowrap
 ```
 
-The TGT can then be used with [Pass the Ticket](../ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step
+The TGT can then be used with [Pass the Ticket](../ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step.
+
+Alternatively, if the machine account credentials are known, a TGT can be requested commonly.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getTGT.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getTGT.py) (Python) script can be used for the purpose.
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getTGT.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getTGT.py) (Python) script can be used for that purpose. Howerver, this step is optional if getST.py is to be used later on for the S4U2self request. In this case, with the appropriate arguments, it will request a TGT automatically
 
 ```bash
 getTGT.py -dc-ip "domaincontroller" -hashes :"NThash" "domain"/"machine$"
@@ -48,7 +50,7 @@ getTGT.py -dc-ip "domaincontroller" -hashes :"NThash" "domain"/"machine$"
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. Howerver, this step is optional if Rubeus is to be used later on for the S4U2self. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. Howerver, this step is optional if Rubeus is to be used later on for the S4U2sel requestf. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
 
 ```powershell
 Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
