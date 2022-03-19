@@ -110,6 +110,7 @@
     * [🛠️ PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
 * [Persistence](ad/persistence/README.md)
   * [Silver & Golden tickets](ad/persistence/silver-and-golden-tickets.md)
+  * [🛠️ RBCD to KRBTGT](ad/persistence/rbcd-to-krbtgt.md)
   * [🛠️ Skeleton key](ad/persistence/skeleton-key.md)
   * [🛠️ SID History](ad/persistence/sid-history.md)
   * [AdminSDHolder](ad/persistence/adminsdholder.md)
