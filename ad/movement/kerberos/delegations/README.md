@@ -89,10 +89,16 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)
 
+## Talk :microphone:
+
+{% embed url="https://docs.google.com/presentation/d/1rAl-XKrkuFjCpExHBGrp5L8ZwtuFFrOygZMapxMp28I/edit?usp=sharing" %}
+
+{% file src="../../../../.gitbook/assets/Insomnihack 2022 - Delegating Kerberos.pdf" %}
+
 ## Resources
+
+{% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-accounts-collude---trustedtoauthfordelegation-who" %}
 
 {% embed url="https://www.harmj0y.net/blog/redteaming/another-word-on-delegation" %}
 
 {% embed url="https://www.harmj0y.net/blog/activedirectory/s4u2pwnage" %}
-
-{% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-accounts-collude---trustedtoauthfordelegation-who" %}
