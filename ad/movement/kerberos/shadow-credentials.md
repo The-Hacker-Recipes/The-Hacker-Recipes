@@ -8,7 +8,7 @@ The Kerberos authentication protocol works with tickets in order to grant access
 
 Active Directory user and computer objects have an attribute called `msDS-KeyCredentialLink` where raw public keys can be set. When trying to pre-authenticate with PKINIT, the KDC will check that the authenticating user has knowledge of the matching private key, and a TGT will be sent if there is a match.
 
-There are multiple scenarios where an attacker can have control over an account that has the ability to edit the `msDS-KeyCredentialLink` (a.k.a. "kcl") attribute of other objects (e.g. member of a [special group](../builtin-groups.md), has [powerful ACEs](../access-controls/), etc.). This allows attackers to create a key pair, append to raw public key in the attribute, and obtain persistent and stealthy access to the target object (can be a user or a computer).
+There are multiple scenarios where an attacker can have control over an account that has the ability to edit the `msDS-KeyCredentialLink` (a.k.a. "kcl") attribute of other objects (e.g. member of a [special group](../domain-settings/builtin-groups.md), has [powerful ACEs](../access-controls/), etc.). This allows attackers to create a key pair, append to raw public key in the attribute, and obtain persistent and stealthy access to the target object (can be a user or a computer).
 
 ## Practice
 

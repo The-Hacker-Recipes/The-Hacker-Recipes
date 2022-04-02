@@ -74,7 +74,7 @@ john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 If an attacker controls an account with the rights to add an SPN to another ([`GenericAll`](../access-controls/#genericall), [`GenericWrite`](../access-controls/#genericwrite)), it can be abused to make that other account vulnerable to Kerberoast (see [exploitation](../access-controls/targeted-kerberoasting.md)).
 
 {% hint style="info" %}
-Controlling a member of the [Account Operators](../builtin-groups.md) group, targeted Kerberoasting can be conducted for the whole domain (see [exploitation](../access-controls/targeted-kerberoasting.md)).
+Controlling a member of the [Account Operators](../domain-settings/builtin-groups.md) group, targeted Kerberoasting can be conducted for the whole domain (see [exploitation](../access-controls/targeted-kerberoasting.md)).
 {% endhint %}
 
 ## Resources
