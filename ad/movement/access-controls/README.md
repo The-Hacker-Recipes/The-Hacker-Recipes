@@ -41,6 +41,10 @@ All of the aforementioned attacks (red blocks) are detailed in the child notes, 
 With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, it is possible to enable it again (e.g. `set-aduser "user" -enabled 1`)
 {% endhint %}
 
+## Talk :microphone:
+
+{% embed url="https://youtu.be/_nGpZ1ydzS8" %}
+
 ## Resources
 
 {% embed url="https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectoryrights" %}

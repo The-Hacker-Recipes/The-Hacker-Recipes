@@ -91,9 +91,11 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 
 ## Talk :microphone:
 
+{% embed url="https://youtu.be/byykEId3FUs" %}
+
 {% embed url="https://docs.google.com/presentation/d/1rAl-XKrkuFjCpExHBGrp5L8ZwtuFFrOygZMapxMp28I/edit?usp=sharing" %}
 
-{% file src="../../../../.gitbook/assets/Insomnihack 2022 - Delegating Kerberos.pdf" %}
+{% file src="../../../../.gitbook/assets/Insomnihack 2022 - Delegating Kerberos To Bypass Kerberos Delegation Limitations.pdf" %}
 
 ## Resources
 
