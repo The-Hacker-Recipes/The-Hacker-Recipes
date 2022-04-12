@@ -41,7 +41,7 @@ The certificate template flag (i.e. `--template`) can either be left blank (defa
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
 
 ```python
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+certipy req 'domain.local'/'user':'password'@'domain_controller'
 ```
 
 {% hint style="info" %}

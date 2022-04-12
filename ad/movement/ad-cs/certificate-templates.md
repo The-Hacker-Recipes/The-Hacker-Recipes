@@ -79,7 +79,7 @@ When a certificate template specifies the **Certificate Request Agent** EKU, it 
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate for, and conduct, the ESC3 scenario. It is possible to output the result in an archive that can be uploaded in Bloodhound.
 
 ```python
-certipy find 'domain.local'/'user':'password'@'domaincontroller' -bloodhound
+certipy find 'domain.local'/'user':'password'@'domain_controller' -bloodhound
 ```
 
 Once a vulnerable template is found, a request shall be made to obtain a certificate specifying the **Certificate Request Agent** EKU.

