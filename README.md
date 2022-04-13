@@ -1,7 +1,3 @@
----
-layout: landing
----
-
 # Introduction
 
 ![](.gitbook/assets/thr\_preview\_2.png)
