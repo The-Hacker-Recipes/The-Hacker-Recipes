@@ -52,7 +52,25 @@ Once the ssh command exits successful (or once a session opens) the tester can t
 {% endtab %}
 
 {% tab title="Metasploit" %}
+Meterpreter features built in port forwarding capabilities with the `portfwd` cmdlet.
 
+* the `-l` option for a local port forwarding, along with the ports and addresses to bind.
+* the `-p` option for a remote port forwarding, along with the ports and addresses to bind.
+* the `-r` option for the targeted remote machine IP address.
+
+```bash
+# Add port forward
+portfwd add –l $LOCAL_PORT –p $REMOTE_PORT –r $REMOTE_ADDRESS
+
+# List ports forwarded
+portfwd list
+
+# Delete port forwarded
+portfwd delete –l $LOCAL_PORT –p $REMOTE_PORT –r $REMOTE_ADDRESS
+
+# Remove all port forwarded
+portfwd flush
+```
 {% endtab %}
 
 {% tab title="plink" %}
