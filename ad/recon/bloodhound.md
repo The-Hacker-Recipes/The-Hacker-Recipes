@@ -12,17 +12,12 @@ BloodHound needs to be fed JSON files containing info on the objects and relatio
 
 {% tabs %}
 {% tab title="Windows" %}
-SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound3), [builds](https://github.com/BloodHoundAD/BloodHound/tree/master/Collectors)) is designed targeting .Net 4.5. It can be used as a PowerShell module or as a compiled executable.
+SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound), [builds](https://github.com/BloodHoundAD/BloodHound/tree/master/Collectors)) is designed targeting .Net 4.5. It can be used as a compiled executable.
 
 It must be run from the context of a domain user, either directly through a logon or through another method such as runas (`runas /netonly /user:$DOMAIN\$USER`) (see [Impersonation](../movement/credentials/impersonation.md)). Alternatively, SharpHound can be used with the `LdapUsername` and `LdapPassword` flags for that matter.
 
 ```bash
-# Use the PowerShell module
-Import-Module .\SharpHound.ps1
-Invoke-BloodHound -CollectionMethod All
-
-# Use the executable version
-.\SharpHound.exe --CollectionMethod All
+SharpHound.exe --CollectionMethod All
 ```
 
 {% hint style="info" %}
@@ -33,18 +28,17 @@ The previous commands are basic but some options (i.e. Stealth and Loop) can be 
 
 ```bash
 # Perform stealth collection methods
-Invoke-BloodHound -CollectionMethod All -Stealth
-.\SharpHound.exe --CollectionMethod All --Stealth
+SharpHound.exe --CollectionMethod All --Stealth
 
 # Loop collections (especially useful for session collection)
 # e.g. collect sessions every 10 minutes for 3 hours
-Invoke-BloodHound -CollectionMethod Session -Loop -LoopDuration 03:00:00 -LoopInterval 00:10:00
-.\SharpHound.exe --CollectionMethod Session --Loop --LoopDuration 03:00:00 --LoopInterval 00:10:00
+SharpHound.exe --CollectionMethod Session --Loop --LoopDuration 03:00:00 --LoopInterval 00:10:00
 
-# Use LDAPS instead of plaintext LDAP (IgnoreLdapCert for self-signed TLS/SSL certificates)
-Invoke-BloodHound -SecureLdap -IgnoreLdapCert
-.\SharpHound.exe --SecureLdap --IgnoreLdapCert
+# Use LDAPS instead of plaintext LDAP (IgnoreLdapCert for self-signed TLS/SSL certificates)https://github.com/BloodHoundAD/SharpHound#cli
+SharpHound.exe --SecureLdap --IgnoreLdapCert
 ```
+
+More help on the CLI commands [here](https://github.com/BloodHoundAD/SharpHound#cli).
 
 {% hint style="success" %}
 Here are a few **tips and tricks** on the collection process
