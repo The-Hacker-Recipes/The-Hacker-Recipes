@@ -37,8 +37,8 @@ From UNIX-like systems, the `msDs-KeyCredentialLink` attribute of a user or comp
 pywhisker.py -d "FQDN_DOMAIN" -u "user1" -p "CERTIFICATE_PASSWORD" --target "TARGET_SAMNAME" --action "list"
 ```
 
-{% hint style="success" %}
-A Pull Request ([#1249](https://github.com/SecureAuthCorp/impacket/pull/1249), awaiting review) includes pywhisker's "add" feature in ntlmrelayx.
+{% hint style="info" %}
+The "add" action from pywhisker is featured in ntlmrelayx.
 
 ```bash
 ntlmrelayx -t ldap://dc02 --shadow-credentials --shadow-target 'dc01$'
