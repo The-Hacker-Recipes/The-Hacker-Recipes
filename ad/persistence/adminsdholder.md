@@ -29,12 +29,18 @@ When talking about AdminSdHolder, the **AdminCount** attribute is usually mentio
 
 ## Practice
 
-Once sufficient privileges are obtained, attackers can abuse AdminSdHolder to get persistence on the domain by modifying the object's DACL.&#x20;
+Once sufficient privileges are obtained, attackers can abuse AdminSdHolder to get persistence on the domain by modifying the AdminSdHolder object's DACL.&#x20;
 
-Let's say an attackers adds the following ACE to AdminSdHolder's DACL: `attackercontrolleduser: Full Control`.
+Let's say an attacker adds the following ACE to AdminSdHolder's DACL: `attackercontrolleduser: Full Control`.
 
 At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` privilege over all protected objects (Domain Admins, Domain Controllers, and so on).
 
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, this can be done with&#x20;
+{% endtab %}
+
+{% tab title="Windows" %}
 This can be done in PowerShell with `Add-DomainObjectAcl` from [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module.
 
 ```powershell
@@ -51,6 +57,8 @@ Get-DomainObjectAcl -SamAccountName "AdminSdHolder" -ResolveGUIDs
 sid = Get-DomainUser "someuser" | Select-Object -ExpandProperty objectsid
 Get-DomainObjectAcl -SamAccountName "AdminSdHolder" -ResolveGUIDs | Where-Object {$_.SecurityIdentifier -eq $sid}
 ```
+{% endtab %}
+{% endtabs %}
 
 ## Resources
 
