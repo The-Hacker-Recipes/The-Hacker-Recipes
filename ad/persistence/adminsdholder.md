@@ -10,13 +10,13 @@ The operation is conducted by a "worker code" called **SDProp** (Security Descri
 
 SDProp propagates AdminSdHolder's DACL to every protected object every 60 minutes if their DACL is different.
 
-The AdminSdHolder object is located at `CN=AdminSdHolder,CN=SYSTEM,DC=DOMAIN,DC=LOCAL`. The default AdminSdHolder object's DACL is the following.
+The AdminSdHolder object is located at `CN=AdminSdHolder,CN=SYSTEM,DC=DOMAIN,DC=LOCAL`. For instance, the default AdminSdHolder object's DACL contains the following.
 
 * Authenticated Users: **Read**
 * SYSTEM: **Full Control**
 * Administrators: **Modify**
-* Domain Admins: **Modify**
-* Enterprise Admins: **Modify**
+* Domain Admins: **ReadAndExecute**
+* Enterprise Admins: **ReadAndExecute**
 
 The default protected objects are the following.
 
