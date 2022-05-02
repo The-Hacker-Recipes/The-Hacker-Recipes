@@ -4,7 +4,7 @@
 
 AdminSdHolder protects domain objects against permission changes. "AdminSdHolder" either refers to a domain object, a "worker code" or an operation depending on the context.&#x20;
 
-The operation consists in the PDC (Principal Domain Controller) Emulator restoring pre-set permissions for high-privilege users every 60 minutes.
+The operation consists in the PDC (Principal Domain Controller) Emulator restoring pre-set permissions for high-privilege users every 60 minutes. Understanding what DACLs/ACEs are and how to abuse them is a requirement to the understanding of this persistence technique (see [Access Controls abuse](../movement/access-controls/)).
 
 The operation is conducted by a "worker code" called **SDProp** (Security Descriptor propagator).&#x20;
 
