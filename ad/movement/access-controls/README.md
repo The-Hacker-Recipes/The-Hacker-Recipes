@@ -2,9 +2,9 @@
 
 ## Theory
 
-Access privileges for resources in Active Directory Domain Services are usually granted through the use of an Access Control Entry (ACE). Access Control Entries describe the allowed and denied permissions for a principal in Active Directory against a securable object (user, group, computer, container, organization unit (OU), GPO and so on)
+Access privileges for resources in Active Directory Domain Services are usually granted through the use of an Access Control Entry (ACE). Access Control Entries describe the allowed and denied permissions for a principal (e.g. user, computer account) in Active Directory against a securable object (user, group, computer, container, organizational unit (OU), GPO and so on)
 
-DACLs (Active Directory Discretionary Access Control Lists) are lists made of ACEs (Access Control Entries) that identify the users and groups that are allowed or denied access on an object.
+DACLs (Active Directory Discretionary Access Control Lists) are lists made of ACEs (Access Control Entries) that identify the users and groups that are allowed or denied access on an object. SACLs (Systems Access Control Lists) define the audit and monitoring rules over a securable object.
 
 When misconfigured, ACEs can be abused to operate lateral movement or privilege escalation within an AD domain.
 
@@ -47,6 +47,8 @@ With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, i
 
 ## Resources
 
+{% embed url="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/990fb975-ab31-4bc1-8b75-5da132cd4584" %}
+
 {% embed url="https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectoryrights" %}
 
 {% embed url="https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces#genericall-on-user" %}
@@ -56,6 +58,4 @@ With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, i
 {% embed url="http://www.selfadsi.org/deep-inside/ad-security-descriptors.htm" %}
 
 {% embed url="https://adsecurity.org/?p=3658" %}
-
-
 
