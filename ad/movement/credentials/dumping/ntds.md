@@ -2,7 +2,7 @@
 description: MITRE ATT&CK™ Sub-technique T1003.003
 ---
 
-# NTDS.dit secrets
+# NTDS secrets
 
 NTDS (Windows NT Directory Services) is the directory services used by Microsoft Windows NT to locate, manage, and organize network resources. The NTDS.dit file is a database that stores the Active Directory data (including users, groups, security descriptors and password hashes). This file is stored on the domain controllers.
 
@@ -39,6 +39,7 @@ Once the VSS is created for the target drive, it is then possible to copy the ta
 
 ```bash
 copy $ShadowCopyName\Windows\NTDS\NTDS.dit C:\Windows\Temp\ntds.dit.save
+copy $ShadowCopyName\Windows\System32\config\SYSTEM C:\Windows\Temp\system.save
 ```
 
 Once the required files are exfiltrated, the shadow copy can be removed
