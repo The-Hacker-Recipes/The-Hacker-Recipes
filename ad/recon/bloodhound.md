@@ -2,7 +2,7 @@
 
 ## Theory
 
-[BloodHound](https://github.com/BloodHoundAD/BloodHound) (Javascript webapp, compiled with Electron, uses [Neo4j](https://neo4j.com) as graph DBMS) is an awesome tool that allows mapping of relationships within Active Directory environments. It mostly uses Windows API functions and LDAP namespace functions to collect data from domain controllers and domain-joined Windows systems.
+[BloodHound](https://github.com/BloodHoundAD/BloodHound) (Javascript webapp, compiled with Electron, uses [Neo4j](https://neo4j.com/) as graph DBMS) is an awesome tool that allows mapping of relationships within Active Directory environments. It mostly uses Windows API functions and LDAP namespace functions to collect data from domain controllers and domain-joined Windows systems.
 
 ## Practice
 
@@ -17,7 +17,7 @@ SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound), [builds](http
 It must be run from the context of a domain user, either directly through a logon or through another method such as runas (`runas /netonly /user:$DOMAIN\$USER`) (see [Impersonation](../movement/credentials/impersonation.md)). Alternatively, SharpHound can be used with the `LdapUsername` and `LdapPassword` flags for that matter.
 
 ```bash
-SharpHound.exe --CollectionMethod All
+SharpHound.exe --collectionmethod All
 ```
 
 {% hint style="info" %}
@@ -28,14 +28,14 @@ The previous commands are basic but some options (i.e. Stealth and Loop) can be 
 
 ```bash
 # Perform stealth collection methods
-SharpHound.exe --CollectionMethod All --Stealth
+SharpHound.exe --collectionmethod All --Stealth
 
 # Loop collections (especially useful for session collection)
 # e.g. collect sessions every 10 minutes for 3 hours
-SharpHound.exe --CollectionMethod Session --Loop --LoopDuration 03:00:00 --LoopInterval 00:10:00
+SharpHound.exe --collectionmethod Session --Loop --loopduration 03:00:00 --loopinterval 00:10:00
 
-# Use LDAPS instead of plaintext LDAP (IgnoreLdapCert for self-signed TLS/SSL certificates)https://github.com/BloodHoundAD/SharpHound#cli
-SharpHound.exe --SecureLdap --IgnoreLdapCert
+# Use LDAPS instead of plaintext LDAP
+SharpHound.exe --secureldap
 ```
 
 More help on the CLI commands [here](https://github.com/BloodHoundAD/SharpHound#cli).
@@ -54,7 +54,7 @@ From UNIX-like system, a non-official (but very effective nonetheless) Python ve
 [BloodHound.py](https://github.com/fox-it/BloodHound.py) is a Python ingestor for BloodHound.
 
 ```bash
-bloodhound.py -c All -d $DOMAIN -u $USERNAME -p $PASSWORD -dc $DOMAIN_CONTROLLER
+bloodhound.py --zip -c All -d $DOMAIN -u $USERNAME -p $PASSWORD -dc $DOMAIN_CONTROLLER
 ```
 
 {% hint style="info" %}
