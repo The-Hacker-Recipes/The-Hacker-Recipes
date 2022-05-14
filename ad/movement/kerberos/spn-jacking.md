@@ -2,14 +2,14 @@
 
 ## Theory
 
-This attack combines [Kerberos Constrained delegation abuse](delegations/constrained.md), as well as [Access Control abuse](../dacl/). A a service configured for Kerberos Constrained Delegation (KCD) can impersonate users on a set of services. The "set of services" is specified in the constrained delegation configuration. It is a list of SPNs (Service Principal Names) written in the `msDS-AllowedToDelegateTo` attribute of the KCD service's object.
+This attack combines [Kerberos Constrained delegation abuse](delegations/constrained.md) and [DACL abuse](../dacl/). A service configured for Kerberos Constrained Delegation (KCD) can impersonate users on a set of services. The "set of services" is specified in the constrained delegation configuration. It is a list of SPNs (Service Principal Names) written in the `msDS-AllowedToDelegateTo` attribute of the KCD service's object.
 
 In standard KCD abuse scenarios, an attacker that gains control over a "KCD service" can operate lateral movement and obtain access to the other services/SPNs. Since KCD allows for impersonation, the attacker can also impersonate users (e.g. domain admins) on the target services. Depending on the SPNs, or if it's possible to [modify it](ptt.md#modifying-the-spn), the attacker could also gain admin access to the server the "listed SPN" belongs to.
 
 On top of all that, if attacker is able to move a "listed SPN" from the original object to the another one, he could be able to compromise it. This is called SPN-jacking and it was intially discovered and explaine by [Elad Shamir](https://twitter.com/elad\_shamir) in [this post](https://www.semperis.com/blog/spn-jacking-an-edge-case-in-writespn-abuse/).
 
-1. In order to "move the SPN", the attacker must have the right to edit the target object's `ServicePrincipalName` attribute (i.e. `GenericAll`, `GenericWrite`, `WriteProperty` over it (called `WriteSPN` [since BloodHound 4.1](https://posts.specterops.io/introducing-bloodhound-4-1-the-three-headed-hound-be3c4a808146)), etc.).
-2. If the "listed SPN" already belongs to an object, it must be removed from it first. This would require the same privileges (`GenericAll`, `GenericWrite`, etc.) over the SPN owner object as well (_a.k.a. "Live SPN-jacking"_). Else, the SPN can be simply be added to the target object (_a.k.a. "Ghost SPN-jacking"_).
+1. In order to "move the SPN", the attacker must have the right to edit the target object's `ServicePrincipalName` attribute (i.e. `GenericAll`, `GenericWrite` over the object or`WriteProperty` over the attribute (called `WriteSPN` [since BloodHound 4.1](https://posts.specterops.io/introducing-bloodhound-4-1-the-three-headed-hound-be3c4a808146)), etc.).
+2. If the "listed SPN" already belongs to an object, it must be removed from it first. This would require the same privileges (`GenericAll`, `GenericWrite`, etc.) over the SPN owner as well (_a.k.a. "Live SPN-jacking"_). Else, the SPN can be simply be added to the target object (_a.k.a. "Ghost SPN-jacking"_).
 
 ## Practice
 
@@ -26,7 +26,7 @@ In this scenario (following [Elad](https://twitter.com/elad\_shamir)'s [post](ht
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like machines, [Impacket](https://github.com/SecureAuthCorp/impacket) example scripts (Python) can be used to conduct the different steps (manipulate SPNs, obtain and manipulate tickets).
+From UNIX-like machines, [krbrelayx](https://github.com/dirkjanm/krbrelayx)'s [addspn.py](https://github.com/dirkjanm/krbrelayx/blob/master/addspn.py) and [Impacket](https://github.com/SecureAuthCorp/impacket) example scripts (Python) can be used to conduct the different steps (manipulate SPNs, obtain and manipulate tickets).
 
 _At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding the `tgssub.py` is pending._ [_The pull request_](https://github.com/SecureAuthCorp/impacket/pull/1184) _modifying the `findDelegation.py` is pending._
 
