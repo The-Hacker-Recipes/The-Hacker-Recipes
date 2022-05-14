@@ -1,4 +1,4 @@
-# 🛠️ Known vulnerabilities
+# Known vulnerabilities
 
 ## Theory
 
@@ -16,9 +16,9 @@ Known vulnerabilities may then be identified depending on these information.
 
 Known vulnerabilities can be found from the following resources
 
-* [exploit-db.com](https://www.exploit-db.com): an online exploit database
+* [exploit-db.com](https://www.exploit-db.com/): an online exploit database
 * [searchsploit](https://www.exploit-db.com/searchsploit) is a command-line utility that allows to do offline searches through the exploit-db
-* [CVE Details](https://www.cvedetails.com), [NVD NIST](https://nvd.nist.gov/vuln/search) and [MITRE](https://cve.mitre.org/cve/search\_cve\_list.html) are online CVE (Common Vulnerabilities and Exposures) searches
+* [CVE Details](https://www.cvedetails.com/), [NVD NIST](https://nvd.nist.gov/vuln/search) and [MITRE](https://cve.mitre.org/cve/search\_cve\_list.html) are online CVE (Common Vulnerabilities and Exposures) searches
 
 ```bash
 # search exploits for a technology
@@ -34,4 +34,4 @@ searchsploit -m $exploit_path
 searchsploit -u
 ```
 
-When a vulnerability is found, one can research a Proof-Of-Concept (PoC) to try at exploiting the vulnerability. Most public PoCs can be found on [GitHub](https://github.com).
+When a vulnerability is found, one can research a Proof-Of-Concept (PoC) to try at exploiting the vulnerability. Most public PoCs can be found on [GitHub](https://github.com/).

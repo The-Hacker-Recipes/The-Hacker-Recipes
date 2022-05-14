@@ -71,7 +71,7 @@ openssl pkcs12 -in "cert.pem" -keyex -CSP "Microsoft Enhanced Cryptographic Prov
 {% endhint %}
 
 {% hint style="info" %}
-Certipy uses DER encryption. To generate a PFX for Rubeus, [openssl](https://www.openssl.org) can be used.
+Certipy uses DER encryption. To generate a PFX for Rubeus, [openssl](https://www.openssl.org/) can be used.
 
 ```bash
 openssl rsa -inform DER -in key.key -out key-pem.key

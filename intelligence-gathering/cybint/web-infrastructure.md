@@ -1,8 +1,8 @@
 # Web infrastructure
 
-## Theory <a href="theory" id="theory"></a>
+## Theory <a href="#theory" id="theory"></a>
 
-## Practice <a href="practice" id="practice"></a>
+## Practice <a href="#practice" id="practice"></a>
 
 shodan : net:"SUBNET/MASK"
 
@@ -11,7 +11,7 @@ zoomeye : IP/MASK
 fofa.so
 
 Get the DNS servers, their records, and map the domain:\
-\-[https://dnsdumpster.com/](https://dnsdumpster.com)\
+\-[https://dnsdumpster.com/](https://dnsdumpster.com/)\
 IP énumération + response header from domain name:\
 \-[https://zoomeye.org](https://zoomeye.org)\
 Find subdomains:\
@@ -20,8 +20,8 @@ Find technologies used and versions of a webapp:\
 \-[https://github.com/urbanadventurer/WhatWeb](https://github.com/urbanadventurer/WhatWeb)
 
 Website caching platforms:\
-\-[https://archive.org/](https://archive.org)\
-\-[https://archive.fo/](https://archive.fo)
+\-[https://archive.org/](https://archive.org/)\
+\-[https://archive.fo/](https://archive.fo/)
 
 Google Analytics:
 

@@ -8,7 +8,7 @@ While Crawling allows testers to build the indexed architecture of website, this
 
 ### Fuzzing tools
 
-Tools like [dirb](http://dirb.sourceforge.net) (C), [dirbuster](https://sourceforge.net/projects/dirbuster/) (Java), [gobuster](https://github.com/OJ/gobuster) (Go), [wfuzz](https://github.com/xmendez/wfuzz) (Python), [ffuf](https://github.com/ffuf/ffuf) (Go) and [feroxbuster](https://github.com/epi052/feroxbuster) (Rust) can do directory fuzzing/bruteforcing. Burp Suite can do it too. Depending on the web application, one will be better suited than another and additional options will be needed.
+Tools like [dirb](http://dirb.sourceforge.net/) (C), [dirbuster](https://sourceforge.net/projects/dirbuster/) (Java), [gobuster](https://github.com/OJ/gobuster) (Go), [wfuzz](https://github.com/xmendez/wfuzz) (Python), [ffuf](https://github.com/ffuf/ffuf) (Go) and [feroxbuster](https://github.com/epi052/feroxbuster) (Rust) can do directory fuzzing/bruteforcing. Burp Suite can do it too. Depending on the web application, one will be better suited than another and additional options will be needed.
 
 ```bash
 gobuster dir --useragent "PENTEST" --wordlist "/path/to/wordlist.txt" --url $URL

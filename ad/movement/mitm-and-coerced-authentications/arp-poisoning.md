@@ -38,7 +38,7 @@ Besides the scenarios mentioned above, many network topologies exist and ARP poi
 Since spoofing every address in a subnet can cause temporary but severe disruption in that subnet, it is highly recommended to target specific addresses and machines while doing ARP spoofing.
 {% endhint %}
 
-The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
+The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org/) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
 
 ### Networking
 

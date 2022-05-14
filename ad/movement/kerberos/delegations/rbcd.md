@@ -2,7 +2,7 @@
 
 ## Theory
 
-If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object (e.g. the `GenericWrite` ACE, see [Abusing ACLs](../../access-controls/)), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
+If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute of another object (e.g. the `GenericWrite` ACE, see [Abusing ACLs](../../dacl/)), is compromised, an attacker can use it populate that attribute, hence configuring that object for RBCD.
 
 {% hint style="success" %}
 Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute, hence allowing RBCD attacks on relayed machine accounts authentications.

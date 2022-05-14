@@ -119,7 +119,7 @@ Using [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell), the fo
   * `wildcard` injects a wildcard record
 * set the threshold at which the combo ADIDNS spoofing mode will take effect
 * enable showing NTLM challenge/response captures from machine accounts
-* set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh))
+* set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/))
 
 ```
 Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -MachineAccounts Y

@@ -12,7 +12,7 @@ WEP can be configured with two different authentication modes : **Open** and **S
 
 ## Requirements
 
-[Aircrack-ng](https://www.aircrack-ng.org) is a complete suite of tools to assess WiFi network security. The suite offers may famous tool like `airbase-ng`, `aircrack-ng`, `airdecap-ng`, `airdecloak-ng`, `airdrop-ng`, `aireplay-ng`, `airmon-ng`, `airodump-ng`, `besside-ng`, `dcrack`, `easside-ng`, `packetforge-ng`, `tkiptun-ng`, `wesside-ng`.
+[Aircrack-ng](https://www.aircrack-ng.org/) is a complete suite of tools to assess WiFi network security. The suite offers may famous tool like `airbase-ng`, `aircrack-ng`, `airdecap-ng`, `airdecloak-ng`, `airdrop-ng`, `aireplay-ng`, `airmon-ng`, `airodump-ng`, `besside-ng`, `dcrack`, `easside-ng`, `packetforge-ng`, `tkiptun-ng`, `wesside-ng`.
 
 Depending on the wireless network configuration and on the context, there are different attack scenarios that can be followed but in order to carry on those attacks, there are requirements that need to be met.
 
@@ -38,7 +38,7 @@ airodump-ng --channel $channel --bssid 'TA:RG:ET:BS:SI:DD' $wlan_interface
 
 ### Obtain an associated state
 
-In order to inject frames from a client to an access point, the client has to be known by the AP (i.e. be associated). 
+In order to inject frames from a client to an access point, the client has to be known by the AP (i.e. be associated).&#x20;
 
 When using `aireplay-ng` for various attacks (ARP replay, fragmentation, chopchop, ...), it is possible to set the `-h` option along with the MAC address of an authenticated client. The authenticated clients can be gathered with `airodump-ng`.
 
@@ -53,7 +53,7 @@ Basically, the easiest attacks paths come down to the following. "Client spoofin
 | Scenarios         | Open                                                                                                                                                                                                 | SKA                                                                                                                                                                              |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Connected clients | [sniffing](wep.md#sniffing-and-cracking) + [arpreplay](wep.md#arp-replay) (with client spoofing) + [deauth](wep.md#de-authentication) + [cracking](wep.md#sniffing-and-cracking)                     | [sniffing](wep.md#sniffing-and-cracking) + [arpreplay](wep.md#arp-replay) (with client spoofing) + [deauth](wep.md#de-authentication) + [cracking](wep.md#sniffing-and-cracking) |
-| No clients        | [sniffing](wep.md#sniffing-and-cracking) + [fake auth](wep.md#fake-authentication) + [fragmentation](wep.md#fragmentation) or [chopchop](wep.md#chopchop) + [cracking](wep.md#sniffing-and-cracking) | :cold_sweat:                                                                                                                                                                     |
+| No clients        | [sniffing](wep.md#sniffing-and-cracking) + [fake auth](wep.md#fake-authentication) + [fragmentation](wep.md#fragmentation) or [chopchop](wep.md#chopchop) + [cracking](wep.md#sniffing-and-cracking) | :cold\_sweat:                                                                                                                                                                    |
 
 ### Sniffing & cracking
 
@@ -85,7 +85,7 @@ aireplay-ng --fakeauth 0 -a 'TA:RG:ET:BS:SI:DD' $wlan_interface
 
 ![](<../../.gitbook/assets/image (1).png>)
 
-When the authentication mode in use is not OPEN, but rather SKA, the tester can either 
+When the authentication mode in use is not OPEN, but rather SKA, the tester can either&#x20;
 
 * spoof a legitimate client's MAC address when attacking with `aireplay-ng` with option `-h`.
 * wait a legitimate client to connect to the AP (or [force it](wep.md#de-authentication)), capture the authentication, have airodump-ng extract the keystream from it, and use it with a known-plaintext attack to bypass the SKA mode requirement (.i.e the need to know the secret key).
@@ -94,7 +94,7 @@ When the authentication mode in use is not OPEN, but rather SKA, the tester can 
 **TODO** : I've had issues with my AP, I need to try again with a RPi or something...
 {% endhint %}
 
-Depending on the scenario, it is advisable to operate fake authentication regularly to keep the association state alive during long attacks. This can be achieved by setting the fakeauth delay to something like 60 (`--fakeauth 60`) and/or changing the delay between keep-alive packets (`-q` option, set to 15 by default). 
+Depending on the scenario, it is advisable to operate fake authentication regularly to keep the association state alive during long attacks. This can be achieved by setting the fakeauth delay to something like 60 (`--fakeauth 60`) and/or changing the delay between keep-alive packets (`-q` option, set to 15 by default).&#x20;
 
 ### De-authentication
 
@@ -125,7 +125,7 @@ In order to make that operation more effective, it is possible to combine the AR
 
 The "ARP replay" mode of `aireplay-ng` can be used to gather new IVs by listening to ARP packets and resending them to the AP. The data will be captured by `airodump-ng` and saved in a capture file with the name supplied on the `--write` argument.
 
-> The classic ARP request replay attack is the most effective way to generate new initialization vectors (IVs), and works very reliably. The program listens for an ARP packet then retransmits it back to the access point. This, in turn, causes the access point to repeat the ARP packet with a new IV. The program retransmits the same ARP packet over and over. However, each ARP packet repeated by the access point has a new IVs. It is all these new IVs which allow you to determine the WEP key. ([source](https://www.aircrack-ng.org/doku.php?id=arp-request_reinjection))
+> The classic ARP request replay attack is the most effective way to generate new initialization vectors (IVs), and works very reliably. The program listens for an ARP packet then retransmits it back to the access point. This, in turn, causes the access point to repeat the ARP packet with a new IV. The program retransmits the same ARP packet over and over. However, each ARP packet repeated by the access point has a new IVs. It is all these new IVs which allow you to determine the WEP key. ([source](https://www.aircrack-ng.org/doku.php?id=arp-request\_reinjection))
 
 ```bash
 aireplay-ng --arpreplay -b 'TA:RG:ET:BS:SI:DD' $wlan_interface
@@ -146,7 +146,7 @@ This attack is really useful when no clients are connected to the target access 
 
 //TO EXPLAIN fragmentation attack : in certain scenarios, this process can be very long since it's virtually based on luck.
 
-//TO EXPLAIN : deauth or disassociation packets can sometimes be received. In this case, it can indicate client MAC filtering. Testers should spoof a legitimate client. 
+//TO EXPLAIN : deauth or disassociation packets can sometimes be received. In this case, it can indicate client MAC filtering. Testers should spoof a legitimate client.&#x20;
 
 ```bash
 aireplay-ng --fragment -F -b 'TA:RG:ET:BS:SI:DD' $wlan_interface
@@ -206,7 +206,7 @@ aireplay-ng --interactive -F -r crafted-packet $wlan_interface
 ![](../../.gitbook/assets/carbon\(20\).png)
 
 {% hint style="success" %}
-In previous tests, combining a fragmentation attack with a chopchop attack resulted in high a number of received IVs per second (`#/s` column in `airodump-ng`) around 250. 
+In previous tests, combining a fragmentation attack with a chopchop attack resulted in high a number of received IVs per second (`#/s` column in `airodump-ng`) around 250.&#x20;
 {% endhint %}
 
 ## Resources

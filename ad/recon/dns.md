@@ -28,7 +28,7 @@ The same commands can be operated the old way with nslookup.
 {% endtab %}
 
 {% tab title="nmap" %}
-The [nmap](https://nmap.org) tool can be used with its [dns-srv-enum.nse](https://nmap.org/nsedoc/scripts/dns-srv-enum.html) script to operate those queries.
+The [nmap](https://nmap.org/) tool can be used with its [dns-srv-enum.nse](https://nmap.org/nsedoc/scripts/dns-srv-enum.html) script to operate those queries.
 
 ```bash
 nmap --script dns-srv-enum --script-args dns-srv-enum.domain=$FQDN_DOMAIN

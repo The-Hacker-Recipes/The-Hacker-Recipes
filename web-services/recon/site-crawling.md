@@ -8,7 +8,7 @@ Crawling is a technique used to recursively follow those links and build the ind
 
 ## Practice
 
-Tools like [hakrawler](https://github.com/hakluke/hakrawler) (Go), [scrapy](https://scrapy.org) (Python) and [spidy](https://github.com/rivermont/spidy) (Python) can be used here.
+Tools like [hakrawler](https://github.com/hakluke/hakrawler) (Go), [scrapy](https://scrapy.org/) (Python) and [spidy](https://github.com/rivermont/spidy) (Python) can be used here.
 
 ```bash
 hakrawler -url $URL

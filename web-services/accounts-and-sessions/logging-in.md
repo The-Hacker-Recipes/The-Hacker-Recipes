@@ -39,7 +39,7 @@ Check the following pages for issues regarding [JWS](https://www.thehacker.recip
 
 ### SQL injection
 
-The tool [sqlmap](https://sqlmap.org) can unveil SQL injections on log-in forms.
+The tool [sqlmap](https://sqlmap.org/) can unveil SQL injections on log-in forms.
 
 ```
 sqlmap -r $REQUEST_FILE -p $LOGIN_PARAM,$PWD_PARAM

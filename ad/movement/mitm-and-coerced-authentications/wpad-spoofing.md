@@ -46,7 +46,7 @@ responder -I "eth0" -wP
 {% endtab %}
 
 {% tab title="Windows" %}
-The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md) (even from machine accounts) and set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh)).
+The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdns-spoofing.md). Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md) (even from machine accounts) and set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)).
 
 * Inveigh starts a WPAD rogue proxy server by default.
 * Options like `-WPADAuth`, `-WPADAuthIgnore`, `-WPADIP`, `-WPADPort`, `-WPADResponse` (and others) can be used to tweak the WPAD abuse.

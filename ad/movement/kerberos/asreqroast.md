@@ -12,7 +12,7 @@ This technique can be categorized as a [plaintext protocol credential dumping](.
 
 ## Practice
 
-Once network traffic is hijacked and goes through an attacker-controlled equipement, valuable information can searched through captured (with [tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html), [tshark ](https://www.wireshark.org/docs/man-pages/tshark.html)or [wireshark](https://www.wireshark.org)) or through live traffic.
+Once network traffic is hijacked and goes through an attacker-controlled equipement, valuable information can searched through captured (with [tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html), [tshark ](https://www.wireshark.org/docs/man-pages/tshark.html)or [wireshark](https://www.wireshark.org/)) or through live traffic.
 
 [PCredz ](https://github.com/lgandx/PCredz)(Python) is a good example and allows extraction of credit card numbers, NTLM (DCE-RPC, HTTP, SQL, LDAP, etc), Kerberos (AS-REQ Pre-Auth etype 23), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, etc from a pcap file or from a live interface.
 

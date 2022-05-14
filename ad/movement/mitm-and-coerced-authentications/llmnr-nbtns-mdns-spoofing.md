@@ -34,7 +34,7 @@ The following command will make Inveigh inspect the network to see if LLMNR, NBT
 Invoke-Inveigh -ConsoleOutput Y -Inspect
 ```
 
-The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md) (even from machine accounts) and set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh)).
+The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md) (even from machine accounts) and set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)).
 
 Inveigh also starts a WPAD rogue proxy server by default for [WPAD abuse](wpad-spoofing.md).
 

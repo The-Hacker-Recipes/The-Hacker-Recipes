@@ -4,7 +4,7 @@
 
 A Content Management System (CMS) is a type of software widely used for websites creation and management. It the allows its users to easily create and manage websites such as blogs, forums and online stores. Among web applications, the large usage of CMS makes those software a huge target.
 
-Here is a shortlist of the most common CMS: [WordPress](https://wordpress.com), [Joomla](https://www.joomla.org), [Shopify](https://www.shopify.com), [Drupal](https://www.drupal.org), [Magento](https://magento.com), [Typo3](https://typo3.org).
+Here is a shortlist of the most common CMS: [WordPress](https://wordpress.com/), [Joomla](https://www.joomla.org/), [Shopify](https://www.shopify.com/), [Drupal](https://www.drupal.org/), [Magento](https://magento.com/), [Typo3](https://typo3.org/).
 
 ## Practice
 
@@ -20,8 +20,8 @@ Automated scanning tools can also help identify which technologies are used, and
 
 * [WPScan](https://github.com/wpscanteam/wpscan) (Ruby) can be used for sites that use WordPress
 * [droopescan](https://github.com/SamJoan/droopescan) (Python) supports Drupal, SilverStripe and WordPress and partially supports Joomla and Moodle.
-* [Wappalyzer](https://www.wappalyzer.com) is a browser extension that can detect the use of certain software including CMS
-* [Whatcms.org](https://whatcms.org) can help answering the question "What CMS is this site using?" but needs the target website to be accessible from the Internet.
+* [Wappalyzer](https://www.wappalyzer.com/) is a browser extension that can detect the use of certain software including CMS
+* [Whatcms.org](https://whatcms.org/) can help answering the question "What CMS is this site using?" but needs the target website to be accessible from the Internet.
 
 {% tabs %}
 {% tab title="WPScan" %}

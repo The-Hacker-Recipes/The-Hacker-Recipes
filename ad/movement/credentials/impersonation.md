@@ -38,7 +38,7 @@ Start-Process Notepad.exe -Credential $credential
 {% tab title="PowerView" %}
 Most of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)'s functions have the `-Credential`, `-Domain` and `-Server` parameters that can be used to explicitly specify the user to run as, the target Domain and and the target Domain Controller. Just like the previous "Powershell" tab, the -Credential option has to be supplied with a credential object.
 
-Here is an example for [targeted Kerberoasting](../access-controls/targeted-kerberoasting.md).
+Here is an example for [targeted Kerberoasting](../dacl/targeted-kerberoasting.md).
 
 ```bash
 # Credential object creation (not prompted)

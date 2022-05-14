@@ -21,7 +21,7 @@ ntlmrelayx.py -t ldaps://10.0.0.5 -debug --dump-gmsa --no-dump --no-da --no-acl 
 ```
 
 {% hint style="success" %}
-In order to easily fake a relayed authentication, once the relay servers are up and running, the tester can browse [http://127.0.0.1/](http://127.0.0.1) in order to trigger a basic authentication that will then be relayed by ntlmrelayx, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
+In order to easily fake a relayed authentication, once the relay servers are up and running, the tester can browse [http://127.0.0.1/](http://127.0.0.1/) in order to trigger a basic authentication that will then be relayed by ntlmrelayx, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
 {% endhint %}
 
 

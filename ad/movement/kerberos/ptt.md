@@ -113,7 +113,7 @@ crackmapexec winrm $TARGETS -k -x whoami
 crackmapexec smb $TARGETS -k -x whoami
 ```
 
-On Windows, legitimate tools like the [sysinternals](https://docs.microsoft.com/en-us/sysinternals/) [PsExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) ([download](https://live.sysinternals.com)) can then be used to open a cmd using that ticket.
+On Windows, legitimate tools like the [sysinternals](https://docs.microsoft.com/en-us/sysinternals/) [PsExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) ([download](https://live.sysinternals.com/)) can then be used to open a cmd using that ticket.
 
 ```bash
 .\PsExec.exe -accepteula \\$TARGET cmd

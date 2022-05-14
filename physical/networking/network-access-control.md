@@ -133,7 +133,7 @@ MAC-based and 802.1x are usually managed one of many ways:
 
 [MAC Authentication Bypass (MAB)](https://networklessons.com/cisco/ccie-routing-switching-written/mac-authentication-bypass-mab) can be done by spoofing an authorized MAC address.
 
-The first step in spoofing an authorized MAC address is to find one. This can be done by physically searching addresses on printers, labels, IP phones and similar equipment, or by using [Wireshark](https://www.wireshark.org) to manually inspect broadcast and multicast packets that travel on the network and obtain some MAC addresses in the traffic.c.
+The first step in spoofing an authorized MAC address is to find one. This can be done by physically searching addresses on printers, labels, IP phones and similar equipment, or by using [Wireshark](https://www.wireshark.org/) to manually inspect broadcast and multicast packets that travel on the network and obtain some MAC addresses in the traffic.c.
 
 [macchanger](https://github.com/alobbs/macchanger) can then be used to spoof the a MAC address. Once there, cables can be swapped to access the customer's network.
 

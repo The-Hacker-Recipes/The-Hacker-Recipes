@@ -1,10 +1,10 @@
 # GEOINT
 
-## Theory <a href="theory" id="theory"></a>
+## Theory <a href="#theory" id="theory"></a>
 
 Geospacial intelligence (GEOINT) is intelligence by analyzing geospacial maps and images about the human activity. This part will present some tools to find and analyze geospacial information. These information could be useful during a Red Team to scout the target's location in order to find building entrances, monitored areas, etc.
 
-## Practice <a href="practice" id="practice"></a>
+## Practice <a href="#practice" id="practice"></a>
 
 **MAPS**\
 **Outdoor geoint:**\
@@ -22,12 +22,12 @@ Find metadata + hidden pixels + error level analysis (ELA) + ect..\
 \-[http://exif.regex.info/exif.cgi](http://exif.regex.info/exif.cgi)\
 \-[https://29a.ch/photo-forensics](https://29a.ch/photo-forensics)\
 Reverse image search:\
-_\*\*_-[https://tineye.com/](https://tineye.com)\
+_\*\*_-[https://tineye.com/](https://tineye.com/)\
 Search for similar images:\
 \-[https://images.google.com](https://images.google.com/?hl=fr)\
 \-[https://yandex.com/images/](https://yandex.com/images/)\
 Remove image background:\
-\-[https://www.remove.bg/](https://www.remove.bg)
+\-[https://www.remove.bg/](https://www.remove.bg/)
 
 {% hint style="info" %}
 It is possible to image search within an image using for instance the Bing's tool:\
@@ -36,7 +36,7 @@ It is possible to image search within an image using for instance the Bing's too
 
 {% hint style="info" %}
 In a journalistic context it is crucial to verify sources, including images. Here is a guide to verify image's veracity:\
-[https://firstdraftnews.org/wp-content/uploads/2017/03/FDN_verificationguide_photos.pdf?x40896](https://firstdraftnews.org/wp-content/uploads/2017/03/FDN_verificationguide_photos.pdf?x40896)
+[https://firstdraftnews.org/wp-content/uploads/2017/03/FDN\_verificationguide\_photos.pdf?x40896](https://firstdraftnews.org/wp-content/uploads/2017/03/FDN\_verificationguide\_photos.pdf?x40896)
 {% endhint %}
 
 ## Sources

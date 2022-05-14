@@ -160,14 +160,14 @@ ntlmrelayx.py -t ldap://$DC_TARGET --add-computer SHUTDOWN
 {% endtab %}
 
 {% tab title="Promotion" %}
-The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group or doing some [ACE abuse](../access-controls/) (`--escalate-user`) if the relayed account has sufficient privileges.
+The following command will try to relay the authentication over LDAPS and escalate the privileges of a domain user by adding it to a privileged group or doing some [ACE abuse](../dacl/) (`--escalate-user`) if the relayed account has sufficient privileges.
 
 ```bash
 ntlmrelayx.py -t ldaps://$DOMAIN_CONTROLLER --escalate-user SHUTDOWN
 ```
 
 {% hint style="info" %}
-This technique is usually combined with a [PushSubscription abuse (a.k.a. PrivExchange)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains (`WriteDACL` over domain object, see [Abusing ACEs](../access-controls/)) to escalate a domain user privileges (`--escalate-user`).
+This technique is usually combined with a [PushSubscription abuse (a.k.a. PrivExchange)](../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to force an Exchange server to initiate an authentication, relay it to a domain controller and abuse the default high privileges of Exchange servers in AD domains (`WriteDACL` over domain object, see [Abusing ACEs](../dacl/)) to escalate a domain user privileges (`--escalate-user`).
 {% endhint %}
 {% endtab %}
 

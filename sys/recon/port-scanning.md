@@ -21,7 +21,7 @@ Knowing which ports are open on a host, and which services hide between these po
 
 ## Practice
 
-The most commonly used tool for port scanning is [nmap](https://nmap.org) ("Network Mapper"). This tool features a lot of options but the main ones are the following.
+The most commonly used tool for port scanning is [nmap](https://nmap.org/) ("Network Mapper"). This tool features a lot of options but the main ones are the following.
 
 ```
 SCAN TECHNIQUES

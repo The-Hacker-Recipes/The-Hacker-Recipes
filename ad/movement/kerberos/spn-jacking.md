@@ -2,7 +2,7 @@
 
 ## Theory
 
-This attack combines [Kerberos Constrained delegation abuse](delegations/constrained.md), as well as [Access Control abuse](../access-controls/). A a service configured for Kerberos Constrained Delegation (KCD) can impersonate users on a set of services. The "set of services" is specified in the constrained delegation configuration. It is a list of SPNs (Service Principal Names) written in the `msDS-AllowedToDelegateTo` attribute of the KCD service's object.
+This attack combines [Kerberos Constrained delegation abuse](delegations/constrained.md), as well as [Access Control abuse](../dacl/). A a service configured for Kerberos Constrained Delegation (KCD) can impersonate users on a set of services. The "set of services" is specified in the constrained delegation configuration. It is a list of SPNs (Service Principal Names) written in the `msDS-AllowedToDelegateTo` attribute of the KCD service's object.
 
 In standard KCD abuse scenarios, an attacker that gains control over a "KCD service" can operate lateral movement and obtain access to the other services/SPNs. Since KCD allows for impersonation, the attacker can also impersonate users (e.g. domain admins) on the target services. Depending on the SPNs, or if it's possible to [modify it](ptt.md#modifying-the-spn), the attacker could also gain admin access to the server the "listed SPN" belongs to.
 

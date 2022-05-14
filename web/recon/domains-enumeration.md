@@ -44,9 +44,9 @@ Search engines like Google and Bing offer Dorking features that can be used to g
 
 > Certificate Transparency(CT) is a project under which a Certificate Authority(CA) has to publish every SSL/TLS certificate they issue to a public log. An SSL/TLS certificate usually contains domain names, sub-domain names and email addresses.
 >
-> ([blog.appsecco.com](https://blog.appsecco.com))
+> ([blog.appsecco.com](https://blog.appsecco.com/))
 
-The following websites allow to search through their CT logs: [crt.sh](https://crt.sh), [censys.io](https://censys.io), [Facebook's CT monitor](https://developers.facebook.com/tools/ct/), [Google's CT monitor](https://transparencyreport.google.com/https/certificates).
+The following websites allow to search through their CT logs: [crt.sh](https://crt.sh/), [censys.io](https://censys.io/), [Facebook's CT monitor](https://developers.facebook.com/tools/ct/), [Google's CT monitor](https://transparencyreport.google.com/https/certificates).
 
 [Findomain](https://github.com/Findomain/Findomain) (Rust), [Subfinder](https://github.com/projectdiscovery/subfinder) (Go) and [Assetfinder](https://github.com/tomnomnom/assetfinder) (Go) mainly rely on Certificate Transparency logs enumeration.
 
