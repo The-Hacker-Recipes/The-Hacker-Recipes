@@ -55,7 +55,7 @@ From Windows systems, the `msDs-KeyCredentialLink` attribute of a target user or
 Whisker.exe add /target:"TARGET_SAMNAME" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
 ```
 
-When the public key has been set in the msDs-KeyCredentialLink of the target, the certificate generated can be used with [Pass-the-Certificate](pass-the-certificate.md) to obtain a TGT and further access.
+When the public key has been set in the `msDs-KeyCredentialLink` of the target, the certificate generated can be used with [Pass-the-Certificate](pass-the-certificate.md) to obtain a TGT and further access.
 {% endtab %}
 {% endtabs %}
 
