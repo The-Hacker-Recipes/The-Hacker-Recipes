@@ -1,6 +1,6 @@
 # AddMember
 
-This abuse can be carried out when controlling an object that has `AllExtendedRights`, `Self`, `WriteProperty`, `GenericWrite` or `GenericAll` over a target group.
+This abuse can be carried out when controlling an object that has a `GenericAll`, `GenericWrite`, `Self`, `AllExtendedRights` or `Self-Membership`, over the target group.
 
 {% tabs %}
 {% tab title="UNIX-like" %}

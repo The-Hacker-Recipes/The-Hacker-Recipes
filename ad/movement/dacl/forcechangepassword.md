@@ -1,6 +1,6 @@
 # ForceChangePassword
 
-This abuse can be carried out when controlling an object that has `AllExtendedRights`, or `GenericAll` over a target user.
+This abuse can be carried out when controlling an object that has a `GenericAll`, `AllExtendedRights` or `User-Force-Change-Password` over the target user.
 
 {% tabs %}
 {% tab title="UNIX-like" %}

@@ -1,6 +1,6 @@
 # ReadLAPSPassword
 
-This abuse can be carried out when controlling an object that has `AllExtendedRights` over a target computer. The attacker can then read the LAPS password of the computer account.&#x20;
+This abuse can be carried out when controlling an object that has `GenericAll` or `AllExtendedRights` over the target computer configured for LAPS. The attacker can then read the LAPS password of the computer account (i.e. the password of the computer's local administrator).
 
 {% tabs %}
 {% tab title="UNIX-like" %}

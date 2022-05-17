@@ -1,6 +1,6 @@
 # Targeted Kerberoasting
 
-This abuse can be carried out when controlling an object that has `WriteProperty`, `GenericWrite` or `GenericAll` over a target user (i.e. member of the [Account Operator](../domain-settings/builtin-groups.md) group).
+This abuse can be carried out when controlling an object that has a `GenericAll`, `GenericWrite`, `WriteProperty` or `Validated-SPN` over the target. A member of the [Account Operator](../domain-settings/builtin-groups.md) group usually has those permissions.
 
 The attacker can add an SPN (`ServicePrincipalName`) to that account. Once the account has an SPN, it becomes vulnerable to [Kerberoasting](../kerberos/kerberoast.md). This technique is called Targeted Kerberoasting.&#x20;
 
@@ -34,4 +34,4 @@ Set-DomainObject -Identity victimuser -Clear serviceprincipalname
 {% endtab %}
 {% endtabs %}
 
-Once the Kerberoast hash is obtained, it can possibly be cracked to recover the account's password if the password used is weak enough.
+Once the Kerberoast hash is obtained, it can possibly be [cracked](../credentials/cracking.md) to recover the account's password if the password used is weak enough.
