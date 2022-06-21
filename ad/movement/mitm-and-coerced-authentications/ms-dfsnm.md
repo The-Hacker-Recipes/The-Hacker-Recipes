@@ -4,7 +4,7 @@
 
 MS-DFSNM is Microsoft's Distributed File System Namespace Management protocol. It provides an RPC interface for administering DFS configurations ([docs.microsoft.com](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-dfsnm/95a506a8-cae6-4c42-b19d-9c1ed1223979)) and is available as an RPC interface. That interface is available through the `\pipe\netdfs` SMB named pipe.
 
-In mid-2022, [Filip Dragovic](https://twitter.com/filip\_dragovic) demonstrated the possibility of abusing the protocol to coerce authentications. Similarly to other MS-RPC abuses, this works by using a specific method relying on remote address. In this case, at the time of writing, one method was detected vulnerable: `NetrDfsRemoveStdRoot`.
+In mid-2022, [Filip Dragovic](https://twitter.com/filip\_dragovic) demonstrated the possibility of abusing the protocol to coerce authentications. Similarly to other MS-RPC abuses, this works by using a specific method relying on remote address. In this case, at the time of writing, one method was detected vulnerable: `NetrDfsRemoveStdRoot`. It is worth noting this coercion method only works against domain controllers.
 
 ## Practice
 
