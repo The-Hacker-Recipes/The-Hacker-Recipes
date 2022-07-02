@@ -101,6 +101,6 @@ Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDeleg
 
 {% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-accounts-collude---trustedtoauthfordelegation-who" %}
 
-{% embed url="https://www.harmj0y.net/blog/redteaming/another-word-on-delegation" %}
+{% embed url="https://blog.harmj0y.net/redteaming/another-word-on-delegation/" %}
 
-{% embed url="https://www.harmj0y.net/blog/activedirectory/s4u2pwnage" %}
+{% embed url="https://harmj0y.medium.com/s4u2pwnage-36efe1a2777c" %}
