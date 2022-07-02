@@ -53,7 +53,7 @@ findDelegation.py -user "account" "DOMAIN"/"USER":"PASSWORD"
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows systems, [BloodHound](../../../recon/bloodhound.md) can be used to identify unconstrained and constrained delegation but at the time of writing (13th October 2021) RBCD and the state of Protocol Transition (for constrained delegation) are not identified.
+From Windows systems, [BloodHound](../../../recon/bloodhound.md) can be used to identify unconstrained and constrained delegation but at the time of writing (13th October 2021), as far as I know, the state of Protocol Transition (for constrained delegation) is not identified.
 
 The Powershell Active Directory module also has a cmdlet that can be used to find delegation for a specific account.
 
