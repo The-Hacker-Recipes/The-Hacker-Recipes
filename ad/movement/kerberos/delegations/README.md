@@ -53,7 +53,23 @@ findDelegation.py -user "account" "DOMAIN"/"USER":"PASSWORD"
 {% endtab %}
 
 {% tab title="Windows" %}
-From Windows systems, [BloodHound](../../../recon/bloodhound.md) can be used to identify unconstrained and constrained delegation but at the time of writing (13th October 2021), as far as I know, the state of Protocol Transition (for constrained delegation) is not identified.
+From Windows systems, [BloodHound](../../../recon/bloodhound.md) can be used to identify unconstrained and constrained delegation.
+
+The following queries can be used to audit delegations.
+
+```cypher
+// Unconstrained Delegation
+MATCH (c {unconstraineddelegation:true}) return c
+
+// Constrained Delegation (with Protocol Transition)
+MATCH (c) WHERE NOT c.allowedtodelegate IS NULL AND c.trustedtoauth=true return c
+
+// Constrained Delegation (without Protocol Transition)
+MATCH (c) WHERE NOT c.allowedtodelegate IS NULL AND c.trustedtoauth=false return c
+
+// Resource-Based Constrained Delegation
+MATCH p=(u)-[:AllowedToAct]->(c) RETURN p
+```
 
 The Powershell Active Directory module also has a cmdlet that can be used to find delegation for a specific account.
 
@@ -61,11 +77,11 @@ The Powershell Active Directory module also has a cmdlet that can be used to fin
 Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDelegation,msDS-AllowedToDelegateTo,PrincipalsAllowedToDelegateToAccount
 ```
 
-| `TrustedForDelegation`                 | Unconstrained Delegation                                            |   |   |
-| -------------------------------------- | ------------------------------------------------------------------- | - | - |
-| `TrustedToAuthForDelegation`           | Constrained Delegation with Protocol Transition                     |   |   |
-| `AllowedToDelegateTo`                  | Constrained Delegation, and list of services allowed to delegate to |   |   |
-| `PrincipalsAllowedToDelegateToAccount` | RBCD, list of services that can delegate to the account             |   |   |
+| `TrustedForDelegation`                                                                                           | Unconstrained Delegation                                            |   |   |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | - | - |
+| `TrustedToAuthForDelegation`                                                                                     | Constrained Delegation with Protocol Transition                     |   |   |
+| `AllowedToDelegateTo`                                                                                            | Constrained Delegation, and list of services allowed to delegate to |   |   |
+| `PrincipalsAllowedToDelegateToAccount` (i.e. refers to the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute) | RBCD, list of services that can delegate to the account             |   |   |
 {% endtab %}
 {% endtabs %}
 
