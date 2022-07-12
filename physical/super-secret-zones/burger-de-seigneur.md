@@ -78,7 +78,7 @@ put the steak and the lard in the pan and cook it when it almost finish put 2 sl
 
 ### Merge it together&#x20;
 
-Take the bread and apply a little sauce as well as a slice of tomato, steak and the lard as shown below.\
+Take the bread and apply a little sauce as well as a slice of tomato, steak and the lard as shown below.
 
 
 ![](<../../.gitbook/assets/montage_seigneur.png>)
