@@ -69,7 +69,7 @@ Knead the mixture and create steaks of 200g.
 
 ### Cook the steak
 
-put the steak and the lard in the pan and cook it when it almost finish put 2 slice of cheddar on each steak as shown below.
+Put the steak and the lard in the pan and cook it when its almost finished put 2 slices of cheddar on each steak as shown below.
 
 ![](<../../.gitbook/assets/cuisson_seigneur.png>)
 
