@@ -31,7 +31,7 @@ You need to follow this recipe step by step as follows:
 
 ### Bacon and french fries
 
-Preheat the oven at 220 C° and place the french fries and bacon in the oven as shown below
+Preheat the oven at 220 °C and place the french fries and bacon in the oven as shown below
 
 ![](<../../.gitbook/assets/frite_bacon_seigneur.png>)
 
