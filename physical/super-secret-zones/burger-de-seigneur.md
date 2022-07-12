@@ -62,7 +62,7 @@ Take a salad bowl and add $nb\_attacker \* 200 g of meat as well as ketchup, min
 
 ![](<../../.gitbook/assets/steak_seigneur.png>)
 
-knead the mixture and create steaks of 200g.
+Knead the mixture and create steaks of 200g.
 {% endtab %}
 {% endtabs %}
 
