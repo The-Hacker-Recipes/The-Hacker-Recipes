@@ -18,7 +18,7 @@ The requirements for this meal are as follow (for 3 attackers):
 * 1 red onion 🧅
 * sauces (ketchup/burger/mustard)
 * 1 tomato 🍅
-* 1.6 KG french fries 🍟
+* 1.6 kg of french fries 🍟
 * Une bonne grose dose de talent
 
 {% hint style="danger" %}
