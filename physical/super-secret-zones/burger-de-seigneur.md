@@ -19,7 +19,7 @@ The requirements for this meal are as follow (for 3 attackers):
 * sauces (ketchup/burger/mustard)
 * 1 tomato 🍅
 * 1.6 kg of french fries 🍟
-* Une bonne grose dose de talent
+* Une bonne grosse dose de talent
 
 {% hint style="danger" %}
 This meal can overflow your calorie counter in this case you can make your shopping by bike.&#x20;
