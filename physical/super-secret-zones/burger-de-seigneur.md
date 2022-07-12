@@ -5,7 +5,7 @@
 
 El famoso "Burger de seigneur" is the reward meal after successfully completing your pentest. This meal was created in "montceau-les-mines" in 2022 by famous french head cook "Toma".&#x20;
 
-The requirements for this meal are as follow (for 3 attacker):
+The requirements for this meal are as follow (for 3 attackers):
 
 * &#x20;32 slices of bacon (320 g) 🥓
 * &#x20;24 slices of cheddar [🧀](https://emojipedia.org/cheese-wedge/)
