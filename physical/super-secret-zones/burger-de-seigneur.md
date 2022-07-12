@@ -1,6 +1,5 @@
 # 🍔 Burger de seigneur
 
-##
 
 ## Theory
 
