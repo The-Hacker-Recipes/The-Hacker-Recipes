@@ -16,7 +16,7 @@ The requirements for this meal are as follow (for 3 attackers):
 * 750 ml of semi-skimmed milk 🥛
 * 3 hamburger bun
 * 1 red onion 🧅
-* sauces (ketchup/ buger/ mustard)
+* sauces (ketchup/burger/mustard)
 * 1 tomato 🍅
 * 1.6 KG french fries 🍟
 * Une bonne grose dose de talent
