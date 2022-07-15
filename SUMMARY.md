@@ -118,6 +118,7 @@
   * [AdminSDHolder](ad/persistence/adminsdholder.md)
   * [🛠️ DC Shadow](ad/persistence/dcshadow.md)
   * [🛠️ CA Shadow](ad/persistence/ca-shadow.md)
+  * [Delegation to KRBTGT](ad/persistence/delegation-to-krbtgt.md)
   * [🛠️ Access controls](ad/persistence/access-controls.md)
 
 ## Web services <a href="#web" id="web"></a>
