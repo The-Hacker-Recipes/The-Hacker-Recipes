@@ -112,13 +112,12 @@
     * [🛠️ PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
 * [Persistence](ad/persistence/README.md)
   * [Silver & Golden tickets](ad/persistence/silver-and-golden-tickets.md)
-  * [🛠️ RBCD to KRBTGT](ad/persistence/rbcd-to-krbtgt.md)
   * [Skeleton key](ad/persistence/skeleton-key.md)
-  * [🛠️ SID History](ad/persistence/sid-history.md)
   * [AdminSDHolder](ad/persistence/adminsdholder.md)
+  * [🛠️ Delegation to KRBTGT](ad/persistence/delegation-to-krbtgt.md)
+  * [🛠️ SID History](ad/persistence/sid-history.md)
   * [🛠️ DC Shadow](ad/persistence/dcshadow.md)
   * [🛠️ CA Shadow](ad/persistence/ca-shadow.md)
-  * [Delegation to KRBTGT](ad/persistence/delegation-to-krbtgt.md)
   * [🛠️ Access controls](ad/persistence/access-controls.md)
 
 ## Web services <a href="#web" id="web"></a>
