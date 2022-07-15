@@ -41,7 +41,7 @@ By default, the ports are in an unauthorized state and will only be allowed to t
 
 From there everything goes vice versa. As EAP is more a framework than a protocol, it contains several EAP methods for authentication. The most commonly known variants are EAP-TLS, EAP-MD5, EAP-PSK and EAP-IKEv2, allowing to authenticate by preshared keys, passwords, certificates or other mechanisms.
 
-![802.1x auth flow (Wikipedia)](<../../.gitbook/assets/image (6).png>)
+![802.1x auth flow (Wikipedia)](<../../.gitbook/assets/image (6) (1).png>)
 
 When all checks are passed, the port will be switched to authorized and thus be allowed for normal network traffic.
 
