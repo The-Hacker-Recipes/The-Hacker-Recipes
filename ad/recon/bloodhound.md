@@ -17,7 +17,7 @@ SharpHound ([sources](https://github.com/BloodHoundAD/SharpHound), [builds](http
 It must be run from the context of a domain user, either directly through a logon or through another method such as runas (`runas /netonly /user:$DOMAIN\$USER`) (see [Impersonation](../movement/credentials/impersonation.md)). Alternatively, SharpHound can be used with the `LdapUsername` and `LdapPassword` flags for that matter.
 
 ```bash
-SharpHound.exe --collectionmethod All
+SharpHound.exe --collectionmethods All
 ```
 
 {% hint style="info" %}
@@ -28,11 +28,11 @@ The previous commands are basic but some options (i.e. Stealth and Loop) can be 
 
 ```bash
 # Perform stealth collection methods
-SharpHound.exe --collectionmethod All --Stealth
+SharpHound.exe --collectionmethods All --Stealth
 
 # Loop collections (especially useful for session collection)
 # e.g. collect sessions every 10 minutes for 3 hours
-SharpHound.exe --collectionmethod Session --Loop --loopduration 03:00:00 --loopinterval 00:10:00
+SharpHound.exe --collectionmethods Session --Loop --loopduration 03:00:00 --loopinterval 00:10:00
 
 # Use LDAPS instead of plaintext LDAP
 SharpHound.exe --secureldap
