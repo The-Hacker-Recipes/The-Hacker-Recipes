@@ -231,7 +231,8 @@
 * [Super secret zones](physical/super-secret-zones/README.md)
   * [🍌 Banana & chocolate cake](physical/super-secret-zones/banana-and-chocolate-cake.md)
   * [🍳 Omelette du fromage](physical/super-secret-zones/omelette-du-fromage.md)
-  * [🍔 Burger de seigneur](physical/super-secret-zones/burger-de-seigneur.md)
+  * [🍔 Burger du seigneur](physical/super-secret-zones/burger-du-seigneur.md)
+
 ## 🛠️ Intelligence gathering
 
 * [CYBINT](intelligence-gathering/cybint/README.md)
