@@ -38,10 +38,10 @@ ntlmrelayx -t "http://CA/certsrv/certfnsh.asp" --adcs --template "Template name"
 The certificate template flag (i.e. `--template`) can either be left blank (default to **Machine** at the time of writing, October 20th 2012) or chosen among the certificate templates that fill the requirements.&#x20;
 {% endhint %}
 
-[Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
+[Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) ([how to enumerate](./#attack-paths)).
 
 ```python
-certipy req 'domain.local'/'user':'password'@'domain_controller'
+certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -stdout | grep -B20 ESC8
 ```
 
 {% hint style="info" %}

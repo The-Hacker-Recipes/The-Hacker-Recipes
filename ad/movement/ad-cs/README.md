@@ -83,11 +83,17 @@ ntlmrelayx -t "ldap://domaincontroller" --dump-adcs
 {% tab title="UNIX-like" %}
 From UNIX-like systems, the [Certipy](https://github.com/ly4k/Certipy) (Python) tool can be used to operate multiple attacks and enumeration operations.
 
-```bash
-certipy 'domain.local'/'user':'password'@'domaincontroller' find
+```python
+# enumerate and save text, json and bloodhound (original) outputs
+certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -old-bloodhound
+
+# quickly spot vulnerable elements
+certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -vulnerable -stdout
 ```
 
+Certipy also supports BloodHound.  With the `-old-bloodhound` option, the data will be exported for the original version of [BloodHound](https://github.com/BloodHoundAD/BloodHound). With the `-bloodhound` option, the data will be exported for the modified version of BloodHound, [forked](https://github.com/ly4k/BloodHound/) by Certipy's [author](https://twitter.com/ly4k\_) (default output when no flag is set).
 
+The tool also supports multiple output types (text, json, stdout).
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -107,7 +113,7 @@ Certify.exe cas
 
 The different domain escalation scenarios are detailed in the following parts.
 
-#### Techniques dubbed ESC1 to ESC3
+#### Techniques dubbed ESC1 to ESC3, ESC9 and ESC10
 
 {% content-ref url="certificate-templates.md" %}
 [certificate-templates.md](certificate-templates.md)
