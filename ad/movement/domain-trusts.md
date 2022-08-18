@@ -6,7 +6,9 @@
 **This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name
 {% endhint %}
 
-Thoughts below
+<details>
+
+<summary>Notes and thoughts</summary>
 
 Access direction = !(one-way trust direction)
 
@@ -27,6 +29,8 @@ Forest trust ticket forging, a.k.a. enhance golden ticket from domain to access 
 ldapdomaindump can be used with python to dump trust information
 
 How a domain admin of forest A could administrate a domain in forest B ? [https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS](https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS)
+
+</details>
 
 {% embed url="https://blog.harmj0y.net/redteaming/the-trustpocalypse/" %}
 
