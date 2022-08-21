@@ -85,9 +85,26 @@ The following table should help  for better understanding of the ACE types and w
 
 {% embed url="https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces#genericall-on-user" %}
 
-{% embed url="https://wald0.com/?p=112" %}
-
 {% embed url="http://www.selfadsi.org/deep-inside/ad-security-descriptors.htm" %}
 
 {% embed url="https://adsecurity.org/?p=3658" %}
 
+{% embed url="https://wald0.com/?p=112" %}
+
+<details>
+
+<summary>BloodHound releases</summary>
+
+[https://medium.com/@\_wald0/bloodhound-1-3-the-acl-attack-path-update-74aa56c5eb3a](https://medium.com/@\_wald0/bloodhound-1-3-the-acl-attack-path-update-74aa56c5eb3a)
+
+[https://blog.cptjesus.com/posts/bloodhound20/](https://blog.cptjesus.com/posts/bloodhound20/)
+
+[https://posts.specterops.io/introducing-bloodhound-3-0-c00e77ff0aa6](https://posts.specterops.io/introducing-bloodhound-3-0-c00e77ff0aa6)
+
+[https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
+
+[https://posts.specterops.io/introducing-bloodhound-4-1-the-three-headed-hound-be3c4a808146](https://posts.specterops.io/introducing-bloodhound-4-1-the-three-headed-hound-be3c4a808146)
+
+[https://posts.specterops.io/introducing-bloodhound-4-2-the-azure-refactor-1cff734938bd](https://posts.specterops.io/introducing-bloodhound-4-2-the-azure-refactor-1cff734938bd)
+
+</details>
