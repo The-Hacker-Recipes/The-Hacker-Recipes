@@ -89,8 +89,6 @@ The following table should help  for better understanding of the ACE types and w
 
 {% embed url="https://adsecurity.org/?p=3658" %}
 
-{% embed url="https://wald0.com/?p=112" %}
-
 <details>
 
 <summary>BloodHound releases</summary>
