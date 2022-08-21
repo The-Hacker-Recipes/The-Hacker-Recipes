@@ -28,7 +28,7 @@ The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Serve
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-**1 - Edit the target's "rbcd" attribute (ACE abuse)** :pencil2: ****&#x20;
+**1 - Edit the target's "rbcd" attribute (**[**DACL abuse**](../../dacl/)**)** :pencil2: ****&#x20;
 
 [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) _c_an be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
@@ -134,3 +134,5 @@ Once the ticket is injected, it can natively be used when accessing the service 
 {% embed url="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html" %}
 
 {% embed url="https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-theory/" %}
+
+{% embed url="https://dirkjanm.io/abusing-forgotten-permissions-on-precreated-computer-objects-in-active-directory/" %}

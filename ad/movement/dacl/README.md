@@ -18,23 +18,6 @@ DACL abuse potential paths can be identified by [BloodHound](../../recon/bloodho
 
 Other tools like, `Get-DomainObjectAcl` and `Add-DomainObjectAcl` from [Powersploit](https://github.com/PowerShellMafia/PowerSploit/)'s [Powerview](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1), `Get-Acl` and `Set-Acl` official Powershell cmdlets, or [Impacket](https://github.com/SecureAuthCorp/impacket)'s dacledit.py script (Python) can be used in order to manually inspect an object's DACL. :warning: _At the time of writing, the Pull Request (_[_#1291_](https://github.com/SecureAuthCorp/impacket/pull/1291)_) offering that dacledit is still being reviewed and in active development. It has the following command-line arguments._
 
-The following table should help  for better understanding of the ACE types and what they allow.
-
-| Common name                    | Permission value / GUID                | Permission type                       | Description                                                                                                                                                                                                         |
-| ------------------------------ | -------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WriteDacl                      | `ADS_RIGHT_WRITE_DAC`                  | Access Right                          | Edit the object's DACL (i.e. "inbound" permissions).                                                                                                                                                                |
-| GenericAll                     | `ADS_RIGHT_GENERIC_ALL`                | Access Right                          | Combination of almost all other rights.                                                                                                                                                                             |
-| GenericWrite                   | `ADS_RIGHT_GENERIC_WRITE`              | Access Right                          | Combination of write permissions (Self, WriteProperty) among other things.                                                                                                                                          |
-| WriteProperty                  | `ADS_RIGHT_DS_WRITE_PROP`              | Access Right                          | Edit one of the object's attributes. The attribute is referenced by an "ObjectType GUID".                                                                                                                           |
-| WriteOwner                     | `ADS_RIGHT_WRITE_OWNER`                | Access Right                          | <p>Assume the ownership of the object (i.e. new owner of the victim = attacker, cannot be set to another user). </p><p></p><p>With the "SeRestorePrivilege" right it is possible to specify an arbitrary owner.</p> |
-| Self                           | `ADS_RIGHT_DS_SELF`                    | Access Right                          | Perform "Validated writes" (i.e. edit an attribute's value and have that value verified and validate by AD). The "Validated writes" is referenced by an "ObjectType GUID".                                          |
-| AllExtendedRights              | `ADS_RIGHT_DS_CONTROL_ACCESS`          | Access Right                          | Peform "Extended rights". "AllExtendedRights" refers to that permission being unrestricted. This right can be restricted by specifying the extended right in the "ObjectType GUID".                                 |
-| User-Force-Change-Password     | `00299570-246d-11d0-a768-00aa006e0529` | Control Access Right (extended right) | Change the password of the object without having to know the previous one.                                                                                                                                          |
-| DS-Replication-Get-Changes     | `1131f6aa-9c07-11d1-f79f-00c04fc2dcd2` | Control Access Right (extended right) | One of the two extended rights needed to operate a [DCSync](https://www.thehacker.recipes/ad/movement/credentials/dumping/dcsync).                                                                                  |
-| DS-Replication-Get-Changes-All | `1131f6ad-9c07-11d1-f79f-00c04fc2dcd2` | Control Access Right (extended right) | One of the two extended rights needed to operate a [DCSync](https://www.thehacker.recipes/ad/movement/credentials/dumping/dcsync).                                                                                  |
-| Self-Membership                | `bf9679c0-0de6-11d0-a285-00aa003049e2` | Validate Write                        | Edit the "member" attribute of the object.                                                                                                                                                                          |
-| Validated-SPN                  | `f3a64788-5306-11d1-a9c5-0000f80367c1` | Validate Write                        | Edit the "servicePrincipalName" attribute of the object.                                                                                                                                                            |
-
 ### Abuse
 
 In order to navigate the notes, testers can use the mindmap below.
@@ -59,6 +42,36 @@ All of the aforementioned attacks (red blocks) are detailed in the child notes, 
 {% hint style="info" %}
 With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, it is possible to enable it again (e.g. `set-aduser "user" -enabled 1`)
 {% endhint %}
+
+### BloodHound edges
+
+[BloodHound](../../recon/bloodhound.md) has the ability to map abuse paths, with some that rely on DACL abuse. The following edges are not includes in the mindmap above:
+
+* `AddKeyCredentialLink`, a write permission on an object's `Key-Credential-Link` attribute, for [Shadow Credentials](../kerberos/shadow-credentials.md) attacks
+* `WriteSPN`, a write permission on an object's `Service-Principal-Name` attribute, for [targeted Kerberoasting](targeted-kerberoasting.md) and [SPN jacking](../kerberos/spn-jacking.md) attacks
+* `AddSelf`, similar to `AddMember`. While `AddMember` is `WriteProperty` access right on the target's `Member` attribute, `AddSelf` is a `Self` access right on the target's `Member` attribute, allowing the attacker to [add itself to the target group](addmember.md), instead of adding arbitrary principals.
+* `AddAllowedToAct`, a write permission on an object's `msDS-Allowed-To-Act-On-Behalf-Of-Other-Identity` attribute, for [Kerberos RBCD](../kerberos/delegations/rbcd.md) attacks
+* `SyncLAPSPassword`, both `DS-GetChanges` and `DS-GetChangesInFilteredSet`, for [synchronizing LAPS password](readlapspassword.md) domain-wise
+* `WriteAccountRestrictions`, which refers to the `User-Account-Restrictions` property set, which contains enough permissions to modify the `msDS-Allowed-To-Act-On-Behalf-Of-Other-Identity` attribute of the target objects, for [Kerberos RBCD](../kerberos/delegations/rbcd.md) attacks
+
+### Permisssions index
+
+The following table should help  for better understanding of the ACE types and what they allow.
+
+| Common name                    | Permission value / GUID                | Permission type                       | Description                                                                                                                                                                                                         |
+| ------------------------------ | -------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WriteDacl                      | `ADS_RIGHT_WRITE_DAC`                  | Access Right                          | Edit the object's DACL (i.e. "inbound" permissions).                                                                                                                                                                |
+| GenericAll                     | `ADS_RIGHT_GENERIC_ALL`                | Access Right                          | Combination of almost all other rights.                                                                                                                                                                             |
+| GenericWrite                   | `ADS_RIGHT_GENERIC_WRITE`              | Access Right                          | Combination of write permissions (Self, WriteProperty) among other things.                                                                                                                                          |
+| WriteProperty                  | `ADS_RIGHT_DS_WRITE_PROP`              | Access Right                          | Edit one of the object's attributes. The attribute is referenced by an "ObjectType GUID".                                                                                                                           |
+| WriteOwner                     | `ADS_RIGHT_WRITE_OWNER`                | Access Right                          | <p>Assume the ownership of the object (i.e. new owner of the victim = attacker, cannot be set to another user). </p><p></p><p>With the "SeRestorePrivilege" right it is possible to specify an arbitrary owner.</p> |
+| Self                           | `ADS_RIGHT_DS_SELF`                    | Access Right                          | Perform "Validated writes" (i.e. edit an attribute's value and have that value verified and validate by AD). The "Validated writes" is referenced by an "ObjectType GUID".                                          |
+| AllExtendedRights              | `ADS_RIGHT_DS_CONTROL_ACCESS`          | Access Right                          | Peform "Extended rights". "AllExtendedRights" refers to that permission being unrestricted. This right can be restricted by specifying the extended right in the "ObjectType GUID".                                 |
+| User-Force-Change-Password     | `00299570-246d-11d0-a768-00aa006e0529` | Control Access Right (extended right) | Change the password of the object without having to know the previous one.                                                                                                                                          |
+| DS-Replication-Get-Changes     | `1131f6aa-9c07-11d1-f79f-00c04fc2dcd2` | Control Access Right (extended right) | One of the two extended rights needed to operate a [DCSync](https://www.thehacker.recipes/ad/movement/credentials/dumping/dcsync).                                                                                  |
+| DS-Replication-Get-Changes-All | `1131f6ad-9c07-11d1-f79f-00c04fc2dcd2` | Control Access Right (extended right) | One of the two extended rights needed to operate a [DCSync](https://www.thehacker.recipes/ad/movement/credentials/dumping/dcsync).                                                                                  |
+| Self-Membership                | `bf9679c0-0de6-11d0-a285-00aa003049e2` | Validate Write                        | Edit the "member" attribute of the object.                                                                                                                                                                          |
+| Validated-SPN                  | `f3a64788-5306-11d1-a9c5-0000f80367c1` | Validate Write                        | Edit the "servicePrincipalName" attribute of the object.                                                                                                                                                            |
 
 ## Talk :microphone:
 
