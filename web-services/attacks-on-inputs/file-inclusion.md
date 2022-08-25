@@ -145,7 +145,7 @@ There are [some variations](https://blog.codeasite.com/how-do-i-find-apache-http
 
 Or if the web server is under Nginx :
 
-> * Linux Nginx access log file location: `/var/log/nginx`
+> * Linux Nginx access log file location: `/var/log/nginx/access.log`
 > * Windows Nginx access log file location: `C:\nginx\log`
 {% endhint %}
 
