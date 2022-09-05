@@ -27,6 +27,10 @@ The following files can then be exported
 * `C:\Windows\Temp\NTDS\Active Directory\ntds.dit`
 * `C:\Windows\Temp\NTDS\registry\SYSTEM`
 
+{% hint style="warning" %}
+If the NTDS database is very large (several gigabytes), the generation of a defragmented backup with ntdsutil consumes a lot of CPU and disk resources on the server, which can cause slowdowns and other undesirable effects on the domain controller.
+{% endhint %}
+
 ### Volume Shadow Copy (VSSAdmin)
 
 VSS (Volume Shadow Copy) is a Microsoft Windows technology, implemented as a service, that allows the creation of backup copies of files or volumes, even when they are in use. The following command will create the shadow copy and will print two values that will be used later: the ID and the Name of the shadow copy.
