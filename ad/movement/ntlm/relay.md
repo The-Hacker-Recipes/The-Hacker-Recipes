@@ -16,7 +16,7 @@ The chart below sums up the expected behavior of cross-protocols relay attacks d
 
 The following mindmap sums up the overall attack paths of NTLM relay.
 
-![](<../../../.gitbook/assets/NTLM relay.drawio.png>)
+![](<../../../.gitbook/assets/NTLM relay.png>)
 
 ### Session signing
 
@@ -151,7 +151,7 @@ In most cases, the `--remove-mic` option will be needed when relaying to LDAP(S)
 {% endhint %}
 
 {% hint style="info" %}
-Using LDAPS for that operation is not mandatory since Active Directory LDAP implements StartTLS. This is implemented in Impacket since April 30th 2022.
+Using LDAPS for that operation is not mandatory since Active Directory LDAP implements StartTLS. This is implemented in Impacket since April 30th 2022 ([PR #1305](https://github.com/SecureAuthCorp/impacket/pull/1305)).
 
 ```bash
 ntlmrelayx.py -t ldap://$DC_TARGET --add-computer SHUTDOWN
