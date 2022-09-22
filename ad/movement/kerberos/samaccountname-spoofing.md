@@ -28,7 +28,7 @@ The ability to edit a machine account's `sAMAccountName` and `servicePrincipalNa
 
 The attack can then be conducted as follows.
 
-1. Clear the controlled machine account `servicePrincipalName` attribute of any value that points to its name (e.g. `host/machine.domain.local`, `RestrictedKrbHost/machine.domain.local`)&#x20;
+1. Clear the controlled machine account `servicePrincipalName` attribute of any value that points to its name (e.g. `host/machine.domain.local`, `RestrictedKrbHost/machine.domain.local`)
 2. Change the controlled machine account `sAMAccountName` to a Domain Controller's name without the trailing `$` -> [CVE-2021-42278](samaccountname-spoofing.md#cve-2021-42278-name-impersonation)
 3. Request a TGT for the controlled machine account
 4. Reset the controlled machine account `sAMAccountName` to its old value (or anything else different than the Domain Controller's name without the trailing `$`)
@@ -72,7 +72,7 @@ KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -
 KRB5CCNAME='DomainAdmin.ccache' secretsdump.py -just-dc-user 'krbtgt' -k -no-pass -dc-ip 'DomainController.domain.local' @'DomainController.domain.local'
 ```
 
-[noPac.py](https://github.com/Ridter/noPac) (Python) is an automated alternative that can be used to scan and abuse unpatched targets from a UNIX environnment.
+[noPac.py](https://github.com/Ridter/noPac) (Python) is an automated alternative that can be used to scan and abuse unpatched targets from a UNIX-like environnment.
 
 ```bash
 scanner.py $DOMAIN/$USERNAME:$PASSWORD -dc-ip $DC_IP
@@ -85,7 +85,7 @@ When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer 
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows systems, the steps mentioned above can be conducted with&#x20;
+On Windows systems, the steps mentioned above can be conducted with
 
 * [PowerMad](https://github.com/Kevin-Robertson/Powermad/)'s (PowerShell) `New-MachineAccount` and `Set-MachineAccountAttribute` functions for the creation and manipulation of a computer account
 * with [Rubeus](https://github.com/GhostPack/Rubeus) (C#) for the requests of Kerberos TGT and Service Ticket
@@ -133,7 +133,7 @@ In the screenshot below, the `-spn` argument is used in the `getST.py` command. 
 
 ### User account
 
-An alternative to using computer accounts is to have enough permissions against a user account (cf. [Access Controls abuse](../dacl/)) to edit its `sAMAccountName` attribute (i.e. `WriteProperty` on the attribute, or on the « general information » or « public information » property sets, or `GenericWrite`, or `GenericAll`).&#x20;
+An alternative to using computer accounts is to have enough permissions against a user account (cf. [Access Controls abuse](../dacl/)) to edit its `sAMAccountName` attribute (i.e. `WriteProperty` on the attribute, or on the « general information » or « public information » property sets, or `GenericWrite`, or `GenericAll`).
 
 This attack path also requires knowledge of the user account password or hash (to obtain a TGT), which can be obtained (or set) in many ways (e.g. [Targeted Kerberoasting](../dacl/targeted-kerberoasting.md), [Shadow Credentials](shadow-credentials.md), [Forced Password Change](../dacl/forcechangepassword.md)).
 
