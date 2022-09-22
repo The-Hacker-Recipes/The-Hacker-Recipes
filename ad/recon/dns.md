@@ -64,4 +64,7 @@ host $IP_address
 
 # manual PTR resolution request
 nslookup -type=ptr $IP_address
+
+# PTR restolution on a range
+dnsrecon -r $RANGE -n $DC_IP
 ```

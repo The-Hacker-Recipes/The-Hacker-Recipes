@@ -4,9 +4,9 @@
 
 When targeting machines connected to a network, identifying which hosts are up and running (and their IP address) is the first step in getting to know the attack surface. There are multiple active and passive ways to discover hosts in a network, each relying on specific protocols that may be used in the network.
 
-Once the hosts are identified, attackers then usually proceed to [port scanning](port-scanning.md) to attempt at compromising them.&#x20;
+Once the hosts are identified, attackers then usually proceed to [port scanning](port-scanning.md) to attempt at compromising them.
 
-Alternatively, there are common scenarios where most of the hosts and services are managed by a central set of services like [Active Directory Domain Services (AD-DS)](broken-reference). In this case, attackers usually try to compromise those services first as it would grant them control over many hosts without having to attack them all. A whole category of The Hacker Recipes is dedicated to Active Directory Domain Services (and other associated AD services).
+Alternatively, there are common scenarios where most of the hosts and services are managed by a central set of services like [Active Directory Domain Services (AD-DS)](broken-reference/). In this case, attackers usually try to compromise those services first as it would grant them control over many hosts without having to attack them all. A whole category of The Hacker Recipes is dedicated to Active Directory Domain Services (and other associated AD services).
 
 ## Practice
 
@@ -38,13 +38,11 @@ nbtscan -r $RANGE
 
 ### DNS queries
 
-Main component in AD environnement have their record on DC. Therefore, it possible to make PTR queries to DC. 
-Reverse DNS brute force is fast and can discover none accessible subnets. The information that can be gathered it can disclose the network infrastructure of the company without alerting the IDS/IPS
+In Active Directory environnements, machines have their record on the Domain Controller (which usually hosts the DNS service). Through PTR resolution requests, is it then possible to find additional ranges and machines.
 
-```bash
-dnsrecon -r $RANGE -n <DC_IP>
-```
-
+{% content-ref url="../../ad/recon/dns.md" %}
+[dns.md](../../ad/recon/dns.md)
+{% endcontent-ref %}
 
 ### ICMP discovery
 
