@@ -36,6 +36,16 @@ It sends NetBIOS status query to each address in supplied range and lists receiv
 nbtscan -r $RANGE
 ```
 
+### DNS queries
+
+Main component in AD environnement have their record on DC. Therefore, it possible to make PTR queries to DC. 
+Reverse DNS brute force is fast and can discover none accessible subnets. The information that can be gathered it can disclose the network infrastructure of the company without alerting the IDS/IPS
+
+```bash
+dnsrecon -r $RANGE -n <DC_IP>
+```
+
+
 ### ICMP discovery
 
 ```bash
