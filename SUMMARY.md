@@ -112,6 +112,7 @@
     * [🛠️ PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
 * [Persistence](ad/persistence/README.md)
   * [Silver & Golden tickets](ad/persistence/silver-and-golden-tickets.md)
+  * [GoldenGMSA](ad/persistence/goldengmsa.md)
   * [Skeleton key](ad/persistence/skeleton-key.md)
   * [AdminSDHolder](ad/persistence/adminsdholder.md)
   * [Delegation to KRBTGT](ad/persistence/delegation-to-krbtgt.md)

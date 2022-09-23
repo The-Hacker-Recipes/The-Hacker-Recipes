@@ -27,7 +27,7 @@ In these situations, testers can specify all the groups ids when creating the ti
 Another solution to this is to look for a specific user with appropriate rights to impersonate and use [GoldenCopy](https://github.com/Dramelac/GoldenCopy) to generate a command that allows to forge a ticket with specific values corresponding to the target user (sid, group ids, etc.). The values are gathered from a neo4j database.
 {% endhint %}
 
-![Using GoldenCopy for specific user impersonation](<../../../.gitbook/assets/image (9).png>)
+![Using GoldenCopy for specific user impersonation](<../../../.gitbook/assets/image (6).png>)
 
 {% hint style="info" %}
 When forging tickets, before November 2021 updates, the user-id and groups-ids were useful but the username supplied was mostly useless. As of Nov. 2021 updates, if the username supplied doesn't exist in Active Directory, the ticket gets rejected. This also applies to Silver Tickets.
