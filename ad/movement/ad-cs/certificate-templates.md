@@ -20,15 +20,15 @@ Following this, [Olivier Lyak](https://twitter.com/ly4k\_) has found two new tem
 
 ### Certificate mapping
 
-This section is dedicated to how a certificate is mapped to an account object, post[ CVE-2022–26923](https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4). Understanding certificate mapping is pretty useful to understand [ESC9](certificate-templates.md#no-security-extension-esc9) and [ESC10](certificate-templates.md#weak-certificate-mapping-esc10).
+This section is dedicated to how a certificate is mapped to an account object (after [certifried.md](certifried.md "mention") patch). Understanding certificate mapping is pretty useful to understand [ESC9](certificate-templates.md#no-security-extension-esc9) and [ESC10](certificate-templates.md#weak-certificate-mapping-esc10).
 
-Following the [CVE-2022–26923](https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4) discovered by [Olivier Lyak](https://twitter.com/ly4k\_), Microsoft has implemented a new security extension for the issued certificates, and two new registry keys to properly deal with certificate mapping.
+Following [CVE-2022–26923](https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4) ([certifried.md](certifried.md "mention")) discovered by [Olivier Lyak](https://twitter.com/ly4k\_), Microsoft has implemented a new security extension for the issued certificates, and two new registry keys to properly deal with certificate mapping.
 
 * The `szOID_NTDS_CA_SECURITY_EXT` extension contains the `objectSid` of the requester
 * The `StrongCertificateBindingEnforcement` registry key is used for Kerberos implicit mapping
 * The `CertificateMappingMethods` registry key is used for Schannel implicit mapping
 
-Mapping a certficiate to a user can be done explicitly or implicitly:
+Mapping a certificate to a user can be done explicitly or implicitly:
 
 * For explicit mapping, the `altSecurityIdentities` attribute of an account must contains the identifier of the certificate. This way, for authentication the certificate must be signed by a trusted CA and match the `altSecurityIdentities` value
 * For implicit mapping, this is the information contained in the certificate's SAN that are used to map with the DNS or the UPN (`userPrincipalName`) field

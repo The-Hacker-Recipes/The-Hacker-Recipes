@@ -12,6 +12,10 @@ The default **User** template checks all the template requirements stated above.
 If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins tend to enable that flag without knowing the security implications), and the **User** template is enabled (which is very often), any user can escalate to domain admin.
 {% endhint %}
 
+{% hint style="danger" %}
+[May 2022 security updates](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-26923) broke ESC6.
+{% endhint %}
+
 ## Practice
 
 {% tabs %}
