@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-09-06T10:17:22.347Z" agent="5.0 (Windows)" etag="WbCn3WwfX3mYtj0o2e5O" version="20.2.6" type="github">
+<mxfile host="app.diagrams.net" modified="2022-09-23T22:55:15.045Z" agent="5.0 (Windows)" etag="IgRcgDMdaqV3aNhH1Eeg" version="20.3.6" type="github">
   <diagram name="Page-1" id="85pv-Fla8Fdj0VkSJ9XD">
-    <mxGraphModel dx="222" dy="1980" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="350" dy="2052" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="-huu3RHe83BYv7qgLgA8-0" />
         <mxCell id="-huu3RHe83BYv7qgLgA8-1" parent="-huu3RHe83BYv7qgLgA8-0" />
@@ -302,13 +302,13 @@
         <mxCell id="-huu3RHe83BYv7qgLgA8-40" value="&lt;font&gt;Coercion method&lt;/font&gt;*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C75B57;fontStyle=0" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="1550" y="-980" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="-huu3RHe83BYv7qgLgA8-41" value="&lt;font&gt;Incoming NTLM auth over&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=0;fontColor=#9BB5CF;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
+        <mxCell id="-huu3RHe83BYv7qgLgA8-41" value="&lt;font&gt;Incoming NTLM auth over&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=0;fontColor=#A69DCF;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="1730" y="-980" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="-huu3RHe83BYv7qgLgA8-42" value="Client-side&lt;br&gt;mitigation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#6788B8;fontStyle=0" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="1890" y="-980" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="-huu3RHe83BYv7qgLgA8-43" value="&lt;font&gt;Relayed NTLM auth over&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=0;fontColor=#9BB5CF;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
+        <mxCell id="-huu3RHe83BYv7qgLgA8-43" value="&lt;font&gt;Relayed NTLM auth over&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=0;fontColor=#A69DCF;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="2350" y="-980" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="-huu3RHe83BYv7qgLgA8-44" value="Post-relay attack" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C75B57;fontStyle=0" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
@@ -531,7 +531,7 @@
         <mxCell id="-huu3RHe83BYv7qgLgA8-146" value="&lt;font&gt;&lt;b&gt;Numbered circles&lt;/b&gt; are an alternative to standard links between elements. Match numbers to know what can be relayed to what.&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=2;fontColor=#DBDBDB;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="1580" y="-600" width="310" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="-huu3RHe83BYv7qgLgA8-201" value="&lt;font color=&quot;#dbdbdb&quot;&gt;There is also a color code.&lt;/font&gt;&lt;font color=&quot;#666666&quot;&gt; &lt;/font&gt;&lt;font color=&quot;#82b366&quot;&gt;&lt;b&gt;Green circles&lt;/b&gt;&lt;/font&gt; &lt;font color=&quot;#dbdbdb&quot;&gt;mean the relay should work. &lt;/font&gt;&lt;font color=&quot;#d79b00&quot;&gt;&lt;b&gt;Orange&lt;/b&gt; &lt;b&gt;circles&lt;/b&gt;&lt;/font&gt; &lt;font color=&quot;#dbdbdb&quot;&gt;mean the relay should work if the target is vulnerable to CVE-2019-1040, CVE-2019-1166, ...&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#4D4D4D;fontStyle=2" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
+        <mxCell id="-huu3RHe83BYv7qgLgA8-201" value="&lt;font color=&quot;#dbdbdb&quot;&gt;There is also a color code.&lt;/font&gt;&lt;font color=&quot;#666666&quot;&gt; &lt;/font&gt;&lt;font color=&quot;#82b366&quot;&gt;&lt;b&gt;Green circles&lt;/b&gt;&lt;/font&gt; &lt;font color=&quot;#dbdbdb&quot;&gt;mean the relay should work. &lt;/font&gt;&lt;font color=&quot;#d79b00&quot;&gt;&lt;b&gt;Orange&lt;/b&gt; &lt;b&gt;circles&lt;/b&gt;&lt;/font&gt; &lt;font color=&quot;#dbdbdb&quot;&gt;mean the relay should work if the target is vulnerable to CVE-2019-1040, CVE-2019-1166, or if NTLMv1 is accepted (is doesn&#39;t support MIC).&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#4D4D4D;fontStyle=2" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="1580" y="-525" width="310" height="60" as="geometry" />
         </mxCell>
         <mxCell id="-huu3RHe83BYv7qgLgA8-262" value="" style="group" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1" connectable="0">
@@ -676,7 +676,7 @@
         <mxCell id="-huu3RHe83BYv7qgLgA8-66" value="&lt;div&gt;Credential dump&lt;/div&gt;&lt;div style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;(SAM secrets)&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fontStyle=1;fillColor=#BA6666;fontColor=#181C1F;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="2520.999999999999" y="-735" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="FiPA9ljY7O0YGI7iuevu-4" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;span&gt;etc.&lt;/span&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fontStyle=1;fillColor=#874A4A;fontColor=#181C1F;verticalAlign=middle;" vertex="1" parent="-huu3RHe83BYv7qgLgA8-1">
+        <mxCell id="FiPA9ljY7O0YGI7iuevu-4" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;span&gt;etc.&lt;/span&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fontStyle=1;fillColor=#874A4A;fontColor=#181C1F;verticalAlign=middle;" parent="-huu3RHe83BYv7qgLgA8-1" vertex="1">
           <mxGeometry x="1560" y="-805" width="120" height="25" as="geometry" />
         </mxCell>
       </root>
