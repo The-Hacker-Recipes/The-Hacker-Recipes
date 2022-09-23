@@ -21,10 +21,6 @@ The "GoldenGMSA" persistence lies in the fact that the KDS root keys used for gM
 Once an AD environment is compromised, acquiring the "GoldenGMSA" persistence requires to dump the KDS root keys.
 
 {% tabs %}
-{% tab title="UNIX-like" %}
-_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
-{% endtab %}
-
 {% tab title="Windows" %}
 The KDS (Key Distribution Service) root keys can be exfiltrated from the domain with high-privileged access with [GoldenGMSA](https://github.com/Semperis/GoldenGMSA) (C#).
 
@@ -38,6 +34,10 @@ With the `--forest` argument specifying the target domain or forest, SYSTEM priv
 
 <pre class="language-batch"><code class="lang-batch"><strong>GoldenGMSA.exe kdsinfo --forest child.lab.local</strong></code></pre>
 {% endtab %}
+
+{% tab title="UNIX-like" %}
+_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+{% endtab %}
 {% endtabs %}
 
 ### Retrieving gMSA passwords
@@ -50,10 +50,6 @@ Later on, the attacker can then, with low-privileged access to the domain:&#x20;
 #### Account information dump
 
 {% tabs %}
-{% tab title="UNIX-like" %}
-_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
-{% endtab %}
-
 {% tab title="Windows" %}
 In addition to the KDS root keys, the following information, relative to a gMSA, need to be dumped in order to compute its password:
 
@@ -73,15 +69,15 @@ In order to dump the necessary information of a single gMSA, its SID can be used
 GoldenGMSA.exe gmsainfo --sid "S-1-5-21-[...]1586295871-1112"
 ```
 {% endtab %}
+
+{% tab title="UNIX-like" %}
+_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+{% endtab %}
 {% endtabs %}
 
 #### Password calculation
 
 {% tabs %}
-{% tab title="UNIX-like" %}
-_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
-{% endtab %}
-
 {% tab title="Windows" %}
 Given a gMSA SID, the corresponding KDS root key (matching the RootKeyGuid obtained beforehand), and the Password ID, the actual plaintext password can be calculated with [GoldenGMSA](https://github.com/Semperis/GoldenGMSA) (C#).
 
@@ -105,6 +101,10 @@ b64 = input("Password Base64: ")
 print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())'
 ```
 {% endcode %}
+{% endtab %}
+
+{% tab title="UNIX-like" %}
+_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
 {% endtab %}
 {% endtabs %}
 
