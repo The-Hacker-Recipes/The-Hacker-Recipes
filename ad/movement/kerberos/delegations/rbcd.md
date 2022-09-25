@@ -65,7 +65,7 @@ getST.py -spn 'cifs/target' -impersonate Administrator -dc-ip 'DomainController'
 {% endcode %}
 
 {% hint style="warning" %}
-In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
+In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets/#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 
 {% hint style="info" %}
@@ -126,7 +126,7 @@ Rubeus.exe hash /password:$password
 ```
 
 {% hint style="warning" %}
-In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
+In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets/#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
 {% endhint %}
 
 {% hint style="info" %}

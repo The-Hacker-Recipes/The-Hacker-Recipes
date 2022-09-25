@@ -37,14 +37,14 @@ Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerb
 
 Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 
-* A TGT is encrypted with the `krbtgt`'s NT hash. An attacker knowing the `krbtgt`'s NT hash can forge TGTs impersonating a domain admin. He can then request STs as a domain admin for any service. The attacker would have access to everything. This forged TGT is called a [Golden ticket](forged-tickets.md#golden-ticket).
-* A ST is encrypted with the service account's NT hash. An attacker knowing a service account's NT hash can use it to forge a Service ticket and obtain access to that service. This forged Service ticket is called a [Silver ticket](forged-tickets.md#silver-ticket).
+* A TGT is encrypted with the `krbtgt`'s NT hash. An attacker knowing the `krbtgt`'s NT hash can forge TGTs impersonating a domain admin. He can then request STs as a domain admin for any service. The attacker would have access to everything. This forged TGT is called a [Golden ticket](forged-tickets/#golden-ticket).
+* A ST is encrypted with the service account's NT hash. An attacker knowing a service account's NT hash can use it to forge a Service ticket and obtain access to that service. This forged Service ticket is called a [Silver ticket](forged-tickets/#silver-ticket).
 
-{% content-ref url="forged-tickets.md" %}
-[forged-tickets.md](forged-tickets.md)
+{% content-ref url="forged-tickets/" %}
+[forged-tickets](forged-tickets/)
 {% endcontent-ref %}
 
-[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets.md#silver-ticket) and [golden ticket](forged-tickets.md#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](ptt.md).
+[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets/#silver-ticket) and [golden ticket](forged-tickets/#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](ptt.md).
 
 {% content-ref url="ptt.md" %}
 [ptt.md](ptt.md)
@@ -80,7 +80,7 @@ In some situations, Kerberos delegations can be abused by attackers to operate l
 [delegations](delegations/)
 {% endcontent-ref %}
 
-In [some cases](delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used to try to bypass restrictions.
+In [some cases](delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](forged-tickets/#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used to try to bypass restrictions.
 
 {% content-ref url="delegations/bronze-bit.md" %}
 [bronze-bit.md](delegations/bronze-bit.md)
@@ -168,6 +168,6 @@ This allows to
 
 * operate [RBCD attacks from SPN-less accounts](delegations/rbcd.md#rbcd-on-spn-less-users)
 * operate an [unPAC-the-hash](unpac-the-hash.md) attack
-* retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](forged-tickets.md).
+* retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](forged-tickets/).
 
 </details>

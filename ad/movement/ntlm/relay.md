@@ -12,7 +12,7 @@ The NTLM authentication messages are embedded in the packets of application prot
 
 The chart below sums up the expected behavior of cross-protocols relay attacks depending on the mitigations in place ([original here](https://beta.hackndo.com/ntlm-relay/)). All the tests and results listed in the chart were made using [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python).
 
-![](<../../../.gitbook/assets/ntlm\_relau\_mitigation\_chart (1).png>)
+![](../../../.assets/ntlm\_relau\_mitigation\_chart.png)
 
 The following mindmap sums up the overall attack paths of NTLM relay. [Gabriel Prudhomme](https://twitter.com/vendetce) explains how to read it here: [BHIS | Coercions and Relays – The First Cred is the Deepest](https://youtu.be/b0lLxLJKaRs?t=480) (at 08:00).
 

@@ -18,10 +18,10 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 
 | Credential material                      | Subsequent attacks                                                                                                                                                                                            |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Plaintext passwords                      | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md) or [silver tickets](../../kerberos/forged-tickets.md)           |
+| Plaintext passwords                      | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md) or [silver tickets](../../kerberos/forged-tickets/)             |
 | LM and NT hashes                         | [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../ntlm/pth.md) |
-| Kerberos keys (RC4, i.e. == NT hash)     | [credential cracking](../cracking.md), [overpass-the-hash](../../kerberos/ptk.md) or [silver tickets](../../kerberos/forged-tickets.md)                                                                       |
-| Kerberos keys (DES, AES)                 | [credential cracking](../cracking.md), [pass-the-key](../../kerberos/ptk.md) or [silver tickets](../../kerberos/forged-tickets.md)                                                                            |
+| Kerberos keys (RC4, i.e. == NT hash)     | [credential cracking](../cracking.md), [overpass-the-hash](../../kerberos/ptk.md) or [silver tickets](../../kerberos/forged-tickets/)                                                                         |
+| Kerberos keys (DES, AES)                 | [credential cracking](../cracking.md), [pass-the-key](../../kerberos/ptk.md) or [silver tickets](../../kerberos/forged-tickets/)                                                                              |
 | Domain Cached Credentials (DCC1 or DCC2) | [credential cracking](../cracking.md)                                                                                                                                                                         |
 
 ## Practice

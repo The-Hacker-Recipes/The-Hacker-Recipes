@@ -2,6 +2,8 @@
 
 ## Theory
 
+The following recipe shows how to abuse S4U2self for Local Privilege Escalation, or for stealthier alternative to Silver Ticket. There are also other tricks based on S4U2self, using u2u (user-to-user) as well: [#s4u2self-+-u2u](../#s4u2self-+-u2u "mention").
+
 ### Delegation and extensions
 
 Kerberos delegations allow services to access other services on behalf of domain users.
@@ -18,7 +20,7 @@ Since machine accounts have their own set of SPNs by default at their creation, 
 
 ### OPSEC considerations
 
-The S4U2self abuse is not only a great way to perform Local Privilege Escalation or a lateral move, it's also an way more stealthier alternative to [Silver Tickets](../forged-tickets.md#silver-ticket) when an attacker has knowledge of a machine account's Kerberos keys. While a Silver Ticket is a Service Ticket featuring a forged PAC, the Service Ticket issued after an S4U2self request will be legitimate and will feature a valid PAC.
+The S4U2self abuse is not only a great way to perform Local Privilege Escalation or a lateral move, it's also an way more stealthier alternative to [Silver Tickets](../forged-tickets/#silver-ticket) when an attacker has knowledge of a machine account's Kerberos keys. While a Silver Ticket is a Service Ticket featuring a forged PAC, the Service Ticket issued after an S4U2self request will be legitimate and will feature a valid PAC.
 
 ## Practice
 
