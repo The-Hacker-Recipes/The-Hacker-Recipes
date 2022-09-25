@@ -6,9 +6,9 @@
 
 Kerberos delegations allow services to access other services on behalf of domain users.
 
-The "Kerberos" authentication protocol features delegation capabilities explained [here](./). Kerberos delegations can be abused by attackers to obtain access to valuable assets and sometimes even escalate to domain admin privileges. Regarding [constrained delegations](constrained.md) and [rbcd](rbcd.md), those types of delegation rely on **Kerberos extensions called S4U2Self and S4U2Proxy**.
+The "Kerberos" authentication protocol features delegation capabilities explained [here](./). Kerberos delegations can be abused by attackers to obtain access to valuable assets and sometimes even escalate to domain admin privileges. Regarding [constrained delegations](constrained.md) and [rbcd](rbcd.md), those types of delegation rely on **Kerberos extensions called** [**S4U2Self and S4U2Proxy**](../#service-for-user-extensions).
 
-**Service for User to Self (S4U2self)** allows a service to obtain a Service Ticket, on behalf of a user (called "principal"), to itself. This extension can be used by any account that has at least one SPN. Depending on the service and principal configurations, the resulting Service Ticket may or may not be forwardable but either way, the ticket can be used for authentication.
+Simply put, **Service for User to Self (S4U2self)** allows a service to obtain a Service Ticket, on behalf of a user (called "principal"), to itself.
 
 Last but not least, S4U2self can be used to produce a Service Ticket to oneself on behalf of another domain user, **even if that user is "sensitive for delegation" or member of the Protected Users group**. Consequently, this allows attackers, in very specific scenarios, to escalate their privileges or perform lateral movements.
 

