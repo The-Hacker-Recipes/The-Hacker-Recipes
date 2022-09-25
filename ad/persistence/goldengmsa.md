@@ -36,7 +36,7 @@ With the `--forest` argument specifying the target domain or forest, SYSTEM priv
 {% endtab %}
 
 {% tab title="UNIX-like" %}
-_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+_At the time of writing this recipe, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
 {% endtab %}
 {% endtabs %}
 
@@ -71,7 +71,7 @@ GoldenGMSA.exe gmsainfo --sid "S-1-5-21-[...]1586295871-1112"
 {% endtab %}
 
 {% tab title="UNIX-like" %}
-_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+_At the time of writing this recipe, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
 {% endtab %}
 {% endtabs %}
 
@@ -104,7 +104,7 @@ print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())'
 {% endtab %}
 
 {% tab title="UNIX-like" %}
-_At the time of writing this recipes, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+_At the time of writing this recipe, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
 {% endtab %}
 {% endtabs %}
 
