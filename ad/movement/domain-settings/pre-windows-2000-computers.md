@@ -33,6 +33,16 @@ cme smb $DC_IP -u "computers.txt" -p "passwords.txt" --no-bruteforce</code></pre
 
 Testers can then change the Pre-Windows 2000 computer accounts' password (i.e. [rpcchangepwd.py](https://github.com/SecureAuthCorp/impacket/pull/1304), [kpasswd.py](https://github.com/SecureAuthCorp/impacket/pull/1189), etc.) in order to use it.
 
+{% hint style="success" %}
+Alternatively, Filip Dragovic was able to authenticate using Kerberos without having to change the account's password. ([source](https://twitter.com/filip\_dragovic/status/1524730451826511872))
+
+```bash
+getTGT.py $DOMAIN/$COMPUTER_NAME\$:$COMPUTER_PASSWORD
+```
+
+The ticket obtained can then be used with [ptt.md](../kerberos/ptt.md "mention")
+{% endhint %}
+
 ## Reference
 
 {% embed url="https://www.trustedsec.com/blog/diving-into-pre-created-computer-accounts/" %}
