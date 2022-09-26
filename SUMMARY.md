@@ -94,6 +94,7 @@
     * [ReadLAPSPassword](ad/movement/dacl/readlapspassword.md)
     * [ReadGMSAPassword](ad/movement/dacl/readgmsapassword.md)
     * [Grant ownership](ad/movement/dacl/grant-ownership.md)
+    * [Pre-Windows 2000 computers](ad/movement/dacl/pre-windows-2000-computers.md)
     * [Grant rights](ad/movement/dacl/grant-rights.md)
     * [Logon script](ad/movement/dacl/logon-script.md)
   * [Group policies](ad/movement/group-policies.md)
