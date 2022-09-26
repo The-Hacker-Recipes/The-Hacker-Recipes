@@ -96,7 +96,7 @@ Kerberos delegations can be abused by attackers to obtain access to valuable ass
 
 <summary>S4U2self requirements</summary>
 
-This extension can only be used by an account that has at least one SPN (except is S4U2self is combined with [U2U](./#user-to-user-authentication)).
+This extension can only be used by an account that has at least one SPN (except if S4U2self is combined with [U2U](./#user-to-user-authentication)).
 
 The resulting Service Ticket is `forwardable` (i.e. can be used with S4U2Proxy to access another service) if and only if:
 
