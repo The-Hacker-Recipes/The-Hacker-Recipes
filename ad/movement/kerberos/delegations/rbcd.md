@@ -200,3 +200,5 @@ After these steps, the final service ticket can be used with [Pass-the-ticket](.
 {% embed url="https://dirkjanm.io/abusing-forgotten-permissions-on-precreated-computer-objects-in-active-directory/" %}
 
 {% embed url="https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html" %}
+
+{% embed url="https://tttang.com/archive/1617/" %}
