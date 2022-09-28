@@ -6,10 +6,10 @@
 
 Kerberos is an authentication protocol based on tickets. It basically works like this (simplified process):
 
-1. Client asks the KDC (Key Distribution Center, usually is a domain controller) for a TGT (Ticket Granting Ticket). One of the requesting user's keys is used for pre-authentication. The TGT is provided by the Authentication Service (AS).
-2. Client uses the TGT to ask the KDC for a ST (Service Ticket). That ticket is provided by the Ticket Granting Service (TGS).
-3. Client uses the ST (Service Ticket) to access a service
-4. Both tickets (TGT and ST) contain the PAC (Privilege Authentication Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on). Only one very special and sensitive service account can write the PAC : `krbtgt`.&#x20;
+1. Client asks the KDC (Key Distribution Center, usually is a domain controller) for a TGT (Ticket Granting Ticket). One of the requesting user's keys is used for pre-authentication. The TGT is provided by the Authentication Service (AS). The client request is called `AS-REQ`, the answer is called `AS-REP`.
+2. Client uses the TGT to ask the KDC for a ST (Service Ticket). That ticket is provided by the Ticket Granting Service (TGS). The client request is called `TGS-REQ`, the answer is called `TGS-REP`.
+3. Client uses the ST (Service Ticket) to access a service. The client request to the service is called `AP-REQ`, the service answer is called `AP-REP`.
+4. Both tickets (TGT and ST) usually contain an encrypted PAC (Privilege Authentication Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on).
 
 A Service Ticket (ST) allows access to a specific service. The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following (read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets\_dauthentification\_pisode\_ii\_\_kerberos\_cont/SSTIC2014-Article-secrets\_dauthentification\_pisode\_ii\_\_kerberos\_contre-attaque-bordes\_2.pdf)).
 
@@ -69,6 +69,8 @@ When attackers have a foothold in the domain (i.e. valid domain credentials), th
 {% content-ref url="kerberoast.md" %}
 [kerberoast.md](kerberoast.md)
 {% endcontent-ref %}
+
+As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username: [#without-pre-authentication](kerberoast.md#without-pre-authentication "mention").
 
 ## Delegations
 

