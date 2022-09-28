@@ -70,7 +70,7 @@ john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 
 ### Kerberoast w/o pre-authentication
 
-In September 2022, [Charlie Cark](https://twitter.com/exploitph) explained how Service Tickets could be obtained through AS-REQ requests (which are usually used for TGT requests). He demonstrated (and [implemented](https://github.com/GhostPack/Rubeus/pull/139)) how to abuse this in a Kerberoasting scenario.
+In September 2022, [Charlie Cark](https://twitter.com/exploitph) explained how Service Tickets could be obtained through `AS-REQ` requests (which are usually used for TGT requests), instead of the usual `TGS-REQ`. He demonstrated (and [implemented](https://github.com/GhostPack/Rubeus/pull/139)) how to abuse this in a Kerberoasting scenario.
 
 If an attacker knows of an account for which pre-authentication isn't required (i.e. an [ASREProastable](asreproast.md) account), as well as one (or multiple) service accounts to target, a Kerberoast attack can be attempted without having to control any Active Directory (since pre-authentication won't be required).
 
