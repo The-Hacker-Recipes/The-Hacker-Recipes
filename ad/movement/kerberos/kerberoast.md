@@ -85,6 +85,14 @@ _At the time of writing, Sept. 28th 2022,_ [_the pull request (#1413)_](https://
 GetUserSPNs.py -no-preauth "bobby" -usersfile "services.txt" -dc-host "DC_IP_or_HOST" "DOMAIN.LOCAL"/
 ```
 {% endcode %}
+
+{% code title="usersfile example" lineNumbers="true" %}
+```
+srv01
+cifs/srv02.domain.local
+cifs/srv02
+```
+{% endcode %}
 {% endtab %}
 
 {% tab title="Windows" %}
