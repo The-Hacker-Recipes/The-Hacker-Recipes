@@ -117,3 +117,5 @@ The [GoldenGMSA](https://github.com/Semperis/GoldenGMSA) (C#) tool featured in t
 {% embed url="https://github.com/Semperis/GoldenGMSA" %}
 
 {% embed url="https://www.semperis.com/blog/golden-gmsa-attack" %}
+
+{% embed url="https://www.trustedsec.com/blog/splunk-spl-queries-for-detecting-gmsa-attacks/" %}
