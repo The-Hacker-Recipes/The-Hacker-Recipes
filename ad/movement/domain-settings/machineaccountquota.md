@@ -51,6 +51,12 @@ The following command, using the [PowerShell ActiveDirectory module](https://doc
 ```bash
 Get-ADDomain | Select-Object -ExpandProperty DistinguishedName | Get-ADObject -Properties 'ms-DS-MachineAccountQuota'
 ```
+
+FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) project is an alternative in C# (.NET assembly) to perform some AD post-compromise operations. Among the possible actions, the MAQ attribute can be requested ([source](https://github.com/FuzzySecurity/StandIn#create-machine-object)).
+
+```powershell
+StandIn.exe --object ms-DS-MachineAccountQuota=*
+```
 {% endtab %}
 {% endtabs %}
 
@@ -79,10 +85,23 @@ $password = ConvertTo-SecureString 'SomePassword' -AsPlainText -Force
 New-MachineAccount -MachineAccount 'PENTEST01' -Password $($password) -Verbose
 ```
 
-While the machine account can only be deleted by doman administrators, it can be deactivated by the creator account with the following command using the Powermad module.
+While the machine account can only be deleted by domian administrators, it can be deactivated by the creator account with the following command using the Powermad module.
 
 ```bash
 Disable-MachineAccount -MachineAccount 'PENTEST01' -Verbose
+```
+
+An alternative is to use FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) (C#, .NET assembly) project to create a new password account with a random password, disable the account, or delete it (with elevated privileges):
+
+```powershell
+# Create the account
+StandIn.exe --computer 'PENTEST01' --make
+
+# Disable the account
+StandIn.exe --computer 'PENTEST01' --disable
+
+# Delete the account (requires elevated rights)
+StandIn.exe --computer 'PENTEST01' --delete
 ```
 {% endtab %}
 {% endtabs %}
