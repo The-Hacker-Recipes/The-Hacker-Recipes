@@ -116,7 +116,7 @@
     * [🛠️ ProxyShell](ad/movement/exchange-services/proxyshell.md)
   * [Print Spooler Service](ad/movement/print-spooler-service/README.md)
     * [PrinterBug](ad/movement/print-spooler-service/printerbug.md)
-    * [🛠️ PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
+    * [PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
 * [Persistence](ad/persistence/README.md)
   * [Silver & Golden tickets](ad/persistence/silver-and-golden-tickets.md)
   * [GoldenGMSA](ad/persistence/goldengmsa.md)
