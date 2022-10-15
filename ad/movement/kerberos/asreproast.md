@@ -66,7 +66,7 @@ john --wordlist=$wordlist ASREProastables.txt
 
 {% embed url="https://blog.xpnsec.com/kerberos-attacks-part-2/" %}
 
-{% embed url="https://www.harmj0y.net/blog/activedirectory/roasting-as-reps/" %}
+{% embed url="https://blog.harmj0y.net/activedirectory/roasting-as-reps/" %}
 
 {% embed url="https://social.technet.microsoft.com/wiki/contents/articles/23559.kerberos-pre-authentication-why-it-should-not-be-disabled.aspx" %}
 
