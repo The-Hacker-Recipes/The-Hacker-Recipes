@@ -30,6 +30,12 @@ This can be achieved with the Active Directory PowerShell module.
 Get-ADComputer -filter {ms-mcs-admpwdexpirationtime -like '*'} -prop 'ms-mcs-admpwd','ms-mcs-admpwdexpirationtime'
 ```
 
+The [`PowerView`](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) powershell module from PowerSploit can also be used for that purpose.
+
+```powershell
+Get-DomainComputer "MachineName" -Properties 'cn','ms-mcs-admpwd','ms-mcs-admpwdexpirationtime'
+```
+
 [SharpLAPS](https://github.com/swisskyrepo/SharpLAPS) (C#) automates that process.&#x20;
 
 ```bash
