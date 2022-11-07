@@ -2,7 +2,7 @@
 
 ## Theory
 
-Sapphire tickets are similar to [Diamond tickets](diamond.md) in the way the ticket is not forged, but instead based on a legitimate one obtained after a request. The difference lays in how the PAC is modified. The [Diamond ticket](diamond.md) approach modifies the legitimate PAC to add some privileged groups (or replace it with a fully-forged one). In the Sapphire ticket approach, the PAC of another powerful user is obtained through an [S4U2self+u2u](../#s4u2self-+-u2u) trick. This PAC then replaces the one featured in the legitimate ticket. The resulting ticket is an assembly of legitimate elements, and follows a standard ticket request, which makes it then most difficult silver/golden ticket variant to detect.
+Sapphire tickets are similar to [Diamond tickets](diamond.md) in the way the ticket is not forged, but instead based on a legitimate one obtained after a request. The difference lays in how the PAC is modified. The [Diamond ticket](diamond.md) approach modifies the legitimate PAC to add some privileged groups (or replace it with a fully-forged one). In the Sapphire ticket approach, the PAC of another powerful user is obtained through an [S4U2self+u2u](../#s4u2self-+-u2u) trick. This PAC then replaces the one featured in the legitimate ticket. The resulting ticket is an assembly of legitimate elements, and follows a standard ticket request, which makes it the most difficult silver/golden ticket variant to detect.
 
 ## Practice
 
