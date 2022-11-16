@@ -1,6 +1,8 @@
 # Introduction
 
-![](<.gitbook/assets/rounded social preview.png>)
+![](<.gitbook/assets/thr\_preview (1).png>)
+
+
 
 This project is aimed at providing technical guides on various hacking topics:
 
