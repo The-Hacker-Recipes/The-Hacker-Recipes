@@ -76,7 +76,7 @@ Once the collection is over, the data can be uploaded and analysed in BloodHound
 * Find information about selected nodes: sessions, properties, group membership/members, local admin rights, Kerberos delegations, RDP rights, outbound/inbound control rights (ACEs), and so on
 * Find help about edges/attacks (abuse, opsec considerations, references)
 
-Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/dacl/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/group-policies.md), [Kerberoast](../movement/kerberos/kerberoast.md), [ASREProast](../movement/kerberos/asreproast.md), [domain trusts attacks](../movement/domain-trusts.md), etc.
+Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/dacl/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/group-policies.md), [Kerberoast](../movement/kerberos/kerberoast.md), [ASREProast](../movement/kerberos/asreproast.md), [domain trusts attacks](../movement/trusts.md), etc.
 
 ![](<../../.gitbook/assets/Screenshot from 2020-12-08 15-29-30.png>)
 
@@ -98,7 +98,7 @@ bhqc.py -u $neo4juser -p $neo4jpassword
 {% endhint %}
 
 {% hint style="success" %}
-[CrackHound](https://github.com/trustedsec/CrackHound) (Python) can be used to populate BloodHound's database with password obtained during a pentest. This can help sort and report attack paths.&#x20;
+[CrackHound](https://github.com/trustedsec/CrackHound) (Python) can be used to populate BloodHound's database with password obtained during a pentest. This can help sort and report attack paths.
 {% endhint %}
 
 ## Resources
@@ -110,4 +110,3 @@ bhqc.py -u $neo4juser -p $neo4jpassword
 {% embed url="https://bloodhound.readthedocs.io/en/latest/" %}
 
 {% embed url="https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/" %}
-

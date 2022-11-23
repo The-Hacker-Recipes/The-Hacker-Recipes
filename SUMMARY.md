@@ -97,7 +97,7 @@
     * [Grant rights](ad/movement/dacl/grant-rights.md)
     * [Logon script](ad/movement/dacl/logon-script.md)
   * [Group policies](ad/movement/group-policies.md)
-  * [🛠️ Trusts](ad/movement/domain-trusts.md)
+  * [🛠️ Trusts](ad/movement/trusts.md)
   * [Built-ins & settings](ad/movement/domain-settings/README.md)
     * [Security groups](ad/movement/domain-settings/builtin-groups.md)
     * [MachineAccountQuota](ad/movement/domain-settings/machineaccountquota.md)
