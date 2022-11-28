@@ -23,7 +23,7 @@ Unlike [ASREProasting](asreproast.md), this attack can only be carried out with 
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN (or name) and valid domain credentials.
 
 {% hint style="info" %}
-> you can perform the Kerberoasting attack without knowing any SPN of the target account. But the existence of at least one SPN for the target account will continue to be needed.
+you can perform the Kerberoasting attack without knowing any SPN of the target account. But the existence of at least one SPN for the target account will continue to be needed.
 {% endhint %}
 
 ```bash
@@ -72,7 +72,7 @@ john --format=krb5tgs --wordlist=$wordlist kerberoastables.txt
 
 In September 2022, [Charlie Cark](https://twitter.com/exploitph) explained how Service Tickets could be obtained through `AS-REQ` requests (which are usually used for TGT requests), instead of the usual `TGS-REQ`. He demonstrated (and [implemented](https://github.com/GhostPack/Rubeus/pull/139)) how to abuse this in a Kerberoasting scenario.
 
-If an attacker knows of an account for which pre-authentication isn't required (i.e. an [ASREProastable](asreproast.md) account), as well as one (or multiple) service accounts to target, a Kerberoast attack can be attempted without having to control any Active Directory (since pre-authentication won't be required).
+If an attacker knows of an account for which pre-authentication isn't required (i.e. an [ASREProastable](asreproast.md) account), as well as one (or multiple) service accounts to target, a Kerberoast attack can be attempted without having to control any Active Directory account (since pre-authentication won't be required).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
