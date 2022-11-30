@@ -19,7 +19,7 @@ In order to exploit that technique, the attacker needs to:
 3. have control over an account that can edit the target object's `msDs-KeyCredentialLink` attribute.
 
 {% hint style="info" %}
-The `msDS-KeyCredentialLink` feature was introduced with Windows Server 2016.
+The `msDS-KeyCredentialLink` feature was introduced with Windows Server 2016. However, this is not to be confused with PKINIT which was already present in Windows 2000. The `msDS-KeyCredentialLink` feature allows to link an X509 certificate to a domain object, that's all.
 {% endhint %}
 
 If those per-requisites are met, an attacker can
