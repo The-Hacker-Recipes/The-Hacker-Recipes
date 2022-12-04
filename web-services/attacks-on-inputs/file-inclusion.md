@@ -299,10 +299,8 @@ curl --user-agent "PENTEST" "$URL?parameter=php://filter/$FILTERS/resource=$FILE
 
 {% hint style="info" %}
 Finding a valid path to a file on the target is not required. PHP wrappers like `php://temp` can be used instead.
-```bash
-FILE="php://temp"
-```
 {% endhint %}
+
 {% endcode %}
 
 The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv and the [original](https://gist.github.com/loknop/b27422) writeup detail the technique.
