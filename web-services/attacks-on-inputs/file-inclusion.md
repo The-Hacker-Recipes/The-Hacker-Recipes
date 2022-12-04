@@ -305,7 +305,7 @@ FILE="php://temp"
 {% endhint %}
 {% endcode %}
 
-The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv and the "[original](https://gist.github.com/loknop/b27422)" writeup detail the technique.
+The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv and the [original](https://gist.github.com/loknop/b27422) writeup detail the technique.
 
 </details>
 
