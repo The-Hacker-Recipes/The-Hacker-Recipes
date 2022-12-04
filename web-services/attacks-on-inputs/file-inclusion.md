@@ -279,8 +279,6 @@ curl --user-agent "PENTEST" -s -X POST --data "<?php system('id'); ?>" "$URL?par
 
 The `filter` wrapper doesn't require the `allow_include_url` to be set. This works on default PHP configuration `allow_url_include=off`.
 
-{% hint style="warning" %} Some binary characters might be returned as part of the conversion. To avoid curl warning `--output -` can be added. A better way is to redirect the response to a file. {% endhint %}
-
 {% code overflow="wrap" %}
 ```bash
 # Testers should make sure to change the $URL, $FILTERS with the chaining that generates their payload and $FILE with the path to the file they can read.
@@ -307,7 +305,7 @@ FILE="php://temp"
 {% endhint %}
 {% endcode %}
 
-The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv and the "[original](https://gist.github.com/loknop/b27422>
+The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv and the "[original](https://gist.github.com/loknop/b27422)" writeup detail the technique.
 
 </details>
 
