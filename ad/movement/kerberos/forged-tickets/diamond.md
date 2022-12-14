@@ -38,6 +38,8 @@ Rubeus.exe diamond /domain:DOMAIN /user:USER /password:PASSWORD /dc:DOMAIN_CONTR
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://www.semperis.com/blog/a-diamond-ticket-in-the-ruff/" %}
+
+{% embed url="https://www.trustedsec.com/blog/a-diamond-in-the-ruff/" %}
