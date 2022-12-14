@@ -3,7 +3,7 @@
 ## Theory
 
 OAuth 2.0 is a widely used framework across websites on the internet. It provides authorization.\
-**Example**: it allows a third-party application to access a user's resource (name, age, location, etc.). 
+**Example**: it allows a third-party application to access a user's resource (name, age, location, etc.).&#x20;
 
 Over time, OAuth 2.0 also started to provide authentication (check [OpenID Connect](https://openid.net/connect/)).\
 **Example**: it allows a user to connect to a third-party website using its social media accounts.
@@ -39,7 +39,7 @@ In the case where the client is confidential (requiring authentication with the 
 
 **Implicit Grant**
 
-To test the redirect URI validation misconfiguration with the implicit grant, the client application needs to hold an [open redirect](https://app.gitbook.com/@shutdown/s/the-hacker-recipes/\~/drafts/-MhmLsf3\_kmf_BhO6cGF/web-services/attacks-on-inputs/open-redirect) vulnerability. The implicit grant is handy for targeting wildcards on query parameters.
+To test the redirect URI validation misconfiguration with the implicit grant, the client application needs to hold an [open redirect](../../web-services/attacks-on-inputs/open-redirect.md) vulnerability. The implicit grant is handy for targeting wildcards on query parameters.
 
 Upon getting a `client_id`, it's possible to test this misconfiguration by abusing the open redirect vulnerability and providing the authorization server with a fake URI. Depending on the server's HTTP response, misconfiguration is present.
 

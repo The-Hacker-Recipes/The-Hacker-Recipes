@@ -158,6 +158,8 @@ A U2U request is a variation of a common Service Ticket request (`KRB_TGS_REQ`).
 * Request contains the `ENC-TKT-IN-SKEY` flag in the `kdc-options` field, indicating that the ticket for the end server is to be encrypted in the session key from the additional TGT provided ([doc](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-sfu/17b9af82-d45a-437d-a05c-79547fe969f5)).
 * The `sname` refers to a UPN (`User Principal Name`) of an account that doesn't necessarily have to have an SPN set.
 
+A ticket produced with u2u is encrypted with the session key of the TGT included as `additional-ticket` instead of the target service long-term key (i.e. DES, RC4 or AES128/256 key).
+
 </details>
 
 <details>

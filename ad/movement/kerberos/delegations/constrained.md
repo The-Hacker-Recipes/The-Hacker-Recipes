@@ -121,6 +121,8 @@ Rubeus.exe s4u /nowrap /msdsspn:"cifs/target" /impersonateuser:"administrator" /
 
 {% hint style="info" %}
 Computer accounts have SPNs set at their creation and can edit their own "rbcd attribute" (i.e. `msDS-AllowedToActOnBehalfOfOtherIdentity`). If the account configured with KCD without protocol transition is a computer, controlling another account to operate the RBCD approach is not needed. In this case, **serviceB** = **serviceA**, the computer account can be configured for a "self-rbcd".
+
+Around Aug./Sept. 2022, Microsoft seems to have patched the "self-rbcd" approach, but reyling on another account for the RBCD will still work.
 {% endhint %}
 
 ## Resources

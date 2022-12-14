@@ -1,27 +1,21 @@
 # Introduction
 
-![](.gitbook/assets/thr\_preview\_2.png)
+![](<.gitbook/assets/thr\_preview (1).png>)
 
-{% hint style="danger" %}
-**This project is a work in progress**. I started it from scratch in 2018 and will probably never finish it. Those subjects evolve day after day. But rest assured, I don't plan on letting this project become deprecated.&#x20;
 
-The "Active Directory" part is a good example of what I want this whole project to be like
-
-The 🛠️ emoji is used where work has to be done.
-{% endhint %}
 
 This project is aimed at providing technical guides on various hacking topics:
 
-* Active Directory (80% done :tada:)
-* Web services (60% done)
-* Systems & services (5% done)
-* Intelligence gathering (0% done)
-* Physical intrusion (0% done)
-* Social engineering (0% done)
-* Phishing (0% done)
-* Mobile apps (0% done)
-* Binary exploitation (0% done)
-* Code analysis (0% done)
+* :green\_circle: Active Directory (80% done)
+* :yellow\_circle: Web services (60% done)
+* :orange\_circle: Systems & services (5% done)
+* :red\_circle: Intelligence gathering (0% done)
+* :red\_circle: Physical intrusion (0% done)
+* :red\_circle: Social engineering (0% done)
+* :red\_circle: Phishing (0% done)
+* :red\_circle: Mobile apps (0% done)
+* :red\_circle: Binary exploitation (0% done)
+* :red\_circle: Code analysis (0% done)
 * ...
 
 Cheatsheets are huge resources, but they sometimes lack simplicity or on the contrary they don't give any context or explanation. **This is not a cheatsheets project**. Everything here will be verified, tested, and not only copy-pasted from I don't know where.
@@ -33,5 +27,5 @@ Keep in mind that these guides are maintained by non-omniscient security enthusi
 :money\_with\_wings: Feel free to show your support by donating: [Ko-fi](https://ko-fi.com/the\_real\_slim\_shutdown) (one time donation), [Patreon](https://www.patreon.com/nwodtuhs) (monthly)
 
 {% hint style="success" %}
-Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://github.com/ShutdownRepo/Exegol), another project of mine of a docker environment ready to hack on day-to-day engagements. It's not much but I use it on all my engagements. Feel free to use it, to contribute, to give feedback etc.
+Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://exegol.rtfd.io/), a community-driven hacking environment, powerful and yet simple enough to be used by anyone in day to day engagements. Exegol is the best solution to deploy powerful hacking environments securely, easily, professionally.
 {% endhint %}

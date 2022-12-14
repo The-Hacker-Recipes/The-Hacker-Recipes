@@ -58,6 +58,14 @@ fping -g $RANGE
 nmap -PE -PP -PM -sP $RANGE
 ```
 
+Ping Sweep on Powershell:
+
+{% code overflow="wrap" %}
+```powershell
+$ping = New-Object System.Net.Networkinformation.Ping ; 1..254 | % { $ping.send("192.168.0.$_", 1) | where status -ne 'TimedOut' | select Address | fl * }
+```
+{% endcode %}
+
 ### ICMPv6 discovery
 
 ```bash
