@@ -36,7 +36,14 @@ Find-InterestingFile -Path "\\$SERVER\$Share" -OfficeDocs
 Last but not least, one of the best tools to find sensitive information across a number of shares and local files is [Snaffler](https://github.com/SnaffCon/Snaffler) (C#).
 
 ```bash
-snaffler.exe -s -o snaffler.log
+# Snaffle all the computers in the domain
+./Snaffler.exe -d domain.local -c <DC> -s
+
+# Snaffle specific computers
+./Snaffler.exe -n computer1,computer2 -s
+
+# Snaffle a specific directory
+./Snaffler.exe -i C:\ -s
 ```
 {% endtab %}
 {% endtabs %}
