@@ -159,3 +159,5 @@ SQL injection cheatsheets (MSSQL, MySQL, Oracle SQL, Postgres SQL, ...)
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection" %}
 
 {% embed url="https://portswigger.net/web-security/sql-injection/cheat-sheet" %}
+
+{% embed url="https://github.com/Hakumarachi/Loose-Compare-Tables" %}
