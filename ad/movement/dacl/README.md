@@ -40,6 +40,12 @@ All of the aforementioned attacks (red blocks) are detailed in the child notes, 
 {% endhint %}
 
 {% hint style="info" %}
+**ACE inheritance**
+
+If attacker can write an ACE (`WriteDacl`) for a container or organisational unit (OU), if inheritance flags are added (`0x01+ 0x02`) to the ACE, and inheritance is enabled for an object in that container/OU, the ACE will be applied to it. Impacket's dacledit (Python) can be used with the `-inheritance` flag for that purpose ([PR#1291](https://github.com/fortra/impacket/pull/1291)).
+{% endhint %}
+
+{% hint style="info" %}
 With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, it is possible to enable it again (e.g. `set-aduser "user" -enabled 1`)
 {% endhint %}
 
