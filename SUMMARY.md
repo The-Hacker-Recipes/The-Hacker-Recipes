@@ -162,7 +162,7 @@
   * [🛠️ Logging in](web-services/accounts-and-sessions/logging-in.md)
 * [User inputs](web/inputs/README.md)
   * [File inclusion](web/inputs/file-inclusion/README.md)
-    * [LFI to RCE](web/inputs/file-inclusion/lfi-to-rce/README.md)
+    * [LFI to RCE](web/inputs/file-inclusion/lfi-to-rce.md)
       * [logs poisoning](web/inputs/file-inclusion/lfi-to-rce/logs-poisoning.md)
       * [phpinfo](web/inputs/file-inclusion/lfi-to-rce/phpinfo.md)
       * [file upload](web/inputs/file-inclusion/lfi-to-rce/file-upload.md)

