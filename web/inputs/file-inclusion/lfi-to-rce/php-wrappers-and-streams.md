@@ -46,7 +46,7 @@ curl --user-agent "PENTEST" "$URL?parameter=php://filter/$FILTERS/resource=$FILE
 ```
 {% endcode %}
 
-The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv, and [the original writeup](https://gist.github.com/loknop/b27422), go into the details of that technique.
+The research article "[PHP filters chain: What is it and how to use it](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)" from Synacktiv, and [the original writeup](https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d), go into the details of that technique.
 
 </details>
 
