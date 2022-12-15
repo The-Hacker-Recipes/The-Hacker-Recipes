@@ -84,6 +84,84 @@ This [pull request](https://github.com/PowerShellMafia/PowerSCCM/pull/6) on Powe
 New-CMScriptDeployement -CMDrive 'E' -ServerFQDN 'sccm.domain.local' -TargetDevice 'target' -Path '.\reverseTCP.ps1' -ScriptName 'evilScript'
 ```
 
+### SCCM credentials extraction with DPAPI
+
+When non-domain joined computers need to retrieve software from a SCCM server, the SCCM endpoint will deploy **Network Access Accounts (NAA)** on them. The NAAs do nothing on the hosts but access resources across the network. Normally, the NAA account [should](https://docs.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/accounts#network-access-account) be configured with the least privilege and does not have interactive logon rights. But it appears that sometimes domain accounts are used for this task.
+
+The NAA policy, including the NAA's credentials, is sent by the SCCM server and stored on the client machine, encrypted via DPAPI with SYSTEM's master key. With a SYSTEM (i.e. local admin) access on the target, it is possible to decipher the policy and retrieve the credentials.
+
+{% hint style="info" %}
+It appears that even after changing the NAA account or uninstalling the SCCM client, the credentials are still present on the disk.
+{% endhint %}
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) (Python) can be used to decipher the WMI blob via DPAPI and retrieve the stored credentials. Additionally, the tool can also extract SYSTEM DPAPI credentials.
+
+```bash
+SystemDPAPIdump.py -creds -sccm 'DOMAIN/USER:Password'@'target.domain.local'
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+With an elevated session on the target machine, [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI) (C#) can be used to extract the SCCM credentials on the host.
+
+```powershell
+.\SharpDPAPI.exe SCCM
+```
+
+The tool [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can also be used for the same purpose.
+
+```batch
+.\mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # token::elevate
+mimikatz # dpapi::sccm
+```
+{% endtab %}
+{% endtabs %}
+
+### Network Access Account deobfuscation
+
+A computer account has the ability to register itself with the SCCM server and request the encrypted NAA policies, decrypt them, deobfuscate them and retrieve the NAA's credentials in them.
+
+The first step consists in controlling a computer account. One can be [created](domain-settings/machineaccountquota.md#create-a-computer-account) if the [Machine Account Quota](domain-settings/machineaccountquota.md) attribute is greater than 0.
+
+{% content-ref url="domain-settings/machineaccountquota.md" %}
+[machineaccountquota.md](domain-settings/machineaccountquota.md)
+{% endcontent-ref %}
+
+#### Enroll and retrieve the NAA policy
+
+The SCCM attack can then be performed with [sccmwtf](https://github.com/xpn/sccmwtf) (Python). The new client to spoof doesn't need to be the previously created computer account (useful if you only have an existing computer account already enrolled).
+
+The positional arguments are as follows:
+
+* Spoof Name&#x20;
+* Spoof FQDN&#x20;
+* Target SCCM&#x20;
+* Computer account username&#x20;
+* Computer account password
+
+{% code overflow="wrap" %}
+```bash
+sccmwtf.py "fakepc" "fakepc.domain.local" 'SCCM-Server' 'DOMAIN\ControlledComputer$' 'Password123!'
+```
+{% endcode %}
+
+{% hint style="warning" %}
+The tool author warns not to use this script in production environments.
+{% endhint %}
+
+#### Retrieve the credentials
+
+Then, on a Windows machine, the two blobs (`NetworkAccessUsername` and `NetworkAccessPassword`) can be retrieved in plaintext by indicating only the hexadecimal part.
+
+```powershell
+.\policysecretunobfuscate.exe <blob_hex_1>
+.\policysecretunobfuscate.exe <blob_hex_2>
+```
+
 ## Resources
 
 {% embed url="https://www.hub.trimarcsecurity.com/post/push-comes-to-shove-exploring-the-attack-surface-of-sccm-client-push-accounts" %}
@@ -91,3 +169,7 @@ New-CMScriptDeployement -CMDrive 'E' -ServerFQDN 'sccm.domain.local' -TargetDevi
 {% embed url="https://enigma0x3.net/2016/02/" %}
 
 {% embed url="https://docs.microsoft.com/en-us/powershell/module/configurationmanager/?view=sccm-ps" %}
+
+{% embed url="https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9" %}
+
+{% embed url="https://blog.xpnsec.com/unobfuscating-network-access-accounts/" %}
