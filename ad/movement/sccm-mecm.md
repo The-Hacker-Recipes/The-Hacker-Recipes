@@ -150,7 +150,7 @@ sccmwtf.py "fakepc" "fakepc.domain.local" 'SCCM-Server' 'DOMAIN\ControlledComput
 {% endcode %}
 
 {% hint style="warning" %}
-The tool author warns not to use this script in production environments.
+The tool author ([Adam Chester](https://twitter.com/\_xpn\_)) warns not to use this script in production environments.
 {% endhint %}
 
 #### Retrieve the credentials
