@@ -70,11 +70,7 @@ The Powershell Active Directory module also has a cmdlet that can be used to fin
 Get-ADComputer "Account" -Properties TrustedForDelegation, TrustedToAuthForDelegation,msDS-AllowedToDelegateTo,PrincipalsAllowedToDelegateToAccount
 ```
 
-| `TrustedForDelegation`                                                                                           | Unconstrained Delegation                                            |   |   |
-| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | - | - |
-| `TrustedToAuthForDelegation`                                                                                     | Constrained Delegation with Protocol Transition                     |   |   |
-| `AllowedToDelegateTo`                                                                                            | Constrained Delegation, and list of services allowed to delegate to |   |   |
-| `PrincipalsAllowedToDelegateToAccount` (i.e. refers to the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute) | RBCD, list of services that can delegate to the account             |   |   |
+<table data-header-hidden><thead><tr><th>Property</th><th>Delegation type</th><th data-hidden></th><th data-hidden></th></tr></thead><tbody><tr><td><code>TrustedForDelegation</code></td><td>Unconstrained Delegation</td><td></td><td></td></tr><tr><td><code>TrustedToAuthForDelegation</code></td><td>Constrained Delegation with Protocol Transition</td><td></td><td></td></tr><tr><td><code>AllowedToDelegateTo</code></td><td>Constrained Delegation, and list of services allowed to delegate to</td><td></td><td></td></tr><tr><td><code>PrincipalsAllowedToDelegateToAccount</code> (i.e. refers to the <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> attribute)</td><td>RBCD, list of services that can delegate to the account</td><td></td><td></td></tr></tbody></table>
 {% endtab %}
 {% endtabs %}
 
