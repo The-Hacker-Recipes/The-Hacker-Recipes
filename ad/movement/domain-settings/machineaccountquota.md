@@ -64,7 +64,7 @@ StandIn.exe --object ms-DS-MachineAccountQuota=*
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py) (Python) can be used to create a computer account, using the credentials of a domain user the the MachineAccountQuota domain-level attribute is set higher than 0 (10 by default).
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://tools.thehacker.recipes/impacket/examples/addcomputer.py) (Python) can be used to create a computer account, using the credentials of a domain user the the MachineAccountQuota domain-level attribute is set higher than 0 (10 by default).
 
 ```bash
 addcomputer.py -computer-name 'SomeName$' -computer-pass 'SomePassword' -dc-host "$DC_HOST" -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
