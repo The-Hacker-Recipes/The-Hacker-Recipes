@@ -21,6 +21,8 @@ cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps -O co
 ```
 
 Impacket's ntlmrelayx also carries that feature, usable with the `--dump-laps`.
+
+[pyLAPS](https://github.com/p0dalirius/pyLAPS) is another Python alternative.
 {% endtab %}
 
 {% tab title="Windows" %}
