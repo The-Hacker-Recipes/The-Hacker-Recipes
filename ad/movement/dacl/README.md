@@ -1,6 +1,6 @@
 # DACL abuse
 
-## Theory
+## [constrained.md](../kerberos/delegations/constrained.md "mention")Theory
 
 Access privileges for resources in Active Directory Domain Services are usually granted through the use of an Access Control Entry (ACE). Access Control Entries describe the allowed and denied permissions for a principal (e.g. user, computer account) in Active Directory against a securable object (user, group, computer, container, organizational unit (OU), GPO and so on)
 
@@ -51,7 +51,7 @@ Impacket's dacledit (Python) can be used with the `-inheritance` flag for that p
 With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, it is possible to enable it again (e.g. `set-aduser "user" -enabled 1`)
 {% endhint %}
 
-### BloodHound edges
+### BloodHound ACE edges
 
 [BloodHound](../../recon/bloodhound.md) has the ability to map abuse paths, with some that rely on DACL abuse. The following edges are not includes in the mindmap above:
 
