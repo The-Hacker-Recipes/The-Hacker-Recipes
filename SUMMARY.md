@@ -277,6 +277,6 @@
 
 * [Android](mobile-apps/android.md)
   * [Android Debug Bridge ⚙️](mobile-apps/android/android-debug-bridge.md)
-  * [Setup](mobile-apps/android/setup.md)
+  * [APK transform](mobile-apps/android/apk-transform.md)
 * [iOS](mobile-apps/ios/README.md)
   * [Certificate pinning](mobile-apps/ios/certificate-pinning.md)

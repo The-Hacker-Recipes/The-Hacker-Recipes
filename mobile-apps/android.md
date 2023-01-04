@@ -12,7 +12,7 @@ Several tools allow to enumerate the attack surface of an APK (e.g. Drozer or An
 
 Android pentesting can be time-consuming. a reading of decompiled files allows to understand the role of functions used (APK transformation), hooks can be placed during the execution of the application in order to bypass its original behaviour (i.e. Frida, Objection).
 
-## Sections
+## Audits
 
 Auditing Android covers multiples domains.
 
@@ -34,3 +34,17 @@ Auditing Android covers multiples domains.
   * Instants Apps
   * Custom URLs
 
+## Setup
+
+Auditing an Android APK requires a setup made of:
+
+* An Android smartphone (e.g. Pixel3A, or any other smartphone easy enough to root) or a Genymotion virtual machine (e.g. using MobSF)
+* A few utilities directly on the phone (whether it's real or virtual)&#x20;
+  * Frida Server
+  * Drozer Server
+  * Magisk App with Modules
+* A few utilities on the computer&#x20;
+  * Frida client
+  * Drozer client
+  * MobSF
+  * A proxy (e.g. Burp Suite)
