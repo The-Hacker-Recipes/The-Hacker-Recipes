@@ -5,7 +5,7 @@
 A Server-Side Request Forgery (a.k.a. SSRF) is a web vulnerability allowing attackers to make the server-side application do certain requests. This vulnerability can lead to unauthorized actions, Sensitive Information Disclosure and even RCE (Remote Code Execution).
 
 {% hint style="info" %}
-SSRF is very similar to [file inclusion](../../web/inputs/file-inclusion/) since both vulnerabilities can be exploited to access external or internal content. The difference resides in the fact that file inclusion vulnerabilities rely on code inclusion functions (e.g. `include()` in PHP) while SSRF ones on functions that only handle data (e.g. `fopen()` in PHP). RFI vulnerabilities will lead to RCE much more often and easily that SSRF ones.
+SSRF is very similar to [file inclusion](file-inclusion.md) since both vulnerabilities can be exploited to access external or internal content. The difference resides in the fact that file inclusion vulnerabilities rely on code inclusion functions (e.g. `include()` in PHP) while SSRF ones on functions that only handle data (e.g. `fopen()` in PHP). RFI vulnerabilities will lead to RCE much more often and easily that SSRF ones.
 {% endhint %}
 
 ## Practice
