@@ -275,6 +275,7 @@
 
 ## 🛠️ mobile apps
 
-* [Android](mobile-apps/android.md)
+* [Android](mobile-apps/android/README.md)
+  * [Setup](mobile-apps/android/setup.md)
 * [iOS](mobile-apps/ios/README.md)
   * [Certificate pinning](mobile-apps/ios/certificate-pinning.md)
