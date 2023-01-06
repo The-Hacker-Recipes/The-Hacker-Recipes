@@ -3,6 +3,18 @@
 A lot of information on an AD domain can be obtained through LDAP. Most of the information can only be obtained with an authenticated bind but metadata (naming contexts, DNS server name, Domain Functional Level (DFL)) can be obtainable anonymously, even with anonymous binding disabled.
 
 {% tabs %}
+{% tab title="ldeep" %}
+The [ldeep](https://github.com/franc-pentest/ldeep) (Python) tool can be used to enumerate essential information like delegations, gpo, groups, machines, pso, trusts, users, and so on.
+
+```bash
+# remotely dump information 
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" all "ldeepdump/$DOMAIN"
+
+# parse saved information (in this case, enumerate trusts)
+ldeep cache -d "ldeepdump" -p "$DOMAIN" trusts
+```
+{% endtab %}
+
 {% tab title="ldapsearch-ad" %}
 The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) Python script can also be used to enumerate essential information like domain admins that have their password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.
 

@@ -97,7 +97,7 @@
     * [Grant rights](ad/movement/dacl/grant-rights.md)
     * [Logon script](ad/movement/dacl/logon-script.md)
   * [Group policies](ad/movement/group-policies.md)
-  * [🛠️ Trusts](ad/movement/trusts.md)
+  * [Trusts](ad/movement/trusts.md)
   * [Netlogon](ad/movement/netlogon/README.md)
     * [ZeroLogon](ad/movement/netlogon/zerologon.md)
   * [Certificate Services (AD-CS)](ad/movement/ad-cs/README.md)

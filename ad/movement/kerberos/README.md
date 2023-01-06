@@ -1,5 +1,17 @@
 # Kerberos
 
+A Kerberos realm is a logical group of networked computers that share a common authentication database. The authentication database is used to store the Kerberos tickets that are issued to users and services when they authenticate to the network.
+
+In a Kerberos environment, each networked computer is a member of a realm. The realm is responsible for authenticating users and services and for issuing and managing Kerberos tickets.
+
+A Kerberos realm can be implemented on any type of network, including networks that are not running Windows. In fact, the Kerberos protocol was developed as an open standard and is used by many different types of operating systems and networks.
+
+On a Windows network, a Kerberos realm is typically equivalent to a domain. Each domain in a Windows network is a member of a realm, and the domain controller is responsible for authenticating users and services and for issuing and managing Kerberos tickets.
+
+However, on a non-Windows network, a Kerberos realm can be implemented independently of any domain structure. In this case, the Kerberos server is responsible for authenticating users and services and for issuing and managing Kerberos tickets.
+
+The Hacker Recipes mainly covers Kerberos attacks in a Windows concept, but some attacks can also be conducted in non-Windows networks.
+
 ![](<../../../.gitbook/assets/Pass the things.png>)
 
 ## Tickets
@@ -175,3 +187,7 @@ This allows to
 * retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](forged-tickets/).
 
 </details>
+
+{% hint style="info" %}
+Parts of this page were written with the help of the [ChatGPT](https://openai.com/blog/chatgpt/) AI model.
+{% endhint %}
