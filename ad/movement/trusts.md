@@ -16,20 +16,19 @@ Once a trust relationship is established between a **trusting domain** (A) and *
 
 1. **Parent-Child**: this type of trust relationship exists between a parent domain and a child domain in the same forest. The parent domain trusts the child domain, and the child domain trusts the parent domain. This type of trust is automatically created when a new child domain is created in a forest.
 2. **Tree-Root**: exists between the root domain of a tree and the root domain of another tree in the same forest. This type of trust is automatically created when a new tree is created in a forest.
-3. **Cross-link**: exists between two child domains of different parent domains within the same forest. It allows users in one child domain to access resources in the other child domain.
+3. **Shortcut (a.k.a. cross-link)**: exists between two child domains of different tree (i.e. different parent domains) within the same forest. This type of trust relationship is used to reduce the number of authentication hops between distant domains. It is a one-way or two-way transitive trust.
 4. **External**: exists between a domain in one forest and a domain in a different forest. It allows users in one domain to access resources in the other domain. It's usually set up when accessing resources in a forest without trust relationships established.
 5. **Forest**: exists between two forests (i.e. between two root domains in their respective forest). It allows users in one forest to access resources in the other forest.
 6. **Realm**: exists between a Windows domain and a non-Windows domain, such as a Kerberos realm. It allows users in the Windows domain to access resources in the non-Windows domain.
-7. **Shortcut**: this type of trust relationship is used to reduce the number of authentication hops required when accessing resources in a remote domain. It is a one-way, transitive trust that can be created between two domains in the same forest or between a domain in one forest and a domain in another forest.
 
-| Trust type   | Transitivity   | Direction | Auth. mechanisms |
-| ------------ | -------------- | --------- | ---------------- |
-| Parent-Child | Transitive     | Two-way   | Either           |
-| Tree-Root    | Transitive     | Two-way   | Either           |
-| Shortcut     | Transitive     | Either    | Either           |
-| Forest       | Transitive     | Either    | Either           |
-| External     | Non-transitive | One-way   | NTLM only        |
-| Realm        | Either         | Either    | Kerberos V5 only |
+| Trust type                   | Transitivity   | Direction | Auth. mechanisms |
+| ---------------------------- | -------------- | --------- | ---------------- |
+| Parent-Child                 | Transitive     | Two-way   | Either           |
+| Tree-Root                    | Transitive     | Two-way   | Either           |
+| Shortcut (a.k.a. cross-link) | Transitive     | Either    | Either           |
+| Forest                       | Transitive     | Either    | Either           |
+| External                     | Non-transitive | One-way   | NTLM only        |
+| Realm                        | Either         | Either    | Kerberos V5 only |
 
 ### Transitivity
 
