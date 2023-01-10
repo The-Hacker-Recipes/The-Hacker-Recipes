@@ -96,7 +96,7 @@ The **SID (Security Identifier)** is a unique identifier that is assigned to eac
 
 The **SID history** is a property of a user or group object that allows the object to retain its SID when it is migrated from one domain to another as part of a domain consolidation or restructuring. When an object is migrated to a new domain, it is assigned a new SID in the target domain. The SID history allows the object to retain its original SID, so that access to resources in the source domain is not lost.
 
-When authenticating across trusts using Kerberos, it is assumed that the extra SID field of the ticket's PAC (Privileged Attribute Certificate) reflects the SID history attribute of the authenticating user. With [SID filtering](trusts.md#sid-filtering) enabled in a trust, the SIDs contained in that field are filtered, effectively preventing SID history from doing its job. There are certain scenarios where some SIDs are not filtereg, allowing for example SIDs with a RID >1000. Some call it "enabling SID history", I'd call it "partial SID filtering", or "unencumbered SID history".
+When authenticating across trusts using Kerberos, it is assumed that the extra SID field of the ticket's PAC (Privileged Attribute Certificate) reflects the SID history attribute of the authenticating user. With [SID filtering](trusts.md#sid-filtering) enabled in a trust, the SIDs contained in that field are filtered, effectively preventing SID history from doing its job. There are certain scenarios where some SIDs are not filtereg, allowing for example SIDs with a RID >1000. Some call it "enabling SID history", I'd call it "partial SID filtering", or "unencumbered SID history". [Dirk-jan Mollema](https://twitter.com/\_dirkjan) calls that "[SID filtering relaxation](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/#sid-filtering-relaxation)".
 
 // A similar process is conducted when using NTLM. \<TODO> how is SID filtering enforced when using NTLM ? Change this section and [NTLM authentication](trusts.md#ntlm-authentication) accordingly.
 
@@ -380,6 +380,8 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 {% embed url="https://nored0x.github.io/red-teaming/active-directory-Trust-enumeration/" %}
 
 {% embed url="https://posts.specterops.io/not-a-security-boundary-breaking-forest-trusts-cd125829518d" %}
+
+{% embed url="https://adsecurity.org/?p=425" %}
 
 {% embed url="https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1" %}
 
