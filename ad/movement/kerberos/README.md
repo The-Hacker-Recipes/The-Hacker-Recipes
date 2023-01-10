@@ -10,7 +10,7 @@ On a Windows network, a Kerberos realm is typically equivalent to a domain. Each
 
 However, on a non-Windows network, a Kerberos realm can be implemented independently of any domain structure. In this case, the Kerberos server is responsible for authenticating users and services and for issuing and managing Kerberos tickets.
 
-The Hacker Recipes mainly covers Kerberos attacks in a Windows concept, but some attacks can also be conducted in non-Windows networks.
+The Hacker Recipes mainly covers Kerberos attacks in a Windows context, but some attacks can also be conducted in non-Windows networks.
 
 ![](<../../../.gitbook/assets/Pass the things.png>)
 

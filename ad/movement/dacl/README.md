@@ -1,6 +1,6 @@
 # DACL abuse
 
-## [constrained.md](../kerberos/delegations/constrained.md "mention")Theory
+## Theory
 
 Access privileges for resources in Active Directory Domain Services are usually granted through the use of an Access Control Entry (ACE). Access Control Entries describe the allowed and denied permissions for a principal (e.g. user, computer account) in Active Directory against a securable object (user, group, computer, container, organizational unit (OU), GPO and so on)
 
