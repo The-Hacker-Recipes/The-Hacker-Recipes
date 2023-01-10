@@ -144,37 +144,9 @@ Understanding how Kerberos works is required here: [the Kerberos protocol](kerbe
 >
 > _(by_ [_Will Schroeder_](https://twitter.com/harmj0y) _on_ [_blog.harmj0y.net_](https://blog.harmj0y.net/redteaming/domain-trusts-were-not-done-yet/)_)_
 
-<details>
+From an offensive point of view, just like a [golden ticket](kerberos/forged-tickets/golden.md), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
 
-<summary>Referral tickets</summary>
-
-From an offensive point of view, if the attacker has compromised a trusted domain (e.g. `DOMAIN1`) and targets a service (e.g. `FILESRV`) from the trusting domain (e.g. `DOMAIN2`), the following attacks could be conducted.
-
-**Forge an inter-realm TGT (i.e. referral ticket)**
-
-1. retrieve the inter-realm key from the trusted domain's (`DOMAIN1`) domain controller
-2. use that key to forge an referral ticket (a.k.a. inter-realm TGT, a.k.a. trust ticket)
-3. find a user in the trusted domain (`DOMAIN1`) that has sufficient privileges on the target service (`FILESRV`) and forge the ticket accordingly
-4. present the ticket to the trusting domain's (`DOMAIN2`) domain controller, to ask for a service ticket
-5. use the service ticket and access `FILESRV` as the impersonated powerful user.
-
-**Forge a** [**golden ticket**](kerberos/forged-tickets/golden.md) **and ask**
-
-1. retrieve the `KRBTGT` keys from the trusted domain's (`DOMAIN1`) domain controller
-2. use that to forge a golden ticket
-3. find a user in the trusted domain (`DOMAIN1`) that has sufficient privileges on the target service (`FILESRV`) and forge the golden ticket accordingly
-4. present the golden ticket to the trusted domain's (DOMAIN1) domain controller, and ask for a service ticket
-5. the domain controller will issue an inter-realm TGT (i.e. referral ticket)
-6. present the ticket to the trusting domain's (`DOMAIN2`) domain controller, to ask for a service ticket
-7. use the service ticket and access `FILESRV` as the impersonated powerful user.
-
-Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should.
-
-Another scenario, that applies to both techniques, is to compromise a parent domain and to forge a ticket to act as an Enterprise Administrator, in order to gain privileged access to all child domains' domain controllers, effectively taking advantage of the automatic parent-child trust relationships.
-
-However, none of these technique allow for a direct privilege escalation from a child to a parent domain. Another ingredient is needed (i.e. SID History).
-
-</details>
+Depending on the trust charasteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
 When using Kerberos authentication across trusts, the trusting domain's domain controller does
 
@@ -183,7 +155,7 @@ When using Kerberos authentication across trusts, the trusting domain's domain c
 
 ### NTLM authentication
 
-
+// [https://www.rebeladmin.com/tag/sid/](https://www.rebeladmin.com/tag/sid/) pass through authentication [https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178(v=ws.10)?redirectedfrom=MSDN](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178\(v=ws.10\)?redirectedfrom=MSDN)
 
 ## Practice
 
@@ -346,6 +318,8 @@ If SID filtering is partially enabled (a.k.a. [SID history enabled](trusts.md#si
 #### SID filtering enabled
 
 If SID filtering is fully enabled (trusts with the `QUARANTINED_DOMAIN` attribute), the techniques presented above will not work since all SID that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods like abusing permissions and group memberships to move laterally from a forest to another.
+
+// could&#x20;
 
 ### Unconstrained delegation
 
