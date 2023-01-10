@@ -32,9 +32,9 @@ A trust relationship allows users in one domain to **authenticate** to the other
 | Parent-Child                 | Transitive     | Two-way   | Either           |
 | Tree-Root                    | Transitive     | Two-way   | Either           |
 | Shortcut (a.k.a. cross-link) | Transitive     | Either    | Either           |
+| Realm                        | Either         | Either    | Kerberos V5 only |
 | Forest                       | Transitive     | Either    | Either           |
 | External                     | Non-transitive | One-way   | NTLM only        |
-| Realm                        | Either         | Either    | Kerberos V5 only |
 
 ### Transitivity
 
@@ -90,7 +90,7 @@ If this flag is set, it means a inter-forest ticket spoofing an RID >1000 can be
 
 ### SID history
 
-This characteristic of trusts is a bit special, since it's not really one. Many resources accross the Internet, including Microsoft's docs and tools, state that SID history can be enabled across a trust. This is not 100% true.
+This characteristic of trusts is a bit special, since it's not really one. Many resources across the Internet, including Microsoft's docs and tools, state that SID history can be enabled across a trust. This is not 100% true.
 
 The **SID (Security Identifier)** is a unique identifier that is assigned to each security principal (e.g. user, group, computer). It is used to identify the principal within the domain and is used to control access to resources.
 
@@ -102,9 +102,15 @@ When authenticating across trusts using Kerberos, it is assumed that the extra S
 
 ### Authentication level
 
-// Forest-wide, domain-wide, and selective authentication
+Inter-forest trusts ("External" and "Forest" trusts) can be configured with different levels of authentication:
 
-// selective auth : target object's DACL must include extended right allowed to authenticate 68b1d179-0d15-4d4f-ab71-46152e79a7bc&#x20;
+* **Forest-wide authentication**: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise).
+* **Domain-wide authentication**: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).
+* **Selective authentication**: allows only specific users in the trusting domain to access resources in the trusted domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain.
+
+It's worth noting that selective authentication is less used by the general public due to complexity of maintenance. In most cases domain wide authentication is used for most organizations.
+
+// selective auth : target object's DACL must include extended right allowed to authenticate 68b1d179-0d15-4d4f-ab71-46152e79a7bc. For everything else, authentication will be blocked.
 
 {% hint style="info" %}
 The authentication level of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
@@ -146,7 +152,7 @@ Understanding how Kerberos works is required here: [the Kerberos protocol](kerbe
 
 From an offensive point of view, just like a [golden ticket](kerberos/forged-tickets/golden.md), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
 
-Depending on the trust charasteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
+Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
 When using Kerberos authentication across trusts, the trusting domain's domain controller does
 
@@ -156,6 +162,8 @@ When using Kerberos authentication across trusts, the trusting domain's domain c
 ### NTLM authentication
 
 // [https://www.rebeladmin.com/tag/sid/](https://www.rebeladmin.com/tag/sid/) pass through authentication [https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178(v=ws.10)?redirectedfrom=MSDN](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178\(v=ws.10\)?redirectedfrom=MSDN)
+
+// selective auth : [https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72)
 
 ## Practice
 
@@ -319,9 +327,11 @@ If SID filtering is partially enabled (a.k.a. [SID history enabled](trusts.md#si
 
 If SID filtering is fully enabled (trusts with the `QUARANTINED_DOMAIN` attribute), the techniques presented above will not work since all SID that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods like abusing permissions and group memberships to move laterally from a forest to another.
 
-// could&#x20;
 
-### Unconstrained delegation
+
+### Explicit permissions
+
+#### Unconstrained delegation abuse
 
 // TODO
 
@@ -329,17 +339,17 @@ If SID filtering is fully enabled (trusts with the `QUARANTINED_DOMAIN` attribut
 [unconstrained.md](kerberos/delegations/unconstrained.md)
 {% endcontent-ref %}
 
-### ADCS
+#### ADCS abuse
 
 When an ADCS is installed and configured in an Active Directory environment, a CA is available for the whole forest. Every usual ADCS attack can be executed through intra-forest trusts. [ESC8](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints) and [ESC11](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/) in particular can be used to pivot to any domain within the forest associated to the CA.
 
-### Permissions abuse
+#### DACL abuse
 
 TODO // How a domain admin of forest A could administrate a domain in forest B ? [https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS](https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS)
 
 TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign principals, BloodHound comes in handy.
 
-### Group memberships
+#### Group memberships
 
 // group scoping
 
