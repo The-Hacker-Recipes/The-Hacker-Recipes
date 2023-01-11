@@ -90,13 +90,13 @@ If this flag is set, it means a inter-forest ticket spoofing an RID >= 1000 can 
 
 ### SID history
 
-This characteristic of trusts is a bit special, since it's not really one. Many resources across the Internet, including Microsoft's docs and tools, state that SID history can be enabled across a trust. This is not 100% true.
-
 The **SID (Security Identifier)** is a unique identifier that is assigned to each security principal (e.g. user, group, computer). It is used to identify the principal within the domain and is used to control access to resources.
 
 The **SID history** is a property of a user or group object that allows the object to retain its SID when it is migrated from one domain to another as part of a domain consolidation or restructuring. When an object is migrated to a new domain, it is assigned a new SID in the target domain. The SID history allows the object to retain its original SID, so that access to resources in the source domain is not lost.
 
-When authenticating across trusts using Kerberos, it is assumed that the extra SID field of the ticket's PAC (Privileged Attribute Certificate) reflects the SID history attribute of the authenticating user. With [SID filtering](trusts.md#sid-filtering) enabled in a trust, the SIDs contained in that field are filtered, effectively preventing SID history from doing its job. There are certain scenarios where some SIDs are not filtered, allowing for example SIDs with a RID >= 1000. Some call it "enabling SID history", I'd call it "partial SID filtering", or "unencumbered SID history". [Dirk-jan Mollema](https://twitter.com/\_dirkjan) calls that "[SID filtering relaxation](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/#sid-filtering-relaxation)".
+Many resources across the Internet, including Microsoft's docs and tools, state that SID history can be enabled across a trust. This is not 100% true. SID history is not a feature that can be toggled on or off per say.
+
+When authenticating across trusts using Kerberos, it is assumed that the extra SID field of the ticket's PAC (Privileged Attribute Certificate) reflects the SID history attribute of the authenticating user. With [SID filtering](trusts.md#sid-filtering) enabled in a trust, the SIDs contained in that field are filtered, effectively preventing SID history from doing its job. There are certain scenarios where some SIDs are not filtered, allowing for example SIDs with a RID >= 1000. Some, including Microsoft, call it "enabling SID history", but in fact, SID history is not toggled on or off here, it's the behavior of SID filtering that is adjusted. I'd call that "partial SID filtering", or "unencumbered SID history". [Dirk-jan Mollema](https://twitter.com/\_dirkjan) calls that "[SID filtering relaxation](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/#sid-filtering-relaxation)".
 
 // A similar process is conducted when using NTLM. \<TODO> how is SID filtering enforced when using NTLM ? Change this section and [NTLM authentication](trusts.md#ntlm-authentication) accordingly.
 
