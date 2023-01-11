@@ -85,7 +85,7 @@ make sure below
 
 `(0x00000040) TREAT_AS_EXTERNAL`: "the trust is to be treated as external \[...]. If this bit is set, then a cross-forest trust to a domain is to be treated as an external trust for the purposes of SID Filtering. Cross-forest trusts are more stringently filtered than external trusts. This attribute relaxes those cross-forest trusts to be equivalent to external trusts." ([Microsoft](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN))
 
-If this flag is set, it means a inter-forest ticket spoofing an RID >1000 can be forged. This can usually lead to the trusting domain compromise. See [SID filtering](trusts.md#sid-filtering), and notes on [SID history](trusts.md#sid-history).
+If this flag is set, it means a inter-forest ticket spoofing an RID >= 1000 can be forged. This can usually lead to the trusting domain compromise. See [SID filtering](trusts.md#sid-filtering), and notes on [SID history](trusts.md#sid-history).
 {% endhint %}
 
 ### SID history
@@ -96,7 +96,7 @@ The **SID (Security Identifier)** is a unique identifier that is assigned to eac
 
 The **SID history** is a property of a user or group object that allows the object to retain its SID when it is migrated from one domain to another as part of a domain consolidation or restructuring. When an object is migrated to a new domain, it is assigned a new SID in the target domain. The SID history allows the object to retain its original SID, so that access to resources in the source domain is not lost.
 
-When authenticating across trusts using Kerberos, it is assumed that the extra SID field of the ticket's PAC (Privileged Attribute Certificate) reflects the SID history attribute of the authenticating user. With [SID filtering](trusts.md#sid-filtering) enabled in a trust, the SIDs contained in that field are filtered, effectively preventing SID history from doing its job. There are certain scenarios where some SIDs are not filtered, allowing for example SIDs with a RID >1000. Some call it "enabling SID history", I'd call it "partial SID filtering", or "unencumbered SID history". [Dirk-jan Mollema](https://twitter.com/\_dirkjan) calls that "[SID filtering relaxation](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/#sid-filtering-relaxation)".
+When authenticating across trusts using Kerberos, it is assumed that the extra SID field of the ticket's PAC (Privileged Attribute Certificate) reflects the SID history attribute of the authenticating user. With [SID filtering](trusts.md#sid-filtering) enabled in a trust, the SIDs contained in that field are filtered, effectively preventing SID history from doing its job. There are certain scenarios where some SIDs are not filtered, allowing for example SIDs with a RID >= 1000. Some call it "enabling SID history", I'd call it "partial SID filtering", or "unencumbered SID history". [Dirk-jan Mollema](https://twitter.com/\_dirkjan) calls that "[SID filtering relaxation](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/#sid-filtering-relaxation)".
 
 // A similar process is conducted when using NTLM. \<TODO> how is SID filtering enforced when using NTLM ? Change this section and [NTLM authentication](trusts.md#ntlm-authentication) accordingly.
 
@@ -221,33 +221,24 @@ netdom trust /domain:DOMAIN.LOCAL
 
 Alternatively, [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) (PowerShell) supports multiple commands for various purposes.
 
-| Command                                                   | Alias                                                                                                  | Description |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| Command                                                   | Alias                                                        | Description                                                                                            |
+| --------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
 | <pre><code><strong>Get-DomainTrust
-</strong></code></pre> |                                                                                                        |             |
-|                                                           | <pre><code><strong>Get-NetDomainTrust
-</strong></code></pre>                                           |             |
-|                                                           | gets all trusts for the current user's domain                                                          |             |
+</strong></code></pre> | <pre><code><strong>Get-NetDomainTrust
+</strong></code></pre> | gets all trusts for the current user's domain                                                          |
 | <pre><code>Get-ForestTrust
-</code></pre>                  |                                                                                                        |             |
-|                                                           | <pre><code>Get-NetForestTrust
-</code></pre>                                                            |             |
-|                                                           | gets all trusts for the forest associated with the current user's domain                               |             |
+</code></pre>                  | <pre><code>Get-NetForestTrust
+</code></pre>                  | gets all trusts for the forest associated with the current user's domain                               |
+|                                                           |                                                              |                                                                                                        |
 | <pre><code>Get-DomainForeignUser
-</code></pre>            |                                                                                                        |             |
-|                                                           | <pre><code>Find-ForeignUser
-</code></pre>                                                              |             |
-|                                                           | enumerates users who are in groups outside of their principal domain                                   |             |
+</code></pre>            | <pre><code>Find-ForeignUser
+</code></pre>                    | enumerates users who are in groups outside of their principal domain                                   |
 | <pre><code>Get-DomainForeignGroupMember
-</code></pre>     |                                                                                                        |             |
-|                                                           | <pre><code>Find-ForeignGroup
-</code></pre>                                                             |             |
-|                                                           | enumerates all the members of a domain's groups and finds users that are outside of the queried domain |             |
+</code></pre>     | <pre><code>Find-ForeignGroup
+</code></pre>                   | enumerates all the members of a domain's groups and finds users that are outside of the queried domain |
 | <pre><code>Get-DomainTrustMapping
-</code></pre>           |                                                                                                        |             |
-|                                                           | <pre><code>Invoke-MapDomainTrust
-</code></pre>                                                         |             |
-|                                                           | try to build a relational mapping of all domain trusts                                                 |             |
+</code></pre>           | <pre><code>Invoke-MapDomainTrust
+</code></pre>               | try to build a relational mapping of all domain trusts                                                 |
 
 > The [global catalog is a partial copy of all objects](https://technet.microsoft.com/en-us/library/cc728188\(v=ws.10\).aspx) in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. Trusted domain objects are replicated in the global catalog, so we can enumerate every single internal and external trust that all domains in our current forest have extremely quickly, and only with traffic to our current PDC.
 >
@@ -267,11 +258,11 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 
 ### Forging tickets
 
-When forging a [referral ticket](trusts.md#referral-tickets), or a [golden ticket](kerberos/forged-tickets/golden.md), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
+When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](kerberos/forged-tickets/golden.md), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
 
 If an SID in the form of `S-1-5-21-<RootDomain>-519` ("Enterprise Admins" group of the forest root domain) was added as "extra SID" in a forged ticket, it would allow for a direct privilege escalation from any compromised domain to it's forest root, and by extension, all the forest, since Enterprise Admins can access all domains' domain controllers as admin.
 
-This technique works for any trust relationship without SID filtering. This technique would also work with an RID > 1000 for External trusts (e.g. `extraSid = S-1-5-21-<RootDomain>-10420`). See SID filtering.
+This technique works for any trust relationship without SID filtering. This technique would also work with an RID >= 1000 for External trusts (e.g. `extraSid = S-1-5-21-<RootDomain>-10420`). See SID filtering.
 
 #### SID filtering disabled
 
@@ -315,7 +306,7 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 
 #### SID filtering partially enabled / SID history enabled
 
-If SID filtering is partially enabled (a.k.a. [SID history enabled](trusts.md#sid-history)), effectively only filtering out RID <1000, a ticket can be forged with an extra SID that contains the target domain and the RID of any group, with RID >1000). The ticket can then be used to conduct more attacks depending on the group privileges. In that case, the commands are the same as for [SID filtering disabled](trusts.md#sid-filtering-disabled), but the RID `519` ("Entreprise Admins" group) must be replaced with another RID >1000 of a powerful group.
+If SID filtering is partially enabled (a.k.a. [SID history enabled](trusts.md#sid-history)), effectively only filtering out RID <1000, a ticket can be forged with an extra SID that contains the target domain and the RID of any group, with RID >= 1000). The ticket can then be used to conduct more attacks depending on the group privileges. In that case, the commands are the same as for [SID filtering disabled](trusts.md#sid-filtering-disabled), but the RID `519` ("Entreprise Admins" group) must be replaced with another RID >= 1000 of a powerful group.
 
 {% hint style="info" %}
 > For example the Exchange security groups, which allow for a [privilege escalation to DA](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/) in many setups all have RIDs larger than 1000. Also many organisations will have custom groups for workstation admins or helpdesks that are given local Administrator privileges on workstations or servers.
