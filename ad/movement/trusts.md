@@ -154,16 +154,32 @@ From an offensive point of view, just like a [golden ticket](kerberos/forged-tic
 
 Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
-When using Kerberos authentication across trusts, the trusting domain's domain controller does
+When doing Kerberos authentications across trusts, the trusting domain's domain controller does
 
 * [SID filtering](trusts.md#sid-filtering) during [PAC validation](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280)
 * [TGT delegation](trusts.md#tgt-delegation) verification, and [Selective Authentication](trusts.md#authentication-level) limitation during the [TGS (Ticket Granting Service) exchange](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/bac4dc69-352d-416c-a9f4-730b81ababb3) (when asked for a Service Ticket for a service configured for unconstrained delegation).&#x20;
 
 ### NTLM authentication
 
-// [https://www.rebeladmin.com/tag/sid/](https://www.rebeladmin.com/tag/sid/) pass through authentication [https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178(v=ws.10)?redirectedfrom=MSDN](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178\(v=ws.10\)?redirectedfrom=MSDN)
+In an NTLM authentication sequence, a user authenticates to a resource by sending an NTLM Negotiate message, receiving an NTLM Challenge, and then sending back an NTLM Authenticate. The server then passes the logon request through to the Domain Controller, using the Netlogon Remote Protocol.
 
-// selective auth : [https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72)
+> This mechanism of delegating the authentication request to a DC is called pass-through authentication.
+>
+> Upon successful validation of the user credentials on the DC, the Netlogon Remote Protocol delivers the user authorization attributes (referred to as user validation information) back to the server over the secure channel.
+>
+> _(_[_Microsoft.com_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/70697480-f285-4836-9ca7-7bb52f18c6af)_)_
+
+When using NTLM across trust relationships, the process is very similar.&#x20;
+
+When a trusted domain's user wants to access a resource from a trusting domain, the user and the resource engage in the standard 3-way NTLM handshake. Upon receiving the NTLM Authenticate message, the resource Netlogon "[workstation secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)" with its own Domain Controller. The trusting DC then engages a Netlogon "[trusted domain secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)" with the trusted domain's DC.
+
+The trusted domain's DC does the usual checks and passes the result to the trusting DC, which in turn passes it to the resource. The resource then accepts or rejects the authentication based on the decision passed through the DCs.
+
+When doing NTLM authentications across trusts, the trusting domain's domain controller does
+
+* [SID filtering](trusts.md#sid-filtering) during ??? from the [`NETLOGON_VALIDATION_SAM_INFO2`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/2a12e289-7904-4ecb-9d83-6732200230c0) structure, in the `ExtraSids` attribute.
+* [Selective Authentication](trusts.md#authentication-level) limitation during the [DC's validation of the user credentials](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72).
+* [TGT delegation](trusts.md#tgt-delegation) verification doesn't apply here, it's a Kerberos mechanism.
 
 ## Practice
 
