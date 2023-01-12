@@ -172,7 +172,7 @@ In an NTLM authentication sequence, a user authenticates to a resource by sendin
 
 When using NTLM across trust relationships, the process is very similar.&#x20;
 
-When a trusted domain's user wants to access a resource from a trusting domain, the user and the resource engage in the standard 3-way NTLM handshake. Upon receiving the NTLM Authenticate message, the resource Netlogon "[workstation secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)" with its own Domain Controller. The trusting DC then engages a Netlogon "[trusted domain secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)" with the trusted domain's DC.
+When a trusted domain's user wants to access a resource from a trusting domain, the user and the resource engage in the standard 3-way NTLM handshake. Upon receiving the NTLM Authenticate message, the resource forwards it to its own domain controller through a Netlogon "[workstation secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)". The trusting DC forwards it as well to the trusted domain's DC through a Netlogon "[trusted domain secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)".
 
 The trusted domain's DC does the usual checks and passes the result to the trusting DC, which in turn passes it to the resource. The resource then accepts or rejects the authentication based on the decision passed through the DCs.
 
