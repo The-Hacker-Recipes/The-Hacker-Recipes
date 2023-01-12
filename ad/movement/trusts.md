@@ -2,6 +2,10 @@
 
 ## Theory
 
+{% hint style="warning" %}
+Attacking Active Directory trust relationships requires a good understanding of a lot of concepts (what forests and domains are, how trusts work, what security mechanisms are involved and how they work, ...). Consequently, this page is lengthy, especially in the [theory](trusts.md#theory) and [resources](trusts.md#resources) parts, but I did my best to include all the necessary info here. Personnal tip: take a look at the table of contents on the right panel, it will allow you to browse the page more easily.
+{% endhint %}
+
 ### Forest, domains & trusts
 
 An Active Directory **domain** is a collection of computers, users, and other resources that are all managed together. A domain has its own security database, which is used to authenticate users and computers when they log in or access resources within the domain.
@@ -60,7 +64,7 @@ The domain is a unit within a forest and represents a logical grouping of users,
 
 Technically, the security boundary is mainly enforced with SID filtering (and other security settings). This mechanism makes sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts. Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) of \[MS-PAC] specifies what is filtered when.
 
-Nota bene, there are two kinds of inter-forest trusts: "Forest", and "External" (see [trust types](trusts.md#trust-types)). Microsoft says "[cross-forest trusts are more stringently filtered than external trusts](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-dtyp/81d92bba-d22b-4a8c-908a-554ab29148ab?redirectedfrom=MSDN)", meaning that in External trusts, SID filtering only filters out RID < 1000.
+There are two kinds of inter-forest trusts: "Forest", and "External" (see [trust types](trusts.md#trust-types)). Microsoft says "[cross-forest trusts are more stringently filtered than external trusts](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-dtyp/81d92bba-d22b-4a8c-908a-554ab29148ab?redirectedfrom=MSDN)", meaning that in External trusts, SID filtering only filters out RID < 1000.
 
 <figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>[MS-PAC] section 4.1.2.2</p></figcaption></figure>
 
@@ -104,11 +108,11 @@ When authenticating across trusts using Kerberos, it is assumed that the extra S
 
 Inter-forest trusts ("External" and "Forest" trusts) can be configured with different levels of authentication:
 
-* **Forest-wide authentication**: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise).
-* **Domain-wide authentication**: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting). // TODO need to check that :warning:
-* **Selective authentication**: allows only specific users in the trusting domain to access resources in the trusted domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain.
+* **Forest-wide authentication**: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level is specific to intra-forest trusts.
+* **Domain-wide authentication**: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).&#x20;
+* **Selective authentication**: allows only specific users in the trusted domain to access resources in the trusting domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain. In order to allow a "trusted user" to access a "trusting resource", the resource's DACL must include an ACE in which the trusted user has the "Allowed-To-Authenticate" extended right (GUID: 68b1d179-0d15-4d4f-ab71-46152e79a7bc).
 
-It's worth noting that selective authentication is less used by the general public due to complexity of maintenance. In most cases domain wide authentication is used for most organizations.
+It's worth noting that selective authentication is less used by the general public due to its complexity, but it's definitely the most restrictive, hence secure, choice.
 
 // selective auth : target object's DACL must include extended right allowed to authenticate 68b1d179-0d15-4d4f-ab71-46152e79a7bc. For everything else, authentication will be blocked.
 
@@ -154,10 +158,7 @@ From an offensive point of view, just like a [golden ticket](kerberos/forged-tic
 
 Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
-When doing Kerberos authentications across trusts, the trusting domain's domain controller does
-
-* [SID filtering](trusts.md#sid-filtering) during [PAC validation](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280)
-* [TGT delegation](trusts.md#tgt-delegation) verification, and [Selective Authentication](trusts.md#authentication-level) limitation during the [TGS (Ticket Granting Service) exchange](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/bac4dc69-352d-416c-a9f4-730b81ababb3) (when asked for a Service Ticket for a service configured for unconstrained delegation).&#x20;
+When doing Kerberos authentications across trusts, the trusting domain's domain controller [checks a few things](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/bac4dc69-352d-416c-a9f4-730b81ababb3) before handing out service tickets to trusted users: [SID filtering](trusts.md#sid-filtering) during [PAC validation](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), [TGT delegation](trusts.md#tgt-delegation) verification (when asked for a Service Ticket for a service configured for unconstrained delegation), and [Selective Authentication](trusts.md#authentication-level) limitation.
 
 ### NTLM authentication
 
@@ -175,11 +176,9 @@ When a trusted domain's user wants to access a resource from a trusting domain, 
 
 The trusted domain's DC does the usual checks and passes the result to the trusting DC, which in turn passes it to the resource. The resource then accepts or rejects the authentication based on the decision passed through the DCs.
 
-When doing NTLM authentications across trusts, the trusting domain's domain controller does
+When doing NTLM authentications across trusts, the trusting domain's domain controller checks a few things from the user info structure supplied by the trusted domain controller: [SID filtering](trusts.md#sid-filtering) (looking in the `ExtraSids` attribute from the [`NETLOGON_VALIDATION_SAM_INFO2`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/2a12e289-7904-4ecb-9d83-6732200230c0) structure), and [Selective Authentication](trusts.md#authentication-level) limitation during the [DC's validation of the user credentials](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72). [TGT delegation](trusts.md#tgt-delegation) verification doesn't occur here, since it's a Kerberos mechanism.
 
-* [SID filtering](trusts.md#sid-filtering) during ??? from the [`NETLOGON_VALIDATION_SAM_INFO2`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/2a12e289-7904-4ecb-9d83-6732200230c0) structure, in the `ExtraSids` attribute.
-* [Selective Authentication](trusts.md#authentication-level) limitation during the [DC's validation of the user credentials](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72).
-* [TGT delegation](trusts.md#tgt-delegation) verification doesn't apply here, it's a Kerberos mechanism.
+_Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
 ## Practice
 
@@ -276,15 +275,24 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 
 When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](kerberos/forged-tickets/golden.md), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
 
-If an SID in the form of `S-1-5-21-<RootDomain>-519` ("Enterprise Admins" group of the forest root domain) was added as "extra SID" in a forged ticket, it would allow for a direct privilege escalation from any compromised domain to it's forest root, and by extension, all the forest, since Enterprise Admins can access all domains' domain controllers as admin.
+Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](trusts.md#sid-filtering) is configured in the trust)&#x20;
 
-This technique works for any trust relationship without SID filtering. This technique would also work with an RID >= 1000 for External trusts (e.g. `extraSid = S-1-5-21-<RootDomain>-10420`). See SID filtering.
+* If the attacker is moving across an intra-forest trust, it would allow to compromise the forest root, and by extension, all the forest, since Enterprise Admins can access all domains' domain controllers as admin (because the security boundary is the forest, not the domain).
+* If the attacker is moving across an inter-forest trust, it could allow to compromise the trusting domain, depending on how [SID filtering](trusts.md#sid-filtering) is configured, and if there are some groups that have sufficient permissions.
 
-#### SID filtering disabled
+In conclusion, before attacking trusts, it's required to enumerate them, as well as enumerate the target (trusting) domain's resources. See [enumeration](trusts.md#enumeration).
 
-If SID filtering is disabled in the targeted trust relationship (see [SID filtering](trusts.md#sid-filtering) and [Enumeration](trusts.md#enumeration)), a ticket (inter-realm/referral ticket, or golden ticket) can be forged with an extra SID that contains the root domain and the RID of the "Enterprise Admins" group. The ticket can then be used to access the forest root domain controller and conduct a [DCSync](credentials/dumping/dcsync.md) attack.
+* If **SID filtering is disabled** in the targeted trust relationship (see [SID filtering](trusts.md#sid-filtering) and [Enumeration](trusts.md#enumeration)), a ticket (inter-realm/referral ticket, or golden ticket) can be forged with an extra SID that contains the root domain and the RID of the "Enterprise Admins" group (i.e. `S-1-5-21-<RootDomain>-519`). The ticket can then be used to access the trusting domain controller as admin and conduct a [DCSync](credentials/dumping/dcsync.md) attack.
+*   If **SID filtering is partially enabled** (sometimes referred to as [SID history enabled](trusts.md#sid-history)), effectively only filtering out RID <1000, a ticket can be forged with an extra SID that contains the target domain and the RID of any group, with RID >= 1000). The ticket can then be used to conduct more attacks depending on the group's privileges.
 
-In the case of an inter-realm ticket forgery, a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do that hard work. Once the last ticket is obtained, it can be used with [pass-the-ticket](kerberos/ptt.md) for the [DCSync](credentials/dumping/dcsync.md) (or any other operation).
+    > For example the Exchange security groups, which allow for a [privilege escalation to DA](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/) in many setups all have RIDs larger than 1000. Also many organisations will have custom groups for workstation admins or helpdesks that are given local Administrator privileges on workstations or servers.
+    >
+    > _(by_ [_Dirk-jan Mollema_](https://twitter.com/\_dirkjan) _on_ [_dirkjanm.io_](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/)_)_
+* If **SID filtering is fully enabled**, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods of [permissions abuse](trusts.md#abusing-permissions).
+
+{% hint style="info" %}
+If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](kerberos/ptt.md) for the [DCSync](credentials/dumping/dcsync.md) (if enough privileges, or any other operation if not).
+{% endhint %}
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -294,8 +302,12 @@ From UNIX-like systems, [Impacket](https://github.com/fortra/impacket) scripts (
 * getST.py to request service tickets
 * lookupsid.py to retrieve the domains' SIDs
 
+If SID filtering is disabled, set the RID to 519 to act as Enterprise Admin.
+
+If SID filtering is partially enabled, set the RID >=1000.
+
 <pre class="language-bash" data-title="Referral ticket" data-overflow="wrap"><code class="lang-bash"><strong># 1. forge the ticket
-</strong>ticketer.py -nthash "inter-realm key" -domain-sid "child_domain_SID" -domain "child_domain_FQDN" -extra-sid "&#x3C;root_domain_SID>-519" -spn "krbtgt/root_domain_fqdn" "someusername"
+</strong>ticketer.py -nthash "inter-realm key" -domain-sid "child_domain_SID" -domain "child_domain_FQDN" -extra-sid "&#x3C;root_domain_SID>-&#x3C;RID>" -spn "krbtgt/root_domain_fqdn" "someusername"
  
 # 2. use it to request a service ticket
 KRB5CCNAME="someusername.ccache" getST.py -k -no-pass -debug -spn "CIFS/domain_controller" "root_domain_fqdn/someusername@root_domain_fqdn"
@@ -303,14 +315,14 @@ KRB5CCNAME="someusername.ccache" getST.py -k -no-pass -debug -spn "CIFS/domain_c
 
 {% code title="Golden ticket" overflow="wrap" %}
 ```bash
-ticketer.py -nthash "child_domain_krbtgt_NT_hash" -domain-sid "child_domain_SID" -domain "child_domain_FQDN" -extra-sid "<root_domain_SID>-519" "someusername"
+ticketer.py -nthash "child_domain_krbtgt_NT_hash" -domain-sid "child_domain_SID" -domain "child_domain_FQDN" -extra-sid "<root_domain_SID>-<RID>" "someusername"
 ```
 {% endcode %}
 
-Impacket's [raiseChild.py](https://github.com/fortra/impacket/blob/master/examples/raiseChild.py) script can also be used to conduct the golden ticket technique automatically (retrieving the SIDs, dumping the child krbtgt, forging the ticket, dumping the forest root keys, etc.).
+Impacket's [raiseChild.py](https://github.com/fortra/impacket/blob/master/examples/raiseChild.py) script can also be used to conduct the golden ticket technique automatically **when SID filtering is disabled** (retrieving the SIDs, dumping the trusted domain's krbtgt, forging the ticket, dumping the forest root keys, etc.). It will forge a ticket with the Enterprise Admins extra SID.
 
 ```bash
-raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD" 
+raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 ```
 {% endtab %}
 
@@ -320,23 +332,7 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 {% endtab %}
 {% endtabs %}
 
-#### SID filtering partially enabled / SID history enabled
-
-If SID filtering is partially enabled (a.k.a. [SID history enabled](trusts.md#sid-history)), effectively only filtering out RID <1000, a ticket can be forged with an extra SID that contains the target domain and the RID of any group, with RID >= 1000). The ticket can then be used to conduct more attacks depending on the group privileges. In that case, the commands are the same as for [SID filtering disabled](trusts.md#sid-filtering-disabled), but the RID `519` ("Entreprise Admins" group) must be replaced with another RID >= 1000 of a powerful group.
-
-{% hint style="info" %}
-> For example the Exchange security groups, which allow for a [privilege escalation to DA](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/) in many setups all have RIDs larger than 1000. Also many organisations will have custom groups for workstation admins or helpdesks that are given local Administrator privileges on workstations or servers.
->
-> _(by_ [_Dirk-jan Mollema_](https://twitter.com/\_dirkjan) _on_ [_dirkjanm.io_](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/)_)_
-{% endhint %}
-
-#### SID filtering enabled
-
-If SID filtering is fully enabled (trusts with the `QUARANTINED_DOMAIN` attribute), the techniques presented above will not work since all SID that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods like abusing permissions and group memberships to move laterally from a forest to another.
-
-
-
-### Explicit permissions
+### Abusing permissions
 
 #### Unconstrained delegation abuse
 
@@ -362,7 +358,25 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 
 ## Resources
 
+### General
+
 {% embed url="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-1-the-mechanics/" %}
+
+{% embed url="https://syfuhs.net/windows-and-domain-trusts" %}
+
+{% embed url="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)?redirectedfrom=MSDN" %}
+
+{% embed url="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc736874(v=ws.10)" %}
+
+{% embed url="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc755321(v=ws.10)?redirectedfrom=MSDN" %}
+
+{% embed url="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/bac4dc69-352d-416c-a9f4-730b81ababb3" %}
+
+{% embed url="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72" %}
+
+{% embed url="https://blogs.msmvps.com/acefekay/tag/active-directory-trusts/" %}
+
+### Offensive POV
 
 {% embed url="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/" %}
 
@@ -373,14 +387,6 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 {% embed url="https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/" %}
 
 {% embed url="https://mayfly277.github.io/posts/GOADv2-pwning-part12" %}
-
-{% embed url="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)?redirectedfrom=MSDN" %}
-
-{% embed url="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc736874(v=ws.10)" %}
-
-{% embed url="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc755321(v=ws.10)?redirectedfrom=MSDN" %}
-
-{% embed url="https://blogs.msmvps.com/acefekay/tag/active-directory-trusts/" %}
 
 {% embed url="https://adsecurity.org/?p=282" %}
 
