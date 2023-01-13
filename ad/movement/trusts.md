@@ -1,9 +1,15 @@
-# Trusts
+# 🛠️ Trusts
+
+{% hint style="danger" %}
+**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name. Wanna help? Please reach out to me: [@\_nwodtuhs](https://twitter.com/\_nwodtuhs)
+{% endhint %}
 
 ## Theory
 
 {% hint style="warning" %}
-Attacking Active Directory trust relationships requires a good understanding of a lot of concepts (what forests and domains are, how trusts work, what security mechanisms are involved and how they work, ...). Consequently, this page is lengthy, especially in the [theory](trusts.md#theory) and [resources](trusts.md#resources) parts, but I did my best to include all the necessary info here. Personnal tip: take a look at the table of contents on the right panel, it will allow you to browse the page more easily.
+Attacking Active Directory trust relationships requires a good understanding of a lot of concepts (what forests and domains are, how trusts work, what security mechanisms are involved and how they work, ...). Consequently, this page is lengthy, especially in the [theory](trusts.md#theory) and [resources](trusts.md#resources) parts, but I did my best to include all the necessary info here.&#x20;
+
+Pro tip: take a look at the table of contents on the right panel, it will allow you to browse the page more easily.
 {% endhint %}
 
 ### Forest, domains & trusts
@@ -62,9 +68,13 @@ According to Microsoft, the security boundary in Active Directory is the forest,
 
 The domain is a unit within a forest and represents a logical grouping of users, computers, and other resources. Users within a domain can access resources within their own domain and can also access resources in other domains within the same forest, as long as they have the appropriate permissions. Users cannot access resources in other forests unless a trust relationship has been established between the forests.
 
-Technically, the security boundary is mainly enforced with SID filtering (and other security settings). This mechanism makes sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts. Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) of \[MS-PAC] specifies what is filtered when.
+SID filtering plays an important role in the security boundary by making sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts.&#x20;
 
-There are two kinds of inter-forest trusts: "Forest", and "External" (see [trust types](trusts.md#trust-types)). Microsoft says "[cross-forest trusts are more stringently filtered than external trusts](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-dtyp/81d92bba-d22b-4a8c-908a-554ab29148ab?redirectedfrom=MSDN)", meaning that in External trusts, SID filtering only filters out RID < 1000.
+Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) of \[MS-PAC] specifies what is filtered and when. There are three important things to remember from this documentation:
+
+* if SID filtering is fully enabled, all SIDs that differ from the trusted domain will be filtered out
+* even if it's enabled, a few SIDs will (almost) never be filtered: "Enterprise Domain Controllers" (S-1-5-9) SID and those described by the [trusted domain object (TDO)](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/f2ef15b6-1e9b-48b5-bf0b-019f061d41c8#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4), as well as seven well-known SIDs (see [MS-PAC doc](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), and [improsec's blogpost](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained#yui\_3\_17\_2\_1\_1673614140169\_543)).
+* there are two kinds of inter-forest trusts: "Forest", and "External" (see [trust types](trusts.md#trust-types)). Microsoft says "[cross-forest trusts are more stringently filtered than external trusts](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-dtyp/81d92bba-d22b-4a8c-908a-554ab29148ab?redirectedfrom=MSDN)", meaning that in External trusts, SID filtering only filters out RID < 1000.
 
 <figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>[MS-PAC] section 4.1.2.2</p></figcaption></figure>
 
@@ -90,6 +100,16 @@ make sure below
 `(0x00000040) TREAT_AS_EXTERNAL`: "the trust is to be treated as external \[...]. If this bit is set, then a cross-forest trust to a domain is to be treated as an external trust for the purposes of SID Filtering. Cross-forest trusts are more stringently filtered than external trusts. This attribute relaxes those cross-forest trusts to be equivalent to external trusts." ([Microsoft](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN))
 
 If this flag is set, it means a inter-forest ticket spoofing an RID >= 1000 can be forged. This can usually lead to the trusting domain compromise. See [SID filtering](trusts.md#sid-filtering), and notes on [SID history](trusts.md#sid-history).
+{% endhint %}
+
+{% hint style="success" %}
+
+{% endhint %}
+
+{% hint style="info" %}
+SID filtering is not unique to trusts. It occurs "[whenever a service ticket is accepted](https://twitter.com/SteveSyfuhs/status/1329148611305693185)" either by the KDC or by a local service and behaves differently depending on the contect in which the ticket was produced.
+
+Also, SID filtering works the same way for NTLM and Kerberos. It's a separate mechanism invoked after user logon info are unpacked (more details in [NTLM](trusts.md#ntlm-authentication) and [Kerberos](trusts.md#kerberos-authentication) chapters).
 {% endhint %}
 
 ### SID history
@@ -158,7 +178,7 @@ From an offensive point of view, just like a [golden ticket](kerberos/forged-tic
 
 Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
-When doing Kerberos authentications across trusts, the trusting domain's domain controller [checks a few things](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/bac4dc69-352d-416c-a9f4-730b81ababb3) before handing out service tickets to trusted users: [SID filtering](trusts.md#sid-filtering) during [PAC validation](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), [TGT delegation](trusts.md#tgt-delegation) verification (when asked for a Service Ticket for a service configured for unconstrained delegation), and [Selective Authentication](trusts.md#authentication-level) limitation.
+When doing Kerberos authentications across trusts, the trusting domain's domain controller [checks a few things](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/bac4dc69-352d-416c-a9f4-730b81ababb3) before handing out service tickets to trusted users: [SID filtering](trusts.md#sid-filtering) during [PAC validation](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) (looking in the `ExtraSids` attribute from the [`KERB_VALIDATION_INFO`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/69e86ccc-85e3-41b9-b514-7d969cd0ed73) structure in the PAC), [TGT delegation](trusts.md#tgt-delegation) verification (when asked for a Service Ticket for a service configured for unconstrained delegation), and [Selective Authentication](trusts.md#authentication-level) limitation.
 
 ### NTLM authentication
 
@@ -288,7 +308,7 @@ In conclusion, before attacking trusts, it's required to enumerate them, as well
     > For example the Exchange security groups, which allow for a [privilege escalation to DA](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/) in many setups all have RIDs larger than 1000. Also many organisations will have custom groups for workstation admins or helpdesks that are given local Administrator privileges on workstations or servers.
     >
     > _(by_ [_Dirk-jan Mollema_](https://twitter.com/\_dirkjan) _on_ [_dirkjanm.io_](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/)_)_
-* If **SID filtering is fully enabled**, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods of [permissions abuse](trusts.md#abusing-permissions).
+* If **SID filtering is fully enabled**, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods of [permissions abuse](trusts.md#abusing-permissions). Alternatively, there are a few SIDs that won't be filtered out (see [SID filtering](trusts.md#sid-filtering) theory and [SID filtering bypass](trusts.md#sid-filtering-bypass) practice).&#x20;
 
 {% hint style="info" %}
 If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](kerberos/ptt.md) for the [DCSync](credentials/dumping/dcsync.md) (if enough privileges, or any other operation if not).
@@ -331,6 +351,40 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 ```
 {% endtab %}
 {% endtabs %}
+
+### SID filtering bypass
+
+> a few SIDs will (almost) never be filtered: "Enterprise Domain Controllers" (S-1-5-9) SID and those described by the [trusted domain object (TDO)](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/f2ef15b6-1e9b-48b5-bf0b-019f061d41c8#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4), as well as seven well-known SIDs (see [MS-PAC doc](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), and [improsec's blogpost](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained#yui\_3\_17\_2\_1\_1673614140169\_543)).
+>
+> _(_[_SID filtering_](trusts.md#sid-filtering) _theory)_
+
+_//_ [_https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research_](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)__
+
+#### Keys container trust
+
+// [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
+
+// Enterprise Domain Controllers have `GenericAll` on `Keys` container (`CN=keys,DN=domain,DN=local`), "Default container for key credential objects", used for gMSA ?
+
+// Container should be empty, but if it's not, ploitable seulement s'il y a déjà des objets dans le conteneur ce qui n'est pas censé être le cas par défaut.
+
+#### DNS trust
+
+// [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
+
+#### GPO on site
+
+// [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
+
+#### GoldenGMSA
+
+// [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-5-golden-gmsa-trust-attack-from-child-to-parent](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-5-golden-gmsa-trust-attack-from-child-to-parent)
+
+#### Schema change attack ([source](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent))
+
+Depuis le domaine source, en tant que SYSTEM, on peut modifier le schéma dans la partition de Configuration puis attendre que ce soit répliqué sur le domaine cible
+
+Plus particulièrement en modifiant le defaultSecurityDescriptor de classes intéressantes (groupes, users, GPC), ou retirant le flag confidential
 
 ### Abusing permissions
 
@@ -376,6 +430,10 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 
 {% embed url="https://blogs.msmvps.com/acefekay/tag/active-directory-trusts/" %}
 
+{% embed url="https://improsec.com/tech-blog/o83i79jgzk65bbwn1fwib1ela0rl2d" %}
+
+{% embed url="https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii__kerberos_cont/SSTIC2014-Slides-secrets_dauthentification_pisode_ii__kerberos_contre-attaque-bordes_2.pdf" %}
+
 ### Offensive POV
 
 {% embed url="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/" %}
@@ -397,6 +455,14 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 {% embed url="https://blog.harmj0y.net/redteaming/the-trustpocalypse/" %}
 
 {% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-2-known-ad-attacks-from-child-to-parent" %}
+
+{% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained" %}
+
+{% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research" %}
+
+{% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-5-golden-gmsa-trust-attack-from-child-to-parent" %}
+
+{% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent" %}
 
 {% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-7-trust-account-attack-from-trusting-to-trusted" %}
 
