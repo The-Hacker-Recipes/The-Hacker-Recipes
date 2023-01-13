@@ -103,6 +103,21 @@ From a UNIX-like host, the `nc` utility can be used to setup local port forwardi
 nc -lvk $LOCAL_ADDRESS $LOCAL_PORT -c "nc -v $REMOTE_ADDRESS $REMOTE_PORT"
 ```
 {% endtab %}
+
+{% tab title="ngrok" %}
+[Ngrok](https://github.com/inconshreveable/ngrok) (Go) is a tool that allows to expose a local web server to the Internet. Upon command execution, the tool will output the Internet-facing address that's configured for port forwarding to the local service.
+
+```bash
+# Expose a local HTTP service on a given port:
+ngrok http $LOCAL_PORT
+
+# Expose a local HTTPS server:
+ngrok http https://localhost
+
+# Expose raw TCP traffic on a given port:
+ngrok tcp $LOCAL_PORT
+```
+{% endtab %}
 {% endtabs %}
 
 ### Chained local port forwarding
