@@ -145,11 +145,9 @@ The authentication level of a trust depends on the [trustAttributes](https://doc
 
 Kerberos unconstrained delegation (KUD) allows a service configured for it to impersonate (almost) any user on any other service. This is a dangerous feature to configure, that won't be explained into much details here as the [Kerberos](kerberos/#delegations), [Kerberos delegations](kerberos/delegations/) and [Kerberos unconstrained delegations](kerberos/delegations/unconstrained.md) pages already cover it.
 
-Kerberos unconstrained delegations could be abused across trusts to take control over any resource of the trusting domain, including the domain controller, as long as the trusted domain is compromised. This relies on the delegation of TGT across trusts, a mechanism that can be disabled.&#x20;
+Kerberos unconstrained delegations could be abused across trusts to take control over any resource of the trusting domain, including the domain controller, as long as the trusted domain is compromised. This relies on the delegation of TGT across trusts, which can be disabled.&#x20;
 
-If TGT delegation is disabled in a trust, attackers won't be able to escalate from one domain to another by abusing unconstrained delegation. On a side note, the other types of delegations are not affected by this as they don't rely on the delegation of tickets, but on S4U extensions instead.
-
-// TODO : can S4U be limited across trusts?
+If TGT delegation is disabled in a trust, attackers won't be able to [escalate from one domain to another by abusing unconstrained delegation](trusts.md#unconstrained-delegation-abuse). On a side note, the other types of delegations are not affected by this as they don't rely on the delegation of tickets, but on S4U extensions instead.
 
 {% hint style="info" %}
 The TGT delegation status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
@@ -437,7 +435,7 @@ Plus particuli√®rement en modifiant le defaultSecurityDescriptor de classes int√
 
 #### Unconstrained delegation abuse
 
-// TODO
+In order to abuse unconstrained delegation across trusts, [TGT delegation](trusts.md#tgt-delegation) must be allow/enable on the trust.
 
 {% content-ref url="kerberos/delegations/unconstrained.md" %}
 [unconstrained.md](kerberos/delegations/unconstrained.md)
