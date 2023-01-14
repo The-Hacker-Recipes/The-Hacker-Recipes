@@ -64,7 +64,7 @@ StandIn.exe --object ms-DS-MachineAccountQuota=*
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://tools.thehacker.recipes/impacket/examples/addcomputer.py) (Python) can be used to create a computer account, using the credentials of a domain user the the MachineAccountQuota domain-level attribute is set higher than 0 (10 by default).
+The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](https://tools.thehacker.recipes/impacket/examples/addcomputer.py) (Python) can be used to create a computer account, using the credentials of a domain user the the `MachineAccountQuota` domain-level attribute is set higher than 0 (10 by default).
 
 ```bash
 addcomputer.py -computer-name 'SomeName$' -computer-pass 'SomePassword' -dc-host "$DC_HOST" -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
@@ -73,7 +73,14 @@ addcomputer.py -computer-name 'SomeName$' -computer-pass 'SomePassword' -dc-host
 Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the `--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
 
 {% hint style="info" %}
-When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs.
+When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs. In this case, they could be added later on with [addspn.py](https://github.com/dirkjanm/krbrelayx) (Python). By default, computer accounts have the following SPNs set:
+
+```
+KrbRestrictedHost/hostname
+KrbRestrictedHost/hostname.domain_fqdn
+Host/hostname
+Host/hostname.domain_fqdn
+```
 {% endhint %}
 {% endtab %}
 

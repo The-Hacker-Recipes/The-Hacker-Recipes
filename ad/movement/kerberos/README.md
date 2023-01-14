@@ -23,34 +23,7 @@ Kerberos is an authentication protocol based on tickets. It basically works like
 3. Client uses the ST (Service Ticket) to access a service. The client request to the service is called `AP-REQ`, the service answer is called `AP-REP`.
 4. Both tickets (TGT and ST) usually contain an encrypted PAC (Privilege Authentication Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on).
 
-A Service Ticket (ST) allows access to a specific service.&#x20;
-
-{% hint style="info" %}
-When requesting a service ticket, the client (`cname`) specifies the service it wants to obtain access to by supplying it's `sname`, which can be one of 9 types ([RPC 4120 section 6.2](https://www.rfc-editor.org/rfc/rfc4120#section-6.2)). Shortly put, the following formats are supported:
-
-* servicePrincipalName
-* userPrincipalName
-* sAMAccountName
-* sAMAccountName@DomainNetBIOSName
-* sAMAccountName@DomainFQDN
-* DomainNetBIOSName\sAMAccountName
-* DomainFQDN\sAMAccountName
-
-> Note that if you use the _SRV01_ string as a sAMAccountName, and the _SRV01_ account does not exist, and the _SRV01$_ account exists, this name will be treated as a principal name of the _SRV01$_ account.
->
-> _(_[_swarm.ptsecurity.com_](https://swarm.ptsecurity.com/kerberoasting-without-spns)_)_
-
-On a good note, if the service name is specified as something else than an SPN (i.e. SAN, UPN), Kerberos will basically deliver service tickets if the requested service
-
-* has a trailing `$` in the requested SAN (`sAMAccountName`)
-* or has at least one SPN (`servicePrincipalName`)
-
-If the service ticket is requested through a specific [U2U (User-to-User)](./#user-to-user-authentication) request, then neither of the conditions above will be required, the target ~~service~~ user can be specified by its UPN (`userPrincipalName`).
-
-_(sources:_ [_Twitter_](https://twitter.com/SteveSyfuhs/status/1613956603807690753) _and_ [_\[MS-KILE\] section 3.3.5.1.1_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/a7ad31b0-37a4-4344-b9a7-01d4d086097e)_)._
-{% endhint %}
-
-The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following (read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets\_dauthentification\_pisode\_ii\_\_kerberos\_cont/SSTIC2014-Article-secrets\_dauthentification\_pisode\_ii\_\_kerberos\_contre-attaque-bordes\_2.pdf)).
+A Service Ticket (ST) allows access to a specific service. The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secret key. That key can be one of the following (read [more](https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets\_dauthentification\_pisode\_ii\_\_kerberos\_cont/SSTIC2014-Article-secrets\_dauthentification\_pisode\_ii\_\_kerberos\_contre-attaque-bordes\_2.pdf)).
 
 | Key name (a.k.a. etype) | Details on key calculation                     |
 | ----------------------- | ---------------------------------------------- |
@@ -103,13 +76,13 @@ If an attacker finds himself in a man-in-the-middle position, effectively captur
 [asreqroast.md](asreqroast.md)
 {% endcontent-ref %}
 
-When attackers have a foothold in the domain (i.e. valid domain credentials), they have the (intended) ability to request a service ticket (ST) for any valid SPN (ServicePrincipalName), or SAN (samAccountName). The ST being encrypted with the service account's NT hash, when that service account's password is weak, it is then possible to crack the ST offline in an attempt to find the password. This is called Kerberoasting. On a side note, obtaining a service ticket for a service specified by its SAN in an attempt to Kerberoast the account will only work if the service has at least one SPN.
+When attackers have a foothold in the domain (i.e. valid domain credentials), they have the (intended) ability to request a service ticket (ST) for any valid SPN (ServicePrincipalName). The ST being encrypted with the service account's NT hash, when that service account's password is weak, it is then possible to crack the ST offline in a an attempt to find the password. This is called Kerberoasting.
 
 {% content-ref url="kerberoast.md" %}
 [kerberoast.md](kerberoast.md)
 {% endcontent-ref %}
 
-As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username:  Kerberoast[#without-pre-authentication](kerberoast.md#without-pre-authentication "mention").
+As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username: [#without-pre-authentication](kerberoast.md#without-pre-authentication "mention").
 
 ## Delegations
 

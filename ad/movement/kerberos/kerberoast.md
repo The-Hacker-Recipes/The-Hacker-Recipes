@@ -6,11 +6,9 @@ description: MITRE ATT&CK™ Sub-technique T1558.003
 
 ## Theory
 
-When asking the KDC (Key Distribution Center) for a Service Ticket (ST), the requesting user needs to send a valid TGT (Ticket Granting Ticket) and the service name (`sname`) of the service wanted. If the TGT is valid, and if the service exists, the KDC sends the ST to the requesting user.
+When asking the KDC (Key Distribution Center) for a Service Ticket (ST), the requesting user needs to send a valid TGT (Ticket Granting Ticket) and the SPN (Service Principal Name) of the service wanted. If the TGT is valid, and if the SPN exists, the KDC sends the ST to the requesting user.
 
-Multiple formats are accepted for the `sname` field: servicePrincipalName (SPN), sAMAccountName (SAN), userPrincipalName (UPN), etc. (see [Kerberos tickets](./#tickets)).
-
-The ST is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a service (by its SAN or SPN), he can request a ST for this service and crack it offline later in an attempt to retrieve that service account's password.
+The ST is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a SPN for a service, he can request a ST for this service and crack it offline later in an attempt to retrieve that service account's password.
 
 In most situations, services accounts are machine accounts, which have very complex, long, and random passwords. But if a service account, with a human-defined password, has a SPN set, attackers can request a ST for this service and attempt to crack it offline. This is Kerberoasting.
 
@@ -25,9 +23,7 @@ Unlike [ASREProasting](asreproast.md), this attack can only be carried out with 
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN (or name) and valid domain credentials.
 
 {% hint style="info" %}
-The Kerberoasting attack can be conducted without knowing any SPN of the target account, since a service ticket can be request for as long as the service's SAN (`sAMAccountName`) is known. ([swarm.ptsecurity.com](https://swarm.ptsecurity.com/kerberoasting-without-spns/))
-
-Nota bene, Kerberos can deliver service tickets even if the service has no SPN at all, but then the service's SAN must end with `$`, and in this case it's hard to know for sure if the service's password is defined by a human. Kerberoast attacks usually target user accounts with at least one SPN (`servicePrincipalName`) since they probably have human-defined passwords (sources: [Twitter](https://twitter.com/SteveSyfuhs/status/1613956603807690753) and [\[MS-KILE\] section 3.3.5.1.1](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/a7ad31b0-37a4-4344-b9a7-01d4d086097e)).
+you can perform the Kerberoasting attack without knowing any SPN of the target account. But the existence of at least one SPN for the target account will continue to be needed.
 {% endhint %}
 
 ```bash
@@ -127,5 +123,3 @@ Controlling a member of the [Account Operators](../domain-settings/builtin-group
 {% embed url="https://adsecurity.org/?p=2011" %}
 
 {% embed url="https://www.semperis.com/blog/new-attack-paths-as-requested-sts/" %}
-
-{% embed url="https://swarm.ptsecurity.com/kerberoasting-without-spns/" %}

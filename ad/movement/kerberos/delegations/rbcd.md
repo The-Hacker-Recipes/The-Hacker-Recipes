@@ -8,10 +8,10 @@ If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOth
 Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute, hence allowing RBCD attacks on relayed machine accounts authentications.
 {% endhint %}
 
-For this attack to work, the attacker needs to populate the target attribute with the SID of an account that Kerberos can consider as a service. A service ticket will be asked for it. In short, the account must be either:
+For this attack to work, the attacker needs to populate the target attribute with the SID of an account that Kerberos can consider as a service. A service ticket will be asked for it. In short, the account must be either (see [Kerberos tickets](../#tickets) for more information about the following):
 
 * a user account having a `ServicePrincipalName` set
-* an account with a trailing `$` in the sAMAccountName (i.e. computer accounts)
+* an account with a trailing `$` in the `sAMAccountName` (i.e. a computer accounts)
 * any other account and conduct [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users) with [U2U (User-to-User) authentication](../#user-to-user-authentication)
 
 The common way to conduct these attacks is to create a computer account. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts.
