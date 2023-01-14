@@ -8,15 +8,21 @@ If an account, having the capability to edit the `msDS-AllowedToActOnBehalfOfOth
 Machine accounts can edit their own `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute, hence allowing RBCD attacks on relayed machine accounts authentications.
 {% endhint %}
 
-For this attack to work, the attacker needs to populate the target attribute with an account having a `ServicePrincipalName` set (needed for Kerberos delegation operations). The usual way to conduct these attacks is to create a computer account, which comes with an SPN set. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts. While this "computer account creation + RBCD attack" is the most common exploitation path, doing so with a user account (having at least one SPN) is perfectly feasible.
+For this attack to work, the attacker needs to populate the target attribute with the SID of an account that Kerberos can consider as a service. A service ticket will be asked for it. In short, the account must be either:
+
+* a user account having a `ServicePrincipalName` set
+* an account with a trailing `$` in the sAMAccountName (i.e. computer accounts)
+* any other account and conduct [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users) with [U2U (User-to-User) authentication](../#user-to-user-authentication)
+
+The common way to conduct these attacks is to create a computer account. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts.
 
 {% hint style="info" %}
 In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0. The technique is demonstrated later on in this page ([RBCD on SPN-less user](rbcd.md#rbcd-on-spn-less-users)).
 {% endhint %}
 
-Then, in order to abuse this, the attacker has to control the account the object's attribute has been populated with (i.e. the account that has an SPN). Using that account's credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
+Then, in order to abuse this, the attacker has to control the account (A) the target object's (B) attribute has been populated with. Using that account's (A) credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
-In the end, an RBCD abuse results in a Service Ticket to authenticate on a target service on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service.&#x20;
+In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service (B).&#x20;
 
 {% hint style="success" %}
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
@@ -42,7 +48,7 @@ The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Serve
 rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action 'read' 'domain'/'PowerfulUser':'Password'
 
 # Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity
-rbcd.py -delegate-from 'controlledaccountwithSPN' -delegate-to 'target$' -dc-ip 'DomainController' -action 'write' 'domain'/'PowerfulUser':'Password'
+rbcd.py -delegate-from 'controlledaccount' -delegate-to 'target$' -dc-ip 'DomainController' -action 'write' 'domain'/'PowerfulUser':'Password'
 ```
 {% endcode %}
 
@@ -51,7 +57,7 @@ Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blo
 {% endhint %}
 
 {% hint style="info" %}
-In this example, `controlledaccountwithSPN` can be [a computer account created for the attack](../../domain-settings/machineaccountquota.md#create-a-computer-account), or any other account -with at least one Service Principal Name set- which credentials are known to the attacker.
+In this example, `controlledaccount` can be [a computer account created for the attack](../../domain-settings/machineaccountquota.md#create-a-computer-account), or any other account -with at least one Service Principal Name set for the usual technique, or without for [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users)- which credentials are known to the attacker.
 {% endhint %}
 
 **2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
