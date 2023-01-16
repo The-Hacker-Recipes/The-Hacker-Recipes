@@ -133,10 +133,13 @@ It's worth noting that selective authentication is less used by the general publ
 {% hint style="info" %}
 The authentication level of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
 
-> * If the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` or `TRUST_ATTRIBUTE_FOREST_TRANSITIVE (0x00000008)` flag is set then **Forest-Wide Authentication** is used.&#x20;
-> * If the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION (0x00000010)` flag is set then **Selective Authentication** is used.
+> * If the trust relationship is made within a forest boundary (aka if the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set), then **Forest-Wide Authentication** will always be used.&#x20;
+> * f the trust relationship crosses a forest boundary and the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION (0x00000010)` flag is set then **Selective Authentication** is used.&#x20;
+> * If the trust relationship crosses a forest boundary, but the trust is marked as transitive (aka if the `TRUST_ATTRIBUTE_FOREST_TRANSITIVE (0x00000008)` flag is set), then **Forest-Wide Authentication** will be used.
 >
-> In any other case **Domain-Wide Authentication** is used in External trusts, and **Forest-Wide Authentication** is used for the rest.
+> In any other case **Domain-Wide Authentication** is used.
+>
+> _Interesting to note: Trusts within a Forest always use **Forest-Wide Authentication** (and this can not be disabled)._
 >
 > _(by_ [_Carsten Sandker_](https://twitter.com/0xcsandker) _on_ [_www.securesystems.de_](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)_)_
 {% endhint %}
