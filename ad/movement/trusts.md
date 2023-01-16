@@ -126,17 +126,17 @@ Inter-forest trusts ("External" and "Forest" trusts) can be configured with diff
 
 * **Forest-wide authentication**: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level is specific to intra-forest trusts.
 * **Domain-wide authentication**: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).&#x20;
-* **Selective authentication**: allows only specific users in the trusted domain to access resources in the trusting domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain. In order to allow a "trusted user" to access a "trusting resource", the resource's DACL must include an ACE in which the trusted user has the "Allowed-To-Authenticate" extended right (GUID: 68b1d179-0d15-4d4f-ab71-46152e79a7bc).
+* **Selective authentication**: allows only specific users in the trusted domain to access resources in the trusting domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain. In order to allow a "trusted user" to access a "trusting resource", the resource's DACL must include an ACE in which the trusted user has the "`Allowed-To-Authenticate`" extended right (GUID: `68b1d179-0d15-4d4f-ab71-46152e79a7bc`).
 
 It's worth noting that selective authentication is less used by the general public due to its complexity, but it's definitely the most restrictive, hence secure, choice.
 
 {% hint style="info" %}
 The authentication level of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
 
-> * If the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set then **Forest-Wide Authentication** is used.&#x20;
+> * If the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` or `TRUST_ATTRIBUTE_FOREST_TRANSITIVE (0x00000008)` flag is set then **Forest-Wide Authentication** is used.&#x20;
 > * If the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION (0x00000010)` flag is set then **Selective Authentication** is used.
 >
-> In any other case **Forest-Wide Authentication** is used.
+> In any other case **Domain-Wide Authentication** is used in External trusts, and **Forest-Wide Authentication** is used for the rest.
 >
 > _(by_ [_Carsten Sandker_](https://twitter.com/0xcsandker) _on_ [_www.securesystems.de_](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)_)_
 {% endhint %}
