@@ -36,7 +36,7 @@ ticketer.py -nthash $krbtgtNThash -domain-sid $domainSID -domain $DOMAIN -user-i
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used for this attack.
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used with [`kerberos::golden`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/golden) for this attack.
 
 ```bash
 # with an NT hash

@@ -73,7 +73,7 @@ zerologon-restore 'Domain'/'DC_account'@'Domain_controller' -target-ip 'DC_IP_ad
 {% endtab %}
 
 {% tab title="Windows" %}
-The attack can also be conducted from Windows systems with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C).
+The attack can also be conducted from Windows systems with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) using [`lsadump::zerologon`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/zerologon) to scan and exploit it, then obtain the krbtgt with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) and reset the DC account with [`lsadump::postzerologon`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/postzerologon) or use [`lsadump::changentlm`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/changentlm).
 
 ```bash
 # Scan for the vulnerability

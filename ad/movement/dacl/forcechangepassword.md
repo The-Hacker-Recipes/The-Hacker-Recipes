@@ -33,6 +33,6 @@ $NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
 Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 ```
 
-Mimikatz's `lsadump::setntlm` can also be used for that purpose.
+Mimikatz's [`lsadump::setntlm`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/setntlm) can also be used for that purpose.
 {% endtab %}
 {% endtabs %}

@@ -73,13 +73,7 @@ Rubeus.exe asktgs /ticket:$base64_extracted_TGT /service:$target_SPN /ptt
 
 Alternatively, the TGT can be used with [S4U2self abuse](s4u2self-abuse.md) in order to gain local admin privileges over the TGT's owner.
 
-Once the TGT is injected, it can natively be
-
-
-
-
-
-&#x20;used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash.
+Once the TGT is injected, it can natively be used when accessing a service. For example, with [Mimikatz](https://github.com/gentilkiwi/mimikatz), to extract the `krbtgt` hash with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync).
 
 ```bash
 lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt

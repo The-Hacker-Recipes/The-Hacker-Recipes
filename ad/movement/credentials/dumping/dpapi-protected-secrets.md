@@ -47,7 +47,7 @@ DonPAPI.py 'domain'/'username':'password'@<'targetName' or 'address/mask'>
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows systems [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used to extract, decrypt or use specific master keys using specified passwords or given sufficient privileges.
+On Windows systems [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used to extract dpapi with [`lsadump::backupkeys`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/backupkeys), decrypt with [`dpapi::chrome`](https://tools.thehacker.recipes/mimikatz/modules/dpapi/chrome) and [`dpapi::cred`](https://tools.thehacker.recipes/mimikatz/modules/dpapi/cred) or use specific master keys with [`dpapi::masterkey`](https://tools.thehacker.recipes/mimikatz/modules/dpapi/masterkey) and [`sekurlsa::dpapi`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/dpapi) , using specified passwords or given sufficient privileges.
 
 ```bash
 # Extract and decrypt a master key
@@ -74,6 +74,3 @@ dpapi::cred /in:"C:\path\to\encrypted\file" /masterkey:$MASTERKEY
 {% embed url="https://book.hacktricks.xyz/windows/windows-local-privilege-escalation/dpapi-extracting-passwords" %}
 
 {% embed url="https://www.synacktiv.com/ressources/univershell_2017_dpapi.pdf" %}
-
-
-

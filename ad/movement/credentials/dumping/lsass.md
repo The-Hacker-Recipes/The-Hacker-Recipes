@@ -38,7 +38,7 @@ crackmapexec smb $TARGETS -k -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JP
 {% endtab %}
 
 {% tab title="Mimikatz" %}
-[Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used locally to extract credentials from lsass's process memory, or remotely to analyze a memory dump (dumped with [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump) for example).
+[Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used locally to extract credentials with [`sekurlsa::logonpasswords`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/logonpasswords) from lsass's process memory, or remotely with [`sekurlsa::minidump`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/minidump) to analyze a memory dump (dumped with [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump) for example).
 
 ```bash
 # (Locally) extract credentials from LSASS process memory

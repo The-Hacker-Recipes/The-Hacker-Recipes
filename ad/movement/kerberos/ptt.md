@@ -41,7 +41,7 @@ export KRB5CCNAME=$path_to_ticket.ccache
 {% tab title="Windows" %}
 The most simple way of injecting the ticket is to supply the `/ptt` flag directly to the command used to request/create a ticket. Both [mimikatz](https://github.com/GhostPack/Rubeus) and [Rubeus](https://github.com/GhostPack/Rubeus) accept this flag.
 
-This can also be done manually with [mimikatz](https://github.com/GhostPack/Rubeus) or [Rubeus](https://github.com/GhostPack/Rubeus).
+This can also be done manually with [mimikatz](https://github.com/GhostPack/Rubeus) using [`kerberos::ptt`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/ptt) or [Rubeus](https://github.com/GhostPack/Rubeus).
 
 ```bash
 # use a .kirbi file
@@ -88,7 +88,7 @@ crackmapexec smb $TARGETS -k -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JP
 lsassy -k $TARGETS
 ```
 
-On Windows, once the ticket is injected, it will natively be used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash.
+On Windows, once the ticket is injected, it will natively be used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync).
 
 ```bash
 lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt

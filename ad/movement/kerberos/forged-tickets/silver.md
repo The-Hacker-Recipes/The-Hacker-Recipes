@@ -33,7 +33,7 @@ The SPN (ServicePrincipalName) set will have an impact on what services will be 
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) can be used to generate a silver ticket. Testers need to carefully choose the right SPN type (cifs, http, ldap, host, rpcss) depending on the wanted usage.
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) can be used to generate a silver ticket with [`kerberos::golden`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/golden). Testers need to carefully choose the right SPN type (cifs, http, ldap, host, rpcss) depending on the wanted usage.
 
 ```bash
 # with an NT hash
