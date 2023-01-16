@@ -133,7 +133,7 @@ crackmapexec smb $TARGETS --kerberos --sam/--lsa
 {% endtab %}
 
 {% tab title="Mimikatz" %}
-[Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used locally to extract credentials from `SAM` and `SECURITY` registry hives (and `SYSTEM` for the encryption keys), or offline with hive dumps.
+[Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used locally with [`lsadump::sam`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/sam) and [`lsadump::secrets`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/secrets) to extract credentials from `SAM` and `SECURITY` registry hives (and `SYSTEM` for the encryption keys), or offline with hive dumps.
 
 ```bash
 # Local dumping of SAM secrets on the target
