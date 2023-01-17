@@ -479,7 +479,7 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 
 #### Group memberships
 
-// group scoping
+// group scoping, [https://posts.specterops.io/a-pentesters-guide-to-group-scoping-c7bbbd9c7560](https://posts.specterops.io/a-pentesters-guide-to-group-scoping-c7bbbd9c7560)
 
 ## Resources
 
