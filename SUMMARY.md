@@ -124,7 +124,7 @@
   * [Skeleton key](ad/persistence/skeleton-key.md)
   * [AdminSDHolder](ad/persistence/adminsdholder.md)
   * [Delegation to KRBTGT](ad/persistence/delegation-to-krbtgt.md)
-  * [🛠️ SID History](ad/persistence/sid-history.md)
+  * [SID History](ad/persistence/sid-history.md)
   * [🛠️ DC Shadow](ad/persistence/dcshadow.md)
   * [🛠️ CA Shadow](ad/persistence/ca-shadow.md)
   * [🛠️ Access controls](ad/persistence/access-controls.md)
