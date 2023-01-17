@@ -292,6 +292,8 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 {% endtab %}
 {% endtabs %}
 
+In addition to enumerating trusts, retrieving information about the permissions of trusted principals against trusting resources could also allow for lateral movement and privilege escalation. The recon techniques will depend on the permissions to abuse ([DACL](trusts.md#dacl-abuse), [Kerberos delegations](kerberos/delegations/), etc.).
+
 ### Forging tickets
 
 When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](kerberos/forged-tickets/golden.md), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
@@ -438,21 +440,42 @@ Plus particuliÃ¨rement en modifiant le defaultSecurityDescriptor de classes intÃ
 
 #### Unconstrained delegation abuse
 
-In order to abuse unconstrained delegation across trusts, [TGT delegation](trusts.md#tgt-delegation) must be allow/enable on the trust.
+In order to abuse unconstrained delegation across trusts, [TGT delegation](trusts.md#tgt-delegation) must be allowed/enabled on the trust, and [Selective Authentication](trusts.md#authentication-level) must **NOT** be enabled (or with a configuration that would allow for the exploitation detailed below, see the [Authentication level](trusts.md#authentication-level) chapter).
+
+In addition to that, the ideal setup would be to have a two-way trust between the compromised domain (A) and the target domain (B), in order to allow the exploitation detailed below.
+
+1. (trusting B -> trusted A), allows access from A to B, allows to coerce authentications
+2. (trusting A -> trusted B), allows access from B to A, allows the coerced account to authenticate to the attacker-controlled KUD account.
+
+Other regular KUD-abuse-specific requirements apply (e.g. accounts not sensitive for delegation or member of the protected users group), see the [Kerberos Unconstrained Delegation](kerberos/delegations/unconstrained.md) page.
+
+If an attacker manages to gain control over an account configured for unconstrained delegation, he could escalate to domain admin privileges. Across trusts, the scenario is very similar. An attacker needs to gain control over a trusted account, configured for KUD (Kerberos Unconstrained Delegation), in order to act on a trusting resource (e.g. trusting domain's DC) as another principal (i.e. domain admin).
+
+{% hint style="info" %}
+By default, all domain controllers are configured for unconstrained delegation.
+{% endhint %}
+
+The [Kerberos Unconstrained Delegation](kerberos/delegations/unconstrained.md#practice) page can be consulted in order to obtain operational guidance on how to abuse this context.&#x20;
+
+In most cases, the attacker will have to:
+
+1. coerce the authentication ([PrinterBug](print-spooler-service/printerbug.md), [PetitPotam](mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](mitm-and-coerced-authentications/ms-dfsnm.md), etc.) of a high-value target (e.g. domain controller) of the trusting domain
+2. retrieve the TGT delegated in the service ticket the trusting resource used to access the attacker-controlled KUD account
+3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](kerberos/ptt.md)) in order to conduct privileged actions (e.g. [DCSync](credentials/dumping/dcsync.md))
 
 {% content-ref url="kerberos/delegations/unconstrained.md" %}
 [unconstrained.md](kerberos/delegations/unconstrained.md)
 {% endcontent-ref %}
-
-#### ADCS abuse
-
-When an ADCS is installed and configured in an Active Directory environment, a CA is available for the whole forest. Every usual ADCS attack can be executed through intra-forest trusts. [ESC8](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints) and [ESC11](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/) in particular can be used to pivot to any domain within the forest associated to the CA.
 
 #### DACL abuse
 
 TODO // How a domain admin of forest A could administrate a domain in forest B ? [https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS](https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS)
 
 TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign principals, BloodHound comes in handy.
+
+#### ADCS abuse
+
+When an ADCS is installed and configured in an Active Directory environment, a CA is available for the whole forest. Every usual ADCS attack can be executed through intra-forest trusts. [ESC8](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints) and [ESC11](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/) in particular can be used to pivot to any domain within the forest associated to the C
 
 #### Group memberships
 
@@ -503,6 +526,12 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 {% embed url="https://blog.harmj0y.net/redteaming/domain-trusts-were-not-done-yet/" %}
 
 {% embed url="https://blog.harmj0y.net/redteaming/the-trustpocalypse/" %}
+
+{% embed url="https://blog.harmj0y.net/redteaming/not-a-security-boundary-breaking-forest-trusts/" %}
+
+{% embed url="https://adsecurity.org/?p=4056" %}
+
+{% embed url="https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1" %}
 
 {% embed url="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-2-known-ad-attacks-from-child-to-parent" %}
 

@@ -24,6 +24,10 @@ Then, in order to abuse this, the attacker has to control the account (A) the ta
 
 In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service (B).&#x20;
 
+{% hint style="warning" %}
+If the "impersonated" account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, the delegation will fail.
+{% endhint %}
+
 {% hint style="success" %}
 On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
