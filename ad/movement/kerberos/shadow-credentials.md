@@ -64,7 +64,7 @@ When the public key has been set in the `msDs-KeyCredentialLink` of the target, 
 
 User objects can't edit their own `msDS-KeyCredentialLink` attribute while computer objects can. This means the following scenario could work: [trigger an NTLM authentication](../mitm-and-coerced-authentications/) from DC01, [relay it](../ntlm/relay.md) to DC02, make pywhisker edit DC01's attribute to create a Kerberos PKINIT pre-authentication backdoor on it, and have persistent access to DC01 with PKINIT and [pass-the-cache](ptc.md).
 
-Computer objects can edit their own `msDS-KeyCredentialLink` attribute but can only add a KeyCredential if none already exists.
+Computer objects cannot edit their own `msDS-KeyCredentialLink` attribute but can only add a KeyCredential if none already exists.
 {% endhint %}
 
 ## Resources
