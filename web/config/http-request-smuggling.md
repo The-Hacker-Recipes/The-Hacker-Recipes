@@ -2,17 +2,22 @@
 
 ## Theory
 
-`HTTP request smuggling` takes advantage of discrepancies in parsing non-RFC compliant HTTP requests through two HTTP devices, typically a backend server and an HTTP-aware firewall or frontend proxy. The HTTP request smuggling process is performed by constructing multiple customized HTTP requests. This allows two target entities to see two different sets of requests.
+`HTTP request smuggling` takes advantage of discrepancies in parsing non-RFC compliant HTTP requests through two HTTP devices, typically a backend server and a HTTP-aware firewall or front-end proxy. The HTTP request smuggling process is performed by constructing multiple customized HTTP requests. This allows two target entities to see two different sets of requests.
 
-In fact, users sends requests to a front-end server that will forward them to a back-end server. Therefore, requests are sent one after another, and the receiving server parses the HTTP request headers to determine where one request ends and the next one begins. In this case, the front-end and the back-end needs to agree about the boundaries between requests. Otherwise an attacker might be able to send an ambiguous request.
+In fact, users send requests to a front-end server that will forward them to a back-end server. Therefore, requests are sent one after another, and the receiving server parses the HTTP request headers to determine where one request ends and the next one begins. In this case, the front-end and the back-end need to agree about the boundaries between requests. Otherwise an attacker might be able to send an ambiguous request.
 
 ![](../../.gitbook/assets/Request-Smuggling.png)
 
 HTTP request smuggling happens because the HTTP specification provides two different ways to specify where a request ends:  the `Content-Length` header and the `Transfer-Encoding` header.
 
-A HTTP request smuggling vulnerability occurs when an attacker sends both headers in a single request. This can cause either the front-end or the back-end server to incorrectly interpret the request, passing through a malicious HTTP query.
+{% hint style="info" %}
+Content-Length: the length of the message body is specified in bytes (\r\n included)
+Transfer-Encoding: the length of chunck in bytes (hexadecimal encoding - \r\n included)
+{% endhint %}
 
-Performing performing a request smuggling attack can lead to :
+HTTP request smuggling vulnerability occurs when an attacker sends both headers in a single request. This can cause either the front-end or the back-end server to incorrectly interpret the request, passing through a malicious HTTP query.
+
+Performing a request smuggling attack can lead to :
 
 * Gain access to protected resources, such as admin consoles
 * Gain access to sensitive data
@@ -20,7 +25,8 @@ Performing performing a request smuggling attack can lead to :
 * Perform credential hijacking
 * Launch cross-site scripting (XSS) attacks without requiring any action from the user
 
-### Content-Lenght.Transfer-Encoding (CL.TE)
+
+### Content-Length.Transfer-Encoding (CL.TE)
 
 In `CL.TE` RS (Request Smuggling) the front-end server uses the Content-Length header and the back-end server uses the Transfer-Encoding header. We can craft the follow HTTP request :
 
@@ -36,9 +42,9 @@ MALICIOUS-REQUEST
 
 Further explanation will be given in the practice part.
 
-### Transfer-Encoding.Content-Lenght (TE.CL)
+### Transfer-Encoding.Content-Length (TE.CL)
 
-In `TE.CL` RS (Request Smuggling) the front-end server uses the Transfer-Encoding header and the back-end server uses the Content-Lenght header. We can craft the follow HTTP request to exploit :
+In `TE.CL` RS (Request Smuggling) the front-end server uses the Transfer-Encoding header and the back-end server uses the Content-Length header. We can craft the follow HTTP request to exploit :
 
 ```HTTP
 POST / HTTP/1.1
@@ -71,11 +77,16 @@ Transfer-Encoding
 : chunked
 ```
 
+Here, you can find a summary table made by Spidersec : 
+
+![](../../.gitbook/assets/spidersec_tableau.jfif)
+
+
 ## Practice
 
 ### Finding HTTP request smuggling using timings techniques
 
-One way to identifies Request Smuggling is the time delay after sending this `CL.TE` request (this technique can also be used for `TE.CL`) for example : 
+One way to identify Request Smuggling is the time delay after sending this `CL.TE` request (this technique can also be used for `TE.CL`) for example : 
 
 ```HTTP
 POST / HTTP/1.1
@@ -88,7 +99,7 @@ A
 X
 ```
 
-In this request, the front end uses the Content-Lenght header, so it will forward 4 bytes of this request, omitting the X. The back-end, using the Transfer-Encoding header, will processes the first chunk and waits for the next, this will cause a huge time delay.
+In this request, the front end uses the Content-Length header, so it will forward 4 bytes of this request, omitting the X. The back-end, using the Transfer-Encoding header, will processes the first chunk and waits for the next, this will cause a huge time delay.
 
 ### Finding HTTP request smuggling using differential responses
 
@@ -116,13 +127,13 @@ x=
 0
 ```
 
-In this case, the front-end processes the Transfer-Encoding header, it treats the message body as using chunked encoding wich is stated 7c bytes long, up to the beginning of the line following the second request. It processes the second chunk, which is stated to be zero length(cause it end by 0), and so is treated as terminating the request. This request is forwarded on to the back-end server.
+In this case, the front-end processes the Transfer-Encoding header, it treats the message body as using chunked encoding which is stated 7c bytes long, up to the beginning of the line following the second request. It processes the second chunk, which is stated to be zero length (cause it end by 0), and so is treated as terminating the request. This request is forwarded on to the back-end server.
 
-The back-end uses the Content-Lenght header and determine that the request is 4 bytes long, up to the start of the line following 7c.
+The back-end uses the Content-Length header and determine that the request is 4 bytes long, up to the start of the line following 7c.
 The following bytes, starting with GET, are left unprocessed, and the back-end server will treat these as being the start of the next request in the sequence.
 
 {% hint style="warning" %}
-If you are using the Burp Repeater, always ensure that the "Update Content-Lenght" option is unchecked for TE.CL since you need to change the Content-Lenght to trigger the vulnerability. You need to include the trailing sequence \r\n\r\n following the final 0.
+If you are using the Burp Repeater, always ensure that the "Update Content-Length" option is unchecked for TE.CL since you need to change the Content-Length to trigger the vulnerability. You need to include the trailing sequence \r\n\r\n following the final 0.
 {% endhint %}
 
 ## Identiying summary 
@@ -150,27 +161,37 @@ List of hosts :
 cat list_of_hosts.txt | python3 smuggler.py
 ```
 
-### Using Burp Suite
-
-You can install the HTTP Request Smuggler Extension on the Bapp Store.
-
-When installed, you can right click on the exploitable request -> Extensions -> HTTP Request Smuggler
-
-You can scan for possible HTTP Request Smuggling with the `scan` option (duh) or launch an auto smuggle with `Smuggle Prob` option
-
-After the identification of a possible RS, you right click on the request in the repeater tab -> Extensions -> HTTP Request Smuggler -> Smuggle Attack (CL.TE or TE.CL)
-Don't forget to change prefix value.
-
 ![](../../.gitbook/assets/RSPOC2.png)
 
+### Using Burp Suite
 
-### Example of an TE.CL exploit on PortSwigger LAB (access the admin panel)
+{% hint style="info" %}
+You can install the HTTP Request Smuggler Extension on the Bapp Store.
+{% endhint %}
 
-1. Identify the HTTP Request Smuggling
+- You can scan for possible HTTP Request Smuggling with the `scan` option (duh) or launch an auto smuggle with `Smuggle Prob` option (You need to have BurpSuite Collaborator to do that)
+
+If `Smuggle Prob` didn't succeed to exploit a HTTP Request Smuggling but identified it OR you already started to manually smuggle a request in the `repeater tab`: 
+- You can use the turbo intruder -> right click on the request -> Extensions -> HTTP Request Smuggler -> Smuggle Attack (CL.TE or TE.CL, depending on what you or `Smuggle Prob` identified)
+
+In the screenshot below, we identified a CL.TE RS. We are trying to access the admin panel. As you can see, we changed the prefix. `The prefix will be the smuggle part of the request.`
 
 ![](../../.gitbook/assets/RSPOC1.png)
 
-2. Use the `Smuggle Prob` option or exploit the TE.CL manually 
+The turbo intruder will help us by `finding the right Content-length header` to smuggle the attack properly (this part is always tricky to perform).
+
+![](../../.gitbook/assets/RSPOC3.png)
+
+As you can see here, we got access to the admin panel !
+
+
+### Example of manual TE.CL exploit on PortSwigger LAB (goal is (again) to access to the admin panel)
+
+
+1. Identify the HTTP Request Smuggling, you can either use : 
+- HTTP Request Smuggler Extension
+- Manual requesting with differential responses or timings techniques
+- Smuggler.py
 
 That's the initial request
 
@@ -191,7 +212,7 @@ Te: trailers
 Connection: close
 ```
 
-First, we try to smuggle the request by changing the GET to POST and adding TE and CL Header. `ALWAYS UNCHECK UPDATE CONTENT LENGHT AND ADD \r\n\r\n FOLLOWING THE FINAL 0 FOR TE.CL REQUEST SMUGGLING` 
+2. First, we try to smuggle the request by changing the GET to POST and adding TE and CL Header. `ALWAYS UNCHECK UPDATE CONTENT LENGTH AND ADD \r\n\r\n FOLLOWING THE FINAL 0 FOR TE.CL REQUEST SMUGGLING` 
 
 ```HTTP
 POST / HTTP/1.1
@@ -210,7 +231,7 @@ x=1
 
 ```
 
-3. We got a problem because we need to specify HOST : localhost for the second request, otherwise, we can't access to the admin panel. Change from the bytes number from 60 to 71 because we add the host header. Using this request, we have access to the admin panel ! :)
+3. We got a problem because we are getting blocked by the back-end. In fact, the back-end need the header `Host : localhost` for the second request. Change the byte's number from 60 to 71 because we added the host header. Using this request, we have access to the admin panel ! :)
 
 ```HTTP
 POST / HTTP/1.1
