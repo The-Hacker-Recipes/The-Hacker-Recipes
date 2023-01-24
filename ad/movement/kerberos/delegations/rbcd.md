@@ -25,11 +25,19 @@ Then, in order to abuse this, the attacker has to control the account (A) the ta
 In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service (B).&#x20;
 
 {% hint style="warning" %}
-If the "impersonated" account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, the delegation will fail.
+If the "impersonated" account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, the delegation will (probably) fail.
+{% endhint %}
+
+{% hint style="warning" %}
+There are a few additional details to keep in mind, valid as of the time of writing this note: Jan. 24th 2023.
+
+* In December 2020, along with [KB4598347](https://support.microsoft.com/en-us/topic/kb4598347-managing-deployment-of-kerberos-s4u-changes-for-cve-2020-17049-569d60b7-3267-e2b0-7d9b-e46d770332ab) patching the [bronze-bit attack](bronze-bit.md) (CVE-2020-17049), Microsoft [KB4577252](https://support.microsoft.com/en-us/topic/kb4577252-managing-deployment-of-rbcd-protected-user-changes-for-cve-2020-16996-9a59a49f-20b9-a292-f205-da9da0ff24d3) patching the CVE-2020-16996 vulnerability. While this second CVE has few information and details about it, some lab testing indicates it may be linked to the verifications made by KDCs when receiving [S4U2proxy `TGS-REQ`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-sfu/c6f6f8b3-1209-487b-881d-d0908a413bb7) requests.
+* Before this pacth, some testing indicates that accounts set as "sensitive and cannot be delegated" wouldn't be delegated (intended behavior), but members of the Protected Users group (and without the "sensitive" setting) would be (unintended !)
+* As it turns out, even after the patch, as of Jan. 24th 2023, members of the Protected Users group are now in fact protected against delegation, except for the native administrator account (RID 500), even if it's a member of the group. No idea if this is intended or not but it seems it's not the only security behavior of that group that doesn't apply for this account (e.g. RC4 pre-authentication still works for the RID-500 admin, even if member of the Protected Users group, source: [Twitter](https://twitter.com/Defte\_/status/1597699988368556032)).
 {% endhint %}
 
 {% hint style="success" %}
-On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+A technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)
