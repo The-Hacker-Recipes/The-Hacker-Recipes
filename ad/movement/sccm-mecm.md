@@ -162,6 +162,10 @@ Then, on a Windows machine, the two blobs (`NetworkAccessUsername` and `NetworkA
 .\policysecretunobfuscate.exe <blob_hex_2>
 ```
 
+### SCCM Site Takeover
+
+// [https://posts.specterops.io/sccm-site-takeover-via-automatic-client-push-installation-f567ec80d5b1](https://posts.specterops.io/sccm-site-takeover-via-automatic-client-push-installation-f567ec80d5b1)
+
 ## Resources
 
 {% embed url="https://www.hub.trimarcsecurity.com/post/push-comes-to-shove-exploring-the-attack-surface-of-sccm-client-push-accounts" %}

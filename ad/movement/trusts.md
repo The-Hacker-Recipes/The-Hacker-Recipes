@@ -556,7 +556,3 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 {% hint style="info" %}
 Parts of this page were written with the help of the [ChatGPT](https://openai.com/blog/chatgpt/) AI model.
 {% endhint %}
-
-{% hint style="info" %}
-We thank **Capgemini** for giving some time to write this page (see [Sponsors](../../#sponsors)).
-{% endhint %}

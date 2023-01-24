@@ -77,11 +77,11 @@ While the "ticket capture" way would theoretically work, the RBCD approach is pr
 
 #### RBCD approach
 
-The service account (called **serviceA**) configured for KCD needs to be configured for RBCD (Resource-Based Constrained Delegations). The service's `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute needs to be appended with an account controlled by the attacker. This second account (called **serviceB**) needs to have at least one SPN.
+The service account (called **serviceA**) configured for KCD needs to be configured for RBCD (Resource-Based Constrained Delegations). The service's `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute needs to be appended with an account controlled by the attacker (e.g. **serviceB**). The attacker-controlled account must meet the necessary [requirements for service ticket requests](../#tickets) (i.e. have at least one SPN, or have its `sAMAccountName` end with `$`).
 
 #### 1. Full S4U2 (self + proxy)
 
-The attacker can then proceed to a full S4U2 attack (S4U2self + S4U2proxy, a standard [RBCD attack](rbcd.md) or [KCD with protocol transition](constrained.md#with-protocol-transition)) to obtain a forwardable ST from a user to one of **serviceA**'s SPNs, using **serviceB**'s credentials.
+The attacker can then proceed to a full S4U attack (S4U2self + S4U2proxy, a standard [RBCD attack](rbcd.md) or [KCD with protocol transition](constrained.md#with-protocol-transition)) to obtain a forwardable ST from a user to one of **serviceA**'s SPNs, using **serviceB**'s credentials.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -124,9 +124,9 @@ Rubeus.exe s4u /nowrap /msdsspn:"cifs/target" /impersonateuser:"administrator" /
 {% endtabs %}
 
 {% hint style="info" %}
-Computer accounts have SPNs set at their creation and can edit their own "rbcd attribute" (i.e. `msDS-AllowedToActOnBehalfOfOtherIdentity`). If the account configured with KCD without protocol transition is a computer, controlling another account to operate the RBCD approach is not needed. In this case, **serviceB** = **serviceA**, the computer account can be configured for a "self-rbcd".
+Computer accounts can edit their own "rbcd attribute" (i.e. `msDS-AllowedToActOnBehalfOfOtherIdentity`). If the account configured with KCD without protocol transition is a computer, controlling another account to operate the RBCD approach is not needed. In this case, **serviceB** = **serviceA**, the computer account can be configured for a "self-rbcd".
 
-Around Aug./Sept. 2022, Microsoft seems to have patched the "self-rbcd" approach, but reyling on another account for the RBCD will still work.
+Around Aug./Sept. 2022, Microsoft seems to have patched the "self-rbcd" approach, but relying on another account for the RBCD will still work.
 {% endhint %}
 
 ## Resources
