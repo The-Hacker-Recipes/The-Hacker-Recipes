@@ -146,6 +146,7 @@
 * [Configuration](web/config/README.md)
   * [Default credentials](web/config/default-credentials.md)
   * [HTTP methods](web/config/http-methods.md)
+  * [HTTP request smuggling](web/config/http-request-smuggling.md)
   * [HTTP security headers](web/config/http-headers/README.md)
     * [Clickjacking](web/config/http-headers/clickjacking.md)
     * [MIME type sniffing](web/config/http-headers/mime-sniffing.md)
