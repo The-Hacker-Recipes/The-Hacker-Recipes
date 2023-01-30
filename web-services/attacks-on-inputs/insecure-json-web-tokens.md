@@ -78,9 +78,59 @@ token = jwt.encode(payload, key=public_key, algorithm='HS256')
 print(token)
 ```
 
+### Signature attack - KID header path traversal
+
+The [kid](https://www.rfc-editor.org/rfc/rfc7515#section-4.1.4) (Key ID) is an optional parameter specified in the JWT header part to indicate the key used for signature validation in case there are multiple ones.
+
+The structure of this ID is not specified and it can be any string value (case-sensitive).&#x20;
+
+The last part is interesting because, if the parameter is vulnerable to [directory traversal](directory-traversal.md), this would allow to perform path traversal and point to a file `path/file` with content we can guess or known somehow, and use its content as the value of the signing key.
+
+{% hint style="info" %}
+> There are a bunch of files in /sys that are basically flags. Like the flag that says if ftrace is enabled is either 0 or 1. So the attacker just creates 2 tokens with that as the key and one of them will work!
+>
+> _(By_ [_Intigriti_](https://twitter.com/intigriti) _on_ [_Twitter_](https://twitter.com/intigriti/status/1618653959752925184)_)_
+
+The example mentioned above is located at `/proc/sys/kernel/ftrace_enabled`
+{% endhint %}
+
+This can be done in Python.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```python
+import jwt
+payload = {'key1':'value1', 'key2':'value2'}
+token = jwt.encode(payload, key='file-content', algorithm='HS256', headers={"kid": "../../../path/to/file"})
+print(token)
+```
+{% endcode %}
+
+#### Special case: `file=/dev/null`
+
+The signature validation can be bypassed by pointing to `/dev/null` which will return an empty string, meaning that an empty key could be used for signature.
+
+{% hint style="info" %}
+"[JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)" PortSwigger lab provides more insight on this technique.
+{% endhint %}
+
+{% code overflow="wrap" lineNumbers="true" %}
+```python
+import jwt
+payload = {'key1':'value1', 'key2':'value2'}
+token = jwt.encode(payload, key='', algorithm='HS256', headers={"kid": "../../../dev/null"})
+print(token)
+```
+{% endcode %}
+
+{% hint style="info" %}
+If Burp is used to craft the JWT token, a symmetric key with value of the `k` property in the JWT equal to `AA==` (base64 value of null byte) must be created.&#x20;
+
+The same secret value is to be used on [jwt.io](https://jwt.io/).&#x20;
+{% endhint %}
+
 ### Cracking the secret
 
-When JWT use HMAC-SHA256/384/512 algorithms to sign the payload, tester can try to find the secret used if it weak enough. [JWT cracker](https://github.com/lmammino/jwt-cracker) (JavaScript) and [JWT tool](https://github.com/ticarpi/jwt\_tool) (Python) are tools that testers can use to bruteforce JWT secrets.
+When JWT uses `HMAC-SHA256`/`384`/`512` algorithms to sign the payload, testers can try to find the secret if weak enough. [JWT cracker](https://github.com/lmammino/jwt-cracker) (JavaScript) and [JWT tool](https://github.com/ticarpi/jwt\_tool) (Python) are tools that testers can use to bruteforce JWT secrets.
 
 JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../ad/movement/credentials/cracking.md) page for more detailed info on how to use it).
 
@@ -90,7 +140,7 @@ hashcat --hash-type 16500 --attack-mode 0 $JWTs_file $wordlist_file
 
 ### Recovering the public key
 
-In certain scenarios, public keys can be recovered when knowing one (for algos ES256, ES384, ES512) or two (for algos RS256, RS384, RS512) tokens.
+In certain scenarios, public keys can be recovered when knowing one (for algos `ES256`, `ES384`, `ES512`) or two (for algos `RS256`, `RS384`, `RS512`) tokens.
 
 This can be achieved with the following Python script : [JWT-Key-Recover](https://github.com/FlorianPicca/JWT-Key-Recovery)
 
@@ -105,3 +155,7 @@ This can be achieved with the following Python script : [JWT-Key-Recover](https:
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token" %}
 
 {% embed url="https://jwt.io/" %}
+
+{% embed url="https://portswigger.net/web-security/jwt" %}
+
+{% embed url="https://systemweakness.com/deep-dive-into-jwt-attacks-efc607858af6" %}
