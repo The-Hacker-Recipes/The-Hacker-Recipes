@@ -130,7 +130,18 @@ The same secret value is to be used on [jwt.io](https://jwt.io/).&#x20;
 
 ### Cracking the secret
 
-When JWT uses `HMAC-SHA256`/`384`/`512` algorithms to sign the payload, testers can try to find the secret if weak enough. [JWT cracker](https://github.com/lmammino/jwt-cracker) (JavaScript) and [JWT tool](https://github.com/ticarpi/jwt\_tool) (Python) are tools that testers can use to bruteforce JWT secrets.
+When JWT uses `HMAC-SHA256`/`384`/`512` algorithms to sign the payload, testers can try to find the secret if weak enough.
+
+[JWT tool](https://github.com/ticarpi/jwt\_tool) (Python3) can be used for this purpose.
+
+<pre class="language-bash" data-overflow="wrap"><code class="lang-bash"># crack the secret using dictionnary attack
+<strong>jwt_tool.py -v -C -d $wordlist_file "$JWT_value"
+</strong><strong>
+</strong># use the secret to tapmer (-T option) the token
+# running this command will show up a menu to choose the value to tamper
+# the result token will be signed with the submited secret using the specified singing algorithm "alg" (hs256/hs384/hs512 = HMAC-SHA signing).
+<strong>jwt_tool.py -v -S $alg -p "$secret" -T "$JWT_value"
+</strong></code></pre>
 
 JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../ad/movement/credentials/cracking.md) page for more detailed info on how to use it).
 
