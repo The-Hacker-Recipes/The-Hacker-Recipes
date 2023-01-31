@@ -4,9 +4,9 @@
 
 When using PKINIT to obtain a TGT (Ticket Granting Ticket), the KDC (Key Distribution Center) includes in the ticket a `PAC_CREDENTIAL_INFO` structure containing the NTLM keys (i.e. LM and NT hashes) of the authenticating user. This feature allows users to switch to NTLM authentications when remote servers don't support Kerberos, while still relying on an asymmetric Kerberos pre-authentication verification mechanism (i.e. PKINIT).
 
-The NTLM keys will then be recoverable after a TGS-REQ through U2U which is a Service Ticket request made to the KDC where the user asks to authenticate to itself ([User-to-User authentication](http://www.di-srv.unisa.it/\~ads/corso-security/www/CORSO-0001/kerberos/ref/kerberos-faq.html#u2uauth)).
+The NTLM keys will then be recoverable after a TGS-REQ through U2U, combined with S4U2self, which is a Service Ticket request made to the KDC where the user asks to authenticate to itself (i.e. [S4U2self + User-to-User authentication](./#s4u2self-+-u2u)).
 
-The following protocol diagram demonstrates how UnPAC-the-hash works. It allows attackers that know a user's private key, or attackers able to conduct a [Shadow Credentials](shadow-credentials.md) attacks, to recover the user's LM and NT hashes.
+The following protocol diagram details how UnPAC-the-hash works. It allows attackers that know a user's private key, or attackers able to conduct [Shadow Credentials](shadow-credentials.md) or [Golden certificate](../../persistence/golden-certificate.md) attacks, to recover the user's LM and NT hashes.
 
 ![](../../../.gitbook/assets/UnPAC-the-hash.png)
 

@@ -120,6 +120,7 @@
     * [Pre-Windows 2000 computers](ad/movement/domain-settings/pre-windows-2000-computers.md)
 * [Persistence](ad/persistence/README.md)
   * [Silver & Golden tickets](ad/persistence/silver-and-golden-tickets.md)
+  * [🛠️ Golden certificate](ad/persistence/golden-certificate.md)
   * [GoldenGMSA](ad/persistence/goldengmsa.md)
   * [Skeleton key](ad/persistence/skeleton-key.md)
   * [AdminSDHolder](ad/persistence/adminsdholder.md)
