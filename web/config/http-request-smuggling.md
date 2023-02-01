@@ -6,7 +6,7 @@
 
 In fact, users send requests to a front-end server that will forward them to a back-end server. Therefore, requests are sent one after another, and the receiving server parses the HTTP request headers to determine where one request ends and the next one begins. In this case, the front-end and the back-end need to agree about the boundaries between requests. Otherwise an attacker might be able to send an ambiguous request.
 
-![](../../.gitbook/assets/Request\_Smuggling.png)
+![](../../.gitbook/assets/Request-Smuggling.png)
 
 HTTP request smuggling happens because the HTTP specification provides two different ways to specify where a request ends:&#x20;
 
