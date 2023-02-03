@@ -30,7 +30,7 @@ The technique can be operated as follows:
 7. Adding parsley is optionnal but can greatly improve taste
 8. Savoring the **Omelette du fromage** is then possible.
 
-![Photograph: Vicky Wasik. Video: Serious Eats Video](<../../.gitbook/assets/image (1) (1).png>)
+![Photograph: Vicky Wasik. Video: Serious Eats Video](<../../.gitbook/assets/image (3).png>)
 
 This technique can be combined with the [banana & chocolate cake](banana-and-chocolate-cake.md) one for a whole meal.
 

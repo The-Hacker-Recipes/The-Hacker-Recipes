@@ -10,7 +10,7 @@ In short, a SOCKS proxy can relay TCP and UDP connections and hence help bypass 
 
 ## Practice
 
-There are two types of dynamic port forwarding used during penetration testing engagments.
+There are two types of dynamic port forwarding used during penetration testing engagements.
 
 * **Dynamic port forwarding**: tunnel the whole attacker's network traffic (instead of only one port) through a remote machine.
 * **Reverse dynamic port forwarding**: tunnel the whole network traffic from a remote machine through the attacker's machine.
