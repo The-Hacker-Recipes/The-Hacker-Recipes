@@ -81,25 +81,15 @@ Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/
 {% hint style="info" %}
 The SID filtering status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4) as well as the type of trust.&#x20;
 
-> * If the `TRUST_ATTRIBUTE_QUARANTINED_DOMAIN (0x00000004)` flag is set, then only SIDs from the trusted domain are allowed (all others are filtered --> I'm not sure about that. I need to test what happens in case the TATE flag is added on top of TAQD).
+> * If the `TRUST_ATTRIBUTE_QUARANTINED_DOMAIN (0x00000004)` flag is set, then only SIDs from the trusted domain are allowed (all others are filtered
 >
 > _(by_ [_Carsten Sandker_](https://twitter.com/0xcsandker) _on_ [_www.securesystems.de_](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)_)_
+>
+> * If the `TRUST_ATTRIBUTE_TREAT_AS_EXTERNAL (0x00000040)` flag is set, then inter-forest ticket can be forged, spoofing an RID >= 1000. Of course, this doesn't apply if TAQD (`TRUST_ATTRIBUTE_QUARANTINED_DOMAIN`) is set.
+>
+> _(sources: section_ [_6.1.6.7.9_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN) _of \[MS-ADTS], and section_ [_4.1.2.2_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) _of \[MS-PAC])._&#x20;
 
-Above are some key, usually valid, elements. But as [Carsten Sandker](https://twitter.com/0xcsandker) puts it: "the logic that sits behind this might be too complex to put it in text". To really know the behavior of SID filtering for a trust, refer to the lookup tables [here](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/OC-b4We5WFiXhTirzI\_Dyw.png) (for default configs) and [there](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/99icUS7SKCscWq6VzW0o5g.png) (for custom configs).
-
-.
-
-.
-
-.
-
-make sure below
-
-.
-
-`(0x00000040) TREAT_AS_EXTERNAL`: "the trust is to be treated as external \[...]. If this bit is set, then a cross-forest trust to a domain is to be treated as an external trust for the purposes of SID Filtering. Cross-forest trusts are more stringently filtered than external trusts. This attribute relaxes those cross-forest trusts to be equivalent to external trusts." ([Microsoft](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN))
-
-If this flag is set, it means a inter-forest ticket spoofing an RID >= 1000 can be forged. This can usually lead to the trusting domain compromise. See [SID filtering](trusts.md#sid-filtering), and notes on [SID history](trusts.md#sid-history).
+Above are some key, usually valid, elements. But as [Carsten Sandker](https://twitter.com/0xcsandker) puts it: "the logic that sits behind this might be too complex to put it in text". To really know the behavior of SID filtering for a trust, refer to the lookup tables [here](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/OC-b4We5WFiXhTirzI\_Dyw.png) (for default trusts setups) and [there](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/99icUS7SKCscWq6VzW0o5g.png) (for custom configs).
 {% endhint %}
 
 {% hint style="info" %}
@@ -350,8 +340,7 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 {% endtab %}
 
 {% tab title="Windows" %}
-```
-```
+// TODO
 {% endtab %}
 {% endtabs %}
 
