@@ -6,12 +6,12 @@
 
 In fact, users send requests to a front-end server that will forward them to a back-end server. Therefore, requests are sent one after another, and the receiving server parses the HTTP request headers to determine where one request ends and the next one begins. In this case, the front-end and the back-end need to agree about the boundaries between requests. Otherwise an attacker might be able to send an ambiguous request.
 
-![](../../.gitbook/assets/Request\_Smuggling.png)
+![HTTP request smuggling process (based on detectify's diagram)](../../.gitbook/assets/Request\_Smuggling.png)
 
 HTTP request smuggling happens because the HTTP specification provides two different ways to specify where a request ends:&#x20;
 
 * the `Content-Length` header: the length of the message body is specified in bytes (`\r\n` included).
-* and the `Transfer-Encoding` header: the length of chunck in bytes (hexadecimal encoding, `\r\n` included)
+* and the `Transfer-Encoding` header: the length of chunk in bytes (hexadecimal encoding, `\r\n` included)
 
 HTTP request smuggling vulnerability occurs when an attacker sends both headers in a single request. This can cause either the front-end or the back-end server to incorrectly interpret the request, passing through a malicious HTTP query.
 
@@ -151,7 +151,7 @@ In this case, the **front-end** processes the `Transfer-Encoding` header and doe
 This request is forwarded to the back-end server. The **back-end** uses the `Content-Length` header and does the following operations
 
 * determines that the request is 4 bytes long (meaning it stops reading at the start of the line following `7c`).&#x20;
-* The following bytes, starting with `GET`, are left unprocessed, and the back-end server will treat these as being the start of the next request in the sequence.
+* The following bytes, starting with `GET`, are left unprocessed, and the back-end server will treat these as being the start of the next request in the sequence and thus return a 404 status code.
 
 {% hint style="warning" %}
 When using the Burp Repeater, testers must always ensure that the "Update Content-Length" option is unchecked for `TE.CL` since modifying the `Content-Length` is required to trigger the vulnerability. The trailing sequence `\r\n\r\n` must be included following the final 0.
