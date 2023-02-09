@@ -1,10 +1,10 @@
-# 🛠️ Content-type juggling
+# Content-type juggling
 
 ## Theory
 
 **Content-type juggling** exploits the lack of checking on the `Content-Type` header when submitting a HTTP request.
 
-**It is often used to perform [unrestricted-file-upload](unrestricted-file-upload.md)**.
+**Most of the time, Content-Type juggling is a component that allows attacks to be carried out such as [unrestricted-file-upload](unrestricted-file-upload.md) or [xxe-injection](content-type-juggling#example-of-a-content-type-juggling-attack-on-api)**.
 
 {% hint style="info" %}
 
@@ -70,9 +70,11 @@ Content-Type: application/php
 -----------------------------974767299852498929531610575--
 ```
 
-## Issue
+{% hint style="danger" %}
 
 If the XCTO (X-Content-Type-Options) security header is present, it will be difficult to perform the Content-Type juggling. As you can read in [mime-sniffing](../../web/config/http-headers/mime-sniffing.md). XCTO security header can be used to indicate that the MIME types advertised in the Content-Type headers should be followed and not be changed by the browser depending on the page's content. Websites that implement that security header with the nosniff directive must also include a valid Content-Type header in their responses.
+
+{% endhint %}
 
 ## Practice
 
@@ -83,15 +85,79 @@ In order to identify if the target is vulnerable to Content-Type juggling, teste
 
 If you answered yes to all the questions, then you should be able to perform Content-Type juggling. Don't forget that, most of the time, Content-Type juggling is a way to upload unattended payload (reverse-shell when the form is used to submit pictures).
 
-Here is the list of all the Content-Type possibilities : 
+<details>
 
-The most common types are:
+<summary>Here is the list of all the mist common the Content-Type possibilities : &#x20;</summary>
 
-INSERT SCHEMA TYPES
 
-### Example
+1. Type application
+    - application/java-archive
+    - application/EDI-X12   
+    - application/EDIFACT   
+    - application/javascript   
+    - application/octet-stream   
+    - application/ogg   
+    - application/pdf  
+    - application/xhtml+xml   
+    - application/x-shockwave-flash    
+    - application/json  
+    - application/ld+json  
+    - application/xml   
+    - application/zip  
+    - application/x-www-form-urlencoded
+2. Type audio
+    - audio/mpeg   
+    - audio/x-ms-wma   
+    - audio/vnd.rn-realaudio   
+    - audio/x-wav   
+3. Type image
+    - image/gif   
+    - image/jpeg   
+    - image/png   
+    - image/tiff    
+    - image/vnd.microsoft.icon    
+    - image/x-icon   
+    - image/vnd.djvu   
+    - image/svg+xml   
+4. Type multipart
+    -  multipart/mixed    
+    -  multipart/alternative   
+    -  multipart/related (using by MHTML (HTML mail).)  
+    -  multipart/form-data  
+5. Type text
+    - text/css    
+    - text/csv    
+    - text/html    
+    - text/javascript (obsolete)    
+    - text/plain    
+    - text/xml   
+6. Type video
+    - video/mpeg    
+    - video/mp4    
+    - video/quicktime    
+    - video/x-ms-wmv    
+    - video/x-msvideo    
+    - video/x-flv   
+    - video/webm    
+7. Type vnd
+    - application/vnd.android.package-archive
+    - application/vnd.oasis.opendocument.text    
+    - application/vnd.oasis.opendocument.spreadsheet  
+    - application/vnd.oasis.opendocument.presentation   
+    - application/vnd.oasis.opendocument.graphics   
+    - application/vnd.ms-excel    
+    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet   
+    - application/vnd.ms-powerpoint    
+    - application/vnd.openxmlformats-officedocument.presentationml.presentation    
+    - application/msword   
+    - application/vnd.openxmlformats-officedocument.wordprocessingml.document   
+    - application/vnd.mozilla.xul+xml   
+    
+</details>
+ 
+### Example of a Content-Type Juggling attack on API leading to XXE
 
-For this example, we're going to use the writeup from @Nicholaz99 explaining one of the GoogleCTF challenge from 2019.
+For this example, we're going to use the writeup from [Nicholaz99](https://github.com/Nicholaz99) explaining one of the GoogleCTF challenge from 2019.
 The first URL lead to this page, that is a form that we can submit.
 
 ![WebPage from GoogleCTF 2019](../../.gitbook/assets/CT-JUGGLING-1.png)
@@ -106,7 +172,7 @@ Now, we can start answering the practice questions that we mentioned above. In t
 
 As you can see above, it works. By combining Content-Type juggling with another attack, it's possible to extract informations.
 
-The last screenshot shows how to perform a blind XXE. You can read more about it in  [xxe-injection](xxe-injection.md). Doing so, we are able to extract the "/etc/passwd" file on the server.
+The last screenshot shows how to perform a blind XXE. You can read more about it in [xxe-injection](xxe-injection.md). Doing so, we are able to extract the "/etc/passwd" file on the server.
 
 ![Crafting an XXE payload to extract /etc/passwd](../../.gitbook/assets/CT-JUGGLING-4.png)
 
