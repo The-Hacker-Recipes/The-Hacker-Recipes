@@ -180,8 +180,6 @@ In this context, an attacker can try to edit the charset (e.g. from `utf-8` to `
 
 Below is an example where an attacker is able to perform Content-Type juggling but is getting blocked by a WAF. To bypass it, "**charset juggling**" can be performed.
 
-Getting caught by a WAF:
-
 {% code title="Getting caught by the WAF" %}
 ```
 POST /foo HTTP/1.1
