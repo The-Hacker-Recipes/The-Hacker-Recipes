@@ -132,7 +132,7 @@ application/vnd.mozilla.xul+xml
 
 </details>
 
-### Examples
+### Example attacks
 
 <details>
 
@@ -222,7 +222,7 @@ For more insight on this attack, refer to [the writeup of the web challenge "BNV
 
 </details>
 
-### Resources
+## Resources
 
 {% embed url="https://medium.com/hmif-itb/googlectf-2019-web-bnv-writeup-nicholas-rianto-putra-medium-b8e2d86d78b2" %}
 
