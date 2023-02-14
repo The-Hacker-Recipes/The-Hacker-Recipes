@@ -190,7 +190,7 @@
   * [🛠️ Arbitrary file download](web-services/attacks-on-inputs/arbitrary-file-download.md)
   * [🛠️ Directory traversal](web-services/attacks-on-inputs/directory-traversal.md)
   * [🛠️ Null-byte injection](web-services/attacks-on-inputs/null-byte-injection.md)
-  * [🛠️ Content-type juggling](web-services/attacks-on-inputs/content-type-juggling.md)
+  * [Content-Type juggling](web-services/attacks-on-inputs/content-type-juggling.md)
 
 ## Systems & services <a href="#sys" id="sys"></a>
 
