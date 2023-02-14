@@ -84,7 +84,7 @@ The [kid](https://www.rfc-editor.org/rfc/rfc7515#section-4.1.4) (Key ID) is an o
 
 The structure of this ID is not specified and it can be any string value (case-sensitive).&#x20;
 
-The last part is interesting because, if the parameter is vulnerable to [directory traversal](directory-traversal.md), this would allow to perform path traversal and point to a file `path/file` with content we can guess or known somehow, and use its content as the value of the signing key.
+The last part is interesting because, if the parameter is vulnerable to [directory traversal](../../web-services/attacks-on-inputs/directory-traversal.md), this would allow to perform path traversal and point to a file `path/file` with content we can guess or known somehow, and use its content as the value of the signing key.
 
 {% hint style="info" %}
 > There are a bunch of files in /sys that are basically flags. Like the flag that says if ftrace is enabled is either 0 or 1. So the attacker just creates 2 tokens with that as the key and one of them will work!

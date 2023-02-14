@@ -46,7 +46,7 @@ parameter='='
 GET parameters are not the only ones that could be vulnerable to SQLi. Testers should thoroughly test all user inputs (parameters, user-agents, cookies...)
 {% endhint %}
 
-The following payload is used for testing SQL injections, [XSS (Cross-Site Scripting)](xss-cross-site-scripting.md) and [SSTI (Server-Side Template Injection)](ssti-server-side-tempate-injection.md).
+The following payload is used for testing SQL injections, [XSS (Cross-Site Scripting)](xss.md) and [SSTI (Server-Side Template Injection)](../../web-services/attacks-on-inputs/ssti-server-side-tempate-injection.md).
 
 ```
 '"<svg/onload=prompt(5);>{{7*7}}

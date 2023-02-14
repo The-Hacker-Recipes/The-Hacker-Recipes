@@ -8,7 +8,7 @@ Some web applications rely on template engines to offer dynamic content. When us
 
 Testers need to identify input vectors (parts of the app that accept content from the users) that might be embedded in templates.
 
-The following payload is used for testing [SQL injections](sql-injection.md), [XSS (Cross-Site Scripting)](xss-cross-site-scripting.md) and SSTI (Server-Side Template Injection). The `{{7*7}}` should be interpreted and changed to `49` by Jinja2 and Twig engines.
+The following payload is used for testing [SQL injections](../../web/inputs/sqli.md), [XSS (Cross-Site Scripting)](../../web/inputs/xss.md) and SSTI (Server-Side Template Injection). The `{{7*7}}` should be interpreted and changed to `49` by Jinja2 and Twig engines.
 
 ```
 '"<svg/onload=prompt(5);>{{7*7}}

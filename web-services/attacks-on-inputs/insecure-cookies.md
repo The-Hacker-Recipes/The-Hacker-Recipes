@@ -19,7 +19,7 @@ The following tests can help identify **insecure cookies (lacking security)**.
 * Creating several accounts with almost the same username, and noticing similarities in the session-cookies value
 * Changing password and realizing the old session cookies is still valid and hasn't been revoked
 
-In some cases, cookies can be used for SQL queries or for dynamic content. Testers should make sure the cookies are not vulnerable to [SQL injections](sql-injection.md) or [XSS](xss-cross-site-scripting.md).
+In some cases, cookies can be used for SQL queries or for dynamic content. Testers should make sure the cookies are not vulnerable to [SQL injections](../../web/inputs/sqli.md) or [XSS](../../web/inputs/xss.md).
 
 ### Security attributes
 

@@ -12,7 +12,7 @@ Victims can be triggered when browsing:
 * a malicious website containing client-side code making the browser send the requests
 * a legitimate website altered by an attacker (XSS vulnerable inputs, unrestricted file upload or any other attack allowing an attacker to add or edit a website content)
 
-People tend to mix up [XSS](xss-cross-site-scripting.md) and CSRF attacks. XSS make user's browser **execute client-side code** (e.g. JavaScript) whereas CSRF make user's browser **send HTTP requests**.
+People tend to mix up [XSS](xss.md) and CSRF attacks. XSS make user's browser **execute client-side code** (e.g. JavaScript) whereas CSRF make user's browser **send HTTP requests**.
 
 ## Practice
 
@@ -20,8 +20,8 @@ People tend to mix up [XSS](xss-cross-site-scripting.md) and CSRF attacks. XSS m
 
 First of all, testers need to find insecure input vectors that allow client-side code (like JS) injection, just like XSS. This part will not be further detailed as it already is in the following page.
 
-{% content-ref url="xss-cross-site-scripting.md" %}
-[xss-cross-site-scripting.md](xss-cross-site-scripting.md)
+{% content-ref url="xss.md" %}
+[xss.md](xss.md)
 {% endcontent-ref %}
 
 ### Verifying actions

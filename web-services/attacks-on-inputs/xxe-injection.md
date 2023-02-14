@@ -8,7 +8,7 @@ Some web applications handle data and rely on the XML format to exchange data wi
 >
 > XML external entity injection (also known as XXE) is a web security vulnerability that allows an attacker to interfere with an application's processing of XML data ([portswigger](https://portswigger.net/web-security/xxe)).
 
-XXE injections can sometimes lead to [SSRF (Server-Side Request Forgery)](ssrf-server-side-request-forgery.md), Local File Disclosure, Sensitive Information Disclosure, Data Exfiltration, RCE (Remote Code Execution) and so on.
+XXE injections can sometimes lead to [SSRF (Server-Side Request Forgery)](../../web/inputs/ssrf.md), Local File Disclosure, Sensitive Information Disclosure, Data Exfiltration, RCE (Remote Code Execution) and so on.
 
 ## Practice
 

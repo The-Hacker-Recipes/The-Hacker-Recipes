@@ -31,7 +31,7 @@ One of the most famous payloads is `<script>alert('XSS');</script>` opening a po
 
 The following [website](https://transformations.jobertabma.nl/) ([GitHub project](https://github.com/jobertabma/transformations)) can help identify transformations applied to user inputs. This can help bypass filters and transformations to exploit XSS attacks.
 
-The following payload is used for testing [SQL injections](sql-injection.md), XSS (Cross-Site Scripting) and [SSTI (Server-Side Template Injection)](ssti-server-side-tempate-injection.md).
+The following payload is used for testing [SQL injections](sqli.md), XSS (Cross-Site Scripting) and [SSTI (Server-Side Template Injection)](../../web-services/attacks-on-inputs/ssti-server-side-tempate-injection.md).
 
 ```
 '"<svg/onload=prompt(5);>{{7*7}}

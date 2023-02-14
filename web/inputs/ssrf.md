@@ -5,7 +5,7 @@
 A Server-Side Request Forgery (a.k.a. SSRF) is a web vulnerability allowing attackers to make the server-side application do certain requests. This vulnerability can lead to unauthorized actions, Sensitive Information Disclosure and even RCE (Remote Code Execution).
 
 {% hint style="info" %}
-SSRF is to [file inclusion](../../web/inputs/file-inclusion/) since both vulnerabilities can be exploited to access external or internal content. The difference resides in the fact that file inclusion vulnerabilities rely on code inclusion functions (e.g. `include()` in PHP) while SSRF ones on functions that only handle data (e.g. `file_get_contents()`, `fopen()`, `fread()`, `fsockopen()`, `curl_exec()` in PHP), meaning file inclusion vulnerabilities will usually lead to RCE much more easily that SSRF ones.
+SSRF is to [file inclusion](file-inclusion/) since both vulnerabilities can be exploited to access external or internal content. The difference resides in the fact that file inclusion vulnerabilities rely on code inclusion functions (e.g. `include()` in PHP) while SSRF ones on functions that only handle data (e.g. `file_get_contents()`, `fopen()`, `fread()`, `fsockopen()`, `curl_exec()` in PHP), meaning file inclusion vulnerabilities will usually lead to RCE much more easily that SSRF ones.
 {% endhint %}
 
 ## Practice
@@ -71,9 +71,9 @@ In this context, a whitelist-based input filter can be used to restrict the type
 
 
 
-## [ORED (Open Redirect)](ssrf-server-side-request-forgery.md#ored-open-redirect-combination) combination
+## [ORED (Open Redirect)](ssrf.md#ored-open-redirect-combination) combination
 
-In the case the argument is strictly validated and doesn't allow for bypasses relying on pattern validation, if one of the whitelisted app's pages is vulnerable to an [ORED (Open Direct)](ssrf-server-side-request-forgery.md#ored-open-redirect-combination), it could be used to make the SSRF possible anyway.
+In the case the argument is strictly validated and doesn't allow for bypasses relying on pattern validation, if one of the whitelisted app's pages is vulnerable to an [ORED (Open Direct)](ssrf.md#ored-open-redirect-combination), it could be used to make the SSRF possible anyway.
 
 The server would request the ORED-vulnerable page through the SSRF vulnerability, and it would then be redirected to the actual target page, thanks to the lesser-filtered Open Redirect.
 
