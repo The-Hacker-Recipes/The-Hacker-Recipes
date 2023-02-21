@@ -39,7 +39,7 @@ In the case where the client is confidential (requiring authentication with the 
 
 **Implicit Grant**
 
-To test the redirect URI validation misconfiguration with the implicit grant, the client application needs to hold an [open redirect](../inputs/ored.md) vulnerability. The implicit grant is handy for targeting wildcards on query parameters.
+To test the redirect URI validation misconfiguration with the implicit grant, the client application needs to hold an [open redirect](../../web-services/attacks-on-inputs/open-redirect.md) vulnerability. The implicit grant is handy for targeting wildcards on query parameters.
 
 Upon getting a `client_id`, it's possible to test this misconfiguration by abusing the open redirect vulnerability and providing the authorization server with a fake URI. Depending on the server's HTTP response, misconfiguration is present.
 

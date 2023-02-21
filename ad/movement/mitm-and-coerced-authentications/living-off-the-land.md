@@ -45,7 +45,7 @@ Internet browsers can access HTTP servers by supplying their URL (i.e. `http://$
 
 ### HTML documents / XSS
 
-HTML documents can be crafted (or injected with content when successfully exploiting an HTML injection attack such as an [Cross-Site Scripting](../../../web/inputs/xss.md)) in way that could make browsers authenticate when accessing a remote resource. This leads to an outgoing traffic using SMB.
+HTML documents can be crafted (or injected with content when successfully exploiting an HTML injection attack such as an [Cross-Site Scripting](../../../web-services/attacks-on-inputs/xss-cross-site-scripting.md)) in way that could make browsers authenticate when accessing a remote resource. This leads to an outgoing traffic using SMB.
 
 ```markup
 <script>
