@@ -41,10 +41,11 @@ The certificate template flag (i.e. `--template`) can either be left blank (defa
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) ([how to enumerate](./#attack-paths)).
 
 <pre class="language-python"><code class="lang-python"><strong># find ESC8-vulnerable CAs
-</strong><strong>certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -stdout | grep -B20 ESC8
+</strong><strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep -B20 ESC8
 </strong><strong>
 </strong><strong># find and look through enabled templates for ones that could be used for authentication
-</strong>certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -stdout -enabled</code></pre>
+</strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
+</code></pre>
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.

