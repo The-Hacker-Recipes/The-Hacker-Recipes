@@ -237,6 +237,16 @@
   * [🛠️ Port forwarding](systems-and-services/pivoting/port-forwarding.md)
   * [🛠️ SOCKS proxy](systems-and-services/pivoting/socks-proxy.md)
 
+## Evasion
+
+* [(AV) Anti-Virus](evasion/av/README.md)
+  * [🛠️ Loader](evasion/av/loader.md)
+  * [🛠️ Dropper](evasion/av/dropper.md)
+  * [🛠️ Obfuscation](evasion/av/obfuscation.md)
+  * [🛠️ Process injection](evasion/av/process-injection.md)
+  * [🛠️ Stealth with C2](evasion/av/stealth.md)
+* [🛠️ (EDR) Endpoint Detection and Response](evasion/edr.md)
+
 ## 🛠️ Physical
 
 * [Locks](physical/lockpicking.md)

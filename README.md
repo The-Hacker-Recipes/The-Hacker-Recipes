@@ -9,6 +9,7 @@ This project is aimed at providing technical guides on various hacking topics:
 * :green\_circle: Active Directory (80% done)
 * :yellow\_circle: Web services (60% done)
 * :orange\_circle: Systems & services (5% done)
+* :orange\_circle: Evasion (AV, EDR, ...) (25% done)
 * :red\_circle: Intelligence gathering (0% done)
 * :red\_circle: Physical intrusion (0% done)
 * :red\_circle: Social engineering (0% done)
