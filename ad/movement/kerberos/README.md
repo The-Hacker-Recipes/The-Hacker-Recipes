@@ -205,7 +205,7 @@ A ticket produced with u2u is encrypted with the session key of the TGT included
 
 <summary>S4U2self + U2U</summary>
 
-In some specific scenarios, S4U2self and U2U can be combined, in which case the flags and structures bot mechanisms include in their requests are combined.
+In some specific scenarios, S4U2self and U2U can be combined, in which case the flags and structures both mechanisms include in their requests are combined.
 
 This allows to
 
