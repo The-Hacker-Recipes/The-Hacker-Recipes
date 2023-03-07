@@ -214,7 +214,3 @@ This allows to
 * retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](forged-tickets/).
 
 </details>
-
-{% hint style="info" %}
-Parts of this page were written with the help of the [ChatGPT](https://openai.com/blog/chatgpt/) AI model.
-{% endhint %}

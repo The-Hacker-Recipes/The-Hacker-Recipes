@@ -31,6 +31,10 @@ Keep in mind that these guides are maintained by non-omniscient security enthusi
 Almost every tool mentioned in theses notes is installed, and sometimes pre-configured, in [Exegol](https://exegol.rtfd.io/), a community-driven hacking environment, powerful and yet simple enough to be used by anyone in day to day engagements. Exegol is the best solution to deploy powerful hacking environments securely, easily, professionally.
 {% endhint %}
 
+{% hint style="info" %}
+Fyi, some parts of the project are written with the help of the [ChatGPT](https://openai.com/blog/chatgpt/) AI model.
+{% endhint %}
+
 ## Sponsors
 
 {% hint style="info" %}
