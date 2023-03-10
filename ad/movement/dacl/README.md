@@ -22,7 +22,7 @@ Other tools like, `Get-DomainObjectAcl` and `Add-DomainObjectAcl` from [Powerspl
 
 In order to navigate the notes, testers can use the mindmap below.
 
-![](<../../../.gitbook/assets/DACL abuse-dark.png>)
+![](<../../../.gitbook/assets/DACL abuse-dark (1).png>)
 
 All of the aforementioned attacks (red blocks) are detailed in the child notes, except:
 

