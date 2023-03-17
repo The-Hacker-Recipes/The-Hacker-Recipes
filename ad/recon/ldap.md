@@ -15,18 +15,25 @@ ldeep cache -d "ldeepdump" -p "$DOMAIN" trusts
 ```
 {% endtab %}
 
+{% tab title="ldapsearch" %}
+The [ldapsearch](https://git.openldap.org/openldap/openldap) (C) tool can also be used.&#x20;
+
+```bash
+# list naming contexts
+ldapsearch -h "$DC_IP" -x -s base namingcontexts
+ldapsearch -H "ldap://$DC_IP" -x -s base namingcontexts
+
+# enumerate info in a base (e.g. naming context = DC=DOMAIN,DC=LOCAL)
+ldapsearch -h "$DC_IP" -x -b "DC=DOMAIN,DC=LOCAL"
+ldapsearch -H "ldap://$TARGET" -x -b "DC=DOMAIN,DC=LOCAL"
+```
+{% endtab %}
+
 {% tab title="ldapsearch-ad" %}
-The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) Python script can also be used to enumerate essential information like domain admins that have their password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.
-
-```bash
-ldapsearch-ad --type all --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD
-```
-
-The FFL (Forest Functional Level), DFL (Domain Functional Level), DCFL (Domain Controller Functionality Level) and naming contexts can be listed with the following command.
-
-```bash
-ldapsearch-ad --type info --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD
-```
+The ldapsearch-ad Python script can also be used to enumerate essential information like domain admins that have their password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.\
+ldapsearch-ad --type all --server $DOMAIN\_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD\
+The FFL (Forest Functional Level), DFL (Domain Functional Level), DCFL (Domain Controller Functionality Level) and naming contexts can be listed with the following command.\
+ldapsearch-ad --type info --server $DOMAIN\_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD
 {% endtab %}
 
 {% tab title="windapsearch" %}
