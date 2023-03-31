@@ -6,6 +6,8 @@ If an account (user or computer), with unconstrained delegations privileges, is 
 
 {% hint style="warning" %}
 If the coerced account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, its TGT will not be delegated in the service ticket used for authentication against the attacker-controlled KUD account.
+
+**Nota bene**: the native, RID 500, "Administrator" account doesn't benefit from that restriction, even if it's added to the Protected Users group (source: [sensepost.com](https://sensepost.com/blog/2023/protected-users-you-thought-you-were-safe-uh/)).
 {% endhint %}
 
 {% hint style="info" %}
