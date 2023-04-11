@@ -89,7 +89,7 @@ On Windows systems, the steps mentioned above can be conducted with
 
 * [PowerMad](https://github.com/Kevin-Robertson/Powermad/)'s (PowerShell) `New-MachineAccount` and `Set-MachineAccountAttribute` functions for the creation and manipulation of a computer account
 * with [Rubeus](https://github.com/GhostPack/Rubeus) (C#) for the requests of Kerberos TGT and Service Ticket
-* with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) for the [DCSync](../credentials/dumping/dcsync.md) operation with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync)``
+* with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) for the [DCSync](../credentials/dumping/dcsync.md) operation with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync)
 
 ```powershell
 # 0. create a computer account

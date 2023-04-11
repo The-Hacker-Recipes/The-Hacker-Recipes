@@ -350,7 +350,7 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 >
 > _(_[_SID filtering_](trusts.md#sid-filtering) _theory)_
 
-_//_ [_https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research_](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)__
+_//_ [_https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research_](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
 
 #### CVE-2020-0665
 

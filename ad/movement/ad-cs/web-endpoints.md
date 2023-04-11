@@ -26,7 +26,7 @@ This allows for lateral movement, account persistence, and in some cases privile
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-**1 - Setting up the relay servers** :tools:****
+**1 - Setting up the relay servers** :tools:
 
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used to conduct the ESC8 escalation scenario.
 
@@ -51,7 +51,7 @@ The certificate template flag (i.e. `--template`) can either be left blank (defa
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 
-**2 - Authentication coercion** :chains:****
+**2 - Authentication coercion** :chains:
 
 Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../mitm-and-coerced-authentications/pushsubscription-abuse.md)) to force accounts/machines to authenticate to the relay servers.
 

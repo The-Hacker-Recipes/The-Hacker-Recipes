@@ -52,7 +52,7 @@ The `msDS-AllowedToActOnBehalfOfOtherIdentity` was introduced with Windows Serve
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-**1 - Edit the target's "rbcd" attribute (**[**DACL abuse**](../../dacl/)**)** :pencil2: ****&#x20;
+**1 - Edit the target's "rbcd" attribute (**[**DACL abuse**](../../dacl/)**)** :pencil2:&#x20;
 
 [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) _c_an be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
@@ -74,7 +74,7 @@ Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blo
 In this example, `controlledaccount` can be [a computer account created for the attack](../../domain-settings/machineaccountquota.md#create-a-computer-account), or any other account -with at least one Service Principal Name set for the usual technique, or without for [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users)- which credentials are known to the attacker.
 {% endhint %}
 
-**2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
+**2 - Obtain a ticket (delegation operation)** :ticket:&#x20;
 
 Once the attribute has been modified, the [Impacket](https://github.com/SecureAuthCorp/impacket) script [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) can then perform all the necessary steps to obtain the final "impersonating" ST (in this case, "Administrator" is impersonated but it can be any user in the environment).
 
@@ -92,7 +92,7 @@ In [some cases](./#theory), the delegation will not work. Depending on the conte
 The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
 {% endhint %}
 
-**3 - Pass-the-ticket** :passport\_control: ****&#x20;
+**3 - Pass-the-ticket** :passport\_control:&#x20;
 
 Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
 {% endtab %}
@@ -100,7 +100,7 @@ Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
 {% tab title="Windows" %}
 In order to run the following commands and tools as other users, testers can check the [user impersonation](../../credentials/impersonation.md) part.
 
-**1 - Edit the target's security descriptor (ACE abuse)**:pencil2: ****&#x20;
+**1 - Edit the target's security descriptor (ACE abuse)**:pencil2:&#x20;
 
 The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powershell/module/addsadministration/?view=win10-ps)'s cmdlets Set-ADComputer and Get-ADComputer can be used to write and read the attributed of an object (in this case, to modify the delegation rights).
 
@@ -137,7 +137,7 @@ StandIn.exe --object samaccountname=controlledaccountwithSPNName
 StandIn.exe --computer "target" --sid "controlledaccountwithSPN's SID"
 ```
 
-**2 - Obtain a ticket (delegation operation)** :ticket: ****&#x20;
+**2 - Obtain a ticket (delegation operation)** :ticket:&#x20;
 
 [Rubeus](https://github.com/GhostPack/Rubeus) can then be used to request the TGT and "impersonation ST", and inject it for later use.
 
@@ -168,7 +168,7 @@ In [some cases](./#theory), the delegation will not work. Depending on the conte
 The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service**s**. This technique can be exploited with the `/altservice` flag with Rubeus.
 {% endhint %}
 
-**3 - Pass-the-ticket** :passport\_control: ****&#x20;
+**3 - Pass-the-ticket** :passport\_control:&#x20;
 
 Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../ptt.md)).
 {% endtab %}

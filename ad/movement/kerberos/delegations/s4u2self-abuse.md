@@ -16,7 +16,7 @@ Last but not least, S4U2self can be used to produce a Service Ticket to oneself 
 
 ### Microsoft Virtual Accounts
 
-Since machine accounts have their own set of SPNs by default at their creation, S4U2self can be used by any machine account, without any supplementary configuration. If an attacker manages to execute code as `NT AUTHORITY\NETWORK SERVICE` __ or as any other "Microsoft Virtual Account" (e.g. `defaultapppool` __ or `mssqlservice`) he will be able to escalate his privileges by abusing S4U2self. This happens because this kind of accounts all act on the network as the machine itself.
+Since machine accounts have their own set of SPNs by default at their creation, S4U2self can be used by any machine account, without any supplementary configuration. If an attacker manages to execute code as `NT AUTHORITY\NETWORK SERVICE` or as any other "Microsoft Virtual Account" (e.g. `defaultapppool` or `mssqlservice`) he will be able to escalate his privileges by abusing S4U2self. This happens because this kind of accounts all act on the network as the machine itself.
 
 ### OPSEC considerations
 

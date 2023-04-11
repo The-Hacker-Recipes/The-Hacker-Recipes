@@ -262,6 +262,7 @@
   * [🍌 Banana & chocolate cake](physical/super-secret-zones/banana-and-chocolate-cake.md)
   * [🍳 Omelette du fromage](physical/super-secret-zones/omelette-du-fromage.md)
   * [🍔 Burger du seigneur](physical/super-secret-zones/burger-du-seigneur.md)
+  * [🥞 The Pancakes of Heaven](physical/super-secret-zones/the-pancakes-of-heaven.md)
 
 ## 🛠️ Intelligence gathering
 

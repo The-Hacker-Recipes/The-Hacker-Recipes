@@ -30,7 +30,7 @@ From UNIX-like machines, [krbrelayx](https://github.com/dirkjanm/krbrelayx)'s [a
 
 _At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding the `tgssub.py` is pending._ [_The pull request_](https://github.com/SecureAuthCorp/impacket/pull/1184) _modifying the `findDelegation.py` is pending._
 
-__:warning: _At the time of writing, 12th Feb. 2022, this technique has not been fully fool-proofed from UNIX systems. In case something errors, switch to the Windows technique._
+:warning: _At the time of writing, 12th Feb. 2022, this technique has not been fully fool-proofed from UNIX systems. In case something errors, switch to the Windows technique._
 
 ```python
 # 1. show SPNs listed in the KCD configuration
