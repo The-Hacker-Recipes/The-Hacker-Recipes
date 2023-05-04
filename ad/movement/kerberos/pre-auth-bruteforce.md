@@ -10,7 +10,37 @@ Sometimes, the pre-authentication is disabled on some accounts. The attacker can
 
 Last but not least, the pre-authentication step can be bruteforced. This type of [credential bruteforcing](../credentials/bruteforcing/) is way faster and stealthier than other bruteforcing methods relying on NTLM. Pre-authentication bruteforcing can even be faster by using UDP as the transport protocol, hence requiring less frames to be sent.
 
+On a side note, it is possible to enumerate domain users in a similar manner.
+
 ## Practice
+
+### Users enum
+
+[nmap](https://nmap.org/)'s `krb5-enum-users` script allows to know wether a username is valid or not (domain-wise) through a legitimate Kerberos service.
+
+{% hint style="info" %}
+A TGT request is made through an `AS-REQ` message. When an invalid username is requested, the server will respond using the Kerberos error code `KRB5KDC_ERR_C_PRINCIPAL_UNKNOWN` in the AS-REP message. When working with a valid username, either a TGT will be obtained, or an error like `KRB5KDC_ERR_PREAUTH_REQUIRED` will be raised (i.e. in this case, indicating that the user is required to perform preauthentication).
+{% endhint %}
+
+The first step in enumerating the usernames is to create a wordlist (by guessing it or by looking for possible associations on social networks).
+
+```
+michael.scott
+jim.halpert
+oscar.martinez
+pam.beesly
+kevin.malone
+```
+
+The enumeration can then be started.
+
+{% code overflow="wrap" %}
+```bash
+nmap -p 88 --script="krb5-enum-users" --script-args="krb5-enum-users.realm='$DOMAIN',userdb=$WORDLIST" $IP_DC
+```
+{% endcode %}
+
+### Pre-auth Bruteforce
 
 Tools like [kerbrute](https://github.com/ropnop/kerbrute) (Go) and [smartbrute](https://github.com/ShutdownRepo/smartbrute) (Python) can be used to bruteforce credentials through the Kerberos pre-authentication. The smartbrute utility can be used in a `brute` mode (standard bruteforcing features) or in a `smart` mode (requires prior knowledge of a low-priv user credentials, but operates LDAP enumeration and avoid locking out accounts, fetches the users list and so on).
 
@@ -33,3 +63,4 @@ In its default setup, smartbrute will attack Kerberos pre-authentication with th
 
 {% embed url="https://github.com/ropnop/kerbrute" %}
 
+{% embed url="https://nmap.org/nsedoc/scripts/krb5-enum-users.html" %}
