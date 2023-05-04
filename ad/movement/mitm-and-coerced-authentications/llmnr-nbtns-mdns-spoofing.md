@@ -23,7 +23,7 @@ The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution 
 
 ```bash
 responder --interface "eth0"
-responder -I "eth0" -A
+responder -I "eth0"
 ```
 {% endtab %}
 
