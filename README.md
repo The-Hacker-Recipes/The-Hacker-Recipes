@@ -1,6 +1,10 @@
 # Introduction
 
-![](<.gitbook/assets/thr\_preview (1).png>)
+<div align="center">
+
+<img src=".gitbook/assets/thr_preview (1).png" alt="">
+
+</div>
 
 
 
