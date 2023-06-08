@@ -75,12 +75,11 @@ gosecretsdump -ntds ntds.dit.save -system system.save
 
 ## NTDS Directory parsing and extraction
 
-With the required files, it is possible to extract more information than juste secrets. The NTDS file is responsible for storing the entire directory, with users, groups, OUs, trusted domains etc... This data can be retrieved by parsing the NTDS with tools like [ntdsdotsqlite](https://github.com/almandin/ntdsdotsqlite). With the NTDS alone, objects can be extracted from the NTDS such as user and machine accounts, with a lot of information about them: descriptions, user account control flags, last logon and password change timestamps etc... This information is stored as an SQLite database which is way more easier to browse and query.
+With the required files, it is possible to extract more information than just secrets. The NTDS file is responsible for storing the entire directory, with users, groups, OUs, trusted domains etc... This data can be retrieved by parsing the NTDS with tools like [ntdsdotsqlite](https://github.com/almandin/ntdsdotsqlite). With the NTDS alone, objects can be extracted from the NTDS such as user and machine accounts, with a lot of information about them: descriptions, user account control flags, last logon and password change timestamps etc. This information is stored as an SQLite database which is easier to browse and query.
 
-With the SYSTEM hive available it is able to extract credentials as well: NT and LM hashes, supplemental credentials such as kerberos keys, cleartext passwords and password hash history.
+With the `SYSTEM` hive available it is able to extract credentials as well: NT and LM hashes, supplemental credentials such as kerberos keys, cleartext passwords and password hash history.
 
-
-```
+```bash
 ntdsdotsqlite ntds.dit -o ntds.sqlite
 ntdsdotsqlite ntds.dit -o ntds.sqlite --system SYSTEM.hive
 ```
