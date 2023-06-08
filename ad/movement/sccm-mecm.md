@@ -349,7 +349,7 @@ Note that the incoming authentication requsts might take a while (couple minutes
 
 <div>
 
-<figure><img src="../../.gitbook/assets/SCCM_Lateral_Movement_Execution_Step3_Trigger_Deployment.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/SCCM_Lateral_Movement_Execution_Step3_Trigger_Deployment (1).png" alt=""><figcaption></figcaption></figure>
 
  
 
