@@ -102,7 +102,7 @@ sed -i 's/HTTP = On/HTTP = Off/g' /PATH/TO/Responder/Responder.conf
 ```
 {% endhint %}
 
-Below are different use-cases of ntlmrelayx. The last "**+**" tab lists other interesting features that make this tool a must-have when attacking AD domains. It's important to know that many of the use-cases below can be combined.
+Below are different use-cases of ntlmrelayx.
 
 {% tabs %}
 {% tab title="Cred dump" %}
