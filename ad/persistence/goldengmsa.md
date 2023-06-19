@@ -9,7 +9,7 @@ Within an Active Directory environment, service accounts are often created and u
 The password of a gMSA account can legitimately be requested by authorized applications. In that case, an LDAP request is made to the domain controller, asking for the gMSA account's `msDS-ManagedPassword` attribute's value.
 
 {% hint style="info" %}
-A gMSA account's `msDS-ManagedPassword` attribute doesn't actually store the password (it's a [constructed attribute](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/a3aff238-5f0e-4eec-8598-0a59c30ecd56)). Everytime that attribute is requested by an authorized principal, the domain controller computes it and returns the result. The calculation is detailed a bit more in the [password calculation](goldengmsa.md#part-3-password-calculation) part of this recipe, but simply said, it relies on a static master key (i.e. one of the KDS root keys) and some additional data relative to the gMSA account.
+A gMSA account's `msDS-ManagedPassword` attribute doesn't actually store the password (it's a [constructed attribute](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/a3aff238-5f0e-4eec-8598-0a59c30ecd56)). Everytime that attribute is requested by an authorized principal, the domain controller computes it and returns the result. The calculation is detailed a bit more in the [password calculation](goldengmsa.md#password-calculation) part of this recipe, but simply said, it relies on a static master key (i.e. one of the KDS root keys) and some additional data relative to the gMSA account.
 {% endhint %}
 
 The "GoldenGMSA" persistence lies in the fact that the KDS root keys used for gMSA password calculation don't change (at least not without some admin intervention or custom automation). Once they are exfiltrated and saved, any gMSA account password can be calculated since the additional values needed can be obtained by any low-privileged user.
@@ -32,7 +32,8 @@ GoldenGMSA.exe kdsinfo
 
 With the `--forest` argument specifying the target domain or forest, SYSTEM privileges are required on the corresponding domain or forest Domain Controller. In case a child domain is specified, the parent domain keys will be dumped as well.
 
-<pre class="language-batch"><code class="lang-batch"><strong>GoldenGMSA.exe kdsinfo --forest child.lab.local</strong></code></pre>
+<pre class="language-batch"><code class="lang-batch"><strong>GoldenGMSA.exe kdsinfo --forest child.lab.local
+</strong></code></pre>
 {% endtab %}
 
 {% tab title="UNIX-like" %}
@@ -42,10 +43,10 @@ _At the time of writing this recipe, September 24th, 2022, no equivalent exists 
 
 ### Retrieving gMSA passwords
 
-Later on, the attacker can then, with low-privileged access to the domain:&#x20;
+Later on, the attacker can then, with low-privileged access to the domain:
 
-1. [dump some information relative to the gMSA account](goldengmsa.md#2.-account-information-dump) to retrieve the password for
-2. use those elements to [calculate the gMSA password](goldengmsa.md#3.-password-calculation)
+1. [dump some information relative to the gMSA account](goldengmsa.md#account-information-dump) to retrieve the password for
+2. use those elements to [calculate the gMSA password](goldengmsa.md#password-calculation)
 
 #### Account information dump
 
