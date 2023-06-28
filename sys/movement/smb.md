@@ -34,7 +34,7 @@ smbmap -u '' -p '' -H $IP
 smbclient //$IP/$SHARE_NAME
 ```
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) can be used to test for null session on multiple hosts.
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used to test for null session on multiple hosts.
 
 ```bash
 crackmapexec smb $TARGETS -u '' -p '' --shares
@@ -77,7 +77,7 @@ Valid credentials can then be used to list accessible shares and enumerate the c
 
 ### Data exfiltration
 
-Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html) and [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) can be used to recursively download a SMB share's content.
+Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html) and [CrackMapExec](https://github.com/mpgn/CrackMapExec) can be used to recursively download a SMB share's content.
 
 ```bash
 # In an smbclient interactive session
@@ -165,7 +165,7 @@ Crackmapexec is a swiss army that has featured a lot of the command execution me
 
 One of its feature is to automate the process of executing code via SMB by switching between methods when one fails.
 
-{% embed url="https://github.com/byt3bl33d3r/CrackMapExec" %}
+{% embed url="https://github.com/mpgn/CrackMapExec" %}
 
 ### 🛠️ Unauthenticated RCE
 

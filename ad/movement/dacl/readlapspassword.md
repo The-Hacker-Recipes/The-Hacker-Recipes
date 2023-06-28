@@ -10,7 +10,7 @@ From UNIX-like systems, [pyLAPS](https://github.com/p0dalirius/pyLAPS) (Python) 
 pyLAPS.py --action get -d 'DOMAIN' -u 'USER' -p 'PASSWORD' --dc-ip 192.168.56.101
 ```
 
-Alternatively, [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) also has this ability (since v5.1.6).. In case it doesn't work [this public module](https://github.com/T3KX/Crackmapexec-LAPS) for CrackMapExec could also be used.
+Alternatively, [CrackMapExec](https://github.com/mpgn/CrackMapExec) also has this ability (since v5.1.6).. In case it doesn't work [this public module](https://github.com/T3KX/Crackmapexec-LAPS) for CrackMapExec could also be used.
 
 ```bash
 # Default command

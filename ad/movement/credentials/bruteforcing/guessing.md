@@ -21,7 +21,7 @@ There are three major types of credential guessing.
 Depending on the target service, different lists of common passwords (e.g. [the SecLists ones](https://github.com/danielmiessler/SecLists/tree/master/Passwords/Common-Credentials)) and different tools can be used.
 
 * [Hydra](https://github.com/vanhauser-thc/thc-hydra) (C) can be used against **a lot (50+)** of services like FTP, HTTP, IMAP, LDAP, MS-SQL, MYSQL, RDP, SMB, SSH and many many more.
-* [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) can be used against LDAP, WinRM, SMB, SSH and MS-SQL.
+* [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used against LDAP, WinRM, SMB, SSH and MS-SQL.
 * [Kerbrute](https://github.com/ropnop/kerbrute) (Go) and [smartbrute](https://github.com/ShutdownRepo/smartbrute) (Python) can be used against [Kerberos pre-authentication](../../kerberos/pre-auth-bruteforce.md).
 
 {% hint style="info" %}

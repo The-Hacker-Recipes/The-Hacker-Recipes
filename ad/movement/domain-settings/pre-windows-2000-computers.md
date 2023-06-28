@@ -15,7 +15,7 @@ Finding computer accounts that have been "pre-created" (i.e. manually created in
 
 The `logonCount` attribute can be filtered as well.
 
-The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) tool can be used to find such accounts. Once "pre-created" computer accounts that have not authenticated are found, they should be usable with their lowercase name set as their password. This can be tested with [CrackMapExec](https://github.com/Porchetta-Industries/CrackMapExec) (Python) for instance.
+The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) tool can be used to find such accounts. Once "pre-created" computer accounts that have not authenticated are found, they should be usable with their lowercase name set as their password. This can be tested with [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) for instance.
 
 <pre class="language-bash" data-overflow="wrap"><code class="lang-bash"><strong># 1. find pre-created accounts that never logged on
 </strong><strong>ldapsearch-ad -l $LDAP_SERVER -d $DOMAIN -u $USERNAME -p $PASSWORD -t search -s '(&#x26;(userAccountControl=4128)(logonCount=0))' | tee results.txt

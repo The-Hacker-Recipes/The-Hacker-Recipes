@@ -49,7 +49,7 @@ Alternatively, information like the PKI's CA and DNS names can be gathered throu
 
 {% tabs %}
 {% tab title="CrackMapExec" %}
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)'s [adcs](https://github.com/byt3bl33d3r/CrackMapExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
+[CrackMapExec](https://github.com/mpgn/CrackMapExec)'s [adcs](https://github.com/mpgn/CrackMapExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
 
 ```bash
 crackmapexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs

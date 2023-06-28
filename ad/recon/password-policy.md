@@ -6,7 +6,7 @@ In order to fine-tune this, the password policy can be obtained. This policy can
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-On UNIX-like systems, there are many alternatives that allow obtaining the password policy like [polenum](https://github.com/Wh1t3Fox/polenum) \(Python\), [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) \(Python\), [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) \(Python\) and [enum4linux](enum4linux.md).
+On UNIX-like systems, there are many alternatives that allow obtaining the password policy like [polenum](https://github.com/Wh1t3Fox/polenum) \(Python\), [CrackMapExec](https://github.com/mpgn/CrackMapExec) \(Python\), [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) \(Python\) and [enum4linux](enum4linux.md).
 
 ```bash
 # polenum (obtained through MS-RPC)
