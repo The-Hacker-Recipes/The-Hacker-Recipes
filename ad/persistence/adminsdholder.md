@@ -20,11 +20,13 @@ The AdminSdHolder object is located at `CN=AdminSdHolder,CN=SYSTEM,DC=DOMAIN,DC=
 
 The default protected objects are the following.
 
-* members (possibly nested) of the following groups: `Account Operators`, `Administrators`, `Backup Operators`, `Domain Admins`, `Domain Controllers`, `Enterprise Admins`, `Print Operators`, `Read-only Domain Controllers`, `Replicator`, `Schema Admins`, `Server Operators`
+* member users (possibly nested) of the following groups: `Account Operators`, `Administrators`, `Backup Operators`, `Domain Admins`, `Domain Controllers`, `Enterprise Admins`, `Print Operators`, `Read-only Domain Controllers`, `Replicator`, `Schema Admins`, `Server Operators`
 * the following users: `Administrator`, `krbtgt`
 
 {% hint style="info" %}
-When talking about AdminSdHolder, the **AdminCount** attribute is usually mentioned. This attribute is automatically set on an object when adding it to a protected group. Originally, the purpose was to improved SDProp's performance. AdminCount cannot be used for malicious purposes and is now mainly informative.
+When talking about `AdminSdHolder`, the `AdminCount` attribute is usually mentioned. This attribute is automatically set on an object when adding it to a protected group. Originally, the purpose was to improve SDProp's performance. `AdminCount` cannot be used for malicious purposes and is now mainly informative.
+
+Also, `AdminCount` will block inheritance. This means that setting inheritence in the ACE added to `AdminSdHolder` will be mostly useless. For instance, domain controllers objects are part of the Domain Controller group (at `CN=Domain Controllers,CN=Users`) which has `AdminCount` set to 1. While a new ACE set to `AdminSdHolder` will propagate to the group, its members will not inherit it.
 {% endhint %}
 
 ## Practice
@@ -33,7 +35,7 @@ Once sufficient privileges are obtained, attackers can abuse AdminSdHolder to ge
 
 Let's say an attacker adds the following ACE to AdminSdHolder's DACL: `attackercontrolleduser: Full Control`.
 
-At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` privilege over all protected objects (Domain Admins, Domain Controllers, and so on).
+At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` privilege over all protected objects (Domain Admins, Account Operators, and so on).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
