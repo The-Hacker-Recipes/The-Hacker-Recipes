@@ -8,7 +8,7 @@ The operation consists in the PDC (Principal Domain Controller) Emulator restori
 
 The operation is conducted by a "worker code" called **SDProp** (Security Descriptor propagator).&#x20;
 
-SDProp propagates AdminSdHolder's DACL to every protected object every 60 minutes if their DACL is different.
+SDProp propagates AdminSdHolder's Security Descriptor (which contains the DACL) to every protected object every 60 minutes if their SD is different.
 
 The AdminSdHolder object is located at `CN=AdminSdHolder,CN=SYSTEM,DC=DOMAIN,DC=LOCAL`. For instance, the default AdminSdHolder object's DACL contains the following.
 
