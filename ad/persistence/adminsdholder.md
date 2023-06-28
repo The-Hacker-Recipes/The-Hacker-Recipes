@@ -24,6 +24,10 @@ The default protected objects are the following.
 * the following users: `Administrator`, `krbtgt`
 
 {% hint style="info" %}
+It's worth noting the members of the `Domain Controllers` and `Read-Only Domain Controllers` groups are not protected.
+{% endhint %}
+
+{% hint style="info" %}
 When talking about `AdminSdHolder`, the `AdminCount` attribute is usually mentioned. This attribute is automatically set on an object when adding it to a protected group. Originally, the purpose was to improve SDProp's performance. `AdminCount` cannot be used for malicious purposes and is now mainly informative.
 
 Also, `AdminCount` will block inheritance. This means that setting inheritence in the ACE added to `AdminSdHolder` will be mostly useless. For instance, domain controllers objects are part of the Domain Controller group (at `CN=Domain Controllers,CN=Users`) which has `AdminCount` set to 1. While a new ACE set to `AdminSdHolder` will propagate to the group, its members will not inherit it.
