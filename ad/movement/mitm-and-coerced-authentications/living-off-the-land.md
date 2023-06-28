@@ -132,7 +132,7 @@ $lnk.Save()
 * LNK files can be mixed with some HTA: [LNK HTA Polyglot](https://hatching.io/blog/lnk-hta-polyglot/)
 {% endhint %}
 
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) can be used to automatically push LNK files to a writeable share.
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used to automatically push LNK files to a writeable share.
 
 ```bash
 # Creation & upload

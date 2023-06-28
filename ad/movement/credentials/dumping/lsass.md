@@ -16,7 +16,7 @@ The Local Security Authority Subsystem Service (LSASS) is a Windows service resp
 
 * several dumping methods: comsvcs.dll, [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump), [Dumpert](https://github.com/outflanknl/Dumpert)
 * several authentication methods: like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
-* it can be used either as a standalone script, as a [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) module or as a Python library
+* it can be used either as a standalone script, as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module or as a Python library
 * it can interact with a Neo4j database to set [BloodHound](https://github.com/BloodHoundAD/BloodHound) targets as "owned"
 
 ```bash

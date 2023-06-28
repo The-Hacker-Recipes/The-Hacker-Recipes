@@ -115,7 +115,7 @@ secretsdump.py -sam '/path/to/sam.save' -security '/path/to/security.save' -syst
 {% endtab %}
 
 {% tab title="CrackMapExec" %}
-[CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec) (Python) can be used to remotely dump SAM and LSA secrets, on multiple hosts. It offers several authentication methods like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used to remotely dump SAM and LSA secrets, on multiple hosts. It offers several authentication methods like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
 
 ```bash
 # Remote dumping of SAM/LSA secrets
