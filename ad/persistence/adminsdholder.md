@@ -24,7 +24,7 @@ The default protected objects are the following.
 * the following users: `Administrator`, `krbtgt`
 
 {% hint style="info" %}
-It's worth noting the members of the `Domain Controllers` and `Read-Only Domain Controllers` groups are not protected.
+It's worth noting the members of the `Domain Controllers` and `Read-Only Domain Controllers` groups are not protected ([source](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/a0d0b4fa-2895-4c64-b182-ba64ad0f84b8)).
 {% endhint %}
 
 {% hint style="info" %}
