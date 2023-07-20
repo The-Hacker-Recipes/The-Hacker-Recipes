@@ -44,11 +44,11 @@ In order to obtain an abusable template, some attributes and parameters need to 
    3. PKINIT Client Authentication (OID: `1.3.6.1.5.2.3.4`)
    4. Any Purpose (OID: `2.5.29.37.0`)
    5. No EKU
-6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](../kerberos/ptt.md).
+6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](broken-reference).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](./#attack-paths)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](broken-reference)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
 
 ```bash
 # 1. Overwrite the certificate template and save the old configuration
@@ -137,7 +137,7 @@ This ID can be used by a user with the **ManageCA** _and_ **ManageCertificates**
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](./#attack-paths)) and modify some CA's attributes like the officiers list (an officier is a user with the **ManageCertificate** rights) or the enabled certificate templates.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](broken-reference)) and modify some CA's attributes like the officiers list (an officier is a user with the **ManageCertificate** rights) or the enabled certificate templates.
 
 ```bash
 # Add a new officier
@@ -192,7 +192,7 @@ DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](./#attack-paths)). Coupled with the **ManageCA** right, it is possible to issue a certificate from a failed request.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](broken-reference)). Coupled with the **ManageCA** right, it is possible to issue a certificate from a failed request.
 
 ```bash
 # Issue a failed request (need ManageCA and ManageCertificates rights for a failed request)

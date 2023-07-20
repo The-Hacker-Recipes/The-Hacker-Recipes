@@ -59,7 +59,7 @@ With enough permissions (`GenericAll`, `GenericWrite`) over a disabled object, i
 * `WriteSPN`, a write permission on an object's `Service-Principal-Name` attribute, for [targeted Kerberoasting](targeted-kerberoasting.md) and [SPN jacking](../kerberos/spn-jacking.md) attacks
 * `AddSelf`, similar to `AddMember`. While `AddMember` is `WriteProperty` access right on the target's `Member` attribute, `AddSelf` is a `Self` access right on the target's `Member` attribute, allowing the attacker to [add itself to the target group](addmember.md), instead of adding arbitrary principals.
 * `AddAllowedToAct`, a write permission on an object's `msDS-Allowed-To-Act-On-Behalf-Of-Other-Identity` attribute, for [Kerberos RBCD](../kerberos/delegations/rbcd.md) attacks
-* `SyncLAPSPassword`, both `DS-GetChanges` and `DS-GetChangesInFilteredSet`, for [synchronizing LAPS password](readlapspassword.md) domain-wise
+* `SyncLAPSPassword`, both `DS-GetChanges` and `DS-GetChangesInFilteredSet`, for [synchronizing LAPS password](broken-reference) domain-wise
 * `WriteAccountRestrictions`, which refers to the `User-Account-Restrictions` property set, which contains enough permissions to modify the `msDS-Allowed-To-Act-On-Behalf-Of-Other-Identity` attribute of the target objects, for [Kerberos RBCD](../kerberos/delegations/rbcd.md) attacks
 
 ### Permisssions index

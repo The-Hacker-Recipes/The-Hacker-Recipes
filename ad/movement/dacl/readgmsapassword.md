@@ -2,7 +2,7 @@
 
 This abuse stands out a bit from other abuse cases. It can be carried out when controlling an object that has enough permissions listed in the target gMSA account's `msDS-GroupMSAMembership` attribute's DACL. Usually, these objects are principals that were configured to be explictly allowed to use the gMSA account.
 
-The attacker can then read the gMSA (group managed service accounts) password of the account if those requirements are met.&#x20;
+The attacker can then read the gMSA (group managed service accounts) password of the account if those requirements are met.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -12,7 +12,7 @@ On UNIX-like systems, [gMSADumper](https://github.com/micahvandeusen/gMSADumper)
 gMSADumper.py -u 'user' -p 'password' -d 'domain.local'
 ```
 
-****
+
 
 **Alternative #1**: Impacket's [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) tool can be used to read and decode gMSA passwords. :warning: Some tests showed ntlmrelayx missed entries gMSADumper didn't.
 
@@ -23,8 +23,6 @@ ntlmrelayx.py -t ldaps://10.0.0.5 -debug --dump-gmsa --no-dump --no-da --no-acl 
 {% hint style="success" %}
 In order to easily fake a relayed authentication, once the relay servers are up and running, the tester can browse [http://127.0.0.1/](http://127.0.0.1/) in order to trigger a basic authentication that will then be relayed by ntlmrelayx, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96).
 {% endhint %}
-
-
 
 **Alternative #2**: The `msDS-ManagedPassword` attribute can also be manually obtained by running the following Python script. The [following code](https://github.com/SecureAuthCorp/impacket/blob/3f3002e1c1dd78a5ee6100d6824ff7b65bbb92b6/impacket/examples/ntlmrelayx/attacks/ldapattack.py#L672-L702) can then be used to decode the blob.
 

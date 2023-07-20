@@ -83,18 +83,18 @@ Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 [forged-tickets](forged-tickets/)
 {% endcontent-ref %}
 
-[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets/#silver-ticket) and [golden ticket](forged-tickets/#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](ptt.md).
+[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets/#silver-ticket) and [golden ticket](forged-tickets/#golden-ticket) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](broken-reference).
 
-{% content-ref url="ptt.md" %}
-[ptt.md](ptt.md)
+{% content-ref url="broken-reference" %}
+[Broken link](broken-reference)
 {% endcontent-ref %}
 
 ## Roasting
 
 If Kerberos preauthentication is disabled for a user, it is possible to request a TGT for that specific user without knowing any credentials. When the TGT is requested, the KDC sends it along with a session key in the `KRB_AS_REP` message to the requesting client. The session key being encrypted with the requested user's NT hash, it is possible to crack that session key offline in a an attempt to find the user's password. This is called ASREProasting.
 
-{% content-ref url="asreproast.md" %}
-[asreproast.md](asreproast.md)
+{% content-ref url="broken-reference" %}
+[Broken link](broken-reference)
 {% endcontent-ref %}
 
 If an attacker finds himself in a man-in-the-middle position, effectively capturing Kerberos messages, he could capture `KRB_AS_REQ` messages and operate a similar cracking attempt.
@@ -105,11 +105,11 @@ If an attacker finds himself in a man-in-the-middle position, effectively captur
 
 When attackers have a foothold in the domain (i.e. valid domain credentials), they have the (intended) ability to request a service ticket (ST) for any valid SPN (ServicePrincipalName), or SAN (samAccountName). The ST being encrypted with the service account's NT hash, when that service account's password is weak, it is then possible to crack the ST offline in an attempt to find the password. This is called Kerberoasting. On a side note, obtaining a service ticket for a service specified by its SAN in an attempt to Kerberoast the account will only work if the service has at least one SPN.
 
-{% content-ref url="kerberoast.md" %}
-[kerberoast.md](kerberoast.md)
+{% content-ref url="broken-reference" %}
+[Broken link](broken-reference)
 {% endcontent-ref %}
 
-As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username:  Kerberoast[#without-pre-authentication](kerberoast.md#without-pre-authentication "mention").
+As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username:  Kerberoast[Broken link](broken-reference "mention").
 
 ## Delegations
 

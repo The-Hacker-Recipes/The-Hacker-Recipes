@@ -23,7 +23,7 @@ WPAD spoofing can be combined with&#x20;
 Proxy auth NTLM authentication can either be
 
 * forced and [captured](../ntlm/capture.md) with Responder with `--wredir` and `--ProxyAuth`&#x20;
-* forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) by using the `--http-port 3128` argument
+* forced and [relayed](broken-reference) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) by using the `--http-port 3128` argument
 {% endhint %}
 
 ### through LLMNR, NBT-NS spoofing

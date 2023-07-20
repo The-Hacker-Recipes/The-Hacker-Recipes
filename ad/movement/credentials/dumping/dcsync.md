@@ -18,7 +18,7 @@ A setting exists in the account policy or when creating users telling the domain
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md).
+On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](broken-reference) or [pass-the-ticket](broken-reference).
 
 ```bash
 # using a plaintext password
@@ -33,15 +33,15 @@ secretsdump -k -outputfile 'something' 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
 
 The secretsdump script creates the following files.
 
-| File       | Content                                                   |
-| ---------- | --------------------------------------------------------- |
-| .ntds      | LM and NT password hashes                                 |
-| .cleartext | Passwords stored using reversible encryption              |
-| .kerberos  | Kerberos keys (DES, AES128 and AES256)                    |
-| .sam       | Domain controller's [SAM secrets](sam-and-lsa-secrets.md) |
-| .secrets   | Domain controller's [LSA secrets](sam-and-lsa-secrets.md) |
+| File       | Content                                             |
+| ---------- | --------------------------------------------------- |
+| .ntds      | LM and NT password hashes                           |
+| .cleartext | Passwords stored using reversible encryption        |
+| .kerberos  | Kerberos keys (DES, AES128 and AES256)              |
+| .sam       | Domain controller's [SAM secrets](broken-reference) |
+| .secrets   | Domain controller's [LSA secrets](broken-reference) |
 
-This attack can also be operated with a [relayed NTLM authentication](../../ntlm/relay.md), but only if the target domain controller is vulnerable to [Zerologon](../../netlogon/zerologon.md) since the DRSUAPI always requires signing.
+This attack can also be operated with a [relayed NTLM authentication](broken-reference), but only if the target domain controller is vulnerable to [Zerologon](../../netlogon/zerologon.md) since the DRSUAPI always requires signing.
 
 ```bash
 # target vulnerable to Zerologon, dump DC's secrets only
@@ -53,7 +53,7 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets/#golden-ticket) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md)).
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets/#golden-ticket) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](broken-reference) or [pass-the-ticket](broken-reference)).
 
 ```bash
 # Extract a specific user, in this case the krbtgt

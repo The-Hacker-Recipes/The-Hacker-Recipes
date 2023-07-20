@@ -476,7 +476,7 @@ From Windows systems, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) can
 
 #### 2. Setup NTLM relay server
 
-The target of the [NTLM relay attack](ntlm/relay.md) must be set to the site database server, either on the MS-SQL (port `1433/tcp`), or SMB service (port `445/tcp`) if the relayed user has admin privileges on the target. The rest of this page is focusing on relaying the authentication on the MS-SQL service.
+The target of the [NTLM relay attack](broken-reference) must be set to the site database server, either on the MS-SQL (port `1433/tcp`), or SMB service (port `445/tcp`) if the relayed user has admin privileges on the target. The rest of this page is focusing on relaying the authentication on the MS-SQL service.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -496,7 +496,7 @@ From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh
 {% endtab %}
 {% endtabs %}
 
-Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [relay.md](ntlm/relay.md "mention").&#x20;
+Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [Broken link](broken-reference "mention").&#x20;
 
 #### 3. Authentication coercion
 

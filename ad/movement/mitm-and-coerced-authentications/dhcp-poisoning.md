@@ -40,7 +40,7 @@ responder -I "eth0" -wPd
 The proxy auth NTLM authentication can either be
 
 * forced and [captured](../ntlm/capture.md) with Responder with the command line above (with `--wredir` and `--ProxyAuth`)
-* or forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument
+* or forced and [relayed](broken-reference) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument
 
 ```bash
 responder --interface "eth0" --DHCP --DHCP-DNS --wpad

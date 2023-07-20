@@ -6,7 +6,7 @@ When using PKINIT to obtain a TGT (Ticket Granting Ticket), the KDC (Key Distrib
 
 The NTLM keys will then be recoverable after a TGS-REQ through U2U, combined with S4U2self, which is a Service Ticket request made to the KDC where the user asks to authenticate to itself (i.e. [S4U2self + User-to-User authentication](./#s4u2self-+-u2u)).
 
-The following protocol diagram details how UnPAC-the-hash works. It allows attackers that know a user's private key, or attackers able to conduct [Shadow Credentials](shadow-credentials.md) or [Golden certificate](../../persistence/golden-certificate.md) attacks, to recover the user's LM and NT hashes.
+The following protocol diagram details how UnPAC-the-hash works. It allows attackers that know a user's private key, or attackers able to conduct [Shadow Credentials](shadow-credentials.md) or [Golden certificate](../../persistence/ad-cs/golden-certificate.md) attacks, to recover the user's LM and NT hashes.
 
 ![](../../../.gitbook/assets/UnPAC-the-hash.png)
 
@@ -29,7 +29,7 @@ export KRB5CCNAME="TGT_CCACHE_FILE"
 getnthash.py -key 'AS-REP encryption key' 'FQDN_DOMAIN'/'TARGET_SAMNAME'
 ```
 
-The NT hash can be used for [pass-the-hash](../ntlm/pth.md), [silver ticket](forged-tickets/#silver-ticket), or [Kerberos delegations](delegations/) abuse.
+The NT hash can be used for [pass-the-hash](broken-reference), [silver ticket](forged-tickets/#silver-ticket), or [Kerberos delegations](delegations/) abuse.
 {% endtab %}
 
 {% tab title="Windows" %}

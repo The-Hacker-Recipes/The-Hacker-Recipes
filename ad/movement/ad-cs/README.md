@@ -14,7 +14,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
   * related to [access control vulnerabilities](access-controls.md)
   * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
 * **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
-  * by [forging certificates with a stolen CA certificates](../../persistence/ca-shadow.md)
+  * by [forging certificates with a stolen CA certificates](broken-reference)
   * by trusting rogue CA certificates
   * by [maliciously creating vulnerable access controls](../../persistence/access-controls.md)
 
@@ -91,7 +91,7 @@ certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -old-bloodhound
 certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -vulnerable -stdout
 ```
 
-Certipy also supports BloodHound.  With the `-old-bloodhound` option, the data will be exported for the original version of [BloodHound](https://github.com/BloodHoundAD/BloodHound). With the `-bloodhound` option, the data will be exported for the modified version of BloodHound, [forked](https://github.com/ly4k/BloodHound/) by Certipy's [author](https://twitter.com/ly4k\_) (default output when no flag is set).
+Certipy also supports BloodHound. With the `-old-bloodhound` option, the data will be exported for the original version of [BloodHound](https://github.com/BloodHoundAD/BloodHound). With the `-bloodhound` option, the data will be exported for the modified version of BloodHound, [forked](https://github.com/ly4k/BloodHound/) by Certipy's [author](https://twitter.com/ly4k\_) (default output when no flag is set).
 
 The tool also supports multiple output types (text, json, stdout).
 

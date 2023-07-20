@@ -2,7 +2,7 @@
 
 ## Theory
 
-The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../ptt.md) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
+The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](broken-reference) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
 
 ## Practice
 
@@ -10,7 +10,7 @@ The long-term key of a service account can be used to forge a Service ticket tha
 When forging tickets, before November 2021 updates, the user-id and groups-ids were useful but the username supplied was mostly useless. As of Nov. 2021 updates, if the username supplied doesn't exist in Active Directory, the ticket gets rejected. This also applies to Silver Tickets.
 {% endhint %}
 
-In order to craft a silver ticket, testers need to find the target service account's RC4 key (i.e. NT hash) or AES key (128 or 256 bits). This can be done by [capturing an NTLM response](../../ntlm/capture.md) (preferably NTLMv1) and [cracking](../../credentials/cracking.md) it, by [dumping LSA secrets](../../credentials/dumping/sam-and-lsa-secrets.md), by doing a [DCSync](../../credentials/dumping/dcsync.md), etc.
+In order to craft a silver ticket, testers need to find the target service account's RC4 key (i.e. NT hash) or AES key (128 or 256 bits). This can be done by [capturing an NTLM response](../../ntlm/capture.md) (preferably NTLMv1) and [cracking](../../credentials/cracking.md) it, by [dumping LSA secrets](broken-reference), by doing a [DCSync](../../credentials/dumping/dcsync.md), etc.
 
 _"While the scope is more limited than Golden Tickets, the required hash is easier to get and there is no communication with a DC when using them, so detection is more difficult than Golden Tickets." (_[_adsecurity.org_](https://adsecurity.org/?p=2011)_)_
 
@@ -46,7 +46,7 @@ kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes128:$krbtgt_aes128_key /use
 kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes256:$krbtgt_aes256_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../ptt.md#injecting-the-ticket).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](broken-reference).
 {% endtab %}
 {% endtabs %}
 
