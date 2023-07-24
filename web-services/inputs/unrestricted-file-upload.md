@@ -4,7 +4,7 @@
 
 Many web applications manage files and allow users to upload and download pictures, documents and so on (e.g. profile pictures). When file upload procedures are not secured enough, attackers can sometimes upload content that servers will execute when later requested or included (PHP, ASP, JSP...).
 
-Among other things, unrestricted file uploads can lead to defacement (visual appearance alteration), client-side attacks (like [XSS](../../web/inputs/xss.md)), or even RCE (Remote Code Execution).
+Among other things, unrestricted file uploads can lead to defacement (visual appearance alteration), client-side attacks (like [XSS](xss.md)), or even RCE (Remote Code Execution).
 
 ## Practice
 
@@ -40,7 +40,7 @@ GIF89a
 {% hint style="info" %}
 Keep in mind that requesting a file and including it are two different things.
 
-If the uploaded file contains PHP code, it can be included and the code will be interpreted, regardless of the filename and extensions. Testers will need to find a way to include that file (see [File inclusion](../../web/inputs/file-inclusion/)) to achieve remote code execution.
+If the uploaded file contains PHP code, it can be included and the code will be interpreted, regardless of the filename and extensions. Testers will need to find a way to include that file (see [File inclusion](../inputs/file-inclusion/)) to achieve remote code execution.
 
 If the uploaded file contains a valid PHP extension in its name, it will  usally be possible to request it and the PHP code will be interpreted, no need to combine the file upload with a file inclusion to achieve remote code execution. Of course, this will depend on the server configuration.
 {% endhint %}

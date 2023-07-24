@@ -41,7 +41,7 @@ nbtscan -r $RANGE
 In Active Directory environnements, machines have their record on the Domain Controller (which usually hosts the DNS service). Through PTR resolution requests, is it then possible to find additional ranges and machines.
 
 {% content-ref url="../../ad/recon/dns.md" %}
-[dns.md](../../ad/recon/dns.md)
+[dns.md](../../active-directory/recon/dns.md)
 {% endcontent-ref %}
 
 ### ICMP discovery

@@ -4,7 +4,7 @@
 
 **Content-Type juggling** exploits the lack of checking on the `Content-Type` header when submitting an HTTP request.
 
-Most of the time, Content-Type juggling is a way to carry out other attacks such as [unrestricted-file-upload](../../web/inputs/file-inclusion/lfi-to-rce/file-upload.md) or [xxe-injection](content-type-juggling.md#example-of-a-content-type-juggling-attack-on-api-leading-to-xxe) (see [examples](content-type-juggling.md#examples)).
+Most of the time, Content-Type juggling is a way to carry out other attacks such as [unrestricted-file-upload](file-inclusion/lfi-to-rce/file-upload.md) or [xxe-injection](content-type-juggling.md#example-of-a-content-type-juggling-attack-on-api-leading-to-xxe) (see [examples](content-type-juggling.md#examples)).
 
 {% hint style="info" %}
 The `Content-Type` header is used to indicate the MIME type of the resource.
@@ -14,7 +14,7 @@ The `Content-Type` header is used to indicate the MIME type of the resource.
 {% endhint %}
 
 {% hint style="warning" %}
-If the [XCTO (X-Content-Type-Options)](../../web/config/http-headers/#xcto-x-content-type-options) security header is present, it will be difficult to perform the `Content-Type` juggling, as indicated in [mime-sniffing](../../web/config/http-headers/mime-sniffing.md). The XCTO security header can be used to indicate that the MIME types advertised in the `Content-Type` headers should be followed and not be changed by the browser depending on the page's content. Websites that implement this security header with the `nosniff` directive must also include a valid `Content-Type` header in their responses.
+If the [XCTO (X-Content-Type-Options)](../config/http-headers/#xcto-x-content-type-options) security header is present, it will be difficult to perform the `Content-Type` juggling, as indicated in [mime-sniffing](../config/http-headers/mime-sniffing.md). The XCTO security header can be used to indicate that the MIME types advertised in the `Content-Type` headers should be followed and not be changed by the browser depending on the page's content. Websites that implement this security header with the `nosniff` directive must also include a valid `Content-Type` header in their responses.
 {% endhint %}
 
 ## Practice

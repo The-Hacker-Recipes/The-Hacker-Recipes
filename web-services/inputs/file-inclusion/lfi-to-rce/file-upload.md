@@ -3,7 +3,7 @@
 ## Image Upload
 
 {% hint style="info" %}
-The prerequisite for this method is to be able to [upload a file](../../../../web-services/attacks-on-inputs/unrestricted-file-upload.md).
+The prerequisite for this method is to be able to [upload a file](../../../inputs/unrestricted-file-upload.md).
 {% endhint %}
 
 ```bash

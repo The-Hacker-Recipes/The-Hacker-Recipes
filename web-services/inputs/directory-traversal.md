@@ -57,7 +57,7 @@ dotdotpwn -m stdout -d 5
 
 #### Reconnaissance
 
-The first step is to find what kind of system is used (Linux, Windows...). One could do that by checking on which [web technology](https://www.thehacker.recipes/web-services/recon/web-technologies) is used (some technologies run on Linux while others run on Windows).
+The first step is to find what kind of system is used (Linux, Windows...). One could do that by checking on which [web technology](https://www.thehacker.recipes/web/recon/web-technologies) is used (some technologies run on Linux while others run on Windows).
 
 Next, finding the right parameter to inject is essential. Usually, a vulnerable parameter is one that requires a file that will be fetched by the back-end server using a path (form parameters, cookies...).
 

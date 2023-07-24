@@ -35,7 +35,7 @@ User enumeration can be made possible depending on the:
 
 ### JSON Web Tokens (JWS) / OAuth 2.0
 
-Check the following pages for issues regarding [JWS](https://www.thehacker.recipes/web-services/attacks-on-inputs/insecure-json-web-tokens) and [OAuth 2.0](https://www.thehacker.recipes/web-services/configuration/oauth-2.0).
+Check the following pages for issues regarding [JWS](https://www.thehacker.recipes/web/inputs/insecure-json-web-tokens) and [OAuth 2.0](https://www.thehacker.recipes/web/configuration/oauth-2.0).
 
 ### SQL injection
 
