@@ -9,9 +9,9 @@ A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things cl
 
 * LM hash and NT hash will refer to the hashing formats
 * LM, NTLM(v1), and NTLMv2, will refer to the authentication protocols
-* LMv1 and LMv2 are response formats that clients return when responding to NTLM_CHALLENGE NTLMv1 and NTLMv2 messages, respectively.
+* LMv1 and LMv2 are response formats that clients return when responding to NTLM\_CHALLENGE NTLMv1 and NTLMv2 messages, respectively.
 
-Yes.. this is confusing, but hey go tell this to Microsoft :triumph:&#x20;
+Yes.. this is confusing, but hey go tell this to Microsoft :triumph:
 {% endhint %}
 
 The LM (LAN Manager) and NTLM (New Technology LM) authentication protocols are widely used in today's Microsoft environments (but mostly NTLM). It relies on a challenge-response scheme based on three messages to authenticate. In order to prove its identity, the authenticating client is asked to compute a response based on multiple variables including:
@@ -47,22 +47,24 @@ This is meant to protect the user's password from eavesdropping by implementing 
 [cracking.md](../credentials/cracking.md)
 {% endcontent-ref %}
 
-The problem is that Microsoft has poorly implemented the zero-knowledge proof concept in the LM and NTLM protocols. The LM or NT hash is used "as is" to compute the response. This means an attacker knowing an LM or NT hash could use it to authenticate as a user without knowing the user's password. This technique is called [Pass the hash](broken-reference).
+The problem is that Microsoft has poorly implemented the zero-knowledge proof concept in the LM and NTLM protocols. The LM or NT hash is used "as is" to compute the response. This means an attacker knowing an LM or NT hash could use it to authenticate as a user without knowing the user's password. This technique is called [Pass the hash](../../../ad/movement/ntlm/broken-reference/).
 
-{% content-ref url="broken-reference" %}
-[Broken link](broken-reference)
+{% content-ref url="../../../ad/movement/ntlm/broken-reference/" %}
+[broken-reference](../../../ad/movement/ntlm/broken-reference/)
 {% endcontent-ref %}
 
-Attackers could also rely on [forced authentications and phishing](../mitm-and-coerced-authentications/) to [relay incoming authentications](broken-reference).
+Attackers could also rely on [forced authentications and phishing](../mitm-and-coerced-authentications/) to [relay incoming authentications](../../../ad/movement/ntlm/broken-reference/).
 
 {% content-ref url="../mitm-and-coerced-authentications/" %}
 [mitm-and-coerced-authentications](../mitm-and-coerced-authentications/)
 {% endcontent-ref %}
 
-{% content-ref url="broken-reference" %}
-[Broken link](broken-reference)
+{% content-ref url="../../../ad/movement/ntlm/broken-reference/" %}
+[broken-reference](../../../ad/movement/ntlm/broken-reference/)
 {% endcontent-ref %}
 
 ## Resources
 
 {% embed url="http://davenport.sourceforge.net/ntlm.html" %}
+
+{% embed url="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nlmp/b38c36ed-2804-4868-a9ff-8dd3182128e4" %}
