@@ -8,7 +8,7 @@
 A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are **hashing formats** used to store user passwords: LM, NT. And there are **authentication protocols** used to authenticate users to remote resources: LM, NTLMv1, and NTLMv2.
 
 * LM hash and NT hash will refer to the hashing formats
-* LM, NTLMv1, and NTLMv2, will refer to the authentication protocols
+* LM, NTLM(v1), and NTLMv2, will refer to the authentication protocols
 * LMv1 and LMv2 are response formats that clients return when responding to NTLM_CHALLENGE NTLMv1 and NTLMv2 messages, respectively.
 
 Yes.. this is confusing, but hey go tell this to Microsoft :triumph:&#x20;
