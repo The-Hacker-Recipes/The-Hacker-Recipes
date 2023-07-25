@@ -38,7 +38,7 @@
       * [Guessing](ad/movement/credentials/bruteforcing/guessing.md)
       * [Spraying](ad/movement/credentials/bruteforcing/password-spraying.md)
       * [Stuffing](ad/movement/credentials/bruteforcing/stuffing.md)
-    * [Shuffling](ad/movement/credentials/credential-shuffling.md)
+    * [Shuffling](ad/movement/credentials/shuffling.md)
     * [Impersonation](ad/movement/credentials/impersonation.md)
   * [MITM and coerced auths](ad/movement/mitm-and-coerced-authentications/README.md)
     * [ARP poisoning](ad/movement/mitm-and-coerced-authentications/arp-poisoning.md)

@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1003.003
 
 NTDS (Windows NT Directory Services) is the directory services used by Microsoft Windows NT to locate, manage, and organize network resources. The NTDS.dit file is a database that stores the Active Directory data (including users, groups, security descriptors and password hashes). This file is stored on the domain controllers.
 
-Once the secrets are extracted, they can be used for various attacks: [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../credential-shuffling.md), [cracking](../cracking.md), [pass-the-hash](broken-reference), [overpass-the-hash](../../kerberos/ptk.md) or [silver or golden tickets](../../kerberos/forged-tickets/).
+Once the secrets are extracted, they can be used for various attacks: [credential spraying](../bruteforcing/password-spraying.md), [stuffing](../bruteforcing/stuffing.md), [shuffling](../shuffling.md), [cracking](../cracking.md), [pass-the-hash](broken-reference), [overpass-the-hash](../../kerberos/ptk.md) or [silver or golden tickets](../../kerberos/forged-tickets/).
 
 ## Exfiltration
 

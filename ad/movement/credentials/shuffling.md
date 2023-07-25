@@ -4,7 +4,7 @@ description: MITRE ATT&CK™ Techniques T1003 and T1552 (kind of)
 
 # Shuffling
 
-When credentials are found \(through [dumping](dumping/) or [cracking](cracking.md) for instance\), attackers try to use them to obtain access to new resources and eventually [dump new credentials](dumping/). Those new credentials can then be used to access other resources, eventually find other credentials, and so forth. This process can theoretically be repeated until all resources have been carved out and all credentials have been found.
+When credentials are found \(through [dumping.mp](dumping/) or [cracking.md](cracking.md) for instance\), attackers try to use them to obtain access to new resources and eventually [dump new credentials](dumping/). Those new credentials can then be used to access other resources, eventually find other credentials, and so forth. This process can theoretically be repeated until all resources have been carved out and all credentials have been found.
 
 {% page-ref page="dumping/" %}
 

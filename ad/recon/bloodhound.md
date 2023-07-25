@@ -82,7 +82,7 @@ Once the collection is over, the data can be uploaded and analyzed in BloodHound
 * Find information about selected nodes: sessions, properties, group membership/members, local admin rights, Kerberos delegations, RDP rights, outbound/inbound control rights (ACEs), and so on
 * Find help about edges/attacks (abuse, OPSEC considerations, references)
 
-Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/dacl/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/credential-shuffling.md), [GPOs abuse](../movement/group-policies.md), [Kerberoast](broken-reference), [ASREProast](broken-reference), [domain trusts attacks](../movement/trusts.md), etc.
+Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/dacl/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/shuffling.md), [GPOs abuse](../movement/group-policies.md), [Kerberoast](broken-reference), [ASREProast](broken-reference), [domain trusts attacks](../movement/trusts.md), etc.
 
 ![](<../../.gitbook/assets/Screenshot from 2020-12-08 15-29-30.png>)
 
