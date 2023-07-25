@@ -15,7 +15,7 @@ NAC is a principle. It can be setup with several measures.
 * Filtering of MAC addresses
 * Authentication with username & password
 * Authentication with certificates
-* Fingerprinting&#x20;
+* Fingerprinting
 * Host checks
 
 NAC aims at protecting against the including, but not limited to, scenarios.
@@ -37,7 +37,7 @@ Most commonly, NAC solution are based on [802.1x](https://en.wikipedia.org/wiki/
 By default, the ports are in an unauthorized state and will only be allowed to transmit and receive [EAPOL](https://www.vocal.com/secure-communication/eapol-extensible-authentication-protocol-over-lan/) frames (Extensible Authentication Protocol Over LAN), which basically is encapsulated [EAP](https://en.wikipedia.org/wiki/Extensible\_Authentication\_Protocol).
 
 1. These EAPOL frames are forwarded from "the client desiring access to the network" to "the switch".
-2. The switch unpacks the EAPOL and forwards the EAP packet to an authentication server, which in most cases will be a **RADIUS** server.&#x20;
+2. The switch unpacks the EAPOL and forwards the EAP packet to an authentication server, which in most cases will be a **RADIUS** server.
 
 From there everything goes vice versa. As EAP is more a framework than a protocol, it contains several EAP methods for authentication. The most commonly known variants are EAP-TLS, EAP-MD5, EAP-PSK and EAP-IKEv2, allowing to authenticate by preshared keys, passwords, certificates or other mechanisms.
 
@@ -45,7 +45,7 @@ From there everything goes vice versa. As EAP is more a framework than a protoco
 
 When all checks are passed, the port will be switched to authorized and thus be allowed for normal network traffic.
 
-An infrastructure that is capable of talking 802.1x is needed for all this to work properly. The infrastructure is comprised of **supplicants** (i.e. clients), **authenticators** (i.e. switches) and **authentication servers** (i.e. [RADIUS](https://en.wikipedia.org/wiki/RADIUS) servers).&#x20;
+An infrastructure that is capable of talking 802.1x is needed for all this to work properly. The infrastructure is comprised of **supplicants** (i.e. clients), **authenticators** (i.e. switches) and **authentication servers** (i.e. [RADIUS](https://en.wikipedia.org/wiki/RADIUS) servers).
 
 A short overview from Gartner lists and reviews many NAC solutions: [NAC Reviews & Ratings](https://www.gartner.com/reviews/market/network-access-control).
 
@@ -181,7 +181,7 @@ But there is a downside to this method. As long as stateless protocols like UDP 
 
 This idea involves a device that - simply spoken - in a first instance just lets all the traffic traverse it by means of forwarding rules, being totally transparent to the network and all the participants. Tt then does some tcpdump magic to sniff traffic like ARP, NetBIOS but also Kerberos, Active Directory, web etc., extracting the needed info to spoof the victim and the networks gateway to stay under the radar. With this info the needed rules in ebtables, iptables etc. are automatically created, and will allow an attacker to interact with the network mimicking the victim.
 
-There is an awesome tool called [nac\_bypass](https://github.com/scipag/nac\_bypass) from [Mick Schneider](https://twitter.com/0x6d69636b) which he walks through in [this](https://www.scip.ch/?labs.20190207) blog post.&#x20;
+There is an awesome tool called [nac\_bypass](https://github.com/scipag/nac\_bypass) from [Mick Schneider](https://twitter.com/0x6d69636b) which he walks through in [this](https://www.scip.ch/?labs.20190207) blog post.
 
 The steps are as follows:
 
@@ -191,14 +191,14 @@ The steps are as follows:
 ![](<../../.gitbook/assets/image (9) (1).png>)
 
 {% hint style="info" %}
-To manually specify the interfaces, one can do so with the <mark style="color:blue;">-1</mark> and <mark style="color:blue;">-2</mark> switches. By default it will treat the lower device as switch side facing, and the next one as victim facing interface.&#x20;
+To manually specify the interfaces, one can do so with the <mark style="color:blue;">-1</mark> and <mark style="color:blue;">-2</mark> switches. By default it will treat the lower device as switch side facing, and the next one as victim facing interface.
 {% endhint %}
 
 * Wait until the script gathered the MAC address of the attacked system, the IP of the attacked system and the gateway's MAC address in order to perform the attack. If all went well the following info will show up and the device should be able to talk to the network:
 
 ![](<../../.gitbook/assets/image (5).png>)
 
-* run other offensive tools for [NTLM capture](../../active-directory/movement/ntlm/capture.md), [relay](broken-reference), etc.
+* run other offensive tools for [NTLM capture](../../ad/movement/ntlm/capture.md), [relay](broken-reference/), etc.
 
 {% hint style="info" %}
 Responder needs to bet set up to listen on the bridge interface, but change the answering IP address to the one of the victim.

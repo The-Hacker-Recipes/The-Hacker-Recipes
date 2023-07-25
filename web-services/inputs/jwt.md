@@ -82,9 +82,9 @@ print(token)
 
 The [kid](https://www.rfc-editor.org/rfc/rfc7515#section-4.1.4) (Key ID) is an optional parameter specified in the JWT header part to indicate the key used for signature validation in case there are multiple ones.
 
-The structure of this ID is not specified and it can be any string value (case-sensitive).&#x20;
+The structure of this ID is not specified and it can be any string value (case-sensitive).
 
-The last part is interesting because, if the parameter is vulnerable to [directory traversal](../inputs/directory-traversal.md), this would allow to perform path traversal and point to a file `path/file` with content we can guess or known somehow, and use its content as the value of the signing key.
+The last part is interesting because, if the parameter is vulnerable to [directory traversal](directory-traversal.md), this would allow to perform path traversal and point to a file `path/file` with content we can guess or known somehow, and use its content as the value of the signing key.
 
 {% hint style="info" %}
 > There are a bunch of files in /sys that are basically flags. Like the flag that says if ftrace is enabled is either 0 or 1. So the attacker just creates 2 tokens with that as the key and one of them will work!
@@ -123,9 +123,9 @@ print(token)
 {% endcode %}
 
 {% hint style="info" %}
-If Burp is used to craft the JWT token, a symmetric key with value of the `k` property in the JWT equal to `AA==` (base64 value of null byte) must be created.&#x20;
+If Burp is used to craft the JWT token, a symmetric key with value of the `k` property in the JWT equal to `AA==` (base64 value of null byte) must be created.
 
-The same secret value is to be used on [jwt.io](https://jwt.io/).&#x20;
+The same secret value is to be used on [jwt.io](https://jwt.io/).
 {% endhint %}
 
 ### Cracking the secret
@@ -136,14 +136,14 @@ When JWT uses `HMAC-SHA256`/`384`/`512` algorithms to sign the payload, testers 
 
 <pre class="language-bash" data-overflow="wrap"><code class="lang-bash"># crack the secret using dictionnary attack
 <strong>jwt_tool.py -v -C -d $wordlist_file "$JWT_value"
-</strong><strong>
-</strong># use the secret to tapmer (-T option) the token
+</strong>
+# use the secret to tapmer (-T option) the token
 # running this command will show up a menu to choose the value to tamper
 # the result token will be signed with the submited secret using the specified singing algorithm "alg" (hs256/hs384/hs512 = HMAC-SHA signing).
 <strong>jwt_tool.py -v -S $alg -p "$secret" -T "$JWT_value"
 </strong></code></pre>
 
-JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../active-directory/movement/credentials/cracking.md) page for more detailed info on how to use it).
+JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../ad/movement/credentials/cracking.md) page for more detailed info on how to use it).
 
 ```bash
 hashcat --hash-type 16500 --attack-mode 0 $JWTs_file $wordlist_file
