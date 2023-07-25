@@ -32,7 +32,7 @@ Sometimes ADB can no longer connect to the mobile. There are several reasons for
 
 > When in doubt, reboot (Confucious)
 
-## References
+## Resources
 
 {% embed url="https://developer.android.com/studio/debug/dev-options" %}
 

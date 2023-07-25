@@ -70,7 +70,7 @@ Domain members refresh group policy settings every 90 minutes by default but it 
 
 In addition to the aforementioned exploitation paths, GPOs can be abused in other ways: leveraging logon/logoff scripts, using registry for autoruns, installing .msi, edit services and similar code execution avenues.
 
-## References
+## Resources
 
 {% embed url="https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/" %}
 

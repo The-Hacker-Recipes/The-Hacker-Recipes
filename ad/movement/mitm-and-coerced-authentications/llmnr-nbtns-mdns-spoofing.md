@@ -53,7 +53,7 @@ Flags like `-ADIDNS,` `-ADIDNSForest,` `-ADIDNSCleanup`, `-ADIDNSThreshold` and 
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="http://remivernier.com/index.php/2018/08/26/protocoles-nbt-ns-llmnr-et-exploitation-des-failles/" %}
 

@@ -32,7 +32,7 @@ Many template engines offer a sandboxed mode for intentional template injection 
 
 
 
-## References
+## Resources
 
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection" %}
 

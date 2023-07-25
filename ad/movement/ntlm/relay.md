@@ -249,7 +249,7 @@ crackmapexec smb --gen-relay-list targets.txt $SUBNET
 ```
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://docs.microsoft.com/en-us/archive/blogs/josebda/the-basics-of-smb-signing-covering-both-smb1-and-smb2" %}
 

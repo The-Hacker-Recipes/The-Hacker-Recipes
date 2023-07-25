@@ -54,7 +54,7 @@ For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject t
 A great, stealthier, alternative is to [abuse S4U2self](../delegations/s4u2self-abuse.md) in order to impersonate a domain user with local admin privileges on the target machine by relying on Kerberos delegation instead of forging everything.
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://en.hackndo.com/kerberos-silver-golden-tickets/" %}
 

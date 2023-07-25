@@ -26,7 +26,7 @@ In order to test IDOR vulnerabilities, testers can follow two methodologies that
 
 While self-XSS are usually out-of-scope in bug bounty programs, and considered impactless in pentest engagements, combining an IDOR to a self-XSS can be impactful when triggering a self-XSS on another user. That is possible when there is an IDOR vulnerability when editing user's non-public info that can trigger an XSS.
 
-## References
+## Resources
 
 {% embed url="https://enciphers.com/insecure-direct-object-reference-a-modern-age-sqli/" %}
 

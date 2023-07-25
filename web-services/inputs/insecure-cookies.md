@@ -29,7 +29,7 @@ Cookies have a key/value pair along with attributes too. The attributes tell the
 * **Secure**: cookies can only be sent through HTTPS sessions, hence mitigating MITM (Man In The Middle) attacks allowing attackers to eavesdrop on unencrypted communications and stealing cookies
 * **SameSite**: cookies can only be sent with requests initiated from the same registrable domain, hence mitigating the risk of CSRF (Cross-Site Request Forgery) and Information leakage attacks.
 
-## References
+## Resources
 
 {% embed url="https://book.hacktricks.xyz/pentesting-web/hacking-with-cookies" %}
 

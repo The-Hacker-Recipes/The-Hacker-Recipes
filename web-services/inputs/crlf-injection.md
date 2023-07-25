@@ -73,7 +73,7 @@ Content-Length: 34
 <html>You have been Phished</html>
 ```
 
-## References
+## Resources
 
 {% embed url="https://www.acunetix.com/websitesecurity/crlf-injection/" %}
 

@@ -67,6 +67,6 @@ The second one relies on [GMSAPasswordReader](https://github.com/rvazarkar/GMSAP
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://cube0x0.github.io/Relaying-for-gMSA/" %}

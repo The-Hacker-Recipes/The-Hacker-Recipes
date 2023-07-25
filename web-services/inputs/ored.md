@@ -40,7 +40,7 @@ Redirections can be header based (`location` header sent from the server), or Ja
 The impact of this vulnerability is debated. Open redirects can help in phishing attacks but in some cases, it could help exploit an XSS, a SSRF or a CSRF, hence increasing the impact.
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://s0cket7.com/open-redirect-vulnerability/" %}
 

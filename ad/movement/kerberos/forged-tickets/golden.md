@@ -63,7 +63,7 @@ Another solution to this is to look for a specific user with appropriate rights 
 
 <figure><img src="../../../../.gitbook/assets/image (9).png" alt=""><figcaption><p>Using GoldenCopy for specific user impersonation</p></figcaption></figure>
 
-## References
+## Resources
 
 {% embed url="https://en.hackndo.com/kerberos-silver-golden-tickets/" %}
 

@@ -35,6 +35,6 @@ On February 12th 2019, Microsoft released updates for Exchange which resolved
 * the fact that Exchange servers had overkill permissions leading attacker to a full domain compromission.
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/" %}

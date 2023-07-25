@@ -44,6 +44,6 @@ The **Bronze bit** vulnerability (CVE-2020-17049) introduced the possibility of 
 
 ![](../../../../.gitbook/assets/Kerberos\_delegation.png)
 
-## References
+## Resources
 
 {% embed url="https://en.hackndo.com/kerberos" %}

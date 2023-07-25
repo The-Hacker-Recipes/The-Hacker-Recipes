@@ -90,7 +90,7 @@ On up-to-date machines (i.e. with the MS16-077 security update applied), WPAD ca
 
 This attack can be conducted with [mitm6](https://github.com/fox-it/mitm6) (Python), see the [DHCPv6 spoofing](dhcpv6-spoofing.md) page for exploitation notes.
 
-## References
+## Resources
 
 {% embed url="https://blog.netspi.com/adidns-revisited/" %}
 

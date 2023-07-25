@@ -66,7 +66,7 @@ By sending a very long password, a DoS attack can be possible. The password hash
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://www.netscout.com/what-is-ddos" %}
 

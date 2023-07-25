@@ -151,7 +151,7 @@ python3 ssrfmap.py -r data/request.txt -p url -m readfiles
 	 --exploit smtp # If port 25 is open and we can access it then, we can send message to anyone as victim user by generating email payload
 </code></pre>
 
-## References
+## Resources
 
 {% embed url="https://portswigger.net/web-security/ssrf" %}
 

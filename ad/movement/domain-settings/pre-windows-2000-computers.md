@@ -43,7 +43,7 @@ getTGT.py $DOMAIN/$COMPUTER_NAME\$:$COMPUTER_PASSWORD
 The ticket obtained can then be used with [ptt.md](../kerberos/ptt.md "mention")
 {% endhint %}
 
-## Reference
+## Resources
 
 {% embed url="https://www.trustedsec.com/blog/diving-into-pre-created-computer-accounts/" %}
 

@@ -114,7 +114,7 @@ Some common ssh credentials [here ](https://github.com/danielmiessler/SecLists/b
 
 #### Private key Bruteforcing
 
-## References
+## Resources
 
 {% embed url="https://book.hacktricks.xyz/pentesting/pentesting-ssh" %}
 

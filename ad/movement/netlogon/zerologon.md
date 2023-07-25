@@ -97,7 +97,7 @@ lsadump::changentlm /server:'Domain_controller' /user:'DC_account$' /oldntlm:'31
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://www.secura.com/blog/zero-logon" %}
 

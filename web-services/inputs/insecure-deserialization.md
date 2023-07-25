@@ -19,7 +19,7 @@ The tool [ysoserial](https://github.com/frohoff/ysoserial) (Java) can be used to
 
 🛠️ Add some examples ?
 
-## References
+## Resources
 
 {% embed url="https://medium.com/blog-blog/insecure-deserialization-e5398e83defea" %}
 

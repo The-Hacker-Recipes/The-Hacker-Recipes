@@ -34,6 +34,6 @@ The technique can be operated as follows:
 
 This technique can be combined with the [banana & chocolate cake](banana-and-chocolate-cake.md) one for a whole meal.
 
-## Reference
+## Resources
 
 {% embed url="https://www.seriouseats.com/french-omelette-cheese-recipe" %}

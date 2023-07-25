@@ -103,7 +103,7 @@ function reqListener() {
 };
 ```
 
-## References
+## Resources
 
 {% embed url="https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties" %}
 

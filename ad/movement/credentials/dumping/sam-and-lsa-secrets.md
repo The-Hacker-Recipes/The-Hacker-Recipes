@@ -155,7 +155,7 @@ lsadump::secrets /security:'C:\path\to\security.save' /system:'C:\path\to\system
 **Nota bene** secretsdump and crackmapexec both extract security questions, if any, from the LSA. They are json formatted, UTF-16-LE encoded, and hex encoded on top of that.
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="http://moyix.blogspot.com/2008/02/syskey-and-sam.html" %}
 

@@ -63,7 +63,7 @@ jadx application.apk -j $(grep -c ^processor /proc/cpuinfo) -d ./application-jad
 apktool d application.apk -o ./application-unpacked/ 
 ```
 
-## Reference
+## Resources
 
 {% embed url="https://github.com/nullenc0de/reverse-apk" %}
 

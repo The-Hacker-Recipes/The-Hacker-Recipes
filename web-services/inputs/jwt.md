@@ -155,7 +155,7 @@ In certain scenarios, public keys can be recovered when knowing one (for algos `
 
 This can be achieved with the following Python script : [JWT-Key-Recover](https://github.com/FlorianPicca/JWT-Key-Recovery)
 
-## References
+## Resources
 
 {% embed url="https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/" %}
 

@@ -47,7 +47,7 @@ Secret cookies, using POST instead of GET and URL rewriting are not efficient mi
 
 The tool [XSRFProbe](https://github.com/0xInfection/XSRFProbe) (Python) is an advanced audit and exploitation toolkit that can help testers find and exploit CSRFs.
 
-## References
+## Resources
 
 {% embed url="https://owasp.org/www-community/attacks/csrf" %}
 

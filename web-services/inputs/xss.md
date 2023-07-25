@@ -39,7 +39,7 @@ The following payload is used for testing [SQL injections](sqli.md), XSS (Cross-
 
 Tools like [XSStrike](https://github.com/s0md3v/XSStrike) (Python) and [XSSer](https://github.com/epsylon/xsser) (Python) can also help in finding and exploiting XSS vulnerable input vectors by fuzzing them with unique payloads and then searching for unique patterns in the responses.
 
-## References
+## Resources
 
 {% embed url="https://xss-game.appspot.com/" %}
 

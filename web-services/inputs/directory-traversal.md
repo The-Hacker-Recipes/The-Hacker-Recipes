@@ -101,7 +101,7 @@ There may be no "administrator" account, you have to guess the right one in that
     C:/$Recycle.Bin/S-1-5-18/desktop.ini
 ```
 
-## References
+## Resources
 
 {% embed url="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal" %}
 

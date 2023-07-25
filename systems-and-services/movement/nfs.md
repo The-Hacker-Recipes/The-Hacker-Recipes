@@ -39,4 +39,4 @@ Alternatively "no\_root\_squash" parameter turns off this configuration and give
 
 {% embed url="https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no_root_squash-misconfiguration-pe" %}
 
-## References
+## Resources

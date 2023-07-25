@@ -132,7 +132,7 @@ Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LL
 * `Stop-Inveigh` to stop all running modules
 * `Watch-Inveigh` to enable real time console output
 
-## References
+## Resources
 
 {% embed url="https://blog.netspi.com/exploiting-adidns/" %}
 

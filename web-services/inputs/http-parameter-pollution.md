@@ -40,6 +40,6 @@ After discovering a few HTTP parameters, one should know the server's behavior w
 
 The payload that would be used to conduct a HPP will depend on the browser's behavior (found previously).
 
-## References
+## Resources
 
 {% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/04-Testing_for_HTTP_Parameter_Pollution" %}

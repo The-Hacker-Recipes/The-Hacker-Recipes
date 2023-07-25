@@ -229,7 +229,7 @@ Here are some general guidelines for keeping things as secure as possible:
 * Restrict access to the systems. If someone is not able to get in between, he can't carry out attacks.
 * Awareness: train employees to ask questions and inform people, when they see a suspicious device hanging from a printer or stuff like that.
 
-## References
+## Resources
 
 {% embed url="https://www.youtube.com/watch?v=rurYRDlf1Bo" %}
 

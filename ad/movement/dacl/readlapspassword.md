@@ -46,6 +46,6 @@ SharpLAPS.exe /user:"DOMAIN\User" /pass:"Password" /host:"192.168.1.1"
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://simondotsh.com/infosec/2022/07/11/dirsync.html" %}

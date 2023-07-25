@@ -203,7 +203,7 @@ Walktrough
 POC
 {% endembed %}
 
-## References
+## Resources
 
 {% embed url="https://pandorafms.com/blog/what-is-wmi/" %}
 

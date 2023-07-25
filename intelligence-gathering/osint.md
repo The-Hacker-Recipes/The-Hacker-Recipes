@@ -36,7 +36,7 @@ In this part we will see how to get information about people \_\*\*\_which could
 **Image recognition:**  
 [**-**https://tineye.com/](https://tineye.com/)
 
-## References <a id="practice"></a>
+## Resources
 
 {% embed url="https://gbhackers.com/external-black-box-penetration-testing/" caption="" %}
 

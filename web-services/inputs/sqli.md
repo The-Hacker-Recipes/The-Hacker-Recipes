@@ -144,7 +144,7 @@ Upgrade-Insecure-Requests: 1
 username=testusername&password=testpassword
 ```
 
-## References
+## Resources
 
 {% embed url="https://www.asafety.fr/mysql-injection-cheat-sheet/" %}
 

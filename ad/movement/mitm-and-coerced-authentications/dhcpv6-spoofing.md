@@ -35,7 +35,7 @@ set dns.spoot.all true
 dns.spoof on
 ```
 
-## References
+## Resources
 
 {% embed url="https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/" %}
 

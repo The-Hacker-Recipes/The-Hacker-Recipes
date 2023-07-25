@@ -10,7 +10,7 @@ Some protection mechanisms should be incorporated:
 
 1. **Protection**: when deleting an account, the web application should request the user to submit its credentials (it can prevent attacks such CSRF, XSS...).
 
-## References
+## Resources
 
 {% embed url="https://hackerone.com/reports/361368" %}
 

@@ -30,7 +30,7 @@ Rubeus.exe golden /rodcNumber:$KBRTGT_NUMBER /flags:forwardable,renewable,enc_pa
 >
 > _(By Elad Shamir on_ [_specterops.io_](https://posts.specterops.io/at-the-edge-of-tier-zero-the-curious-case-of-the-rodc-ef5f1799ca06)_)_
 
-## References
+## Resources
 
 {% embed url="https://adsecurity.org/?p=3592" %}
 

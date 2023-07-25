@@ -30,6 +30,6 @@ Default passwords can be found through the following means
 This technique is not to be confused with credential bruteforcing which aims at sending multiple login+password attempts until valid credentials are found. The "default credentials" technique aims at finding potential valid creds depending on the information gathered during the reconnaissance phase.
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/02-Testing_for_Default_Credentials" %}

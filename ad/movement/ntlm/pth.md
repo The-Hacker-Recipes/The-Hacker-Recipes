@@ -114,7 +114,7 @@ Just like with any other domain account, a machine account's NT hash can be used
 A domain controller machine account's NT hash can be used with pass-the-hash to [dump the domain hashes (NTDS.dit)](broken-reference).&#x20;
 {% endhint %}
 
-## References
+## Resources
 
 {% embed url="https://en.hackndo.com/pass-the-hash/" %}
 

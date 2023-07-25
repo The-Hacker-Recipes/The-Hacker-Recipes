@@ -49,7 +49,7 @@ If the uploaded file contains a valid PHP extension in its name, it will  usally
 
 [Fuxploider](https://github.com/almandin/fuxploider) (Python) is a tool used to automate the process of detecting and exploiting file upload forms flaws. As any other fuzzing tool, testers need to be careful when using it.
 
-## References
+## Resources
 
 {% embed url="https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload" %}
 

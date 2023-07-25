@@ -46,6 +46,6 @@ Then, dump the `krbtgt_XXXXX` key on the RODC server with admin access on the ho
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="https://posts.specterops.io/at-the-edge-of-tier-zero-the-curious-case-of-the-rodc-ef5f1799ca06" %}

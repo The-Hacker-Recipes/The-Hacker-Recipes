@@ -57,7 +57,7 @@ A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `
 {% endtab %}
 {% endtabs %}
 
-## References
+## Resources
 
 {% embed url="http://www.harmj0y.net/blog/redteaming/abusing-active-directory-permissions-with-powerview/" %}
 

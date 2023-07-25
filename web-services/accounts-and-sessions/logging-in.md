@@ -63,7 +63,7 @@ For manual testing: [LDAP injection (PayloadsAllTheThings)](https://github.com/s
 
 Some web applications don't use TLS to encrypt login requests, this can lead to account takeover via a Man-in-the-Middle attack.
 
-## References
+## Resources
 
 {% embed url="https://portswigger.net/web-security/authentication/password-based" %}
 

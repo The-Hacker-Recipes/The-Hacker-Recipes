@@ -94,7 +94,7 @@ As code execution functions can be filtered, the phpinfo testing phase is requir
 [rfi-to-rce.md](rfi-to-rce.md)
 {% endcontent-ref %}
 
-## References
+## Resources
 
 {% embed url="https://www.acunetix.com/websitesecurity/directory-traversal" %}
 

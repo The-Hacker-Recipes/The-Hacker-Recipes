@@ -269,7 +269,7 @@ Content-Length: 107
 
 </details>
 
-## References
+## Resources
 
 {% embed url="https://portswigger.net/web-security/xxe" %}
 
