@@ -24,7 +24,7 @@ The default protected objects are the following.
 * the following users: `Administrator`, `krbtgt`
 
 {% hint style="info" %}
-It's worth noting the members of the `Domain Controllers` and `Read-Only Domain Controllers` groups are not protected ([source](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/a0d0b4fa-2895-4c64-b182-ba64ad0f84b8)).
+It's worth noting the members of the `Domain Controllers` and `Read-Only Domain Controllers` groups are not protected ([source](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/a0d0b4fa-2895-4c64-b182-ba64ad0f84b8)), only the groups are.
 {% endhint %}
 
 {% hint style="info" %}
@@ -45,7 +45,7 @@ At the next run of SDProp, `attackercontrolleduser` will have a `GenericAll` pri
 {% tab title="UNIX-like" %}
 From UNIX-like systems, this can be done with [Impacket](https://github.com/SecureAuthCorp/impacket)'s dacledit.py (Python).
 
-:warning: _At the time of writing, May 2nd 2022, the_ [_Pull Request (#1291)_](https://github.com/SecureAuthCorp/impacket/pull/1291) _is still pending._
+:warning: _July 25th 2023, the_ [_Pull Request (#1291)_](https://github.com/SecureAuthCorp/impacket/pull/1291) _is still pending._
 
 ```bash
 dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' 'domain'/'user':'password'
