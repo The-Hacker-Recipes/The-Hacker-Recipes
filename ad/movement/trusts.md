@@ -1,7 +1,7 @@
-# 🛠️ Trusts
+# Trusts
 
 {% hint style="danger" %}
-**This is a work-in-progress**. It's indicated with the 🛠️ emoji in the page name or in the category name. Wanna help? Please reach out to me: [@\_nwodtuhs](https://twitter.com/\_nwodtuhs)
+**There are some parts missing here.** It's indicated with the 🛠️ emoji in the category name. Wanna help? Please reach out to me: [@\_nwodtuhs](https://twitter.com/\_nwodtuhs)
 {% endhint %}
 
 ## Theory
@@ -165,7 +165,7 @@ Understanding how Kerberos works is required here: [the Kerberos protocol](kerbe
 >
 > _(by_ [_Will Schroeder_](https://twitter.com/harmj0y) _on_ [_blog.harmj0y.net_](https://blog.harmj0y.net/redteaming/domain-trusts-were-not-done-yet/)_)_
 
-From an offensive point of view, just like a [golden ticket](kerberos/forged-tickets/golden.md), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
+From an offensive point of view, just like a [golden ticket](broken-reference), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
 
 Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
@@ -286,7 +286,7 @@ In addition to enumerating trusts, retrieving information about the permissions 
 
 ### Forging tickets
 
-When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](kerberos/forged-tickets/golden.md), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
+When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](broken-reference), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
 
 Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](trusts.md#sid-filtering) is configured in the trust)&#x20;
 
@@ -339,12 +339,12 @@ raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
 ```
 {% endtab %}
 
-{% tab title="Windows" %}
+{% tab title="🛠️ Windows" %}
 // TODO
 {% endtab %}
 {% endtabs %}
 
-### SID filtering bypass
+### 🛠️ SID filtering bypass
 
 > a few SIDs will (almost) never be filtered: "Enterprise Domain Controllers" (S-1-5-9) SID and those described by the [trusted domain object (TDO)](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/f2ef15b6-1e9b-48b5-bf0b-019f061d41c8#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4), as well as seven well-known SIDs (see [MS-PAC doc](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), and [improsec's blogpost](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained#yui\_3\_17\_2\_1\_1673614140169\_543)).
 >
@@ -399,7 +399,7 @@ The attack can be conducted with [Dirk-jan Mollema](https://twitter.com/\_dirkja
 </strong>KRB5CCNAME=username.ccache smbclient.py -k "trusted_domain"/"someusername"@"target_server_FQDN" -no-pass
 </code></pre>
 
-#### Keys container trust
+#### 🛠️ Keys container trust
 
 // [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
 
@@ -407,25 +407,25 @@ The attack can be conducted with [Dirk-jan Mollema](https://twitter.com/\_dirkja
 
 // Container should be empty, but if it's not, exploitable seulement s'il y a déjà des objets dans le conteneur ce qui n'est pas censé être le cas par défaut.
 
-#### DNS trust
+#### 🛠️ DNS trust
 
 // [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
 
-#### GPO on site
+#### 🛠️ GPO on site
 
 // [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research)
 
-#### GoldenGMSA
+#### 🛠️ GoldenGMSA
 
 // [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-5-golden-gmsa-trust-attack-from-child-to-parent](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-5-golden-gmsa-trust-attack-from-child-to-parent)
 
-#### Schema change attack ([source](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent))
+#### 🛠️ Schema change attack ([source](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent))
 
 Depuis le domaine source, en tant que SYSTEM, on peut modifier le schéma dans la partition de Configuration puis attendre que ce soit répliqué sur le domaine cible
 
 Plus particulièrement en modifiant le defaultSecurityDescriptor de classes intéressantes (groupes, users, GPC), ou retirant le flag confidential
 
-### Abusing permissions
+### 🛠️ Abusing permissions
 
 #### Unconstrained delegation abuse
 
@@ -456,17 +456,17 @@ In most cases, the attacker will have to:
 [unconstrained.md](kerberos/delegations/unconstrained.md)
 {% endcontent-ref %}
 
-#### DACL abuse
+#### 🛠️ DACL abuse
 
 TODO // How a domain admin of forest A could administrate a domain in forest B ? [https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS](https://social.technet.microsoft.com/Forums/windowsserver/en-US/fa4070bd-b09f-4ad2-b628-2624030c0116/forest-trust-domain-admins-to-manage-both-domains?forum=winserverDS)
 
 TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign principals, BloodHound comes in handy.
 
-#### ADCS abuse
+#### 🛠️ ADCS abuse
 
 When an ADCS is installed and configured in an Active Directory environment, a CA is available for the whole forest. Every usual ADCS attack can be executed through intra-forest trusts. [ESC8](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints) and [ESC11](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/) in particular can be used to pivot to any domain within the forest associated to the C
 
-#### Group memberships
+#### 🛠️ Group memberships
 
 // group scoping, [https://posts.specterops.io/a-pentesters-guide-to-group-scoping-c7bbbd9c7560](https://posts.specterops.io/a-pentesters-guide-to-group-scoping-c7bbbd9c7560)
 
