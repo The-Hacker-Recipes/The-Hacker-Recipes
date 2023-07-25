@@ -1,2 +1,0 @@
-# Certificate templates
-

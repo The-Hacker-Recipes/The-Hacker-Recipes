@@ -1,7 +1,7 @@
 # Certificate Services (AD-CS)
 
 {% hint style="info" %}
-See AD > Movement > Certificate Services (AD-CS) to know more about it.
+See [AD > Movement > Certificate Services (AD-CS)](../../movement/ad-cs/) to know more about it.
 {% endhint %}
 
 ## Theory
@@ -14,13 +14,10 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 * **Account persistence** (dubbed PERSIST1 to PERSIST3)
 * **Domain escalation** (dubbed ESC1 to ESC8)
   * based on [misconfigured certificate templates](../../movement/ad-cs/certificate-templates.md)
-  * based on [dangerous CA configuration](../../movement/ad-cs/ca-configuration.md)
+  * based on [dangerous CA configuration](../../movement/ad-cs/certificate-authority.md)
   * related to [access control vulnerabilities](../../movement/ad-cs/access-controls.md)
   * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](../../movement/ad-cs/web-endpoints.md)
 * **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
-  * by forging certificates with a stolen CA certificates
-  * by trusting rogue CA certificates
-  * by maliciously creating vulnerable access controls
-
-
-
+  * by [forging certificates with a stolen CA certificates](certificate-authority.md#stolen-ca)
+  * by [trusting rogue CA certificates](certificate-authority.md#rogue-ca)
+  * by [maliciously creating vulnerable access controls](access-controls.md)

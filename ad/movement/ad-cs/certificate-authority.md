@@ -1,4 +1,4 @@
-# CA configuration
+# Certificate authority
 
 ## Theory
 
@@ -13,7 +13,7 @@ If the CA is configured with the  `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins 
 {% endhint %}
 
 {% hint style="danger" %}
-[May 2022 security updates](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-26923) broke ESC6.
+[May 2022 security updates](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-26923) broke the ESC6 attack.
 {% endhint %}
 
 ## Practice

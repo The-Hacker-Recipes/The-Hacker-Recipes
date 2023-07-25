@@ -64,7 +64,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 ### Active Directory Certificate Services
 
-* [ ] The CA is configured correctly (the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag is not set). This prevents [the corresponding domain escalation attack](ad-cs/ca-configuration.md).
+* [ ] The CA is configured correctly (the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag is not set). This prevents [the corresponding domain escalation attack](ad-cs/certificate-authority.md).
 * [ ] There are no certificate templates that are badly configured. This prevents [the corresponding domain escalation attack](ad-cs/certificate-templates.md).
 * [ ] AD-CS web endpoints are secured against [AD-CS NTLM relay attacks](ad-cs/web-endpoints.md) (HTTPS and EPA (Extended Protection for Authentication) enforced).
 

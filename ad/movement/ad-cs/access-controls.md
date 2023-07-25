@@ -8,7 +8,7 @@ Active Directory Certificate Services add multiple objects to AD, including secu
 
 * **Certificate templates (ESC4)**: powerful rights over these objects can allow attackers to _"push a misconfiguration to a template that is not otherwise vulnerable (e.g., by enabling the `mspki-certificate-name-flag` flag for a template that allows for domain authentication) this results in the same domain compromise scenario \[...]" (_[_specterops.io_](https://posts.specterops.io/certified-pre-owned-d95910965cd2)_)_ as the one based on misconfigured certificate templates where low-privs users can specify an arbitrary SAN (`subjectAltName`) and authenticate as anyone else. &#x20;
 * **The Certificate Authority (ESC7)**: _"The two main rights here are the `ManageCA` right and the `ManageCertificates` right, which translate to the “CA administrator” and “Certificate Manager” (sometimes known as a CA officer) respectively. known as Officer rights)" (_[_specterops.io_](https://posts.specterops.io/certified-pre-owned-d95910965cd2)_)_.&#x20;
-  * If an attacker gains control over a principal that has the ManageCA right over the CA, he can remotely flip the `EDITF_ATTRIBUTESUBJECTALTNAME2` bit to allow SAN specification in any template (c.f. [CA misconfiguration](ca-configuration.md)).
+  * If an attacker gains control over a principal that has the ManageCA right over the CA, he can remotely flip the `EDITF_ATTRIBUTESUBJECTALTNAME2` bit to allow SAN specification in any template (c.f. [CA misconfiguration](certificate-authority.md)).
   * If an attacker gains control over a principal that has the ManageCertificates right over the CA, he can remotely approve pending certificate requests, subvertnig the "CA certificate manager approval" protection (referred to as PREVENT4 in [the research whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf)).
 * **Several other objects (ESC5):** abuse standard [AD access control abuse](../dacl/) over regulard AD objects.
   * The CA server’s AD computer object (i.e., compromise through [RBCD abuse](../kerberos/delegations/rbcd.md), [Shadow Credentials](../kerberos/shadow-credentials.md), [UnPAC-the-hash](../kerberos/unpac-the-hash.md), ...).
@@ -112,7 +112,7 @@ Currently, the best resources for manually abusing this are&#x20;
 
 ### Certificate Authority (ESC7)
 
-If sufficient rights are obtained over the Certificate Authority (Access Controls, local admin account, ...) an attacker could remotely edit the registries, enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute, restart the `CertSvc` service,  and abuse [ESC6 (CA configuration abuse)](ca-configuration.md).
+If sufficient rights are obtained over the Certificate Authority (Access Controls, local admin account, ...) an attacker could remotely edit the registries, enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute, restart the `CertSvc` service,  and abuse [ESC6 (CA configuration abuse)](certificate-authority.md).
 
 ```bash
 ## Beware: change placeholder values CA-NAME, VALUE, NEW_VALUE

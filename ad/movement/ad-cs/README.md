@@ -10,7 +10,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 * **Account persistence** (dubbed PERSIST1 to PERSIST3)
 * **Domain escalation** (dubbed ESC1 to ESC8)
   * based on [misconfigured certificate templates](certificate-templates.md)
-  * based on [dangerous CA configuration](ca-configuration.md)
+  * based on [dangerous CA configuration](certificate-authority.md)
   * related to [access control vulnerabilities](access-controls.md)
   * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
 * **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
@@ -121,8 +121,8 @@ The different domain escalation scenarios are detailed in the following parts.
 
 #### Technique dubbed ESC6
 
-{% content-ref url="ca-configuration.md" %}
-[ca-configuration.md](ca-configuration.md)
+{% content-ref url="certificate-authority.md" %}
+[certificate-authority.md](certificate-authority.md)
 {% endcontent-ref %}
 
 #### Techniques dubbed ESC4, ESC5 & ESC7
