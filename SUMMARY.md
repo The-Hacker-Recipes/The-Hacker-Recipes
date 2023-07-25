@@ -134,7 +134,7 @@
   * [Certificate Services (AD-CS)](ad/persistence/ad-cs/README.md)
     * [Certificate authority](ad/persistence/ad-cs/certificate-authority.md)
     * [Access controls](ad/persistence/ad-cs/access-controls.md)
-    * [🛠️ Golden certificate](ad/persistence/ad-cs/golden-certificate.md)
+    * [Golden certificate](ad/persistence/ad-cs/golden-certificate.md)
   * [🛠️ DACL abuse](ad/persistence/access-controls.md)
 
 ## Web services <a href="#web" id="web"></a>
