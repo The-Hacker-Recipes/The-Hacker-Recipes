@@ -15,4 +15,6 @@ Most tools ([certsync](https://github.com/zblurx/certsync), [certipy](https://gi
 
 {% embed url="https://www.hackingarticles.in/domain-persistence-golden-certificate-attack/" %}
 
-{% embed url="https://pentestlab.blog/2021/11/15/golden-certificate/" fullWidth="false" %}
+{% embed url="https://san3ncrypt3d.com/2022/02/19/gc/" %}
+
+{% embed url="https://www.youtube.com/watch?v=2KZCsfplSlI" %}
