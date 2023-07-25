@@ -10,4 +10,4 @@ In the same research papers, domain escalation techniques abusing misconfigurate
 
 If an attacker obtains sufficient permissions in a domain, he could modify security descriptors of AD CS components, in order to make them vulnerable to the attacks mentioned in [Movement > AD-CS > Access controls](../../movement/ad-cs/access-controls.md).
 
-These modifications can be made with tools like [Impacket's (Python) dacledit.py](https://github.com/fortra/impacket/pull/1291) or with [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module), as explained in [grant-rights.md](../../movement/dacl/grant-rights.md "mention")
+These modifications can be made with tools like [Impacket's (Python) dacledit.py](https://github.com/fortra/impacket/pull/1291) or with [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module), as explained in [grant-rights.md](../../movement/dacl/grant-rights.md "mention").
