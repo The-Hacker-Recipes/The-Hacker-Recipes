@@ -19,10 +19,10 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 ### Patch management
 
-* [ ] Domain Controllers are patched against [ZeroLogon](netlogon/zerologon.md).
+* [ ] Domain Controllers are patched against [ZeroLogon](broken-reference).
 * [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](kerberos/samaccountname-spoofing.md).
-* [ ] [MS14-068](kerberos/forged-tickets/#ms-14-068-cve-2014-6324) is patched, preventing forging of powerful Kerberos tickets.
-* [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse.md), and [ACE abuse](dacl/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
+* [ ] [MS14-068](broken-reference) is patched, preventing forging of powerful Kerberos tickets.
+* [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](broken-reference), and [ACE abuse](dacl/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
 * [ ] Patches for NTLM tampering vulnerabilities (e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166) are applied to limit [NTLM relay](broken-reference) attacks.
 * [ ] Latest security patched are applied (e.g. for ProxyLogon, ProxyShell, PrintNightmare, ...).
 
@@ -37,7 +37,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 ### Credentials Management
 
-* [ ] Caching of domain users is limited on workstations and avoided on servers to prevent [credential dumping](credentials/dumping/) of LSA secrets from registry.
+* [ ] Caching of domain users is limited on workstations and avoided on servers to prevent [credential dumping](broken-reference) of LSA secrets from registry.
 * [ ] [Group Policy Preferences Passwords](credentials/dumping/group-policies-preferences.md) are not used.
 * [ ] LSA protection are enabled to prevent [LSASS dumping](broken-reference).
 * [ ] Network shares readable by all domain users don't contain sensitive data like passwords or certificates limiting [credential dumping](credentials/dumping/network-shares.md).
@@ -52,10 +52,10 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] SMB is required when possible, especially on sensitive servers, preventing [NTLM relay](broken-reference) attacks.
 * [ ] LDAP signing is required on Domain Controllers, preventing [NTLM relay](broken-reference) attacks.
 * [ ] Extended Protection for Authentication (EPA) is required, especially for Domain Controllers supporting LDAPS, preventing [NTLM relay](broken-reference) attacks.
-* [ ] IPv6 is either fully configured and used or disabled, preventing [DHCPv6 spoofing with DNS poisoning](mitm-and-coerced-authentications/dhcpv6-spoofing.md) attacks.
-* [ ] [LLMNR, NBT-NS and mDNS](mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md) are disabled, preventing MITM attacks relying on those multicast/broadcast domain name resolution protocols.
-* [ ] WPAD is disabled, preventing [WPAD spoofing](mitm-and-coerced-authentications/wpad-spoofing.md).
-* [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md#wildcard-records) attacks. Preferably, this is a `TXT` record.
+* [ ] IPv6 is either fully configured and used or disabled, preventing [DHCPv6 spoofing with DNS poisoning](broken-reference) attacks.
+* [ ] [LLMNR, NBT-NS and mDNS](broken-reference) are disabled, preventing MITM attacks relying on those multicast/broadcast domain name resolution protocols.
+* [ ] WPAD is disabled, preventing [WPAD spoofing](broken-reference).
+* [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](broken-reference) attacks. Preferably, this is a `TXT` record.
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.
 * [ ] The WSUS server (if any) is configured with HTTPS, to prevent ARP poisoning with [WSUS spoofing](mitm-and-coerced-authentications/wsus-spoofing.md) attacks.
 * [ ] Set-up packet filtering & inspection and enable port security on network switched to prevent [ARP poisoning](mitm-and-coerced-authentications/arp-poisoning.md) attacks and [network secrets dumping](credentials/dumping/network-protocols.md).&#x20;

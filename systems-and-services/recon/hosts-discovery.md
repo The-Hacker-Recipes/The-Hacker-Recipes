@@ -4,7 +4,7 @@
 
 When targeting machines connected to a network, identifying which hosts are up and running (and their IP address) is the first step in getting to know the attack surface. There are multiple active and passive ways to discover hosts in a network, each relying on specific protocols that may be used in the network.
 
-Once the hosts are identified, attackers then usually proceed to [port scanning](port-scanning.md) to attempt at compromising them.
+Once the hosts are identified, attackers then usually proceed to [port scanning](../../sys/recon/port-scanning.md) to attempt at compromising them.
 
 Alternatively, there are common scenarios where most of the hosts and services are managed by a central set of services like [Active Directory Domain Services (AD-DS)](broken-reference/). In this case, attackers usually try to compromise those services first as it would grant them control over many hosts without having to attack them all. A whole category of The Hacker Recipes is dedicated to Active Directory Domain Services (and other associated AD services).
 
@@ -41,7 +41,7 @@ nbtscan -r $RANGE
 In Active Directory environnements, machines have their record on the Domain Controller (which usually hosts the DNS service). Through PTR resolution requests, is it then possible to find additional ranges and machines.
 
 {% content-ref url="../../ad/recon/dns.md" %}
-[dns.md](../../active-directory/recon/dns.md)
+[dns.md](../../ad/recon/dns.md)
 {% endcontent-ref %}
 
 ### ICMP discovery

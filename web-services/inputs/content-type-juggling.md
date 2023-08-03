@@ -14,7 +14,7 @@ The `Content-Type` header is used to indicate the MIME type of the resource.
 {% endhint %}
 
 {% hint style="warning" %}
-If the [XCTO (X-Content-Type-Options)](../config/http-headers/#xcto-x-content-type-options) security header is present, it will be difficult to perform the `Content-Type` juggling, as indicated in [mime-sniffing](../config/http-headers/mime-sniffing.md). The XCTO security header can be used to indicate that the MIME types advertised in the `Content-Type` headers should be followed and not be changed by the browser depending on the page's content. Websites that implement this security header with the `nosniff` directive must also include a valid `Content-Type` header in their responses.
+If the [XCTO (X-Content-Type-Options)](../../web/config/http-headers/#xcto-x-content-type-options) security header is present, it will be difficult to perform the `Content-Type` juggling, as indicated in [mime-sniffing](../../web/config/http-headers/mime-sniffing.md). The XCTO security header can be used to indicate that the MIME types advertised in the `Content-Type` headers should be followed and not be changed by the browser depending on the page's content. Websites that implement this security header with the `nosniff` directive must also include a valid `Content-Type` header in their responses.
 {% endhint %}
 
 ## Practice
@@ -25,11 +25,11 @@ In order to identify if the target is vulnerable to `Content-Type` juggling, tes
 
 * Is there a post request with value(s) and `Content-Type` header ?
 * Is the `X-Content-Type-Options` security header **not** present ?
-* Can the `Content-Type` header  be edited, and the `POST` request still be submitted successfully ?
+* Can the `Content-Type` header be edited, and the `POST` request still be submitted successfully ?
 
 If the answer is yes to the questions above, then one should be able to perform `Content-Type` juggling and might find a way to perform other attacks as a result:
 
-* If one can switch to `application/xml`,  [XXE](xxe-injection.md) should be tried.
+* If one can switch to `application/xml`, [XXE](xxe-injection.md) should be tried.
 * If one can switch to `application/zip`, uploading malicious zip file should be tried.
 * If one can switch to `application/php`, uploading PHP payloads should be tried.
 * If one can switch to `application/image`, uploading [malicious image](https://www.synacktiv.com/publications/persistent-php-payloads-in-pngs-how-to-inject-php-code-in-an-image-and-keep-it-there.html) should be tried.
@@ -206,9 +206,9 @@ Content-Length: 19
 
 <summary>API attack, leading to XXE</summary>
 
-In the following request, the application normally sends JSON content (`Content-Type: application/json`).&#x20;
+In the following request, the application normally sends JSON content (`Content-Type: application/json`).
 
-If the target is vulnerable to Content-Type juggling and XXE, an attacker could attempt to modify the content-type header to `application/xml` and put some malicious XML to exploit an XXE.&#x20;
+If the target is vulnerable to Content-Type juggling and XXE, an attacker could attempt to modify the content-type header to `application/xml` and put some malicious XML to exploit an XXE.
 
 <img src="../../.gitbook/assets/CT-JUGGLING-3.png" alt="Performing Content-Type juggling" data-size="original">
 

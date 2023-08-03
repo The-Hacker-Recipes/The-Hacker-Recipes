@@ -21,13 +21,13 @@ Active Directory Certificate Services add multiple objects to AD, including secu
 {% hint style="info" %}
 Maliciously configuring a CA or a certificate template can be insufficient. A controlled AD object (user or computer) must also have the ability to request a certificate for that template. The controlled AD object must have `Certificate-Enrollment` rights over the enrollment services (i.e. CA) **and** over the certificate template ([source](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/#section-2-2-3)).
 
-[PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/dev)'s [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) function (in [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)) can be used to add `Certificate-Enrollment` rights to a "controlled AD object" over a specific template. In order to achieve this, the attacker needs to have enough rights (i.e. [`WriteDacl`](../dacl/grant-rights.md)) over the certificate template.
+[PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/dev)'s [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) function (in [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)) can be used to add `Certificate-Enrollment` rights to a "controlled AD object" over a specific template. In order to achieve this, the attacker needs to have enough rights (i.e. [`WriteDacl`](broken-reference)) over the certificate template.
 
 ```powershell
 Add-DomainObjectAcl -TargetIdentity "target template" -PrincipalIdentity "controlled object" -RightsGUID "0e10c968-78fb-11d2-90d4-00c04f79dc55" -TargetSearchBase "LDAP://CN=Configuration,DC=DOMAIN,DC=LOCAL" -Verbose
 ```
 
-The example above shows how to edit a certificate template's DACL (requires [`WriteDacl`](../dacl/grant-rights.md) over the template, i.e. [ESC4](access-controls.md#certificate-templates-esc4)), but modifying a CA's DACL follows the same principle (requires [`WriteDacl`](../dacl/grant-rights.md) over the CA, i.e. [ESC7](access-controls.md#certificate-authority-esc7)).
+The example above shows how to edit a certificate template's DACL (requires [`WriteDacl`](broken-reference) over the template, i.e. [ESC4](access-controls.md#certificate-templates-esc4)), but modifying a CA's DACL follows the same principle (requires [`WriteDacl`](broken-reference) over the CA, i.e. [ESC7](access-controls.md#certificate-authority-esc7)).
 {% endhint %}
 
 ### Certificate templates (ESC4)

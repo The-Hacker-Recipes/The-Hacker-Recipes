@@ -53,7 +53,7 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 
 **2 - Authentication coercion** :chains:
 
-Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../mitm-and-coerced-authentications/pushsubscription-abuse.md)) to force accounts/machines to authenticate to the relay servers.
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](broken-reference)) to force accounts/machines to authenticate to the relay servers.
 
 {% content-ref url="../mitm-and-coerced-authentications/" %}
 [mitm-and-coerced-authentications](../mitm-and-coerced-authentications/)

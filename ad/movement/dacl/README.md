@@ -29,7 +29,7 @@ All of the aforementioned attacks (red blocks) are detailed in the child notes, 
 * **SPN-jacking:** very specific scenario, requires lots of access: see [ADDS > Movement > Kerberos > SPN-jacking](../kerberos/spn-jacking.md)
 * **Shadow Credentials:** see [ADDS > Movement > Kerberos > Shadow Credentials](../kerberos/shadow-credentials.md)
 * **Kerberos RBCD**: see [ADDS > Movement > Kerberos > Kerberos Delegations > RBCD](../kerberos/delegations/rbcd.md)
-* **GPO abuses**: see [ADDS > Movement > GPOs](../group-policies.md)
+* **GPO abuses**: see [ADDS > Movement > GPOs](broken-reference)
 * **DCSync** : see [ADDS > Movement > Credential > Dumping > DCSync](../credentials/dumping/dcsync.md)
 
 {% hint style="success" %}

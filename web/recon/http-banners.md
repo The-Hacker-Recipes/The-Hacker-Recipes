@@ -1,4 +1,4 @@
-# HTTP headers
+# HTTP response headers
 
 ## Theory
 

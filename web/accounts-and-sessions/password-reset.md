@@ -4,7 +4,7 @@
 
 Websites that manage user accounts usually have a "forgot password" or "reset password" feature. This offers attackers an interesting vector as it could potentially lead to Account Takeover (ATO).
 
-## Practice <a href="practice" id="practice"></a>
+## Practice <a href="#practice" id="practice"></a>
 
 When this feature is present on a website, there a a few things to check.
 

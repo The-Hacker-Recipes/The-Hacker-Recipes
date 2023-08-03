@@ -22,7 +22,7 @@ When auditing an APK, transforming it to human-readable formats is usually requi
 
 <summary>Install notes</summary>
 
-## Add Kali repo to your sources
+### Add Kali repo to your sources
 
 {% code overflow="wrap" %}
 ```
@@ -38,7 +38,7 @@ Note that if you haven’t updated your Kali installation in some time, you will
 wget -q -O - https://archive.kali.org/archive-key.asc | apt-key add
 ```
 
-## Install softwares
+### Install softwares
 
 ```
 apt install unzip smali apktool dex2jar jadx

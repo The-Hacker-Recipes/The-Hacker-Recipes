@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1550.003
 
 ## Theory
 
-There are ways to come across ([cached Kerberos tickets](../credentials/dumping/cached-kerberos-tickets.md)) or forge ([overpass the hash](ptk.md), [silver ticket](forged-tickets/#silver-ticket) and [golden ticket](forged-tickets/#golden-ticket) attacks) Kerberos tickets. A ticket can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass the ticket](ptt.md). Another name for this is Pass the Cache (when using tickets from, or found on, UNIX-like systems).&#x20;
+There are ways to come across ([cached Kerberos tickets](../credentials/dumping/cached-kerberos-tickets.md)) or forge ([overpass the hash](ptk.md), [silver ticket](broken-reference) and [golden ticket](broken-reference) attacks) Kerberos tickets. A ticket can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass the ticket](ptt.md). Another name for this is Pass the Cache (when using tickets from, or found on, UNIX-like systems).
 
 ## Practice
 
@@ -72,7 +72,7 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) scripts like [secrets
 secretsdump.py -k $TARGET
 ```
 
-[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/#windows-computer-registry-hives)).
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](broken-reference)).
 
 ```bash
 crackmapexec smb $TARGETS -k --sam
@@ -80,7 +80,7 @@ crackmapexec smb $TARGETS -k --lsa
 crackmapexec smb $TARGETS -k --ntds
 ```
 
-[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/#windows-computer-lsass-exe)).
+[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](broken-reference)).
 
 ```bash
 crackmapexec smb $TARGETS -k -M lsassy
@@ -131,7 +131,7 @@ Their are multiple service classes for multiple service types (LDAP, CIFS, HTTP 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket (Impacket tries to change the service class to something else, and calls this "AnySPN").&#x20;
+This technique is implemented and attempted by default in all [Impacket](https://github.com/SecureAuthCorp/impacket) scripts when doing pass-the-ticket (Impacket tries to change the service class to something else, and calls this "AnySPN").
 
 Impacket's tgssub.py script can also be used for manual manipulation of the service name value. _At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding this script is pending._
 

@@ -12,7 +12,7 @@ The NTLM authentication messages are embedded in the packets of application prot
 
 The chart below sums up the expected behavior of cross-protocols relay attacks depending on the mitigations in place ([original here](https://beta.hackndo.com/ntlm-relay/)). All the tests and results listed in the chart were made using [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python).
 
-![](../../../.assets/ntlm\_relau\_mitigation\_chart.png)
+![](<../../../.gitbook/assets/ntlm\_relau\_mitigation\_chart (1).png>)
 
 The following mindmap sums up the overall attack paths of NTLM relay. [Gabriel Prudhomme](https://twitter.com/vendetce) explains how to read it here: [BHIS | Coercions and Relays – The First Cred is the Deepest](https://youtu.be/b0lLxLJKaRs?t=480) (at 08:00).
 
@@ -64,7 +64,7 @@ Windows Server 2019 ISOs seem to be patched against (at least) CVE-2019-1040.
 {% endhint %}
 
 {% hint style="danger" %}
-Reminder: if NTLMv1 is accepted, NTLM could be relayed and modified and the MIC dropped :microphone:&#x20;
+Reminder: if NTLMv1 is accepted, NTLM could be relayed and modified and the MIC dropped :microphone:
 {% endhint %}
 
 ### EPA (Extended Protection for Auth.) <a href="#epa-extended-protection-for-authentication" id="epa-extended-protection-for-authentication"></a>
@@ -75,7 +75,7 @@ In short, EPA (Extended Protection for Authentication) can use one or both of th
 * A Service Binding information in the form of a Service Principal Name (SPN), usually when there is no TLS channel to bind to (HTTP)
 
 {% hint style="info" %}
-For more details on how NTLM works, testers can read [the MS-NLMP doc](https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-NLMP/\[MS-NLMP].pdf).&#x20;
+For more details on how NTLM works, testers can read [the MS-NLMP doc](https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-NLMP/\[MS-NLMP].pdf).
 {% endhint %}
 
 ## Practice
