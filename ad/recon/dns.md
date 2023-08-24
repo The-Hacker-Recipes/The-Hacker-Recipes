@@ -68,3 +68,37 @@ nslookup -type=ptr $IP_address
 # PTR restolution on a range
 dnsrecon -r $RANGE -n $DC_IP
 ```
+
+## Dump DNS Records in a Domain
+By default any user in Active Directory can enumerate all DNS records in the Domain or Forest DNS zones, similar to a zone transfer.
+
+{% tabs %}
+{% tab title="adidnsdump" %}
+[adidnsdump](https://github.com/dirkjanm/adidnsdump) can bu sed for that purpose.
+
+```bash
+adidnsdump -u <DOMAIN_FQDN>\\<USERNAME> ldap://<DC_IP> -r
+cat records.csv
+```
+
+{% endtab %}
+
+{% tab title="crackmapexec" %}
+CrackMapExec's [Enum_dns](https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-enum_dns) module utilizes WMI to dump DNS information from an Active Directory DNS Server. It extracts `MicrosoftDNS_ResourceRecord` (complete zone information) from **ALL** found domains.
+```bash
+crackmapexec smb -u <USERNAME> -p <PASSWORD> -d <DOMAIN> -M enum_dns
+```
+{% hint style="info" %}
+So far this module works only with Administrative privileges.
+{% endhint %}
+
+{% endtab %}
+
+{% tab title="dig" %}
+If zone transfers are allowed, `dig` can be used to request a zone transfer.
+
+```bash
+dig axfr @<DC_IP> <DOMAIN_FQDN>
+```
+
+{% endtab %}
