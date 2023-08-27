@@ -91,8 +91,8 @@ In order to identify if the target is vulnerable to HTTP request smuggling, test
 * Is there a front-end and a back-end ?
 * Are they are using `CL.TE` or `TE.CL` or `TE.TE` ? This can be answered [using Burp](http-request-smuggling.md#using-burp-suite), [smuggler.py](http-request-smuggling.md#using-smuggler.py) or manually in a "die and retry" manner.
 * If `HTTP/2` is used, can the session be downgraded it to perform `H2.CL` or `H2.TE` ? [http2smugl](https://github.com/neex/http2smugl) (Python) can be used to detect this, with the `http2smugl detect $URL` command
-* Can differentials responses be triggered a request is smuggled and sent multiple times ?
-* Can timing delay is be triggered in responses when a request is smuggled and sent multiple times?
+* Can differentials responses be triggered when a request is smuggled and sent multiple times ?
+* Can timing delays be triggered in responses when a request is smuggled and sent multiple times?
 
 The last two questions can be answered by conducting the tests explained below.
 
@@ -161,7 +161,7 @@ When using the Burp Repeater, testers must always ensure that the "Update Conten
 
 ### Using smuggler.py
 
-Tools like [smuggler.py](https://github.com/gwen001/pentest-tools/blob/master/smuggler.py) (Python) can be used to identify potential HTTP request smuggling vulnerabilities.
+Tools like [smuggler.py](https://github.com/defparam/smuggler) (Python) can be used to identify potential HTTP request smuggling vulnerabilities.
 
 ```bash
 # for a single host

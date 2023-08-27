@@ -87,6 +87,10 @@ The structure of this ID is not specified and it can be any string value (case-s
 The last part is interesting because, if the parameter is vulnerable to [directory traversal](directory-traversal.md), this would allow to perform path traversal and point to a file `path/file` with content we can guess or known somehow, and use its content as the value of the signing key.
 
 {% hint style="info" %}
+"[JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)" PortSwigger lab provides more insight on this technique.
+{% endhint %}
+
+{% hint style="info" %}
 > There are a bunch of files in /sys that are basically flags. Like the flag that says if ftrace is enabled is either 0 or 1. So the attacker just creates 2 tokens with that as the key and one of them will work!
 >
 > _(By_ [_Intigriti_](https://twitter.com/intigriti) _on_ [_Twitter_](https://twitter.com/intigriti/status/1618653959752925184)_)_
@@ -94,30 +98,29 @@ The last part is interesting because, if the parameter is vulnerable to [directo
 The example mentioned above is located at `/proc/sys/kernel/ftrace_enabled`
 {% endhint %}
 
-This can be done in Python.
-
-{% code overflow="wrap" lineNumbers="true" %}
-```python
-import jwt
-payload = {'key1':'value1', 'key2':'value2'}
-token = jwt.encode(payload, key='file-content', algorithm='HS256', headers={"kid": "../../../path/to/file"})
-print(token)
-```
-{% endcode %}
-
-#### Special case: `file=/dev/null`
-
-The signature validation can be bypassed by pointing to `/dev/null` which will return an empty string, meaning that an empty key could be used for signature.
-
 {% hint style="info" %}
-"[JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)" PortSwigger lab provides more insight on this technique.
+In some cases, using the trick above will not work, as the file is listed with a size of 0, and some apps could check that the signature file is not empty.
+
+```python
+>>> import os
+>>> os.path.getsize("/proc/sys/kernel/ftrace_enabled")
+0
+```
+
+Alternatively, other file could be used:
+
+* some have a content that rarely changes (e.g. old configuration files like`/etc/host.conf`, `/etc/xattr.conf`, ...)
+* some have a predictable content (e.g. `/etc/hostname`, JS files in `/var/www/html`, ...)
+* some return an empty string (e.g. `/dev/null`) effectively allowing to bypass the signature validation, meaning an empty key could be used for signature.
 {% endhint %}
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```python
-import jwt
+import jwt, os
 payload = {'key1':'value1', 'key2':'value2'}
-token = jwt.encode(payload, key='', algorithm='HS256', headers={"kid": "../../../dev/null"})
+with open("path/to/file", 'r') as file:
+    data = file.read()
+token = jwt.encode(payload, key=data, algorithm='HS256', headers={"kid": "../../../path/to/file"})
 print(token)
 ```
 {% endcode %}
