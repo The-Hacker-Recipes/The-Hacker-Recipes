@@ -8,8 +8,8 @@ Executing arbitrary code on a victim's browser can allow an attacker to perform 
 
 There are three major types of XSS:
 
-* **Stored**: the user input is stored on the website. It usually happens on user profiles, forums, chats and so on were the user content is permanently (or temporarily) stored. Attackers can inject malicious payloads and every user browsing the infected page will be affected. This is one of the most dangerous forms of XSS because exploitation requires no phishing and it can affect many users. XSS on pages that only the attacker's user has the right to browse (e.g. user settings page) are called self-XSS and are considered to have a close to 0 impact since it's theoretically can't affect other users.  &#x20;
-* **Reflected**: the user input is reflected but not stored. It usually happens on search forms, login pages and pages that reflect content for one response only. When the reflected vulnerable input is in the URI (`http://www.target.com/search.php?keyword=INJECTION`) attackers can craft a malicious URI and send it to the victims hoping they will browse it. This form of XSS usually requires phishing and attackers can be limited in the length of the malicious payload (cf. [this](https://serpstat.com/blog/how-long-should-be-the-page-url-length-for-seo/)).&#x20;
+* **Stored**: the user input is stored on the website. It usually happens on user profiles, forums, chats and so on were the user content is permanently (or temporarily) stored. Attackers can inject malicious payloads and every user browsing the infected page will be affected. This is one of the most dangerous forms of XSS because exploitation requires no phishing and it can affect many users. XSS on pages that only the attacker's user has the right to browse (e.g. user settings page) are called self-XSS and are considered to have a close to 0 impact since it's theoretically can't affect other users.
+* **Reflected**: the user input is reflected but not stored. It usually happens on search forms, login pages and pages that reflect content for one response only. When the reflected vulnerable input is in the URI (`http://www.target.com/search.php?keyword=INJECTION`) attackers can craft a malicious URI and send it to the victims hoping they will browse it. This form of XSS usually requires phishing and attackers can be limited in the length of the malicious payload (cf. [this](https://serpstat.com/blog/how-long-should-be-the-page-url-length-for-seo/)).
 * **DOM-based**: while stored and reflected XSS attacks exploit vulnerabilities in the server-side code, a DOM-based XSS exploits client-side ones (e.g. JavaScript used to help dynamically render a page). DOM-based XSS usually affect user inputs that are temporarily reflected, just like reflected XSS attacks.
 
 ## Practice
@@ -31,7 +31,7 @@ One of the most famous payloads is `<script>alert('XSS');</script>` opening a po
 
 The following [website](https://transformations.jobertabma.nl/) ([GitHub project](https://github.com/jobertabma/transformations)) can help identify transformations applied to user inputs. This can help bypass filters and transformations to exploit XSS attacks.
 
-The following payload is used for testing [SQL injections](sqli.md), XSS (Cross-Site Scripting) and [SSTI (Server-Side Template Injection)](../inputs/ssti-server-side-tempate-injection.md).
+The following payload is used for testing [SQL injections](sqli.md), XSS (Cross-Site Scripting) and [SSTI (Server-Side Template Injection)](../../web/inputs/ssti.md).
 
 ```
 '"<svg/onload=prompt(5);>{{7*7}}

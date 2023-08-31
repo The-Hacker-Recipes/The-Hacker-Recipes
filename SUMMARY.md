@@ -192,7 +192,7 @@
   * [Insecure Cookies](web-services/inputs/insecure-cookies.md)
   * [HTTP response splitting](web-services/attacks-on-inputs/http-response-splitting.md)
   * [🛠️ HTTP parameter pollution](web-services/inputs/http-parameter-pollution.md)
-  * [🛠️ SSTI (Server-Side Template Injection)](web-services/inputs/ssti-server-side-tempate-injection.md)
+  * [🛠️ SSTI (Server-Side Template Injection)](web/inputs/ssti.md)
   * [🛠️ Insecure deserialization](web-services/inputs/insecure-deserialization.md)
   * [🛠️ CRLF injection](web-services/inputs/crlf-injection.md)
   * [🛠️ Arbitrary file download](web-services/attacks-on-inputs/arbitrary-file-download.md)
