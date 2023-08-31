@@ -8,8 +8,8 @@ Active Directory Certificate Services add multiple objects to AD, including secu
 
 * **Certificate templates (ESC4)**: powerful rights over these objects can allow attackers to _"push a misconfiguration to a template that is not otherwise vulnerable (e.g., by enabling the `mspki-certificate-name-flag` flag for a template that allows for domain authentication) this results in the same domain compromise scenario \[...]" (_[_specterops.io_](https://posts.specterops.io/certified-pre-owned-d95910965cd2)_)_ as the one based on misconfigured certificate templates where low-privs users can specify an arbitrary SAN (`subjectAltName`) and authenticate as anyone else. &#x20;
 * **The Certificate Authority (ESC7)**: _"The two main rights here are the `ManageCA` right and the `ManageCertificates` right, which translate to the “CA administrator” and “Certificate Manager” (sometimes known as a CA officer) respectively. known as Officer rights)" (_[_specterops.io_](https://posts.specterops.io/certified-pre-owned-d95910965cd2)_)_.&#x20;
-  * **Attack path 1**: if an attacker gains control over a principal that has the `ManageCA` right over the CA, he can remotely flip the `EDITF_ATTRIBUTESUBJECTALTNAME2` bit to allow SAN specification in any template (c.f. [CA misconfiguration](certificate-authority.md)). This only works if the attacker is able to restart the `CertSvc` service on the CA server.
-  * **Attack path 2**: alternatively (or if the attacker can't restart the **CertSrv**), if an attacker gains control over a principal that has the `ManageCA` + `ManageCertificates` rights over the CA object, he can remotely approve pending certificate requests, subverting the "CA certificate manager approval" protection (referred to as PREVENT4 in [the research whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf)).
+  * **Attack path 1**: if an attacker gains control over a principal that has the `ManageCA` right over the CA, or local admin right, he can remotely flip the `EDITF_ATTRIBUTESUBJECTALTNAME2` bit to allow SAN specification in any template (c.f. [CA misconfiguration](certificate-authority.md)). This only works if the attacker is able to restart the `CertSvc` service on the CA server.
+  * **Attack path 2**: alternatively (or if the attacker can't restart the `CertSrv`), if an attacker gains control over a principal that has the `ManageCA` right over the CA object, he can remotely gain the `ManageCertificates` right, approve pending certificate requests, subverting the "CA certificate manager approval" protection (referred to as PREVENT4 in [the research whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf)).
 * **Several other objects (ESC5):** abuse standard [AD access control abuse](../dacl/) over regulard AD objects.
   * The CA server’s AD computer object (i.e., compromise through [RBCD abuse](../kerberos/delegations/rbcd.md), [Shadow Credentials](../kerberos/shadow-credentials.md), [UnPAC-the-hash](../kerberos/unpac-the-hash.md), ...).
   * The CA server’s RPC/DCOM server
@@ -114,12 +114,12 @@ Currently, the best resources for manually abusing this are&#x20;
 
 There are two attacks paths for this scenario:
 
-1. If an attacker gains control over a principal that's able to edit the CA server registries (e.g. local admin), and is able to restart the `CertSrv` service on the server, he can make the CA vulnerable to ESC6 and exploit that
+1. If an attacker gains control over a principal that's able to edit the CA server registries (e.g. local admin, or `ManageCA`?), and is able to restart the `CertSrv` service on the server, he can make the CA vulnerable to ESC6 and exploit that
 2. Alternatively, if an attacker gains control over a principal that has the `ManageCA` right over the CA object, he can remotely obtain the `ManageCertificates` right and with those two rights combined, approve pending certificate requests, subverting the "CA certificate manager approval" protection (referred to as PREVENT4 in [the research whitepaper](https://www.specterops.io/assets/resources/Certified\_Pre-Owned.pdf)).
 
 #### ESC7 - Exposing to ESC6
 
-If sufficient rights are obtained over the Certificate Authority (Access Controls, local admin account, ...) an attacker could remotely edit the registries, enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute, restart the `CertSvc` service,  and abuse [ESC6 (CA configuration abuse)](certificate-authority.md).
+If sufficient rights are obtained over the Certificate Authority (`ManageCA`?, local admin account, ...) an attacker could remotely edit the registries, enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute, restart the `CertSvc` service,  and abuse [ESC6 (CA configuration abuse)](certificate-authority.md).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -174,7 +174,7 @@ DISM.exe /Online /add-capability /CapabilityName:Rsat.CertificateServices.Tools~
 
 When it is not possible to restart the `CertSvc` service to enable the `EDITF_ATTRIBUTESUBJECTALTNAME2` attribute, the `SubCA` built-in template can be used, along with a `ManageCA` right.
 
-The `SubCA` template is vulnerable to the ESC1 attack, but only **Domain Admins** and **Enterprise Admins** can enroll in it. If a standard user tries to enroll in it, he will encounter a `CERTSRV_E_TEMPLATE_DENIED` errror and will obtain a request ID with a corresponding private key.
+The `SubCA` template is vulnerable to the ESC1 attack, but only Domain Admins and Enterprise Admins can enroll in it. If a standard user tries to enroll in it, he will encounter a `CERTSRV_E_TEMPLATE_DENIED` errror and will obtain a request ID with a corresponding private key.
 
 This ID can be used by a user with the `ManageCA` and `ManageCertificates` rights to validate the failed request anyway. The user can then retrieve the issued certificate by specifying the same ID.
 
@@ -208,6 +208,8 @@ The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-th
 
 {% tab title="Windows" %}
 From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate info about the CAs, including access rights over the CA object, and to request a certificate that requires manager approval.
+
+In this example, both `ManageCA` and `ManageCertificates` are already obtained. There is no known method to obtain the `ManageCertificates` right.
 
 Then, [PSPKI](https://github.com/PKISolutions/PSPKI) (PowerShell) can be used to approve a certificate request ([RSAT](https://docs.microsoft.com/fr-fr/troubleshoot/windows-server/system-management-components/remote-server-administration-tools) is needed on the machine where PSPKI is used). PSPKI is a PowerShell module used to "simplify various PKI and AD CS management tasks".
 
