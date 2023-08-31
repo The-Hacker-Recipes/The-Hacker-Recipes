@@ -88,7 +88,7 @@ ForgeCert.exe --CaCertPath "ca.pfx" --CaCertPassword "Password" --Subject "CN=Us
 
 An attacker with sufficient privileges in the domain can setup a rogue CA and make the domain's resources trust it. Once the rogue CA is trusted, the attacker can forge and sign client certificates.
 
-In order to register the rogue CA, the self-signed CA cert must be added the `NTAuthCertificates` object's `cacertificate` attribute, and in the `RootCA` directory services store.
+In order to register the rogue CA, the self-signed CA cert must be added to the `NTAuthCertificates` object's `cacertificate` attribute, and in the `RootCA` directory services store.
 
 Registering the rogue CA can be done remotely with the `certutil.exe` utility from Windows systems.
 
