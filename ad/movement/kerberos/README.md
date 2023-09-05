@@ -137,9 +137,9 @@ Kerberos delegations can be abused by attackers to obtain access to valuable ass
 
 <summary>S4U2self requirements</summary>
 
-This extension can only be used by an account that has at least one SPN (except if S4U2self is combined with [U2U](./#user-to-user-authentication)).
+There are no particular requirements to this extension. The service does not necessarily have to have an SPN, as long as the request's `sname` field is formatted correctly (see [Tickets](./#tickets)). This requirement applies when [combining S4U2self with U2U](./#s4u2self-+-u2u).
 
-The resulting Service Ticket is `forwardable` (i.e. can be used with S4U2Proxy to access another service) if and only if:
+The resulting Service Ticket is `forwardable` (i.e. can be used with S4U2Proxy to access another service) if, and only if:
 
 * the service is configured for **constrained delegation (KCD)** **with protocol transition**
 * the principal is **not "sensitive for delegation"**
