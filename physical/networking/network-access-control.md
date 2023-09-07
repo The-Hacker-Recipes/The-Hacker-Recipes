@@ -126,8 +126,14 @@ Companies usually have devices that don't fully support 802.1x. Among them can b
 MAC-based and 802.1x are usually managed one of many ways:
 
 * by setting up each physical RJ45 port (i.e. the authenticator) in the building to do either MAC-based NAC or 802.1x -> [MAC-based bypass](network-access-control.md#mac-address-used-as-only-authentication-feature)
-* by having the authenticator (i.e. port) check if the devices than connect support 802.1x and switch to MAC-based if they don't ->
+* by having the authenticator (i.e. port) check if the devices than connect support 802.1x and switch to MAC-based if they don't
 * by mixing MAC-based and authentication (i.e. 802.1x): the MAC address is checked and authentication then takes place -> [MAC-based + authentication](network-access-control.md#mac-address-needs-to-be-authorized-and-authentication-required)
+
+
+
+{% hint style="info" %}
+Devices like the [Basilisk](https://ringtail.ch/products/basilisk-automatic-ethernet-ghosting), [Basilisk Zero](https://ringtail.ch/products/basilisk-zero-automatic-ethernet-ghosting), or [Skunk](https://ringtail.ch/products/skunk-gigabit-ethernet-tap-switch) can be helpful in NAC-bypass engagements. _Nota bene: keep in mind ghosted Linux machines will require custom iptable rules to work smoothly._
+{% endhint %}
 
 ### MAC-based only <a href="#mac-address-used-as-only-authentication-feature" id="mac-address-used-as-only-authentication-feature"></a>
 
