@@ -69,7 +69,7 @@ nmap $TARGET
 nmap -F $TARGET
 
 # scan all TCP ports with an aggressive speed, skipping host discovery, adding verbosity
-nmap -v -Pn -p0-65535 -T4 $TARGET
+nmap -v -Pn -p "0-65535" -T4 $TARGET
 
 # scan specific TCP ports, enable service/version detection and script scanning, skipping host discovery, with an aggressive speed
 nmap -Pn -sC -sV -p "20-25,53,80,135,139,443,445" $TARGET
