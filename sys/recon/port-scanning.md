@@ -15,7 +15,7 @@ TCP and UDP are quite similar in the sense that they work with ports. Services c
 **ICMP (Internet Control Message Protocol)** is a separate transport protocol that is commonly known for its "echo request" message used to "ping" machines across networks. ICMP doesn't rely on ports like TCP and UDP do. There is no port in ICMP.
 {% endhint %}
 
-While there are many services that are well known for using common ports (e.g. `80/TCP` for HTTP, `443/TCP` for HTTPS, `22/TCP` for SSH, etc.), the port is just a number. Any port from 0 to 65535 can be bound to any service. Machines (a.k.a. hosts) can theoretically have 65535 ports open on TCP, and 65535 ports open on UDP at the same time.
+While there are many services that are well known for using common ports (e.g. `80/TCP` for HTTP, `443/TCP` for HTTPS, `22/TCP` for SSH, etc.), the port is just a number. Any port from 0 to 65535 can be bound to any service. Machines (a.k.a. hosts) can theoretically have 65536 ports open on TCP, and 65536 ports open on UDP at the same time.
 
 Knowing which ports are open on a host, and which services hide between these ports is essential in the host reconnaissance part of an intrusion attempt.
 
