@@ -160,4 +160,6 @@ SQL injection cheatsheets (MSSQL, MySQL, Oracle SQL, Postgres SQL, ...)
 
 {% embed url="https://portswigger.net/web-security/sql-injection/cheat-sheet" %}
 
+{% embed url="https://portswigger.net/kb/issues/00100210_sql-injection-second-order" %}
+
 {% embed url="https://github.com/Hakumarachi/Loose-Compare-Tables" %}
