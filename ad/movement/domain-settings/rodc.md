@@ -41,7 +41,7 @@ Several attacks can be performed on RODCs:
 
 * [RODC golden ticket](broken-reference)
 * [Key list attack](../credentials/dumping/kerberos-key-list.md)
-* [Exploiting control over a RODC computer object](broken-reference)
+* [Exploiting control over a RODC computer object](../dacl/rights-on-rodc-object.md)
 
 ## Resources
 
