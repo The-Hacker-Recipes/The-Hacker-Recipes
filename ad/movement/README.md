@@ -20,7 +20,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 ### Patch management
 
 * [ ] Domain Controllers are patched against [ZeroLogon](broken-reference).
-* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](kerberos/samaccountname-spoofing.md).
+* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](broken-reference).
 * [ ] [MS14-068](broken-reference) is patched, preventing forging of powerful Kerberos tickets.
 * [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](broken-reference), and [ACE abuse](dacl/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
 * [ ] Patches for NTLM tampering vulnerabilities (e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166) are applied to limit [NTLM relay](broken-reference) attacks.
