@@ -30,6 +30,18 @@ A trust relationship allows users in one domain to **authenticate** to the other
 
 ### Trust types
 
+The `trustType` attribute of a TDO specifies the type of trust that is established. Here are the different trust types (section [6.1.6.7.15 "trustType"](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/36565693-b5e4-4f37-b0a8-c1b12138e18e) of \[MS-ADTS]):
+
+1. **Downlevel**: a trust with a domain that is running a version of Windows NT 4.0 or earlier.&#x20;
+2. **Uplevel**: a trust with a domain that is running Windows 2000 or later.
+3. **MIT**: a trust with a non-Windows Kerberos realm, typically used for interoperability with UNIX-based systems running MIT Kerberos.
+4. **DCE**: not used in Windows. Would refer to trusts with a domain running [DCE](http://www.opengroup.org/dce/info/).
+5. **AAD**: the trusted domain is in Azure Active Directory.
+
+### Trust flavor
+
+The trust "flavor", on the other hand, represents the nature of the trust relationship between domains or forests. It is not a direct attribute but is identified based on other TDO attributes (see ["How Domain and Forest Trusts Work > Trust Types"](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178\(v=ws.10\)#trust-types)).
+
 1. **Parent-Child**: this type of trust relationship exists between a parent domain and a child domain in the same forest. The parent domain trusts the child domain, and the child domain trusts the parent domain. This type of trust is automatically created when a new child domain is created in a forest.
 2. **Tree-Root**: exists between the root domain of a tree and the root domain of another tree in the same forest. This type of trust is automatically created when a new tree is created in a forest.
 3. **Shortcut (a.k.a. cross-link)**: exists between two child domains of different tree (i.e. different parent domains) within the same forest. This type of trust relationship is used to reduce the number of authentication hops between distant domains. It is a one-way or two-way transitive trust.
@@ -37,14 +49,7 @@ A trust relationship allows users in one domain to **authenticate** to the other
 5. **Forest**: exists between two forests (i.e. between two root domains in their respective forest). It allows users in one forest to access resources in the other forest.
 6. **Realm**: exists between a Windows domain and a non-Windows domain, such as a Kerberos realm. It allows users in the Windows domain to access resources in the non-Windows domain.
 
-| Trust type                   | Transitivity   | Direction | Auth. mechanisms |
-| ---------------------------- | -------------- | --------- | ---------------- |
-| Parent-Child                 | Transitive     | Two-way   | Either           |
-| Tree-Root                    | Transitive     | Two-way   | Either           |
-| Shortcut (a.k.a. cross-link) | Transitive     | Either    | Either           |
-| Realm                        | Either         | Either    | Kerberos V5 only |
-| Forest                       | Transitive     | Either    | Either           |
-| External                     | Non-transitive | One-way   | NTLM only        |
+<table><thead><tr><th width="146">Trust type</th><th width="142">Transitivity</th><th width="129">Direction</th><th width="181">Auth. mechanisms</th><th>Creation mode</th></tr></thead><tbody><tr><td>Parent-Child</td><td>Transitive</td><td>Two-way</td><td>Either</td><td>Automatic</td></tr><tr><td>Tree-Root</td><td>Transitive</td><td>Two-way</td><td>Either</td><td>Automatic</td></tr><tr><td>Shortcut (a.k.a. cross-link)</td><td>Transitive</td><td>Either</td><td>Either</td><td>Manual</td></tr><tr><td>Realm</td><td>Either</td><td>Either</td><td>Kerberos V5 only</td><td>Manual</td></tr><tr><td>Forest</td><td>Transitive</td><td>Either</td><td>Either</td><td>Manual</td></tr><tr><td>External</td><td>Non-transitive</td><td>One-way</td><td>NTLM only</td><td>Manual</td></tr></tbody></table>
 
 ### Transitivity
 
@@ -69,6 +74,8 @@ According to Microsoft, the security boundary in Active Directory is the forest,
 The domain is a unit within a forest and represents a logical grouping of users, computers, and other resources. Users within a domain can access resources within their own domain and can also access resources in other domains within the same forest, as long as they have the appropriate permissions. Users cannot access resources in other forests unless a trust relationship has been established between the forests.
 
 SID filtering plays an important role in the security boundary by making sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts.&#x20;
+
+<figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption><p>(source: <a href="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/">securesystems.de</a>)</p></figcaption></figure>
 
 Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) of \[MS-PAC] specifies what is filtered and when. There are three important things to remember from this documentation:
 
