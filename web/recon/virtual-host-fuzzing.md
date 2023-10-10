@@ -1,4 +1,4 @@
-# Virtual host fuzzing
+# Subdomain & vhost fuzzing
 
 ## Theory
 
@@ -23,17 +23,31 @@ Tools like [gobuster](https://github.com/OJ/gobuster) (Go), [wfuzz](https://gith
 
 Vhost fuzzing needs to be slowed down when testing production instances as it could lead to an unintended denial of service.
 
+{% code overflow="wrap" %}
 ```bash
 gobuster vhost --useragent "PENTEST" --wordlist "/path/to/wordlist.txt" --url $URL
 ```
+{% endcode %}
 
+{% code overflow="wrap" %}
 ```bash
 wfuzz -H "Host: FUZZ.something.com" --hc 404,403 -H "User-Agent: PENTEST" -c -z file,"/path/to/wordlist.txt" $URL
 ```
+{% endcode %}
 
+{% code overflow="wrap" %}
 ```bash
 ffuf -H "Host: FUZZ.$DOMAIN" -H "User-Agent: PENTEST" -c -w "/path/to/wordlist.txt" -u $URL
 ```
+{% endcode %}
+
+Some applications don't allow vhost fuzzing like showcased above. The command below can be attempted.
+
+{% code overflow="wrap" %}
+```bash
+ffuf -c -r -w "/path/to/wordlist.txt" -u "http://FUZZ.$TARGET/"
+```
+{% endcode %}
 
 {% hint style="info" %}
 Virtual host fuzzing is not the only technique to find subdomains. There are others means to that end: see [subdomains enumeration](domains-enumeration.md).

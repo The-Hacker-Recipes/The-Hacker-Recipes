@@ -2,7 +2,7 @@
 
 * [Introduction](README.md)
 
-## Active Directory <a href="#ad" id="ad"></a>
+## Active Directory <a href="#a-d" id="a-d"></a>
 
 * [Reconnaissance](ad/recon/README.md)
   * [DHCP](ad/recon/dhcp.md)
@@ -146,7 +146,7 @@
   * [Site crawling](web-services/recon/site-crawling.md)
   * [Directory fuzzing](web/recon/directory-fuzzing.md)
   * [Subdomains enumeration](web/recon/domains-enumeration.md)
-  * [Virtual host fuzzing](web/recon/virtual-host-fuzzing.md)
+  * [Subdomain & vhost fuzzing](web/recon/virtual-host-fuzzing.md)
   * [Web Application Firewall (WAF)](web/recon/waf-fingerprinting.md)
   * [Content Management System (CMS)](web/recon/cms.md)
   * [Other technologies](web/recon/web-technologies.md)
