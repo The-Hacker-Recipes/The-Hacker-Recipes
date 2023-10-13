@@ -123,7 +123,7 @@
     * [Pre-Windows 2000 computers](ad/movement/domain-settings/pre-windows-2000-computers.md)
     * [RODC](ad/movement/domain-settings/rodc.md)
 * [Persistence](ad/persistence/README.md)
-  * [🛠️ DC Shadow](ad/persistence/dcshadow.md)
+  * [DCShadow](ad/persistence/dcshadow.md)
   * [SID History](ad/persistence/sid-history.md)
   * [Skeleton key](ad/persistence/skeleton-key.md)
   * [GoldenGMSA](ad/persistence/goldengmsa.md)
