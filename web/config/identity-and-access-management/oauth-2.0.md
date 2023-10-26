@@ -17,7 +17,7 @@ The exploitation will depend on the misconfiguration. The next image shows a roa
 
 The misconfiguration types can be better understood with this table:
 
-![](<../../../.gitbook/assets/image (4).png>)
+![](<../../../.gitbook/assets/image (4) (1).png>)
 
 🛠️ **To continue.**
 

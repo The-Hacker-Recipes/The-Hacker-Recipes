@@ -2,6 +2,8 @@
 
 * [Introduction](README.md)
 
+## Active Directory <a href="#ad" id="ad"></a>
+
 ## Active Directory <a href="#a-d" id="a-d"></a>
 
 * [Reconnaissance](ad/recon/README.md)
@@ -123,7 +125,7 @@
     * [Pre-Windows 2000 computers](ad/movement/domain-settings/pre-windows-2000-computers.md)
     * [RODC](ad/movement/domain-settings/rodc.md)
 * [Persistence](ad/persistence/README.md)
-  * [🛠️ DC Shadow](ad/persistence/dcshadow.md)
+  * [DC Shadow](ad/persistence/dcshadow.md)
   * [SID History](ad/persistence/sid-history.md)
   * [Skeleton key](ad/persistence/skeleton-key.md)
   * [GoldenGMSA](ad/persistence/goldengmsa.md)
@@ -160,7 +162,7 @@
     * [🛠️ CORS (Cross-Origin Resource Sharing)](web-services/config/http-headers/cors-cross-origin-resource-sharing.md)
     * [🛠️ CSP (Content Security Policy)](web-services/config/http-headers/csp-content-security-policy.md)
   * [HTTP request smuggling](web-services/config/http-request-smuggling.md)
-  * [HTTP response splitting](web/config/http-response-splitting.md)
+  * [HTTP response splitting](web-services/attacks-on-inputs/http-response-splitting.md)
   * [Insecure Cookies](web/config/insecure-cookies.md)
   * [Denial of Service (DoS)](web-services/config/dos-mitigations.md)
   * [Identity and Access Management](web/config/identity-and-access-management/README.md)
