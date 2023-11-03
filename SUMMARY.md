@@ -4,8 +4,6 @@
 
 ## Active Directory <a href="#ad" id="ad"></a>
 
-## Active Directory <a href="#a-d" id="a-d"></a>
-
 * [Reconnaissance](ad/recon/README.md)
   * [DHCP](ad/recon/dhcp.md)
   * [DNS](ad/recon/dns.md)
