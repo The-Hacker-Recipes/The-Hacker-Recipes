@@ -68,10 +68,10 @@ modifyCertTemplate.py -template templateName -value 2 -property mspki-enrobashll
 modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature "$DOMAIN/$USER:$PASSWORD"
 
 # 3. Enable SAN Specification
-modifyCertTemplate.py -template templateName -add enrollee_supplies_subject -property msPKI-Certificate-Name-Flag "$DOMAIN/$USER:$PASSWORD"
+modifyCertTemplate.py -template templateName -add enrollee_supplies_subject -property "msPKI-Certificate-Name-Flag" "$DOMAIN/$USER:$PASSWORD"
 
 # 4. Edit Certificate Application Policy Extension
-modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6.1.5.2.3.4'" -property mspki-certificate-application-policy "$DOMAIN/$USER:$PASSWORD"
+modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6.1.5.2.3.4'" -property "pKIExtendedKeyUsage" "$DOMAIN/$USER:$PASSWORD"
 ```
 
 {% hint style="info" %}
