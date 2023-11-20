@@ -31,11 +31,13 @@ This allows for lateral movement, account persistence, and in some cases privile
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used to conduct the ESC8 escalation scenario.
 
 ```python
-ntlmrelayx -t "http://CA/certsrv/certfnsh.asp" --adcs --template "Template name"
+ntlmrelayx -t "http://$PKI.domain.local/certsrv/certfnsh.asp" --adcs --template "Template name"
 ```
 
 {% hint style="info" %}
 The certificate template flag (i.e. `--template`) can either be left blank (default to **Machine** at the time of writing, October 20th 2012) or chosen among the certificate templates that fill the requirements.&#x20;
+
+For instance, if the relayed principal is a domain controller, the `DomainController` template must be specified.
 {% endhint %}
 
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) ([how to enumerate](broken-reference)).
