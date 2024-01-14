@@ -117,6 +117,7 @@
   * [Print Spooler Service](ad/movement/print-spooler-service/README.md)
     * [PrinterBug](ad/movement/print-spooler-service/printerbug.md)
     * [PrintNightmare](ad/movement/print-spooler-service/printnightmare.md)
+  * [schannel](ad/movement/schannel/passthecert.md)
   * [Built-ins & settings](ad/movement/domain-settings/README.md)
     * [Security groups](ad/movement/domain-settings/builtin-groups.md)
     * [MachineAccountQuota](ad/movement/domain-settings/machineaccountquota.md)
