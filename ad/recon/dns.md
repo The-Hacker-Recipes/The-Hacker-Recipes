@@ -84,10 +84,10 @@ cat records.csv
 {% endtab %}
 
 {% tab title="bloodyad" %}
-Or with [bloodyad](https://github.com/CravateRouge/bloodyAD).
+Alternatively, it can be achieved using [bloodyad](https://github.com/CravateRouge/bloodyAD).
 
 ```bash
-bloodyAD --host <DC_IP> -d <DOMAIN_FQDN> -u <USERNAME> -p <PASSWORD> get dnsDump
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get dnsDump
 ```
 
 {% endtab %}

