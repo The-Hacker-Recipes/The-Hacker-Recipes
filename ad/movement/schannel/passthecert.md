@@ -34,7 +34,7 @@ certipy auth -pfx -dc-ip "10.0.0.1" -ldap-shell
 {% endtab %}
 
 {% tab title="Windows" %}
-Pass the cert technique can be done with[PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) (C# version).
+Pass the cert technique can be done with [PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) (C# version).
 
 ```bash
 # Add simple_user to Domain Admins (it assumes that the domain account for which the certificate was issued, holds privileges to add user to this group)
