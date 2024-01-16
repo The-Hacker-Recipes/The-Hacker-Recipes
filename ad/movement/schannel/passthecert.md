@@ -6,7 +6,7 @@ This technique extends the notion of [Pass the Certificate](../kerberos/pass-the
 
 ## Theory
 
-Sometimes, Domain Controllers do not support [PKINIT](../../kerberos/pass-the-certificate.md). This can be because their certificates do not have the `Smart Card Logon` EKU. Most of the time, domain controllers return `KDC_ERR_PADATA_TYPE_NOSUPP` error when the EKU is missing. Fortunately, several protocols — including LDAP — support Schannel, thus authentication through TLS. As the term "schannel authentication" is derived from the [Schannel SSP (Security Service Provider)](https://learn.microsoft.com/en-us/windows-server/security/tls/tls-ssl-schannel-ssp-overview) which is the Microsoft SSL/TLS implementation in Windows, it is important to note that schannel authentication is a SSL/TLS client authentication.
+Sometimes, Domain Controllers do not support [PKINIT](../kerberos/pass-the-certificate.md). This can be because their certificates do not have the `Smart Card Logon` EKU. Most of the time, domain controllers return `KDC_ERR_PADATA_TYPE_NOSUPP` error when the EKU is missing. Fortunately, several protocols — including LDAP — support Schannel, thus authentication through TLS. As the term "schannel authentication" is derived from the [Schannel SSP (Security Service Provider)](https://learn.microsoft.com/en-us/windows-server/security/tls/tls-ssl-schannel-ssp-overview) which is the Microsoft SSL/TLS implementation in Windows, it is important to note that schannel authentication is a SSL/TLS client authentication.
 
 {% hint style="success" %}
 * Schannel authentication relies on TLS so it is, by design, not subject to channel binding, as the authentication is borne by TLS itself.
@@ -34,7 +34,7 @@ certipy auth -pfx -dc-ip "10.0.0.1" -ldap-shell
 {% endtab %}
 
 {% tab title="Windows" %}
-Pass the cert technique can be done with[PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) (C# version).
+Pass the cert technique can be done with [PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) (C# version).
 
 ```bash
 # Add simple_user to Domain Admins (it assumes that the domain account for which the certificate was issued, holds privileges to add user to this group)
@@ -47,6 +47,8 @@ Pass the cert technique can be done with[PassTheCert](https://github.com/AlmondO
 
 {% embed url="https://offsec.almond.consulting/authenticating-with-certificates-when-pkinit-is-not-supported.html" %}
 
-{% embed url="https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf" %}
+[Certified Pre-Owned (pdf)](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)
+
+{% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
 
 {% embed url="https://posts.specterops.io/certificates-and-pwnage-and-patches-oh-my-8ae0f4304c1d" %}
