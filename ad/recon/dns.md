@@ -83,6 +83,15 @@ cat records.csv
 
 {% endtab %}
 
+{% tab title="bloodyad" %}
+Alternatively, it can be achieved using [bloodyad](https://github.com/CravateRouge/bloodyAD).
+
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get dnsDump
+```
+
+{% endtab %}
+
 {% tab title="crackmapexec" %}
 CrackMapExec's [Enum_dns](https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-enum_dns) module utilizes WMI to dump DNS information from an Active Directory DNS Server. It extracts `MicrosoftDNS_ResourceRecord` (complete zone information) from all found domains.
 ```bash

