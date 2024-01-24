@@ -208,9 +208,9 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
 ## Bastion/Red Forests
-Microsoft introduced Privileged Access Management (PAM) with Server 2016. Among other things, it has very interesting features like -
-    - A bastion forest (Think the administrative forest in ESAE (Enhanced Security Admin Environment) or the famous Red Forest)
-    - Shadow security principals
+Microsoft introduced Privileged Access Management (PAM) with Server 2016. Core features include:
+    - A Bastion Forest (Think the administrative forest in ESAE (Enhanced Security Admin Environment) or the famous Red Forest)
+    - Shadow Security Principals
     - Temporary group membership (Add a user to a group with time-to-live (TTL))
 ### Overview
 1. PAM enables managing an existing production/user forest using a Bastion Forest which has a one-way PAM trust with the existing forest. The users in the bastion forest can be 'mapped' to privileged groups like Domain Admins and Enterprise Admins in the user forest without modifying any group memberships or ACLs. This is done by creating Shadow security principals in the bastion forest, which are mapped to SIDs for high-privilege groups in the user forest, and then adding users from the admin forest as members of the shadow security principals.
