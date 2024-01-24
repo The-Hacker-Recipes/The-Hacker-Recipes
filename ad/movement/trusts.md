@@ -207,7 +207,13 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
-## Bastion Forests & PAM (Red Forests) (adapted by [Nikhil Mittal's research](https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html))
+## Bastion Forests & PAM (Red Forests) 
+
+{% hint style="info" %}
+
+The following section is a light adaptation of Nikhil Mittal's work: https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html
+
+{% endhint %}
 
 Microsoft introduced Privileged Access Management (PAM) with Server 2016, including the following features.
 - A Bastion forest (i.e. forest in ESAE (Enhanced Security Admin Environment), a.k.a. Red Forest)
@@ -219,19 +225,6 @@ PAM enables the management of an existing "User Forest" using a "Bastion Forest"
 This is done by creating "Shadow Security Principals" in the Bastion Forest, which are mapped to SIDs for high-privileged groups in the User Forest, and then adding users from the Bastion Forest as members of the Shadow Security Principals.
 
 Shadow Principals reside in a special container `CN=Shadow Principal Configuration,CN=Services` under the Configuration container on the Bastion Forest.
-
-{% hint style="info" %}
-
-There is something worth noticing about the above setup. To be able to use the Shadow Security Principals, we had to allow SID History in the PAM trust which means no SID Filtering.
-
-A PAM trust without an isolated Bastion Forest is disastrous since a compromised Bastion Forest would then imply compromised administrated forests (i.e. User Forest) Why? Because in such a case if we compromise the bastion forest we get high privileges (Enterprise Admins or Domain Admins) in the other forest:
-    - There is no group membership (unlike Foreign Security Principals)
-    - No ACLs modification
-    - No other modification to look for in the forest which gets compromised!
-    
-PAM has been discussed in much detail [here by Russell Smith](https://www.petri.com/windows-server-2016-set-privileged-access-management) and [here by Willem Kasdorp](https://blogs.technet.microsoft.com/389thoughts/2017/06/19/ad-2016-pam-trust-how-it-works-and-safety-advisory/).
-
-{% endhint %}
 
 ### Enumeration
 
