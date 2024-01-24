@@ -29,7 +29,7 @@ A trust relationship allows users in one domain to **authenticate** to the other
 {% endhint %}
 
 ### Global Catalog
-The global catalog is a partial copy of all objects in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. One of the Global Catalog's purposes is to facilitate quick object searching and conflict resolution without the necessity of referring to other domains ([more information here](https://technet.microsoft.com/en-us/library/cc978012.aspx).
+The global catalog is a partial copy of all objects in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. One of the Global Catalog's purposes is to facilitate quick object searching and conflict resolution without the necessity of referring to other domains [(more information here)](https://technet.microsoft.com/en-us/library/cc978012.aspx).
 
 The initial global catalog is generated on the first domain controller created in the first domain in the forest. The first domain controller for each new child domain is also set as a global catalog by default, but others can be added.
 
