@@ -207,22 +207,34 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
-## Bastion/Red Forests
-Microsoft introduced Privileged Access Management (PAM) with Server 2016. Core features include:
-- A Bastion Forest (Think the administrative forest in ESAE (Enhanced Security Admin Environment) or the famous Red Forest)
-- Shadow Security Principals
-- Temporary group membership (Add a user to a group with time-to-live (TTL))
-### Overview
-1. PAM enables managing an existing production/user forest using a Bastion Forest which has a one-way PAM trust with the existing forest. The users in the bastion forest can be 'mapped' to privileged groups like Domain Admins and Enterprise Admins in the user forest without modifying any group memberships or ACLs. This is done by creating Shadow security principals in the bastion forest, which are mapped to SIDs for high-privilege groups in the user forest, and then adding users from the admin forest as members of the shadow security principals.
-2. Shadow Principals reside in a special container 'CN=Shadow Principal Configuration,CN=Services' under the Configuration container on Bastion Forest.
-3. With that configuration, it is possible to manage production.local forest from bastion.local without making any changes in the group memberships or ACLs on production.local. This takes away the administrative overhead of managing groups and ACLs and reduces the chances of lateral movement techniques like OverPTH, PTT, and other credential relay techniques.
-4. There is something worth noticing about the above setup. To be able to use the shadow security principals, we had to allow SIDHistory in the PAM trust which means no SID Filtering.
-5. A PAM trust where you do not have an isolated bastion forest is disastrous. Why? Because in such a case if we compromise the bastion forest we get high privileges (Enterprise Admins or Domain Admins) in the other forest:
+## Bastion Forests & PAM (Red Forests)
+
+Microsoft introduced Privileged Access Management (PAM) with Server 2016, including the following features.
+- A Bastion forest (i.e. forest in ESAE (Enhanced Security Admin Environment), a.k.a. Red Forest)
+- Shadow Security Principals (i.e. admins in Bastion Forest can be mapped as Domain Admins or a "User Forest")
+- Temporary group membership (i.e. add a user to a group with a time-to-live (TTL))
+
+PAM enables the management of an existing "User Forest" using a "Bastion Forest" which has a one-way PAM trust with the existing forest. The users in the Bastion Forest can be 'mapped' to privileged groups like "Domain Admins" and "Enterprise Admins" in the User Forest without modifying any group memberships or ACLs. This takes away the administrative overhead and reduces the chances of lateral movement techniques.
+
+This is done by creating "Shadow Security Principals" in the Bastion Forest, which are mapped to SIDs for high-privileged groups in the User Forest, and then adding users from the Bastion Forest as members of the Shadow Security Principals.
+
+Shadow Principals reside in a special container `CN=Shadow Principal Configuration,CN=Services` under the Configuration container on the Bastion Forest.
+
+{% hint style="info" %}
+
+There is something worth noticing about the above setup. To be able to use the Shadow Security Principals, we had to allow SID History in the PAM trust which means no SID Filtering.
+
+A PAM trust without an isolated Bastion Forest is disastrous since a compromised Bastion Forest would then imply compromised administrated forests (i.e. User Forest) Why? Because in such a case if we compromise the bastion forest we get high privileges (Enterprise Admins or Domain Admins) in the other forest:
     - There is no group membership (unlike Foreign Security Principals)
     - No ACLs modification
     - No other modification to look for in the forest which gets compromised!
-6. PAM has been discussed in much detail [here by Russell Smith](https://www.petri.com/windows-server-2016-set-privileged-access-management) and [here by Willem Kasdorp](https://blogs.technet.microsoft.com/389thoughts/2017/06/19/ad-2016-pam-trust-how-it-works-and-safety-advisory/).
+    
+PAM has been discussed in much detail [here by Russell Smith](https://www.petri.com/windows-server-2016-set-privileged-access-management) and [here by Willem Kasdorp](https://blogs.technet.microsoft.com/389thoughts/2017/06/19/ad-2016-pam-trust-how-it-works-and-safety-advisory/).
+
+{% endhint %}
+
 ### Enumeration
+
 1. Using the ADModule, one can simply run Get-ADTrust and look for a trust which has ForestTransitive set to True and SIDFilteringQuarantined set to False - this means that SID Filtering is disabled. `Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}`
 2. If one wants to enumerate if their current forest is managed by a Bastion Forest, they can look for `ForestTransitive` set to `True` and `SIDFilteringForestAware` set to `True`. In this case, TrustAttributes is also a very good indicator. It is `0x00000400` (`1024` in decimal) for PAM/PIM trust. Simplifying it, it is `1096` for PAM + External Trust + Forest Transitive.
 3. To enumerate the shadow security principals, its members from the current (bastion) forest and privileges in the user/production forest, one can use the following command from the ActiveDirectory module: `Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl`
