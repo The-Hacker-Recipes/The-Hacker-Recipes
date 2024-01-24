@@ -207,7 +207,7 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
-## Bastion Forests & PAM (Red Forests)
+## Bastion Forests & PAM (Red Forests) (adapted by [Nikhil Mittal's research](https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html))
 
 Microsoft introduced Privileged Access Management (PAM) with Server 2016, including the following features.
 - A Bastion forest (i.e. forest in ESAE (Enhanced Security Admin Environment), a.k.a. Red Forest)
@@ -252,7 +252,7 @@ Attackers can also use this for persistence. Please note that the persistence wi
 Please note that in this case, if someone looks at the details of the 'lowprivuser', that account would appear to be a part of the `psforest-ShadowEnterpriseAdmin`'group'.
 2. A better and more feasible TTP would be the modification of ACLs of the shadow principal object. One can provide a user in control, Full Permission overt shadow principal object but a principle of minimal permissions should always be met. `Read Members` and `Write Members` permissions on the shadow principal object are adequate to add and remove principals at will from the shadow principals. At this point, one can add or remove users at will with the privileges of 'reportdbadmin' user. On top of that, by default there are no logs for any changes to the ACL or 'membership' of a shadow principal.
 
-## Trust Attack High-Level Strategy
+## Trust Attack High-Level Strategy (adapted by [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d))
 1. The first step is to enumerate all trusts the current domain has, along with any trusts those domains have, and so on. Essentially, this includes the process of producing a mapping of all the domains that are reachable from the current context through the linking of trust referrals. This allows one to determine the domains they need to hop through to get to their target and what techniques they can execute to achieve this. Any domains in the mapped “mesh” that are in the same forest (e.g. parent->child relationships) are of particular interest due to the `SIDhistory-trust-hopping` technique.
 2. The next step is to enumerate any users/groups/computers (security principals) in one domain that either (1) have access to resources in another domain (i.e. membership in local administrator groups, or DACL ACE entries), or (2) are in groups or (if a group) have users from another domain. The point here is to find relationships that cross the mapped trust boundaries in some way and therefore might provide a type of “access bridge” from one domain to another in the mesh. While a cross-domain nested relationship is not guaranteed to facilitate access, trusts are normally implemented for a reason, meaning more often than not some type of cross-domain user/group/resource “nesting” probably exists, and in many organizations these relationships are misconfigured. Kerberoasting across trusts may be another vector to hop a trust boundary.
 3. When the trust mesh, types, and cross-domain nested relationships have been mapped out, one can have a clear map of what accounts need to be compromised to pivot from our current domain into our target.
