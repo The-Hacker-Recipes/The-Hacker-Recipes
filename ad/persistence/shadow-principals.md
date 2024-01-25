@@ -7,3 +7,10 @@ Please note that in this case, if someone looks at the details of the 'lowprivus
 {% hint style="info" %}
 Please note that the persistence will be for the privileges on the user/production forest and not the Bastion Forest itself.
 {% endhint %}
+
+## Resources
+{% embed url="https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html" %}
+
+{% embed url="https://posts.specterops.io/not-a-security-boundary-breaking-forest-trusts-cd125829518d" %}
+
+
