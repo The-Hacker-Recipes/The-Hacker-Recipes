@@ -1,3 +1,5 @@
+# Shadow Principals (PAM)
+
 When a Bastion Forest is compromised, there are multiple ways to obtain persistence on the forest it manages (i.e. called "Production Forest" here).
 
 1. Mark a low-privilege user from the Production Forest as an Shadow Security Principal in the Bastion Forest
