@@ -346,7 +346,7 @@ In addition to enumerating trusts, retrieving information about the permissions 
 
 A forest is probably managed by a Bastion Forest when the `TRUST_ATTRIBUTE_PIM_TRUST (0x400)` flag is set in the trust attributes.
 
-To enumerate the Shadow Security Principals, and LDAP query can be made to list the `Name`, `member`, and `msDS-ShadowPrincipalSid` attributes of the `msDS-ShadowPrincipalContainer` object in the `CN=Shadow Principal Configuration,CN=Services,{CONFIGURATION_NAMING_CONTEXT}` container.
+To enumerate the Shadow Security Principals, and LDAP query can be made to list the `Name`, `member`, and `msDS-ShadowPrincipalSid` attributes of Shadow Principals in the `CN=Shadow Principal Configuration,CN=Services,{CONFIGURATION_NAMING_CONTEXT}` container.
 
 - `name`: name of the shadow principal
 - `member`: principals (from the Bastion Forest) mapped to it
