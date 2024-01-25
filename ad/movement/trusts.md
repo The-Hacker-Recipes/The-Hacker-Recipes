@@ -230,9 +230,27 @@ This is done by creating "Shadow Security Principals" in the Bastion Forest, whi
 
 The main Active Directory Objects and Attributes related to the Bastion Forest are the following:
 
-1. `msDS-ShadowPrincipalContainer`: dedicated container for `msDS-ShadowPrincipal` objects (reside in a special container `CN=Shadow Principal Configuration,CN=Services` under the Configuration container on the Bastion Forest). NB: Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
+1. `msDS-ShadowPrincipalContainer`: dedicated container class for `msDS-ShadowPrincipal` objects. One default container (`CN=Shadow Principal Configuration`) is created in the Services container in the Configuration NC on the Bastion Forest). NB: Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
 2. `msDS-ShadowPrincipal`: principal from an external forest (Bastion Forest). Has the `msDS-ShadowPrincipalSid` attribute and can only be in a Shadow Principal container. Any principal may be represented by a Shadow Principal. If the Shadow Principal is in the default container (mentioned above), Kerberos tickets will embed the group membership (in the same forest) of the principal referenced by the Shadow Principal. If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
 4. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
+
+```
+Bastion ROOT (DC=bastion,DC=local)
+├── Configuration Naming Context (CN=Configuration)
+│   ├── Services (CN=Services)
+│   │   ├── Default Shadow Principal Container (CN=Shadow Principal Configuration)
+│   │   │   ├── Shadow Principal object
+│   │   │   │   ├── name: prodForest-ShadowEntrepriseAdmin
+│   │   │   │   ├── member: { BASTION/bobby, BASTION/jason } (Users in Bastion Forest)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-519 (Entreprise Admins @ Production Forest SID)
+│   │   │   │   ├── ...
+│   │   │   ├── Shadow Principal object
+│   │   │   │   ├── name: prodForest-ShadowDomainAdmin
+│   │   │   │   ├── member: { BASTION/max, BASTION/jason } (Users in Bastion Forest)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-512 (Domain Admins @ Production Forest SID)
+│   │   │   │   ├── ...
+│   │   ├── [...]   
+```
 
 <details>
 
