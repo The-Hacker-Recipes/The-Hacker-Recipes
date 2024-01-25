@@ -238,13 +238,25 @@ If a TTL value of the membership is set it will integrate with Kerberos and the 
 3. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. It has constraints so SIDs from its own domain or from any other domain within its own forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
 
 
-## Trust Attack High-Level Strategy (adapted by [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d))
-1. The first step is to enumerate all trusts the current domain has, along with any trusts those domains have, and so on. Essentially, this includes the process of producing a mapping of all the domains that are reachable from the current context through the linking of trust referrals. This allows one to determine the domains they need to hop through to get to their target and what techniques they can execute to achieve this. Any domains in the mapped “mesh” that are in the same forest (e.g. parent->child relationships) are of particular interest due to the `SIDhistory-trust-hopping` technique.
-2. The next step is to enumerate any users/groups/computers (security principals) in one domain that either (1) have access to resources in another domain (i.e. membership in local administrator groups, or DACL ACE entries), or (2) are in groups or (if a group) have users from another domain. The point here is to find relationships that cross the mapped trust boundaries in some way and therefore might provide a type of “access bridge” from one domain to another in the mesh. While a cross-domain nested relationship is not guaranteed to facilitate access, trusts are normally implemented for a reason, meaning more often than not some type of cross-domain user/group/resource “nesting” probably exists, and in many organizations these relationships are misconfigured. Kerberoasting across trusts may be another vector to hop a trust boundary.
-3. When the trust mesh, types, and cross-domain nested relationships have been mapped out, one can have a clear map of what accounts need to be compromised to pivot from our current domain into our target.
-4. At a minimum, remember that if a domain trusts us, i.e. if the trust is bidirectional or if one-way and inbound, then one can query any Active Directory information from the trusting domain. ALL parent->child (intra-forest domain trusts) retain an implicit two-way transitive trust with each other. Furthermore, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest. This means that trust “flows down” from the forest root, making it a primary objective to move from child to forest root at any appropriate step in the attack chain.
+
 
 ## Practice
+### Trust Attack High-Level Strategy (adapted by [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d))
+{% hint style="info" %}
+At a minimum, a Domain Trust (bidirectional or one-way inbound), guarantees that one can query any Active Directory information from the trusting domain. ALL parent->child (intra-forest domain trusts) retain an implicit two-way transitive trust with each other. Furthermore, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest, which means that trust “flows down” from the forest root.
+{% endhint %}
+
+1. The first step is to enumerate all trusts the current domain has, along with any trusts those domains have, and so on, resulting in a trust mapping of all the domains that are reachable from the current context through the linking of trust referrals.
+2. Any domains in the mapped “mesh” that are in the same forest (e.g. parent->child relationships) are of particular interest due to the `SIDhistory-trust-hopping` technique.
+3. The next step is to enumerate any users/groups/computers (security principals) in one domain that either:
+- have access to resources in another domain (i.e. membership in local administrator groups, or DACL ACE entries)
+- are in groups or (if a group) have users from another domain.
+
+The goal here is to find relationships that cross the mapped trust boundaries in some way and therefore might provide a type of “access bridge” from one domain to another in the mesh. While a cross-domain nested relationship is **not guaranteed** to facilitate access, trusts are normally implemented for day-to-day operationss, meaning that some type of cross-domain user/group/resource “nesting” probably exists. Due to the complex nature of Trust relationships, many times those relationships are often overlooked and misconfigured.
+{% hint style="info" %}
+Kerberoasting/ASREPRoasting across trusts can be an obvious vector to hop a trust boundary and it should always be checked.
+{% endhint %}
+
 
 ### Enumeration
 
@@ -337,7 +349,7 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 
 In addition to enumerating trusts, retrieving information about the permissions of trusted principals against trusting resources could also allow for lateral movement and privilege escalation. The recon techniques will depend on the permissions to abuse ([DACL](trusts.md#dacl-abuse), [Kerberos delegations](kerberos/delegations/), etc.).
 
-#### Enumarating Bastion Forests and their Managed Production Forests
+#### Enumarating Bastion Forests
 1. Using the `ADModule`, one can run Get-ADTrust and look for a trust which has `ForestTransitive` set to `True` and `SIDFilteringQuarantined` set to `False` The goal here is to realize whether SID Filtering is disabled. `Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}`
 2. For situational awareness purposes it is important to enumerate if the current forest is managed by a Bastion Forest. This can be done by looking for: `ForestTransitive` set to `True` and `SIDFilteringForestAware` set to `True`. In this case, TrustAttributes is also a very good indicator, which holds the value of `0x00000400` (`1024` in decimal) for PAM/PIM trust. Overall, it is `1096` for PAM + External Trust + Forest Transitive.
 3. To enumerate the Shadow Security Principals, its members from the current (Bastion) Forest and privileges it holds in the Production Forests, one can use the following command from the ActiveDirectory module: `Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl`
