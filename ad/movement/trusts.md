@@ -234,6 +234,8 @@ The main Active Directory Objects and Attributes related to the Bastion Forest a
 2. `msDS-ShadowPrincipal`: principal from an external forest (Bastion Forest). Has the `msDS-ShadowPrincipalSid` attribute and can only be in a Shadow Principal container. Any principal may be represented by a Shadow Principal. If the Shadow Principal is in the default container (mentioned above), Kerberos tickets will embed the group membership (in the same forest) of the principal referenced by the Shadow Principal. If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
 4. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
 
+{% code overflow="wrap" %}
+
 ```
 Bastion ROOT (DC=bastion,DC=local)
 ├── Configuration Naming Context (CN=Configuration)
@@ -251,6 +253,8 @@ Bastion ROOT (DC=bastion,DC=local)
 │   │   │   │   ├── ...
 │   │   ├── [...]   
 ```
+
+{% encode %}
 
 <details>
 
