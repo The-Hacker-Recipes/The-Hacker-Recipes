@@ -28,6 +28,15 @@ Simply establishing a trust relationship does not automatically grant access to 
 A trust relationship allows users in one domain to **authenticate** to the other domain's resources, but it does not automatically grant access to them. Access to resources is controlled by permissions, which must be granted explicitly to the user in order for them to access the resources.
 {% endhint %}
 
+### Global Catalog
+The global catalog is a partial copy of all objects in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. One of the Global Catalog's purposes is to facilitate quick object searching and conflict resolution without the necessity of referring to other domains [(more information here)](https://technet.microsoft.com/en-us/library/cc978012.aspx).
+
+The initial global catalog is generated on the first domain controller created in the first domain in the forest. The first domain controller for each new child domain is also set as a global catalog by default, but others can be added.
+
+The GC allows both users and applications to find information about any objects in ANY domain in the forest. The Global Catalog performs the following functions:
+- Authentication (provided authorization for all groups that a user account belongs to, which is included when an access token is generated)
+- Object search (making the directory structure within a forest transparent, allowing a search to be carried out across all domains in a forest by providing just one attribute about an object.)
+
 ### Trust types
 
 The `trustType` attribute of a TDO specifies the type of trust that is established. Here are the different trust types (section [6.1.6.7.15 "trustType"](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/36565693-b5e4-4f37-b0a8-c1b12138e18e) of \[MS-ADTS]):
@@ -164,7 +173,7 @@ The TGT delegation status of a trust depends on the [trustAttributes](https://do
 
 Understanding how Kerberos works is required here: [the Kerberos protocol](kerberos/).
 
-> In order for a Kerberos authentication to occur across a domain trust, the kerberos key distribution centers (KDCs) in two domains must have a shared secret, called an inter-realm key. This key is [derived from a shared password](https://msdn.microsoft.com/en-us/library/windows/desktop/aa378170\(v=vs.85\).aspx), and rotates approximately every 30 days. Parent-child domains share an inter-realm key implicitly.
+> For a Kerberos authentication to occur across a domain trust, the Kerberos key distribution centers (KDCs) in two domains must have a shared secret, called an inter-realm key. This key is [derived from a shared password](https://msdn.microsoft.com/en-us/library/windows/desktop/aa378170\(v=vs.85\).aspx), and rotates approximately every 30 days. Parent-child domains share an inter-realm key implicitly.
 >
 > When a user in domain A tries to authenticate or access a resource in domain B that he has established access to, he presents his ticket-granting-ticket (TGT) and request for a service ticket to the KDC for domain A. The KDC for A determines that the resource is not in its realm, and issues the user a referral ticket.
 >
@@ -198,7 +207,69 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
+## MIM PAM & Bastion (Red Forests) 
+
+{% hint style="info" %}
+
+The following section is a light adaptation of [Nikhil Mittal's](https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html) and [Daniel Ulrichs's](https://secureidentity.se/msds-shadowprincipal/) work.
+
+{% endhint %}
+
+Microsoft introduced MIM (Microsoft Identity Manager) Privileged Access Management (PAM) with Server 2016, including the following features. (Sometimes PAM is also referred to as PIM in some docs/links).
+- A Bastion forest (i.e. forest in ESAE (Enhanced Security Admin Environment), a.k.a. Red Forest)
+- Shadow Security Principals (i.e. admins in Bastion Forest can be mapped as Domain Admins or a "User Forest")
+- Temporary group membership (i.e. add a user to a group with a time-to-live (TTL))
+
+PAM enables the management of an existing "Production Forest" (one can think of that as a User Forest as well) using a "Bastion Forest" which has a one-way PAM trust with the existing forest. The users in the Bastion Forest can be 'mapped' to privileged groups like "Domain Admins" and "Enterprise Admins" in the Production Forest without modifying any group memberships or ACLs. This takes away the administrative overhead and reduces the chances of lateral movement techniques.
+
+This is done by creating "Shadow Security Principals" in the Bastion Forest, which are mapped to SIDs for high-privileged groups in the User Forest, and then adding users from the Bastion Forest as members of the Shadow Security Principals.
+
+<details>
+
+<summary>More technical notes</summary>
+
+The main Active Directory Objects and Attributes related to the Bastion Forest are the following:
+
+1. `msDS-ShadowPrincipalContainer`: dedicated container class for `msDS-ShadowPrincipal` objects. One default container (`CN=Shadow Principal Configuration`) is created in the Services container in the Configuration NC on the Bastion Forest). NB: Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
+2. `msDS-ShadowPrincipal`: principal from an external forest (Bastion Forest). Has the `msDS-ShadowPrincipalSid` attribute and can only be in a Shadow Principal container. Any principal may be represented by a Shadow Principal. If the Shadow Principal is in the default container (mentioned above), Kerberos tickets will embed the group membership (in the same forest) of the principal referenced by the Shadow Principal. If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
+4. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
+
+{% code overflow="wrap" %}
+
+```
+Bastion ROOT (DC=bastion,DC=local)
+├── Configuration Naming Context (CN=Configuration)
+│   ├── Services (CN=Services)
+│   │   ├── Default Shadow Principal Container (CN=Shadow Principal Configuration)
+│   │   │   ├── Shadow Principal object
+│   │   │   │   ├── name: prodForest-ShadowEntrepriseAdmin
+│   │   │   │   ├── member: { BASTION/bobby, BASTION/jason } (Users in Bastion Forest)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-519 (Entreprise Admins @ Production Forest SID)
+│   │   │   │   ├── ...
+│   │   │   ├── Shadow Principal object
+│   │   │   │   ├── name: prodForest-ShadowDomainAdmin
+│   │   │   │   ├── member: { BASTION/max, BASTION/jason } (Users in Bastion Forest)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-512 (Domain Admins @ Production Forest SID)
+│   │   │   │   ├── ...
+│   │   ├── [...]   
+```
+
+{% encode %}
+
+<details>
+
 ## Practice
+
+While domain trusts don't necessarily give access to resources, they allow the trusted domain's principal to query another -trusting- domain's AD info.
+
+> And remember that all parent->child (intra-forest domain trusts) retain an implicit two way transitive trust with each other. Also, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest.
+> This means that trust “flows down” from the forest root, making it our objective to move from child to forest root at any appropriate step in the attack chain. (from [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d)).
+
+Attacking AD trusts comes down to the following process.
+
+1. Map all direct and indirect trusts involved with an already compromised domain.
+2. All domains from the same forest are to be considered as first-choice targets ([SID filtering](trusts.md#sid-filtering) would be disabled, allowing for [Forging a ticket](trusts.md#forging-tickets) with an [SID history](trusts.md#sid-history)).
+3. For the others, permissions must be audited to finds ways in trusting domains. This is done by finding out what trusted principals can do on trusting resources (Kerberos delegations, groups membership, DACLs, etc.), and then [abuse those permissions](trusts.md#abusing-permissions). All regular AD movement techniques apply, except the target resources and the account used to authenticate are not on the same domain, that's basically it.
 
 ### Enumeration
 
@@ -214,7 +285,7 @@ Several tools can be used to enumerate trust relationships. The following major 
 >
 > It's important to check both ends of the trust (because the characteristics could differ). \[...]
 >
-> All the trust relationship information are fetched via LDAP and preferably (if that server is operational) from the Global Catalog server. As the Global catalog contains information about every object in the forest it might also contain information about trust entities that you can't reach (e.g. due to network segmentation or because they are offline).
+> All the trust relationship information is fetched via LDAP and preferably (if that server is operational) from the Global Catalog server. As the Global catalog contains information about every object in the forest it might also contain information about trust entities that you can't reach (e.g. due to network segmentation or because they are offline).
 >
 > _(by_ [_Carsten Sandker_](https://twitter.com/0xcsandker) _on_ [_www.securesystems.de_](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)_)_
 {% endhint %}
@@ -290,6 +361,20 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 {% endtabs %}
 
 In addition to enumerating trusts, retrieving information about the permissions of trusted principals against trusting resources could also allow for lateral movement and privilege escalation. The recon techniques will depend on the permissions to abuse ([DACL](trusts.md#dacl-abuse), [Kerberos delegations](kerberos/delegations/), etc.).
+
+<details>
+
+<summary>Notes on Bastion Forests</summary>
+
+A forest is probably managed by a Bastion Forest when the `TRUST_ATTRIBUTE_PIM_TRUST (0x400)` flag is set in the trust attributes.
+
+To enumerate the Shadow Security Principals, and LDAP query can be made to list the `Name`, `member`, and `msDS-ShadowPrincipalSid` attributes of Shadow Principals in the `CN=Shadow Principal Configuration,CN=Services,{CONFIGURATION_NAMING_CONTEXT}` container.
+
+- `name`: name of the shadow principal
+- `member`: principals (from the Bastion Forest) mapped to it
+- `msDS-ShadowPrincipalSid`: the SID of the principal (from the Production Forest) whose privileges are assigned to the shadow security principal.
+    
+</details>
 
 ### Forging tickets
 
@@ -503,6 +588,10 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 
 {% embed url="https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii__kerberos_cont/SSTIC2014-Slides-secrets_dauthentification_pisode_ii__kerberos_contre-attaque-bordes_2.pdf" %}
 
+{% embed url="https://secureidentity.se/msds-shadowprincipal/" %}
+
+{% embed url="https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services" %}
+
 ### Offensive POV
 
 {% embed url="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/" %}
@@ -548,6 +637,8 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 {% embed url="https://adsecurity.org/?p=425" %}
 
 {% embed url="https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1" %}
+
+{% embed url="https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html" %}
 
 {% hint style="info" %}
 Parts of this page were written with the help of the [ChatGPT](https://openai.com/blog/chatgpt/) AI model.

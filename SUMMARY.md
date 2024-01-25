@@ -138,6 +138,7 @@
     * [Access controls](ad/persistence/ad-cs/access-controls.md)
     * [Golden certificate](ad/persistence/ad-cs/golden-certificate.md)
   * [🛠️ DACL abuse](ad/persistence/access-controls.md)
+  * [Shadow Principals (PAM)](ad/persistence/shadow-principals.md)
 
 ## Web services <a href="#web" id="web"></a>
 
