@@ -207,7 +207,7 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
-## Bastion Forests & PAM (Red Forests) 
+## MIM PAM & Bastion (Red Forests) 
 
 {% hint style="info" %}
 
@@ -215,48 +215,39 @@ The following section is a light adaptation of [Nikhil Mittal's](https://www.lab
 
 {% endhint %}
 
-Microsoft introduced Privileged Access Management (PAM) with Server 2016, including the following features.
+Microsoft introduced MIM (Microsoft Identity Manager) Privileged Access Management (PAM) with Server 2016, including the following features. (Sometimes PAM is also referred to as PIM in some docs/links).
 - A Bastion forest (i.e. forest in ESAE (Enhanced Security Admin Environment), a.k.a. Red Forest)
 - Shadow Security Principals (i.e. admins in Bastion Forest can be mapped as Domain Admins or a "User Forest")
 - Temporary group membership (i.e. add a user to a group with a time-to-live (TTL))
 
-PAM enables the management of an existing "Production Forest"(one can think of that as a User Forest as well) using a "Bastion Forest" which has a one-way PAM trust with the existing forest. The users in the Bastion Forest can be 'mapped' to privileged groups like "Domain Admins" and "Enterprise Admins" in the Production Forest without modifying any group memberships or ACLs. This takes away the administrative overhead and reduces the chances of lateral movement techniques.
+PAM enables the management of an existing "Production Forest" (one can think of that as a User Forest as well) using a "Bastion Forest" which has a one-way PAM trust with the existing forest. The users in the Bastion Forest can be 'mapped' to privileged groups like "Domain Admins" and "Enterprise Admins" in the Production Forest without modifying any group memberships or ACLs. This takes away the administrative overhead and reduces the chances of lateral movement techniques.
 
 This is done by creating "Shadow Security Principals" in the Bastion Forest, which are mapped to SIDs for high-privileged groups in the User Forest, and then adding users from the Bastion Forest as members of the Shadow Security Principals.
 
+<details>
+
+<summary>More technical notes</summary>
+
 The main Active Directory Objects and Attributes related to the Bastion Forest are the following:
-1. `msDS-ShadowPrincipalContainer`: Shadow Principals reside in a special container `CN=Shadow Principal Configuration,CN=Services,DC=bastion,DC=local` under the Configuration container on the Bastion Forest. This class is the dedicated container for msDS-ShadowPrincipal objects.
-{% hint style="info" %}
-Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
-{% endhint %}
 
-2. `msDS-ShadowPrincipal`: The principal from an external forest (Bastion Forest) is represented by this class. It needs to have a value of `msDS-ShadowPrincipalSid` and can only be formed in a Shadow Principal container. Any Security Principal Account, Security Group, or Computer may be represented by a Shadow Principal. One important security feature in PAM and Shadow Principals is that TTL values can be specified on the membership in the same manner that can be done with [time-based groups](http://secureidentity.se/time-based-groups/). If the Shadow Principal resides in the default `CN=Shadow Principal Configuration,CN=Services,CN=Configuration,DC=bastion,DC=local` container, the membership that any domain account has of any Shadow Principal will be added to the Kerberos tickets as with any other group membership. One constraint is it can only have members of principals within its own forest.
-If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
+1. `msDS-ShadowPrincipalContainer`: dedicated container for `msDS-ShadowPrincipal` objects (reside in a special container `CN=Shadow Principal Configuration,CN=Services` under the Configuration container on the Bastion Forest). NB: Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
+2. `msDS-ShadowPrincipal`: principal from an external forest (Bastion Forest). Has the `msDS-ShadowPrincipalSid` attribute and can only be in a Shadow Principal container. Any principal may be represented by a Shadow Principal. If the Shadow Principal is in the default container (mentioned above), Kerberos tickets will embed the group membership (in the same forest) of the principal referenced by the Shadow Principal. If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
+4. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
 
-3. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. It has constraints so SIDs from its own domain or from any other domain within its own forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
-
-
-
+<details>
 
 ## Practice
-### Trust Attack High-Level Strategy (adapted by [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d))
 
-{% hint style="info" %}
-At a minimum, a Domain Trust (bidirectional or one-way inbound), guarantees that one can query any Active Directory information from the trusting domain. ALL parent->child (intra-forest domain trusts) retain an implicit two-way transitive trust with each other. Furthermore, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest, which means that trust “flows down” from the forest root.
-{% endhint %}
+While domain trusts don't necessarily give access to resources, they allow the trusted domain's principal to query another -trusting- domain's AD info.
 
-1. The first step is to enumerate all trusts the current domain has, along with any trusts those domains have, and so on, resulting in a trust mapping of all the domains that are reachable from the current context through the linking of trust referrals.
-2. Any domains in the mapped “mesh” that are in the same forest (e.g. parent->child relationships) are of particular interest due to the `SIDhistory-trust-hopping` technique.
-3. The next step is to enumerate any users/groups/computers (security principals) in one domain that either:
-- have access to resources in another domain (i.e. membership in local administrator groups, or DACL ACE entries)
-- are in groups or (if a group) have users from another domain.
+> And remember that all parent->child (intra-forest domain trusts) retain an implicit two way transitive trust with each other. Also, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest.
+> This means that trust “flows down” from the forest root, making it our objective to move from child to forest root at any appropriate step in the attack chain. (from [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d)).
 
-The goal here is to find relationships that cross the mapped trust boundaries in some way and therefore might provide a type of “access bridge” from one domain to another in the mesh. While a cross-domain nested relationship is **not guaranteed** to facilitate access, trusts are normally implemented for day-to-day operationss, meaning that some type of cross-domain user/group/resource “nesting” probably exists. Due to the complex nature of Trust relationships, many times those relationships are often overlooked and misconfigured.
+Attacking AD trusts comes down to the following process.
 
-{% hint style="info" %}
-Kerberoasting/ASREPRoasting across trusts can be an obvious vector to hop a trust boundary and it should always be checked.
-{% endhint %}
-
+1. Map all direct and indirect trusts involved with an already compromised domain.
+2. All domains from the same forest are to be considered as first-choice targets ([SID filtering](trusts.md#sid-filtering) would be disabled, allowing for [Forging a ticket](trusts.md#forging-tickets) with an [SID history](trusts.md#sid-history)).
+3. For the others, permissions must be audited to finds ways in trusting domains. This is done by finding out what trusted principals can do on trusting resources (Kerberos delegations, groups membership, DACLs, etc.), and then [abuse those permissions](trusts.md#abusing-permissions). All regular AD movement techniques apply, except the target resources and the account used to authenticate are not on the same domain, that's basically it.
 
 ### Enumeration
 
@@ -349,14 +340,19 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 
 In addition to enumerating trusts, retrieving information about the permissions of trusted principals against trusting resources could also allow for lateral movement and privilege escalation. The recon techniques will depend on the permissions to abuse ([DACL](trusts.md#dacl-abuse), [Kerberos delegations](kerberos/delegations/), etc.).
 
-#### Enumerating Bastion Forests
-1. Using the `ADModule`, one can run Get-ADTrust and look for a trust which has `ForestTransitive` set to `True` and `SIDFilteringQuarantined` set to `False` The goal here is to realize whether SID Filtering is disabled. `Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}`
-2. For situational awareness purposes it is important to enumerate if the current forest is managed by a Bastion Forest. This can be done by looking for: `ForestTransitive` set to `True` and `SIDFilteringForestAware` set to `True`. In this case, TrustAttributes is also a very good indicator, which holds the value of `0x00000400` (`1024` in decimal) for PAM/PIM trust. Overall, it is `1096` for PAM + External Trust + Forest Transitive.
-3. To enumerate the Shadow Security Principals, its members from the current (Bastion) Forest and privileges it holds in the Production Forests, one can use the following command from the ActiveDirectory module: `Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl`
-The following properties are the most interesting ones:
-- `name` - Name of the shadow principal
-- `member` - Members from the bastion forest which are mapped to the shadow principal. In our example, it is the Domain Administrator of defensiveps.local.
-- `msDS-ShadowPrincipalSid` - The SID of the principal (user or group) in the user/prodcution forest whose privileges are assigned to the shadow security principal.
+<details>
+
+<summary>Notes on Bastion Forests</summary>
+
+A forest is probably managed by a Bastion Forest when the `TRUST_ATTRIBUTE_PIM_TRUST (0x400)` flag is set in the trust attributes.
+
+To enumerate the Shadow Security Principals, and LDAP query can be made to list the `Name`, `member`, and `msDS-ShadowPrincipalSid` attributes of the `msDS-ShadowPrincipalContainer` object in the `CN=Shadow Principal Configuration,CN=Services,{CONFIGURATION_NAMING_CONTEXT}` container.
+
+- `name`: name of the shadow principal
+- `member`: principals (from the Bastion Forest) mapped to it
+- `msDS-ShadowPrincipalSid`: the SID of the principal (from the Production Forest) whose privileges are assigned to the shadow security principal.
+    
+</details>
 
 ### Forging tickets
 
@@ -544,11 +540,6 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 
 // group scoping, [https://posts.specterops.io/a-pentesters-guide-to-group-scoping-c7bbbd9c7560](https://posts.specterops.io/a-pentesters-guide-to-group-scoping-c7bbbd9c7560)
 
-#### Abusing Shadow Principals
-1. If one compromises an account in the Shadow Principals, they can use the privileges to access the user forest using RDP (explicit credentials of the bastion user required), WMI, PowerShell Remoting etc. It is important to note that if Kerberos AES Encryption is not enabled for the PAM trust, one needs to add the machines of the existing forest in `WSMan TrustedHosts` and use the `-Authentication Negotiate` option with PowerShell remoting cmdlets.
-2. It is also possible to use the `SIDHistory` injection attack using `Mimikatz` to abuse the PAM trust.
-3. Overall, auditors should look for a way to compromise the Bastion (Red) forest to easily gain access to all the managed Production Forests.
-
 ## Resources
 
 ### General
@@ -577,7 +568,7 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 
 {% embed url="https://secureidentity.se/msds-shadowprincipal/" %}
 
-{% embed url="https://github.com/MicrosoftDocs/MIMDocs/blob/main/MIMDocs/pam/privileged-identity-management-for-active-directory-domain-services.experimental.md" %}
+{% embed url="https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services" %}
 
 ### Offensive POV
 
