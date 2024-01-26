@@ -252,7 +252,7 @@ Bastion ROOT (DC=bastion,DC=local)
 │   │   ├── [...]   
 ```
 
-<details>
+</details>
 
 ## Practice
 
