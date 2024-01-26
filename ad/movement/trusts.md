@@ -207,7 +207,7 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
-## MIM PAM & Bastion (Red Forests) 
+### MIM PAM & Bastion (Red Forests) 
 
 {% hint style="info" %}
 
@@ -232,9 +232,7 @@ The main Active Directory Objects and Attributes related to the Bastion Forest a
 
 1. `msDS-ShadowPrincipalContainer`: dedicated container class for `msDS-ShadowPrincipal` objects. One default container (`CN=Shadow Principal Configuration`) is created in the Services container in the Configuration NC on the Bastion Forest). NB: Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
 2. `msDS-ShadowPrincipal`: principal from an external forest (Bastion Forest). Has the `msDS-ShadowPrincipalSid` attribute and can only be in a Shadow Principal container. Any principal may be represented by a Shadow Principal. If the Shadow Principal is in the default container (mentioned above), Kerberos tickets will embed the group membership (in the same forest) of the principal referenced by the Shadow Principal. If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
-4. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
-
-{% code overflow="wrap" %}
+3. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
 
 ```
 Bastion ROOT (DC=bastion,DC=local)
@@ -253,8 +251,6 @@ Bastion ROOT (DC=bastion,DC=local)
 │   │   │   │   ├── ...
 │   │   ├── [...]   
 ```
-
-{% encode %}
 
 <details>
 
