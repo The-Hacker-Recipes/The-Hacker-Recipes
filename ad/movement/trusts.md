@@ -235,19 +235,19 @@ The main Active Directory Objects and Attributes related to the Bastion Forest a
 3. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
 
 ```
-Bastion ROOT (DC=bastion,DC=local)
+Bastion ROOT (DC=BASTION,DC=LOCAL)
 ├── Configuration Naming Context (CN=Configuration)
 │   ├── Services (CN=Services)
 │   │   ├── Default Shadow Principal Container (CN=Shadow Principal Configuration)
 │   │   │   ├── Shadow Principal object
 │   │   │   │   ├── name: prodForest-ShadowEntrepriseAdmin
 │   │   │   │   ├── member: { BASTION/bobby, BASTION/jason } (Users in Bastion Forest)
-│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-519 (Entreprise Admins @ Production Forest SID)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-519 (Entreprise Admins @ PRODUCTION.LOCAL)
 │   │   │   │   ├── ...
 │   │   │   ├── Shadow Principal object
 │   │   │   │   ├── name: prodForest-ShadowDomainAdmin
 │   │   │   │   ├── member: { BASTION/max, BASTION/jason } (Users in Bastion Forest)
-│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-512 (Domain Admins @ Production Forest SID)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-512 (Domain Admins @ PRODUCTION.LOCAL)
 │   │   │   │   ├── ...
 │   │   ├── [...]   
 ```
