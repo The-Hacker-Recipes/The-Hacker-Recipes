@@ -7,7 +7,7 @@
 ## Theory
 
 {% hint style="warning" %}
-Attacking Active Directory trust relationships requires a good understanding of a lot of concepts (what forests and domains are, how trusts work, what security mechanisms are involved and how they work, ...). Consequently, this page is lengthy, especially in the [theory](trusts.md#theory) and [resources](trusts.md#resources) parts, but I did my best to include all the necessary info here.&#x20;
+Attacking Active Directory trust relationships requires a good understanding of a lot of concepts (what forests and domains are, how trusts work, what security mechanisms are involved and how they work, ...). Consequently, this page is lengthy, especially in the [theory](trusts.md#theory) and [resources](trusts.md#resources) parts, but I did my best to include all the necessary info here.
 
 Pro tip: take a look at the table of contents on the right panel, it will allow you to browse the page more easily.
 {% endhint %}
@@ -28,11 +28,22 @@ Simply establishing a trust relationship does not automatically grant access to 
 A trust relationship allows users in one domain to **authenticate** to the other domain's resources, but it does not automatically grant access to them. Access to resources is controlled by permissions, which must be granted explicitly to the user in order for them to access the resources.
 {% endhint %}
 
+### Global Catalog
+
+The global catalog is a partial copy of all objects in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. One of the Global Catalog's purposes is to facilitate quick object searching and conflict resolution without the necessity of referring to other domains [(more information here)](https://technet.microsoft.com/en-us/library/cc978012.aspx).
+
+The initial global catalog is generated on the first domain controller created in the first domain in the forest. The first domain controller for each new child domain is also set as a global catalog by default, but others can be added.
+
+The GC allows both users and applications to find information about any objects in ANY domain in the forest. The Global Catalog performs the following functions:
+
+* Authentication (provided authorization for all groups that a user account belongs to, which is included when an access token is generated)
+* Object search (making the directory structure within a forest transparent, allowing a search to be carried out across all domains in a forest by providing just one attribute about an object.)
+
 ### Trust types
 
 The `trustType` attribute of a TDO specifies the type of trust that is established. Here are the different trust types (section [6.1.6.7.15 "trustType"](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/36565693-b5e4-4f37-b0a8-c1b12138e18e) of \[MS-ADTS]):
 
-1. **Downlevel**: a trust with a domain that is running a version of Windows NT 4.0 or earlier.&#x20;
+1. **Downlevel**: a trust with a domain that is running a version of Windows NT 4.0 or earlier.
 2. **Uplevel**: a trust with a domain that is running Windows 2000 or later.
 3. **MIT**: a trust with a non-Windows Kerberos realm, typically used for interoperability with UNIX-based systems running MIT Kerberos.
 4. **DCE**: not used in Windows. Would refer to trusts with a domain running [DCE](http://www.opengroup.org/dce/info/).
@@ -58,8 +69,8 @@ In Active Directory, a transitive trust is a type of trust relationship that all
 {% hint style="info" %}
 The transitivity status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
 
-> * If the `TRUST_ATTRIBUTE_NON_TRANSITIVE (0x00000001)` flag is set then the transitivity is **disabled**.&#x20;
-> * If the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set then the transitivity is **enabled**.&#x20;
+> * If the `TRUST_ATTRIBUTE_NON_TRANSITIVE (0x00000001)` flag is set then the transitivity is **disabled**.
+> * If the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set then the transitivity is **enabled**.
 > * If the `TRUST_ATTRIBUTE_FOREST_TRANSITIVE (0x00000008)` flag is set then the transitivity is **enabled**.
 >
 > In any other case the transitivity is **disabled**.
@@ -73,7 +84,7 @@ According to Microsoft, the security boundary in Active Directory is the forest,
 
 The domain is a unit within a forest and represents a logical grouping of users, computers, and other resources. Users within a domain can access resources within their own domain and can also access resources in other domains within the same forest, as long as they have the appropriate permissions. Users cannot access resources in other forests unless a trust relationship has been established between the forests.
 
-SID filtering plays an important role in the security boundary by making sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts.&#x20;
+SID filtering plays an important role in the security boundary by making sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts.
 
 <figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption><p>(source: <a href="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/">securesystems.de</a>)</p></figcaption></figure>
 
@@ -86,7 +97,7 @@ Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/
 <figure><img src="../../.gitbook/assets/image (1) (2).png" alt=""><figcaption><p>[MS-PAC] section 4.1.2.2</p></figcaption></figure>
 
 {% hint style="info" %}
-The SID filtering status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4) as well as the type of trust.&#x20;
+The SID filtering status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4) as well as the type of trust.
 
 > * If the `TRUST_ATTRIBUTE_QUARANTINED_DOMAIN (0x00000004)` flag is set, then only SIDs from the trusted domain are allowed (all others are filtered
 >
@@ -94,7 +105,7 @@ The SID filtering status of a trust depends on the [trustAttributes](https://doc
 >
 > * If the `TRUST_ATTRIBUTE_TREAT_AS_EXTERNAL (0x00000040)` flag is set, then inter-forest ticket can be forged, spoofing an RID >= 1000. Of course, this doesn't apply if TAQD (`TRUST_ATTRIBUTE_QUARANTINED_DOMAIN`) is set.
 >
-> _(sources: section_ [_6.1.6.7.9_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN) _of \[MS-ADTS], and section_ [_4.1.2.2_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) _of \[MS-PAC])._&#x20;
+> _(sources: section_ [_6.1.6.7.9_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN) _of \[MS-ADTS], and section_ [_4.1.2.2_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) _of \[MS-PAC])._
 
 Above are some key, usually valid, elements. But as [Carsten Sandker](https://twitter.com/0xcsandker) puts it: "the logic that sits behind this might be too complex to put it in text". To really know the behavior of SID filtering for a trust, refer to the lookup tables [here](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/OC-b4We5WFiXhTirzI\_Dyw.png) (for default trusts setups) and [there](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/99icUS7SKCscWq6VzW0o5g.png) (for custom configs).
 {% endhint %}
@@ -122,7 +133,7 @@ When authenticating with NTLM, the process is highly similar, see the [NTLM auth
 Inter-forest trusts ("External" and "Forest" trusts) can be configured with different levels of authentication:
 
 * **Forest-wide authentication**: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level is specific to intra-forest trusts.
-* **Domain-wide authentication**: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).&#x20;
+* **Domain-wide authentication**: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).
 * **Selective authentication**: allows only specific users in the trusted domain to access resources in the trusting domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain. In order to allow a "trusted user" to access a "trusting resource", the resource's DACL must include an ACE in which the trusted user has the "`Allowed-To-Authenticate`" extended right (GUID: `68b1d179-0d15-4d4f-ab71-46152e79a7bc`).
 
 It's worth noting that selective authentication is less used by the general public due to its complexity, but it's definitely the most restrictive, hence secure, choice.
@@ -130,8 +141,8 @@ It's worth noting that selective authentication is less used by the general publ
 {% hint style="info" %}
 The authentication level of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
 
-> * If the trust relationship is made within a forest boundary (aka if the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set), then **Forest-Wide Authentication** will always be used.&#x20;
-> * f the trust relationship crosses a forest boundary and the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION (0x00000010)` flag is set then **Selective Authentication** is used.&#x20;
+> * If the trust relationship is made within a forest boundary (aka if the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set), then **Forest-Wide Authentication** will always be used.
+> * f the trust relationship crosses a forest boundary and the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION (0x00000010)` flag is set then **Selective Authentication** is used.
 > * If the trust relationship crosses a forest boundary, but the trust is marked as transitive (aka if the `TRUST_ATTRIBUTE_FOREST_TRANSITIVE (0x00000008)` flag is set), then **Forest-Wide Authentication** will be used.
 >
 > In any other case **Domain-Wide Authentication** is used.
@@ -145,16 +156,16 @@ The authentication level of a trust depends on the [trustAttributes](https://doc
 
 Kerberos unconstrained delegation (KUD) allows a service configured for it to impersonate (almost) any user on any other service. This is a dangerous feature to configure, that won't be explained into much details here as the [Kerberos](kerberos/#delegations), [Kerberos delegations](kerberos/delegations/) and [Kerberos unconstrained delegations](kerberos/delegations/unconstrained.md) pages already cover it.
 
-Kerberos unconstrained delegations could be abused across trusts to take control over any resource of the trusting domain, including the domain controller, as long as the trusted domain is compromised. This relies on the delegation of TGT across trusts, which can be disabled.&#x20;
+Kerberos unconstrained delegations could be abused across trusts to take control over any resource of the trusting domain, including the domain controller, as long as the trusted domain is compromised. This relies on the delegation of TGT across trusts, which can be disabled.
 
 If TGT delegation is disabled in a trust, attackers won't be able to [escalate from one domain to another by abusing unconstrained delegation](trusts.md#unconstrained-delegation-abuse). On a side note, the other types of delegations are not affected by this as they don't rely on the delegation of tickets, but on S4U extensions instead.
 
 {% hint style="info" %}
 The TGT delegation status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4).
 
-> * If the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION_NO_TGT_DELEGATION (0x00000200)` flag is set, then TGT Delegation is **disabled**.&#x20;
+> * If the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION_NO_TGT_DELEGATION (0x00000200)` flag is set, then TGT Delegation is **disabled**.
 > * If the `TRUST_ATTRIBUTE_QUARANTINED_DOMAIN (0x00000004)` flag is set, then TGT Delegation is **disabled**.
-> * If the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION_ENABLE_TGT_DELEGATION (0x00000800)`flag is set, then TGT Delegation is **enabled**.&#x20;
+> * If the `TRUST_ATTRIBUTE_CROSS_ORGANIZATION_ENABLE_TGT_DELEGATION (0x00000800)`flag is set, then TGT Delegation is **enabled**.
 > * If the `TRUST_ATTRIBUTE_WITHIN_FOREST (0x00000020)` flag is set, then TGT Delegation is **enabled**.
 >
 > _(by_ [_Carsten Sandker_](https://twitter.com/0xcsandker) _on_ [_www.securesystems.de_](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)_)_
@@ -164,7 +175,7 @@ The TGT delegation status of a trust depends on the [trustAttributes](https://do
 
 Understanding how Kerberos works is required here: [the Kerberos protocol](kerberos/).
 
-> In order for a Kerberos authentication to occur across a domain trust, the kerberos key distribution centers (KDCs) in two domains must have a shared secret, called an inter-realm key. This key is [derived from a shared password](https://msdn.microsoft.com/en-us/library/windows/desktop/aa378170\(v=vs.85\).aspx), and rotates approximately every 30 days. Parent-child domains share an inter-realm key implicitly.
+> For a Kerberos authentication to occur across a domain trust, the Kerberos key distribution centers (KDCs) in two domains must have a shared secret, called an inter-realm key. This key is [derived from a shared password](https://msdn.microsoft.com/en-us/library/windows/desktop/aa378170\(v=vs.85\).aspx), and rotates approximately every 30 days. Parent-child domains share an inter-realm key implicitly.
 >
 > When a user in domain A tries to authenticate or access a resource in domain B that he has established access to, he presents his ticket-granting-ticket (TGT) and request for a service ticket to the KDC for domain A. The KDC for A determines that the resource is not in its realm, and issues the user a referral ticket.
 >
@@ -172,7 +183,7 @@ Understanding how Kerberos works is required here: [the Kerberos protocol](kerbe
 >
 > _(by_ [_Will Schroeder_](https://twitter.com/harmj0y) _on_ [_blog.harmj0y.net_](https://blog.harmj0y.net/redteaming/domain-trusts-were-not-done-yet/)_)_
 
-From an offensive point of view, just like a [golden ticket](broken-reference), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
+From an offensive point of view, just like a [golden ticket](broken-reference/), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
 
 Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
@@ -188,7 +199,7 @@ In an NTLM authentication sequence, a user authenticates to a resource by sendin
 >
 > _(_[_Microsoft.com_](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/70697480-f285-4836-9ca7-7bb52f18c6af)_)_
 
-When using NTLM across trust relationships, the process is very similar.&#x20;
+When using NTLM across trust relationships, the process is very similar.
 
 When a trusted domain's user wants to access a resource from a trusting domain, the user and the resource engage in the standard 3-way NTLM handshake. Upon receiving the NTLM Authenticate message, the resource forwards it to its own domain controller through a Netlogon "[workstation secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)". The trusting DC forwards it as well to the trusted domain's DC through a Netlogon "[trusted domain secure channel](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-nrpc/08b36439-331a-4e20-89a5-12f3fab33dfc)".
 
@@ -198,7 +209,63 @@ When doing NTLM authentications across trusts, the trusting domain's domain cont
 
 _Nota bene, wether it's Kerberos or NTLM, the ExtraSids are in the same data structure, it's just named differently for each protocol. And, the SID filtering function called by the trusting DC is the same, for both authentication protocols._
 
+### MIM PAM & Bastion (Red Forests)
+
+{% hint style="info" %}
+The following section is a light adaptation of [Nikhil Mittal's](https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html) and [Daniel Ulrichs's](https://secureidentity.se/msds-shadowprincipal/) work.
+{% endhint %}
+
+Microsoft introduced MIM (Microsoft Identity Manager) Privileged Access Management (PAM) with Server 2016, including the following features. (Sometimes PAM is also referred to as PIM in some docs/links).
+
+* A Bastion forest (i.e. forest in ESAE (Enhanced Security Admin Environment), a.k.a. Red Forest)
+* Shadow Security Principals (i.e. admins in Bastion Forest can be mapped as Domain Admins or a "User Forest")
+* Temporary group membership (i.e. add a user to a group with a time-to-live (TTL))
+
+PAM enables the management of an existing "Production Forest" (one can think of that as a User Forest as well) using a "Bastion Forest" which has a one-way PAM trust with the existing forest. The users in the Bastion Forest can be 'mapped' to privileged groups like "Domain Admins" and "Enterprise Admins" in the Production Forest without modifying any group memberships or ACLs. This takes away the administrative overhead and reduces the chances of lateral movement techniques.
+
+This is done by creating "Shadow Security Principals" in the Bastion Forest, which are mapped to SIDs for high-privileged groups in the User Forest, and then adding users from the Bastion Forest as members of the Shadow Security Principals.
+
+<details>
+
+<summary>More technical notes</summary>
+
+The main Active Directory Objects and Attributes related to the Bastion Forest are the following:
+
+1. `msDS-ShadowPrincipalContainer`: dedicated container class for `msDS-ShadowPrincipal` objects. One default container (`CN=Shadow Principal Configuration`) is created in the Services container in the Configuration NC on the Bastion Forest). NB: Privileged Containers can be created in other locations as well, however, Kerberos will NOT work there.
+2. `msDS-ShadowPrincipal`: principal from an external forest (Bastion Forest). Has the `msDS-ShadowPrincipalSid` attribute and can only be in a Shadow Principal container. Any principal may be represented by a Shadow Principal. If the Shadow Principal is in the default container (mentioned above), Kerberos tickets will embed the group membership (in the same forest) of the principal referenced by the Shadow Principal. If a TTL value of the membership is set it will integrate with Kerberos and the lifetime of the tickets will be set to the shortest expiring TTL value.
+3. `msDS-ShadowPrincipalSid`: This attribute contains the SID of a principal from an external forest. SIDs from a domain of the same forest cannot be added. To be able to add SIDs from another Domain, a Forest Trust must be configured between them. This means that at least a one-way incoming Forest Trust from the Domain that holds the Shadow Principals must be configured. This attribute is also indexed.
+
+```
+Bastion ROOT (DC=BASTION,DC=LOCAL)
+├── Configuration Naming Context (CN=Configuration)
+│   ├── Services (CN=Services)
+│   │   ├── Default Shadow Principal Container (CN=Shadow Principal Configuration)
+│   │   │   ├── Shadow Principal object
+│   │   │   │   ├── name: prodForest-ShadowEntrepriseAdmin
+│   │   │   │   ├── member: { BASTION/bobby, BASTION/jason } (Users in Bastion Forest)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-519 (Entreprise Admins @ PRODUCTION.LOCAL)
+│   │   │   │   ├── ...
+│   │   │   ├── Shadow Principal object
+│   │   │   │   ├── name: prodForest-ShadowDomainAdmin
+│   │   │   │   ├── member: { BASTION/max, BASTION/jason } (Users in Bastion Forest)
+│   │   │   │   ├── msDS-ShadowPrincipalSid: S-1-5-21-[...]-512 (Domain Admins @ PRODUCTION.LOCAL)
+│   │   │   │   ├── ...
+│   │   ├── [...]   
+```
+
+</details>
+
 ## Practice
+
+While domain trusts don't necessarily give access to resources, they allow the trusted domain's principal to query another -trusting- domain's AD info.
+
+> And remember that all parent->child (intra-forest domain trusts) retain an implicit two way transitive trust with each other. Also, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest. This means that trust “flows down” from the forest root, making it our objective to move from child to forest root at any appropriate step in the attack chain. (from [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d)).
+
+Attacking AD trusts comes down to the following process.
+
+1. Map all direct and indirect trusts involved with an already compromised domain.
+2. All domains from the same forest are to be considered as first-choice targets ([SID filtering](trusts.md#sid-filtering) would be disabled, allowing for [Forging a ticket](trusts.md#forging-tickets) with an [SID history](trusts.md#sid-history)).
+3. For the others, permissions must be audited to finds ways in trusting domains. This is done by finding out what trusted principals can do on trusting resources (Kerberos delegations, groups membership, DACLs, etc.), and then [abuse those permissions](trusts.md#abusing-permissions). All regular AD movement techniques apply, except the target resources and the account used to authenticate are not on the same domain, that's basically it.
 
 ### Enumeration
 
@@ -214,7 +281,7 @@ Several tools can be used to enumerate trust relationships. The following major 
 >
 > It's important to check both ends of the trust (because the characteristics could differ). \[...]
 >
-> All the trust relationship information are fetched via LDAP and preferably (if that server is operational) from the Global Catalog server. As the Global catalog contains information about every object in the forest it might also contain information about trust entities that you can't reach (e.g. due to network segmentation or because they are offline).
+> All the trust relationship information is fetched via LDAP and preferably (if that server is operational) from the Global Catalog server. As the Global catalog contains information about every object in the forest it might also contain information about trust entities that you can't reach (e.g. due to network segmentation or because they are offline).
 >
 > _(by_ [_Carsten Sandker_](https://twitter.com/0xcsandker) _on_ [_www.securesystems.de_](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)_)_
 {% endhint %}
@@ -242,7 +309,7 @@ ldapsearch -h ldap://"$DC_IP" -b "CN=SYSTEM,DC=$DOMAIN" "(objectclass=trustedDom
 {% tab title="Windows" %}
 From Windows systems, many tools like can be used to enumerate trusts. "[A Guide to Attacking Domain Trusts](https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts)" by [Will Schroeder](https://twitter.com/harmj0y) provides more in-depth guidance on how to enumerate and visually map domain trusts (in the "Visualizing Domain Trusts" section), as well as identify potential attack paths ("Foreign Relationship Enumeration" section).
 
-### netdom
+#### netdom
 
 From domain-joined hosts, the `netdom` cmdlet can be used.
 
@@ -250,28 +317,38 @@ From domain-joined hosts, the `netdom` cmdlet can be used.
 netdom trust /domain:DOMAIN.LOCAL
 ```
 
-### PowerView
+#### PowerView
 
 Alternatively, [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) (PowerShell) supports multiple commands for various purposes.
 
-| Command                                                   | Alias                                                        | Description                                                                                            |
-| --------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Command                                                   | Alias                                                                                                  | Description |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------- |
 | <pre><code><strong>Get-DomainTrust
-</strong></code></pre> | <pre><code><strong>Get-NetDomainTrust
-</strong></code></pre> | gets all trusts for the current user's domain                                                          |
+</strong></code></pre> |                                                                                                        |             |
+|                                                           | <pre><code><strong>Get-NetDomainTrust
+</strong></code></pre>                                           |             |
+|                                                           | gets all trusts for the current user's domain                                                          |             |
 | <pre><code>Get-ForestTrust
-</code></pre>                  | <pre><code>Get-NetForestTrust
-</code></pre>                  | gets all trusts for the forest associated with the current user's domain                               |
-|                                                           |                                                              |                                                                                                        |
+</code></pre>                  |                                                                                                        |             |
+|                                                           | <pre><code>Get-NetForestTrust
+</code></pre>                                                            |             |
+|                                                           | gets all trusts for the forest associated with the current user's domain                               |             |
+|                                                           |                                                                                                        |             |
 | <pre><code>Get-DomainForeignUser
-</code></pre>            | <pre><code>Find-ForeignUser
-</code></pre>                    | enumerates users who are in groups outside of their principal domain                                   |
+</code></pre>            |                                                                                                        |             |
+|                                                           | <pre><code>Find-ForeignUser
+</code></pre>                                                              |             |
+|                                                           | enumerates users who are in groups outside of their principal domain                                   |             |
 | <pre><code>Get-DomainForeignGroupMember
-</code></pre>     | <pre><code>Find-ForeignGroup
-</code></pre>                   | enumerates all the members of a domain's groups and finds users that are outside of the queried domain |
+</code></pre>     |                                                                                                        |             |
+|                                                           | <pre><code>Find-ForeignGroup
+</code></pre>                                                             |             |
+|                                                           | enumerates all the members of a domain's groups and finds users that are outside of the queried domain |             |
 | <pre><code>Get-DomainTrustMapping
-</code></pre>           | <pre><code>Invoke-MapDomainTrust
-</code></pre>               | try to build a relational mapping of all domain trusts                                                 |
+</code></pre>           |                                                                                                        |             |
+|                                                           | <pre><code>Invoke-MapDomainTrust
+</code></pre>                                                         |             |
+|                                                           | try to build a relational mapping of all domain trusts                                                 |             |
 
 > The [global catalog is a partial copy of all objects](https://technet.microsoft.com/en-us/library/cc728188\(v=ws.10\).aspx) in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. Trusted domain objects are replicated in the global catalog, so we can enumerate every single internal and external trust that all domains in our current forest have extremely quickly, and only with traffic to our current PDC.
 >
@@ -283,7 +360,7 @@ Get-DomainTrust -SearchBase "GC://$($ENV:USERDNSDOMAIN)"
 
 The global catalog can be found in many ways, including a simple DNS query (see [DNS recon](../recon/dns.md#finding-domain-controllers)).
 
-### BloodHound
+#### BloodHound
 
 [BloodHound](../recon/bloodhound.md) can also be used to map the trusts. While it doesn't provide much details, it shows a visual representation.
 {% endtab %}
@@ -291,11 +368,25 @@ The global catalog can be found in many ways, including a simple DNS query (see 
 
 In addition to enumerating trusts, retrieving information about the permissions of trusted principals against trusting resources could also allow for lateral movement and privilege escalation. The recon techniques will depend on the permissions to abuse ([DACL](trusts.md#dacl-abuse), [Kerberos delegations](kerberos/delegations/), etc.).
 
+<details>
+
+<summary>Notes on Bastion Forests</summary>
+
+A forest is probably managed by a Bastion Forest when the `TRUST_ATTRIBUTE_PIM_TRUST (0x400)` flag is set in the trust attributes.
+
+To enumerate the Shadow Security Principals, and LDAP query can be made to list the `Name`, `member`, and `msDS-ShadowPrincipalSid` attributes of Shadow Principals in the `CN=Shadow Principal Configuration,CN=Services,{CONFIGURATION_NAMING_CONTEXT}` container.
+
+* `name`: name of the shadow principal
+* `member`: principals (from the Bastion Forest) mapped to it
+* `msDS-ShadowPrincipalSid`: the SID of the principal (from the Production Forest) whose privileges are assigned to the shadow security principal.
+
+</details>
+
 ### Forging tickets
 
-When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](broken-reference), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
+When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](broken-reference/), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
 
-Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](trusts.md#sid-filtering) is configured in the trust)&#x20;
+Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](trusts.md#sid-filtering) is configured in the trust)
 
 * If the attacker is moving across an intra-forest trust, it would allow to compromise the forest root, and by extension, all the forest, since Enterprise Admins can access all domains' domain controllers as admin (because the security boundary is the forest, not the domain).
 * If the attacker is moving across an inter-forest trust, it could allow to compromise the trusting domain, depending on how [SID filtering](trusts.md#sid-filtering) is configured, and if there are some groups that have sufficient permissions.
@@ -308,10 +399,10 @@ In conclusion, before attacking trusts, it's required to enumerate them, as well
     > For example the Exchange security groups, which allow for a [privilege escalation to DA](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/) in many setups all have RIDs larger than 1000. Also many organisations will have custom groups for workstation admins or helpdesks that are given local Administrator privileges on workstations or servers.
     >
     > _(by_ [_Dirk-jan Mollema_](https://twitter.com/\_dirkjan) _on_ [_dirkjanm.io_](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/)_)_
-* If **SID filtering is fully enabled**, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods of [permissions abuse](trusts.md#abusing-permissions). Alternatively, there are a few SIDs that won't be filtered out (see [SID filtering](trusts.md#sid-filtering) theory and [SID filtering bypass](trusts.md#sid-filtering-bypass) practice).&#x20;
+* If **SID filtering is fully enabled**, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods of [permissions abuse](trusts.md#abusing-permissions). Alternatively, there are a few SIDs that won't be filtered out (see [SID filtering](trusts.md#sid-filtering) theory and [SID filtering bypass](trusts.md#sid-filtering-bypass) practice).
 
 {% hint style="info" %}
-If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](broken-reference) for the [DCSync](credentials/dumping/dcsync.md) (if enough privileges, or any other operation if not).
+If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](broken-reference/) for the [DCSync](credentials/dumping/dcsync.md) (if enough privileges, or any other operation if not).
 {% endhint %}
 
 {% tabs %}
@@ -374,10 +465,10 @@ For more details about how this attack works under the hood, refer to the articl
 {% endhint %}
 
 {% hint style="warning" %}
-Some considerations to reproduce the attack:&#x20;
+Some considerations to reproduce the attack:
 
-* Full control over the trusted forest is assumed.&#x20;
-* Information that flows over to the trusting forest can be modified.&#x20;
+* Full control over the trusted forest is assumed.
+* Information that flows over to the trusting forest can be modified.
 * There is at least one server joined to a domain in the trusting forest (referred to as the "target server" here).
 {% endhint %}
 
@@ -397,12 +488,12 @@ The attack can be conducted with [Dirk-jan Mollema](https://twitter.com/\_dirkja
 
 <pre class="language-bash" data-title="3. Get local admin on the target" data-overflow="wrap"><code class="lang-bash"><strong># 1. Forge an inter-realm/referral ticket with the spoofed SID put as extended SID with RID 500 using the AES key of the incoming trust
 </strong><strong>ticketer.py -aesKey "AES_key_of_incoming_trust" -domain "trusted_root_domain_FQDN" -domain-sid "trusted_root_domain_SID" -user-id 1000 -groups 513 -extra-sid "&#x3C;spoofed_SID>"-500 -spn "krbtgt/trusting_root_domain_FQDN" "someusername"
-</strong><strong>
-</strong><strong># 2. Request a service ticket using the forged referral ticket
+</strong>
+<strong># 2. Request a service ticket using the forged referral ticket
 </strong><strong># Notice that keys has to be manually modified in the getftST.py script before
 </strong>KRB5CCNAME="someusername.ccache" getftST.py -spn "CIFS/target_server_FQDN" -target-domain "trusting_root_domain_FQDN" -via-domain "trusted_root_domain_FQDN" "domain/username" -dc-ip "target_DC_IP"
-<strong>
-</strong><strong># 3. Use the obtained ST to access the target server as local admin
+
+<strong># 3. Use the obtained ST to access the target server as local admin
 </strong>KRB5CCNAME=username.ccache smbclient.py -k "trusted_domain"/"someusername"@"target_server_FQDN" -no-pass
 </code></pre>
 
@@ -451,13 +542,13 @@ If an attacker manages to gain control over an account configured for unconstrai
 By default, all domain controllers are configured for unconstrained delegation.
 {% endhint %}
 
-The [Kerberos Unconstrained Delegation](kerberos/delegations/unconstrained.md#practice) page can be consulted in order to obtain operational guidance on how to abuse this context.&#x20;
+The [Kerberos Unconstrained Delegation](kerberos/delegations/unconstrained.md#practice) page can be consulted in order to obtain operational guidance on how to abuse this context.
 
 In most cases, the attacker will have to:
 
 1. coerce the authentication ([PrinterBug](print-spooler-service/printerbug.md), [PetitPotam](mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](mitm-and-coerced-authentications/ms-dfsnm.md), etc.) of a high-value target (e.g. domain controller) of the trusting domain
 2. retrieve the TGT delegated in the service ticket the trusting resource used to access the attacker-controlled KUD account
-3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](broken-reference)) in order to conduct privileged actions (e.g. [DCSync](credentials/dumping/dcsync.md))
+3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](broken-reference/)) in order to conduct privileged actions (e.g. [DCSync](credentials/dumping/dcsync.md))
 
 {% content-ref url="kerberos/delegations/unconstrained.md" %}
 [unconstrained.md](kerberos/delegations/unconstrained.md)
@@ -502,6 +593,10 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 {% embed url="https://improsec.com/tech-blog/o83i79jgzk65bbwn1fwib1ela0rl2d" %}
 
 {% embed url="https://www.sstic.org/media/SSTIC2014/SSTIC-actes/secrets_dauthentification_pisode_ii__kerberos_cont/SSTIC2014-Slides-secrets_dauthentification_pisode_ii__kerberos_contre-attaque-bordes_2.pdf" %}
+
+{% embed url="https://secureidentity.se/msds-shadowprincipal/" %}
+
+{% embed url="https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services" %}
 
 ### Offensive POV
 
@@ -548,6 +643,8 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 {% embed url="https://adsecurity.org/?p=425" %}
 
 {% embed url="https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1" %}
+
+{% embed url="https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html" %}
 
 {% hint style="info" %}
 Parts of this page were written with the help of the [ChatGPT](https://openai.com/blog/chatgpt/) AI model.
