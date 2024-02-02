@@ -128,14 +128,4 @@ Monitor mode can be activated automatically with tools such as airgeddon and wif
 
 ## Resources
 
-Reaver (C): https://github.com/t6x/reaver-wps-fork-t6x
-
-Bully (C): https://github.com/aanarchyy/bully
-
-Airgeddon (Bash): https://github.com/v1s1t0r1sh3r3/airgeddon
-
-Wifite2 (Python): https://github.com/derv82/wifite2
-
-Aircrack-ng (C): https://www.aircrack-ng.org
-
-Vulnerable router models: https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A_p7Nnj5Y
+{% embed url="https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A_p7Nnj5Y" %}
