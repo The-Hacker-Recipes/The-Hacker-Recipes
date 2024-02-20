@@ -94,12 +94,12 @@ Read the password value in the `HKEY_LOCAL_MACHINE\SOFTWARE\Yubico\YubiHSM\AuthK
 Then, find a way to configure the USB device server to connect to the attacker controlled server. For this step, the different tasks to perform may vary between the USB device server solutions in use.
 
 {% hint style="danger" %}
-Generally USB device server solutions do not permit to connect the device to multiple systems at the same time. If the device is disconnected from the CA server, the CA will stop working.
+Generally USB device server solutions can't connect the device to multiple systems at once. If the device is disconnected from the CA server, the CA will stop working.
 {% endhint %}
 {% endtab %}
 {% endtabs %}
 
-#### Forge our own certificate
+#### Forge a certificate
 
 If the CA's private key is stored on a physical USB device such as "YubiHSM2", and a shell access is obtained on the PKI server (even with low privileges), it is possible to recover the key.
 
@@ -121,7 +121,7 @@ Next, the certificate must be associated to the private key in the YubiHSM2 devi
 certutil -csp "YubiHSM Key Storage Provider" -repairstore -user my <CA Common Name>
 ```
 
-Finally, access the CA certificate and its private key as his own and bring the many options of `certutil -sign` to forge new arbitrary certificates.
+Finally, use the CA certificate and its private key with the `certutil -sign` [command](https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/certutil#-sign) to forge new arbitrary certificates.
 {% endtab %}
 {% endtabs %}
 

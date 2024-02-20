@@ -65,9 +65,13 @@ If some certificate authentication issues are encountered in an Active Directory
 
 It is possible to apply issuance policies to certificate templates. This takes the form of a certificate extension, and is stored as an OID (object identifier) in the `msPKI-Certificate-Policy` attribute of the template. When the CA issues the certificate, the policy is added to the "Certificate Policies" attribute of the certificate. A template stores required policies in the `msPKI-RA-Policies` attribute.
 
-An issuance policy can be set up by a company, for example, for access control: a system can require a user to present a certificate with a given policy in order to guarantee that the system only grants access to authorised users. Finally, all issuing policies are AD object of the class `msPKI-Enterprise-Oid` stored in the PKI OID container.
+An issuance policy can be set up by a company, for example, for access control: a system can require a user to present a certificate with a given policy in order to guarantee that the system only grants access to authorised users. Issuing policies are `msPKI-Enterprise-Oid` objects found in the PKI OID container (`CN=OID,CN=Public Key Services,CN=Services`, in the Configuration Naming Context).
 
-This object has an `msDS-OIDToGroupLink` attribute which allows a policy to be linked to an AD group so that a system can authorise a user presenting the certificate as if he were a member of this group. As explained by [Jonas Bülow Knudsen](https://twitter.com/Jonas_B_K) in [its article](https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53): "*If you perform client authentication with the certificate, then you will receive an access token specifying the membership of this group.*"
+This object has an `msDS-OIDToGroupLink` attribute which allows a policy to be linked to an AD group so that a system can authorise a user presenting the certificate as if he were a member of this group. As explained by [Jonas Bülow Knudsen](https://twitter.com/Jonas_B_K) in [his ADCS ESC13 article](https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53).
+
+> If you perform client authentication with the certificate, then you will receive an access token specifying the membership of this group.
+> 
+> ([specterops.io](https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53))
 
 ## Practice
 
@@ -483,13 +487,13 @@ For a group to be linked to an issuance policy via `msDS-OIDToGroupLink` it must
 
 So, if a user or a computer can enroll on a template that specifies an issuance policy linked to a highly privileged group, the issued certificate privilegies will be mapped to those of the group.
 
-To exploit an ESC13, here are the requirements:
+To exploit ESC13, here are the requirements:
 
 * The controlled principal can enroll to the template and meets all the required issuance policies
-* The template spcifies an issuance policies
+* The template specifies an issuance policy
 * This policy is linked to a privileged groups via `msDS-OIDToGroupLink`
-* The template allows the Client Authentication is its EKU
-* And basically, all the usual requirements
+* The template allows the Client Authentication in its EKU
+* All the usual requirements
 
 {% tabs %}
 {% tab title="UNIX-like" %}
