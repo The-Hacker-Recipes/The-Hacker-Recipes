@@ -61,6 +61,18 @@ The current default value is `0x18` (`0x8` and `0x10`). Schannel doesn't support
 
 If some certificate authentication issues are encountered in an Active Directory, [Microsoft has officially suggested](https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16) to set the `CertificateMappingMethods` value to `0x1f` (old value).
 
+#### Issuance policies
+
+It is possible to apply issuance policies to certificate templates. This takes the form of a certificate extension, and is stored as an OID (object identifier) in the `msPKI-Certificate-Policy` attribute of the template. When the CA issues the certificate, the policy is added to the "Certificate Policies" attribute of the certificate. A template stores required policies in the `msPKI-RA-Policies` attribute.
+
+An issuance policy can be set up by a company, for example, for access control: a system can require a user to present a certificate with a given policy in order to guarantee that the system only grants access to authorised users. Issuing policies are `msPKI-Enterprise-Oid` objects found in the PKI OID container (`CN=OID,CN=Public Key Services,CN=Services`, in the Configuration Naming Context).
+
+This object has an `msDS-OIDToGroupLink` attribute which allows a policy to be linked to an AD group so that a system can authorise a user presenting the certificate as if he were a member of this group. As explained by [Jonas Bülow Knudsen](https://twitter.com/Jonas_B_K) in [his ADCS ESC13 article](https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53).
+
+> If you perform client authentication with the certificate, then you will receive an access token specifying the membership of this group.
+> 
+> ([specterops.io](https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53))
+
 ## Practice
 
 ### Template allows SAN (ESC1)
@@ -280,7 +292,7 @@ To understand this privilege escalation, it is recommended to know how certifica
 
 This ESC refers to a weak configuration of the registry keys:
 
-* Case 1 :&#x20;
+* Case 1 :
   * `StrongCertificateBindingEnforcement` set to `0`, meaning no strong mapping is performed
   * A template that specifiy client authentication is enabled (any template, like the built-in `User` template)
   * `GenericWrite` right against any account A to compromise any account B
@@ -375,7 +387,7 @@ Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"C
 {% endtab %}
 {% endtabs %}
 
-* Case 2 :&#x20;
+* Case 2 :
   * `CertificateMappingMethods` is set to `0x4`, meaning no strong mapping is performed and only the UPN will be checked
   * A template that specifiy client authentication is enabled (any template, like the built-in `User` template)
   * `GenericWrite` right against any account A to compromise any account B without a UPN already set (machine accounts or buit-in Administrator account for example)
@@ -466,6 +478,63 @@ Now, authentication with the obtained certificate will be performed through Scha
 {% endtab %}
 {% endtabs %}
 
+### Issuance policiy with privileged group linked (ESC13)
+
+For a group to be linked to an issuance policy via `msDS-OIDToGroupLink` it must meet two requirements:
+
+* Be empty
+* Have a universal scope, i.e. be "Forest Wide". By default, "Forest Wide" groups are "Enterprise Read-only Domain Controllers", "Enterprise Key Admins", "Enterprise Admins" and "Schema Admins"
+
+So, if a user or a computer can enroll on a template that specifies an issuance policy linked to a highly privileged group, the issued certificate privilegies will be mapped to those of the group.
+
+To exploit ESC13, here are the requirements:
+
+* The controlled principal can enroll to the template and meets all the required issuance policies
+* The template specifies an issuance policy
+* This policy is linked to a privileged groups via `msDS-OIDToGroupLink`
+* The template allows the Client Authentication in its EKU
+* All the usual requirements
+
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, this [pull request](https://github.com/ly4k/Certipy/pull/196) on Certipy (Python) permits to identify a certificate template with an issuance policy, i.e. with the `msPKI-Certificate-Policy` property not empty. Additionally, it verifies if this issuance policy has an OID group link to a group in the property `msDS-OIDToGroupLink`.
+
+```bash
+certipy find -u '$USER@$DOMAIN' -p '"$PASSWORD' -dc-ip '$DC_IP'
+```
+
+If a vulnerable template is found, there is no particular issuance requirement, the principal can enroll, and the template indicates the Client Authentication EKU, request a certificate for this template with [Certipy](https://github.com/ly4k/Certipy) (Python) as usual:
+
+```bash
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'Vulnerable template'
+```
+
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, the ActiveDirectory PowerShell module can be used to identify a certificate template with an issuance policy, i.e. with the `msPKI-Certificate-Policy` property not empty.
+
+```powershell
+Get-ADObject "CN="Vulnerable template",$TemplateContainer" -Properties msPKI-Certificate-Policy
+```
+
+Then, if there is no particular issuance requirement, the principal can enroll, and the template indicates the Client Authentication EKU, verify if this issuance policy has an OID group link to a group in the property `msDS-OIDToGroupLink`.
+
+```powershell
+Get-ADObject "CN=$POLICY_ID,$OIDContainer" -Properties DisplayName,msPKI-Cert-Template-OID,msDS-OIDToGroupLink
+```
+
+Now, request a certificate for this template with [Certify](https://github.com/GhostPack/Certify) (C#) as usual:
+
+```powershell
+.\Certify.exe request /ca:domain\ca /template:"Vulnerable template"
+```
+
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
+{% endtab %}
+{% endtabs %}
+
 ## Resources
 
 {% embed url="https://posts.specterops.io/certified-pre-owned-d95910965cd2" %}
@@ -473,3 +542,5 @@ Now, authentication with the obtained certificate will be performed through Scha
 {% embed url="https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6" %}
 
 {% embed url="https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7" %}
+
+{% embed url="https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53" %}
