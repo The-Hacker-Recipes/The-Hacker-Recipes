@@ -86,7 +86,9 @@ The domain is a unit within a forest and represents a logical grouping of users,
 
 SID filtering plays an important role in the security boundary by making sure "only SIDs from the trusted domain will be accepted for authorization data returned during authentication. SIDs from other domains will be removed" (`netdom` cmdlet output). By default, SID filtering is disabled for intra-forest trusts, and enabled for inter-forest trusts.
 
-<figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption><p>(source: <a href="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/">securesystems.de</a>)</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption><p>Default configurations (source: <a href="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/">securesystems.de</a>)</p></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption><p>Custom configurations (source: <a href="https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/">securesystems.de</a>)</p></figcaption></figure>
 
 Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) of \[MS-PAC] specifies what is filtered and when. There are three important things to remember from this documentation:
 
@@ -94,7 +96,7 @@ Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/
 * even if it's enabled, a few SIDs will (almost) never be filtered: "Enterprise Domain Controllers" (S-1-5-9) SID and those described by the [trusted domain object (TDO)](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/f2ef15b6-1e9b-48b5-bf0b-019f061d41c8#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4), as well as seven well-known SIDs (see [MS-PAC doc](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), and [improsec's blogpost](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained#yui\_3\_17\_2\_1\_1673614140169\_543)).
 * there are two kinds of inter-forest trusts: "Forest", and "External" (see [trust types](trusts.md#trust-types)). Microsoft says "[cross-forest trusts are more stringently filtered than external trusts](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-dtyp/81d92bba-d22b-4a8c-908a-554ab29148ab?redirectedfrom=MSDN)", meaning that in External trusts, SID filtering only filters out RID < 1000.
 
-<figure><img src="../../.gitbook/assets/image (1) (2).png" alt=""><figcaption><p>[MS-PAC] section 4.1.2.2</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (2) (1).png" alt=""><figcaption><p>[MS-PAC] section 4.1.2.2</p></figcaption></figure>
 
 {% hint style="info" %}
 The SID filtering status of a trust depends on the [trustAttributes](https://docs.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c) flags of a [TDO](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt\_f2ceef4e-999b-4276-84cd-2e2829de5fc4) as well as the type of trust.
@@ -321,34 +323,23 @@ netdom trust /domain:DOMAIN.LOCAL
 
 Alternatively, [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) (PowerShell) supports multiple commands for various purposes.
 
-| Command                                                   | Alias                                                                                                  | Description |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| Command                                                         | Alias                                                        | Description                                                                                            |
+| --------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
 | <pre><code><strong>Get-DomainTrust
-</strong></code></pre> |                                                                                                        |             |
-|                                                           | <pre><code><strong>Get-NetDomainTrust
-</strong></code></pre>                                           |             |
-|                                                           | gets all trusts for the current user's domain                                                          |             |
+</strong></code></pre>       | <pre><code><strong>Get-NetDomainTrust
+</strong></code></pre> | gets all trusts for the current user's domain                                                          |
 | <pre><code>Get-ForestTrust
-</code></pre>                  |                                                                                                        |             |
-|                                                           | <pre><code>Get-NetForestTrust
-</code></pre>                                                            |             |
-|                                                           | gets all trusts for the forest associated with the current user's domain                               |             |
-|                                                           |                                                                                                        |             |
-| <pre><code>Get-DomainForeignUser
-</code></pre>            |                                                                                                        |             |
-|                                                           | <pre><code>Find-ForeignUser
-</code></pre>                                                              |             |
-|                                                           | enumerates users who are in groups outside of their principal domain                                   |             |
+</code></pre>                        | <pre><code>Get-NetForestTrust
+</code></pre>                  | gets all trusts for the forest associated with the current user's domain                               |
+| <pre><code><strong>Get-DomainForeignUser
+</strong></code></pre> | <pre><code>Find-ForeignUser
+</code></pre>                    | enumerates users who are in groups outside of their principal domain                                   |
 | <pre><code>Get-DomainForeignGroupMember
-</code></pre>     |                                                                                                        |             |
-|                                                           | <pre><code>Find-ForeignGroup
-</code></pre>                                                             |             |
-|                                                           | enumerates all the members of a domain's groups and finds users that are outside of the queried domain |             |
+</code></pre>           | <pre><code>Find-ForeignGroup
+</code></pre>                   | enumerates all the members of a domain's groups and finds users that are outside of the queried domain |
 | <pre><code>Get-DomainTrustMapping
-</code></pre>           |                                                                                                        |             |
-|                                                           | <pre><code>Invoke-MapDomainTrust
-</code></pre>                                                         |             |
-|                                                           | try to build a relational mapping of all domain trusts                                                 |             |
+</code></pre>                 | <pre><code>Invoke-MapDomainTrust
+</code></pre>               | try to build a relational mapping of all domain trusts                                                 |
 
 > The [global catalog is a partial copy of all objects](https://technet.microsoft.com/en-us/library/cc728188\(v=ws.10\).aspx) in an Active Directory forest, meaning that some object properties (but not all) are contained within it. This data is replicated among all domain controllers marked as global catalogs for the forest. Trusted domain objects are replicated in the global catalog, so we can enumerate every single internal and external trust that all domains in our current forest have extremely quickly, and only with traffic to our current PDC.
 >

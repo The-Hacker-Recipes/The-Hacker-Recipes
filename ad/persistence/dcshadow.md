@@ -37,7 +37,7 @@ It is important to note that this technique can be used as a "meta" one, in the 
 
 For instance, a DC Shadow attack can be conducted to register a controlled workstation as a domain controller, and then use that to push changes to the domain that would expose it to DACL abuse.
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption><p>"leHack 2023 - Un conseil, brûlez tout" by Charlie Bromberg and Volker Carstein</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>"leHack 2023 - Un conseil, brûlez tout" by Charlie Bromberg and Volker Carstein</p></figcaption></figure>
 
 ## Practice
 

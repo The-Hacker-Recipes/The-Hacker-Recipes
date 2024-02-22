@@ -83,7 +83,7 @@ When no clients are connected to the AP, or when the tester doesn't want to spoo
 aireplay-ng --fakeauth 0 -a 'TA:RG:ET:BS:SI:DD' $wlan_interface
 ```
 
-![](<../../.gitbook/assets/image (1).png>)
+![](<../../.gitbook/assets/image (1) (2).png>)
 
 When the authentication mode in use is not OPEN, but rather SKA, the tester can either&#x20;
 

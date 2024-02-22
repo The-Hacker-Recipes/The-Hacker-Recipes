@@ -12,7 +12,7 @@ However, on a non-Windows network, a Kerberos realm can be implemented independe
 
 The Hacker Recipes mainly covers Kerberos attacks in a Windows context, but some attacks can also be conducted in non-Windows networks.
 
-![](<../../../.gitbook/assets/Pass the things.png>)
+![](<../../../.gitbook/assets/Pass the things-Dark.png>)
 
 ## Tickets
 

