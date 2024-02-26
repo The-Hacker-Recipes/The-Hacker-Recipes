@@ -2,7 +2,7 @@
 
 ## Theory
 
-"PushSubscription" is an API on Exchange Web Services that allows to subscribe to push notifications. Attackers abuse it to make Exchange servers authenticate to a target of their choosing. **The coerced authentication is made over HTTP**, which is particularly powerful when doing [NTLM relay](../../../ad/movement/mitm-and-coerced-authentications/broken-reference/) ([because of the Session Signing and MIC mitigations](../../../ad/movement/mitm-and-coerced-authentications/broken-reference/)). As Exchange servers usually have high privileges in a domain (i.e. `WriteDacl`, see [Abusing ACLs](../dacl/)), the forced authentication can then be relayed and abused to obtain domain admin privileges (see [NTLM Relay](../../../ad/movement/mitm-and-coerced-authentications/broken-reference/) and [Kerberos Unconstrained Delegations](../kerberos/delegations/#unconstrained-delegations-kud)).
+"PushSubscription" is an API on Exchange Web Services that allows to subscribe to push notifications. Attackers abuse it to make Exchange servers authenticate to a target of their choosing. **The coerced authentication is made over HTTP**, which is particularly powerful when doing [NTLM relay](../ntlm/relay.md) ([because of the Session Signing and MIC mitigations](../../../ad/movement/mitm-and-coerced-authentications/broken-reference/)). As Exchange servers usually have high privileges in a domain (i.e. `WriteDacl`, see [Abusing ACLs](../dacl/)), the forced authentication can then be relayed and abused to obtain domain admin privileges (see [NTLM Relay](../ntlm/relay.md) and [Kerberos Unconstrained Delegations](../kerberos/delegations/#unconstrained-delegations-kud)).
 
 ## Practice
 

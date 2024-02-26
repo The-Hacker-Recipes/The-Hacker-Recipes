@@ -43,7 +43,7 @@ More help on the CLI commands [here](https://github.com/BloodHoundAD/SharpHound#
 {% hint style="success" %}
 Here are a few **tips and tricks** on the collection process
 
-* Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context (e.g. with runas, [pass-the-hash](broken-reference/) or [overpass-the-hash](../movement/kerberos/ptk.md)). This is useful when domain computers have antivirus or other protections preventing (or slowing) testers from using enumerate or exploitation tools.
+* Testers can absolutely run SharpHound from a computer that is not enrolled in the AD domain, by running it in a domain user context (e.g. with runas, [pass-the-hash](../movement/ntlm/pth.md) or [overpass-the-hash](../movement/kerberos/ptk.md)). This is useful when domain computers have antivirus or other protections preventing (or slowing) testers from using enumerate or exploitation tools.
 * When obtaining a foothold on an AD domain, testers should first run SharpHound with all collection methods, and then start a loop collection to enumerate more sessions.
 {% endhint %}
 {% endtab %}
@@ -82,7 +82,7 @@ Once the collection is over, the data can be uploaded and analyzed in BloodHound
 * Find information about selected nodes: sessions, properties, group membership/members, local admin rights, Kerberos delegations, RDP rights, outbound/inbound control rights (ACEs), and so on
 * Find help about edges/attacks (abuse, OPSEC considerations, references)
 
-Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/dacl/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/shuffling.md), [GPOs abuse](../movement/group-policies.md), [Kerberoast](broken-reference/), [ASREProast](broken-reference/), [domain trusts attacks](broken-reference), etc.
+Using BloodHound can help find attack paths and abuses like [ACEs abuse](../movement/dacl/), [Kerberos delegations abuse](../movement/kerberos/delegations/), [credential dumping](../movement/credentials/dumping/) and [credential shuffling](../movement/credentials/shuffling.md), [GPOs abuse](../movement/group-policies.md), [Kerberoast](../movement/kerberos/kerberoast.md), [ASREProast](../movement/kerberos/asreproast.md), [domain trusts attacks](broken-reference), etc.
 
 ![](<../../.gitbook/assets/Screenshot from 2020-12-08 15-29-30.png>)
 

@@ -41,7 +41,7 @@ ntlmv1-multi --ntlmv1 SV01$::BREAKING.BAD:AD1235DEAC142CD5FC2D123ADCF51A111ADF45
 ```
 
 {% hint style="success" %}
-Machine account NT hashes can be used with the [Silver Ticket](broken-reference) or [S4U2self abuse](../kerberos/delegations/s4u2self-abuse.md) techniques to gain admin access to it.
+Machine account NT hashes can be used with the [Silver Ticket](../kerberos/forged-tickets/silver.md) or [S4U2self abuse](../kerberos/delegations/s4u2self-abuse.md) techniques to gain admin access to it.
 {% endhint %}
 
 {% hint style="info" %}

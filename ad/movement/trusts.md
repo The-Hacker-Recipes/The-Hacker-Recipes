@@ -185,7 +185,7 @@ Understanding how Kerberos works is required here: [the Kerberos protocol](kerbe
 >
 > _(by_ [_Will Schroeder_](https://twitter.com/harmj0y) _on_ [_blog.harmj0y.net_](https://blog.harmj0y.net/redteaming/domain-trusts-were-not-done-yet/)_)_
 
-From an offensive point of view, just like a [golden ticket](broken-reference/), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
+From an offensive point of view, just like a [golden ticket](kerberos/forged-tickets/golden.md), a referral ticket could be forged. Forging a referral ticket using the inter-realm key, instead of relying on the krbtgt keys for a golden ticket, is a nice alternative for organizations that choose to roll their krbtgt keys, as they should. This technique is [a little bit trickier](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#do-you-need-to-use-inter-realm-tickets) though, as it requires to [use the correct key](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/#which-keys-do-i-need-for-inter-realm-tickets).
 
 Depending on the trust characteristics, ticket forgery can also be combined with [SID history](trusts.md#sid-history) spoofing for a direct privilege escalation from a child to a parent domain.
 
@@ -375,7 +375,7 @@ To enumerate the Shadow Security Principals, and LDAP query can be made to list 
 
 ### Forging tickets
 
-When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](broken-reference/), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
+When forging a [referral ticket](trusts.md#kerberos-authentication), or a [golden ticket](kerberos/forged-tickets/golden.md), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](trusts.md#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
 
 Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](trusts.md#sid-filtering) is configured in the trust)
 
@@ -393,7 +393,7 @@ In conclusion, before attacking trusts, it's required to enumerate them, as well
 * If **SID filtering is fully enabled**, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fallback to other methods of [permissions abuse](trusts.md#abusing-permissions). Alternatively, there are a few SIDs that won't be filtered out (see [SID filtering](trusts.md#sid-filtering) theory and [SID filtering bypass](trusts.md#sid-filtering-bypass) practice).
 
 {% hint style="info" %}
-If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](broken-reference/) for the [DCSync](credentials/dumping/dcsync.md) (if enough privileges, or any other operation if not).
+If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](kerberos/ptt.md) for the [DCSync](credentials/dumping/dcsync.md) (if enough privileges, or any other operation if not).
 {% endhint %}
 
 {% tabs %}
@@ -539,7 +539,7 @@ In most cases, the attacker will have to:
 
 1. coerce the authentication ([PrinterBug](print-spooler-service/printerbug.md), [PetitPotam](mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](mitm-and-coerced-authentications/ms-dfsnm.md), etc.) of a high-value target (e.g. domain controller) of the trusting domain
 2. retrieve the TGT delegated in the service ticket the trusting resource used to access the attacker-controlled KUD account
-3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](broken-reference/)) in order to conduct privileged actions (e.g. [DCSync](credentials/dumping/dcsync.md))
+3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](kerberos/ptt.md)) in order to conduct privileged actions (e.g. [DCSync](credentials/dumping/dcsync.md))
 
 {% content-ref url="kerberos/delegations/unconstrained.md" %}
 [unconstrained.md](kerberos/delegations/unconstrained.md)

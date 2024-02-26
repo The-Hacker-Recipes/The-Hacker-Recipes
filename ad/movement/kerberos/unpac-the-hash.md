@@ -29,7 +29,7 @@ export KRB5CCNAME="TGT_CCACHE_FILE"
 getnthash.py -key 'AS-REP encryption key' 'FQDN_DOMAIN'/'TARGET_SAMNAME'
 ```
 
-The NT hash can be used for [pass-the-hash](broken-reference), [silver ticket](broken-reference), or [Kerberos delegations](delegations/) abuse.
+The NT hash can be used for [pass-the-hash](../ntlm/pth.md), [silver ticket](forged-tickets/silver.md), or [Kerberos delegations](delegations/) abuse.
 {% endtab %}
 
 {% tab title="Windows" %}

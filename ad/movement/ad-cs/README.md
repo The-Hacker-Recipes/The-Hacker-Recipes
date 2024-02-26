@@ -14,7 +14,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
   * related to [access control vulnerabilities](access-controls.md)
   * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
 * **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
-  * by [forging certificates with a stolen CA certificates](broken-reference)
+  * by [forging certificates with a stolen CA certificates](certificate-authority.md#stolen-ca)
   * by trusting rogue CA certificates
   * by [maliciously creating vulnerable access controls](../../persistence/access-controls.md)
 

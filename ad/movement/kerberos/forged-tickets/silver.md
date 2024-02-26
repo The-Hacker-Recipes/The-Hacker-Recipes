@@ -2,7 +2,7 @@
 
 ## Theory
 
-The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../../../../ad/movement/kerberos/forged-tickets/broken-reference/) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
+The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../ptt.md) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
 
 ## Practice
 

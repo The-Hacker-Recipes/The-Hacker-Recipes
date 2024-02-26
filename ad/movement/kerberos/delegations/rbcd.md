@@ -22,7 +22,7 @@ In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN
 
 Then, in order to abuse this, the attacker has to control the account (A) the target object's (B) attribute has been populated with. Using that account's (A) credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
-In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](broken-reference) to access the target service (B).&#x20;
+In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service (B).&#x20;
 
 {% hint style="warning" %}
 If the "impersonated" account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, the delegation will (probably) fail.
@@ -85,7 +85,7 @@ getST.py -spn 'cifs/target' -impersonate Administrator -dc-ip 'DomainController'
 {% endcode %}
 
 {% hint style="warning" %}
-In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](broken-reference)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
+In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](bronze-bit.md)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 {% endhint %}
 
 {% hint style="info" %}
@@ -94,7 +94,7 @@ The SPN (Service Principal Name) set can have an impact on what services will be
 
 **3 - Pass-the-ticket** :passport\_control:&#x20;
 
-Once the ticket is obtained, it can be used with [pass-the-ticket](broken-reference).
+Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -161,7 +161,7 @@ Rubeus.exe hash /user:$username /domain:"domain.local" /password:$password
 ```
 
 {% hint style="warning" %}
-In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](broken-reference)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
+In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](bronze-bit.md)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
 {% endhint %}
 
 {% hint style="info" %}
@@ -170,7 +170,7 @@ The SPN (Service Principal Name) set can have an impact on what services will be
 
 **3 - Pass-the-ticket** :passport\_control:&#x20;
 
-Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](broken-reference)).
+Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../ptt.md)).
 {% endtab %}
 {% endtabs %}
 
@@ -183,7 +183,7 @@ The technique is as follows:
 1. Obtain a TGT for the SPN-less user allowed to delegate to a target and retrieve the TGT session key.
 2. Change the user's password hash and set it to the TGT session key.
 3. [Combine S4U2self and U2U](../#s4u2self-+-u2u) so that the SPN-less user can obtain a service ticket to itself, on behalf of another (powerful) user, and then proceed to S4U2proxy to obtain a service ticket to the target the user can delegate to, on behalf of the other, more powerful, user.
-4. [Pass the ticket](broken-reference) and access the target, as the delegated other
+4. [Pass the ticket](../ptt.md) and access the target, as the delegated other
 
 {% hint style="danger" %}
 While this technique allows for an abuse of the RBCD primitive, even when the [`MachineAccountQuota`](broken-reference) is set to 0, or when the absence of LDAPS limits the creation of computer accounts, it requires a sacrificial user account. In the abuse process, the user account's password hash will be reset with another hash that has no known plaintext, effectively preventing regular users from using this account.
@@ -212,7 +212,7 @@ smbpasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledac
 ```
 {% endcode %}
 
-After these steps, the final service ticket can be used with [Pass-the-ticket](broken-reference).
+After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -220,7 +220,7 @@ From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be 
 
 The steps detailed in [PR #137](https://github.com/GhostPack/Rubeus/pull/137) can be followed.
 
-After these steps, the final service ticket can be used with [Pass-the-ticket](broken-reference).
+After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
 {% endtab %}
 {% endtabs %}
 

@@ -2,7 +2,7 @@
 
 t has the following command-line arguments.This abuse can be carried out when controlling an object that has `WriteOwner` or `GenericAll` over any object.
 
-The attacker can update the owner of the target object. Once the object owner has been changed to a principal the attacker controls, the attacker may manipulate the object any way they see fit. For instance, the attacker could change the target object's permissions and [grant rights](../../../ad/movement/dacl/broken-reference/).
+The attacker can update the owner of the target object. Once the object owner has been changed to a principal the attacker controls, the attacker may manipulate the object any way they see fit. For instance, the attacker could change the target object's permissions and [grant rights](grant-rights.md).
 
 {% tabs %}
 {% tab title="UNIX-like" %}

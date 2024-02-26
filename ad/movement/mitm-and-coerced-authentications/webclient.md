@@ -4,7 +4,7 @@
 
 > Web Distributed Authoring and Versioning (WebDAV) is an extension to Hypertext Transfer Protocol (HTTP) that defines how basic file functions such as copy, move, delete, and create are performed by using HTTP ([docs.microsoft.com](https://docs.microsoft.com/en-us/windows/win32/webdav/webdav-portal))
 
-The WebClient service needs to be enabled for WebDAV-based programs and features to work. As it turns out, the WebClient service can be indirectly abused by attackers to coerce authentications. This technique needs to be combined with other coercion techniques (e.g. [PetitPotam](ms-efsr.md), [PrinterBug](ms-rprn.md)) to act as a booster for these techniques. **It allows attackers to elicit authentications made over HTTP instead of SMB**, hence heightening [NTLM relay](broken-reference) capabilities.
+The WebClient service needs to be enabled for WebDAV-based programs and features to work. As it turns out, the WebClient service can be indirectly abused by attackers to coerce authentications. This technique needs to be combined with other coercion techniques (e.g. [PetitPotam](ms-efsr.md), [PrinterBug](ms-rprn.md)) to act as a booster for these techniques. **It allows attackers to elicit authentications made over HTTP instead of SMB**, hence heightening [NTLM relay](../ntlm/relay.md) capabilities.
 
 ## Practice
 
@@ -42,7 +42,7 @@ To retrieve an authenticated connection, the remote server that attacker wants t
 
 In order to have a valid NetBIOS name, [Responder](https://github.com/lgandx/Responder) can be used.
 
-A heftier alternative is to do some [ADIDNS poisoning](broken-reference) to create and use a valid DNS entry.
+A heftier alternative is to do some [ADIDNS poisoning](adidns-spoofing.md) to create and use a valid DNS entry.
 {% endhint %}
 
 Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-service/printerbug.md) and [PetitPotam](ms-efsr.md).

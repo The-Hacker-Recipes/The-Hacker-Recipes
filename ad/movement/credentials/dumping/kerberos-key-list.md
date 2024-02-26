@@ -3,7 +3,7 @@
 ## Theory
 
 It is possible to retrieve the long term secret of a user (e.g. NT hash) by sending a `TGS-REQ` (service ticket request) to the `KRBTGT` service with a [`KERB-KEY-LIST-REQ`](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/732211ae-4891-40d3-b2b6-85ebd6f5ffff) message type. This was introduced initially to support SSO with legacy protocols (e.g. NTLM) with Azure AD on on-premises resources.\
-An attacker can abuse this by forging a [RODC golden ticket](broken-reference) for a target user and use it to send a `TGS-REQ` to the `KRBTGT` service with a `padata` filed value of [161](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/ae60c948-fda8-45c2-b1d1-a71b484dd1f7) (`KERB-KEY-LIST-REQ`). Knowing the `KRBTGT` key of the RODC is required here. The `TGS-REP` will contain the long term secret of the user in the `KERB-KEY-LIST-REP` key value.
+An attacker can abuse this by forging a [RODC golden ticket](../../kerberos/forged-tickets/rodc-golden-tickets.md) for a target user and use it to send a `TGS-REQ` to the `KRBTGT` service with a `padata` filed value of [161](https://learn.microsoft.com/en-us/openspecs/windows\_protocols/ms-kile/ae60c948-fda8-45c2-b1d1-a71b484dd1f7) (`KERB-KEY-LIST-REQ`). Knowing the `KRBTGT` key of the RODC is required here. The `TGS-REP` will contain the long term secret of the user in the `KERB-KEY-LIST-REP` key value.
 
 ## Practice
 

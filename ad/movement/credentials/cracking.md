@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1110.002
 
 ## Theory
 
-Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges (like with [pass-the-hash](broken-reference), [overpass-the-hash](../kerberos/ptk.md)), it is required to crack it.
+Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges (like with [pass-the-hash](../ntlm/pth.md), [overpass-the-hash](../kerberos/ptk.md)), it is required to crack it.
 
 Cracking is an operation that can be carried out through different types of attacks:
 
@@ -38,8 +38,8 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | [(DCC1) Domain Cached Credentials](broken-reference)   | 1100                                                                                 |
 | [(DCC2) Domain Cached Credentials 2](broken-reference) | 2100                                                                                 |
 | [ASREQroast](../kerberos/asreqroast.md)                | 7500                                                                                 |
-| [ASREProast](broken-reference)                         | 18200                                                                                |
-| [Kerberoast](broken-reference)                         | 13100                                                                                |
+| [ASREProast](../kerberos/asreproast.md)                         | 18200                                                                                |
+| [Kerberoast](../kerberos/kerberoast.md)                         | 13100                                                                                |
 
 ### Dictionnary attack
 
