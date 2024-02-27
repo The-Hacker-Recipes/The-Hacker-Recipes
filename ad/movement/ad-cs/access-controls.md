@@ -48,7 +48,7 @@ In order to obtain an abusable template, some attributes and parameters need to 
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](../../../ad/movement/ad-cs/broken-reference/)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](./#attack-paths)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
 
 ```bash
 # 1. Save the old configuration, edit the template and make it vulnerable
@@ -185,7 +185,7 @@ This ID can be used by a user with the `ManageCA` and `ManageCertificates` right
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-If the attacker only has the `ManageCA` permission, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](../../../ad/movement/ad-cs/broken-reference/)) and modify some CA's attributes like the officers list (an officer is a user with the `ManageCertificates` right). The attacker could also enable or disable certificate templates.
+If the attacker only has the `ManageCA` permission, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](./#attack-paths)) and modify some CA's attributes like the officers list (an officer is a user with the `ManageCertificates` right). The attacker could also enable or disable certificate templates.
 
 ```bash
 # Add a new officier

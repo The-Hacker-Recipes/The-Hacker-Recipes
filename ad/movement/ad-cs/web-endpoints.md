@@ -2,7 +2,7 @@
 
 ## Theory
 
-In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) found a domain escalation vector based on web endpoints vulnerable to [NTLM relay attacks](broken-reference). The escalation vector was dubbed [ESC8](https://posts.specterops.io/certified-pre-owned-d95910965cd2#48bd).
+In [their research papers](https://posts.specterops.io/certified-pre-owned-d95910965cd2), [Will Schroeder](https://twitter.com/harmj0y) and [Lee Christensen](https://twitter.com/tifkin\_) found a domain escalation vector based on web endpoints vulnerable to [NTLM relay attacks](../ntlm/relay.md). The escalation vector was dubbed [ESC8](https://posts.specterops.io/certified-pre-owned-d95910965cd2#48bd).
 
 > AD CS supports several HTTP-based enrollment methods via additional server roles that administrators can optionally install \[(The certificate enrollment web interface, Certificate Enrollment Service (CES), Network Device Enrollment Service (NDES)).]
 >
@@ -12,7 +12,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 >
 > ([specterops.io](https://posts.specterops.io/certified-pre-owned-d95910965cd2#5c3c))
 
-This attack, like all [NTLM relay attacks](broken-reference), requires a victim account to authenticate to an attacker-controlled machine. An attacker can coerce authentication by many means, see [MITM and coerced authentication coercion techniques](../mitm-and-coerced-authentications/). Once the incoming authentication is received by the attacker, it can be relayed to an AD CS web endpoint.
+This attack, like all [NTLM relay attacks](../ntlm/relay.md), requires a victim account to authenticate to an attacker-controlled machine. An attacker can coerce authentication by many means, see [MITM and coerced authentication coercion techniques](../mitm-and-coerced-authentications/). Once the incoming authentication is received by the attacker, it can be relayed to an AD CS web endpoint.
 
 Once the relayed session is obtained, the attacker poses as the relayed account and can request a client authentication certificate. The certificate template used needs to be configured for authentication (i.e. EKUs like Client Authentication, PKINIT Client Authentication, Smart Card Logon, Any Purpose (`OID 2.5.29.37.0`), or no EKU (`SubCA`)) and allowing low-priv users to enroll can be abused to authenticate as any other user/machine/admin.
 
@@ -40,7 +40,7 @@ The certificate template flag (i.e. `--template`) can either be left blank (defa
 For instance, if the relayed principal is a domain controller, the `DomainController` template must be specified.
 {% endhint %}
 
-[Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) ([how to enumerate](broken-reference)).
+[Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) ([how to enumerate](./#attack-paths)).
 
 <pre class="language-python"><code class="lang-python"><strong># find ESC8-vulnerable CAs
 </strong><strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep -B20 ESC8
@@ -55,7 +55,7 @@ By default, Certipy uses LDAPS, which is not always supported by the domain cont
 
 **2 - Authentication coercion** :chains:
 
-Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](broken-reference)) to force accounts/machines to authenticate to the relay servers.
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
 
 {% content-ref url="../mitm-and-coerced-authentications/" %}
 [mitm-and-coerced-authentications](../mitm-and-coerced-authentications/)

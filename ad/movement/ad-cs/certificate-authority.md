@@ -40,7 +40,7 @@ certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep "U
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 {% endhint %}
 
-Once the right template is found (i.e. the default User template) ([how to enumerate](broken-reference)), a request shall be made to obtain a certificate, with another high-priv user set as SAN (`subjectAltName`).
+Once the right template is found (i.e. the default User template) ([how to enumerate](./#attack-paths)), a request shall be made to obtain a certificate, with another high-priv user set as SAN (`subjectAltName`).
 
 ```bash
 #To specify a user account in the SAN

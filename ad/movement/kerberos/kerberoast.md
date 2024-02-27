@@ -17,7 +17,7 @@ In most situations, services accounts are machine accounts, which have very comp
 ## Practice
 
 {% hint style="warning" %}
-Unlike [ASREProasting](asreproast.md), this attack can only be carried out with a prior foothold (valid domain credentials), except in the [Kerberoasting without pre-authentication](kerberoast.md#undefined) scenario.
+Unlike [ASREProasting](asreproast.md), this attack can only be carried out with a prior foothold (valid domain credentials), except in the [Kerberoasting without pre-authentication](kerberoast.md#kerberoast-wo-pre-authentication) scenario.
 {% endhint %}
 
 {% tabs %}

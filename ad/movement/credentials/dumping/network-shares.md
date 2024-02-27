@@ -2,7 +2,7 @@
 
 ## Theory
 
-In organization networks, it is common to find passwords in random files (logs, config files, personal documents, Office documents, ...). Other credential dumping techniques ([SAM & LSA](broken-reference), [NTDS.dit](broken-reference), some [web browsers](web-browsers.md), ...) could be considered as sub-techniques of credential dumping from files. This recipe focuses on the techniques that allow to gather password and sensitive information from generic and random files other than the ones involved in the sub-techniques mentioned before.
+In organization networks, it is common to find passwords in random files (logs, config files, personal documents, Office documents, ...). Other credential dumping techniques ([SAM & LSA](sam-and-lsa-secrets.md), [NTDS.dit](ntds.md), some [web browsers](web-browsers.md), ...) could be considered as sub-techniques of credential dumping from files. This recipe focuses on the techniques that allow to gather password and sensitive information from generic and random files other than the ones involved in the sub-techniques mentioned before.
 
 ## Practice
 

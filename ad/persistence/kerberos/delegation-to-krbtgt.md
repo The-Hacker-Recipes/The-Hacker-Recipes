@@ -2,7 +2,7 @@
 
 ## Theory
 
-The idea behind this technique is to configure [resource-based constrained delegation](../../movement/kerberos/delegations/rbcd.md) on the `krbtgt` account to generate TGTs on-demand as a persistence technique. The requirements for the technique are to have enough privileges (i.e. domain admin rights) to edit the `krbtgt` account's "rbcd" attribute (i.e. `ms-DS-Allowed-To-Act-On-Behalf-Of-Other-Identity`) and to control an account that has an SPN ([or create one](broken-reference), or do [SPN-less RBCD](../../movement/kerberos/delegations/rbcd.md#rbcd-on-spn-less-users)).
+The idea behind this technique is to configure [resource-based constrained delegation](../../movement/kerberos/delegations/rbcd.md) on the `krbtgt` account to generate TGTs on-demand as a persistence technique. The requirements for the technique are to have enough privileges (i.e. domain admin rights) to edit the `krbtgt` account's "rbcd" attribute (i.e. `ms-DS-Allowed-To-Act-On-Behalf-Of-Other-Identity`) and to control an account that has an SPN ([or create one](../../movement/domain-settings/machineaccountquota.md#create-a-computer-account), or do [SPN-less RBCD](../../movement/kerberos/delegations/rbcd.md#rbcd-on-spn-less-users)).
 
 Once the delegation is configured, an attacker can later on obtain a service ticket for the krbtgt on behalf of any user.&#x20;
 

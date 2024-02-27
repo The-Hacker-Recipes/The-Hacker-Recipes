@@ -14,10 +14,10 @@ For this attack to work, the attacker needs to populate the target attribute wit
 * an account with a trailing `$` in the `sAMAccountName` (i.e. a computer accounts)
 * any other account and conduct [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users) with [U2U (User-to-User) authentication](../#user-to-user-authentication)
 
-The common way to conduct these attacks is to create a computer account. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](broken-reference) that allows regular users to create up to 10 computer accounts.
+The common way to conduct these attacks is to create a computer account. This is usually possible thanks to a domain-level attribute called [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) that allows regular users to create up to 10 computer accounts.
 
 {% hint style="info" %}
-In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](broken-reference) is set to 0. The technique is demonstrated later on in this page ([RBCD on SPN-less user](rbcd.md#rbcd-on-spn-less-users)).
+In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0. The technique is demonstrated later on in this page ([RBCD on SPN-less user](rbcd.md#rbcd-on-spn-less-users)).
 {% endhint %}
 
 Then, in order to abuse this, the attacker has to control the account (A) the target object's (B) attribute has been populated with. Using that account's (A) credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
@@ -39,7 +39,7 @@ There are a few additional details to keep in mind, valid as of the time of writ
 {% endhint %}
 
 {% hint style="success" %}
-A technique called [AnySPN or "service class modification"](broken-reference) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+A technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-rbcd.png)
@@ -67,11 +67,11 @@ rbcd.py -delegate-from 'controlledaccount' -delegate-to 'target$' -dc-ip 'Domain
 {% endcode %}
 
 {% hint style="success" %}
-Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option when conducting this attack from a [relayed authentication](broken-reference).
+Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) to set the delegation rights with the `--delegate-access` option when conducting this attack from a [relayed authentication](../../ntlm/relay.md).
 {% endhint %}
 
 {% hint style="info" %}
-In this example, `controlledaccount` can be [a computer account created for the attack](broken-reference), or any other account -with at least one Service Principal Name set for the usual technique, or without for [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users)- which credentials are known to the attacker.
+In this example, `controlledaccount` can be [a computer account created for the attack](../../domain-settings/machineaccountquota.md#create-a-computer-account), or any other account -with at least one Service Principal Name set for the usual technique, or without for [SPN-less RBCD](rbcd.md#rbcd-on-spn-less-users)- which credentials are known to the attacker.
 {% endhint %}
 
 **2 - Obtain a ticket (delegation operation)** :ticket:&#x20;
@@ -89,7 +89,7 @@ In [some cases](./#theory), the delegation will not work. Depending on the conte
 {% endhint %}
 
 {% hint style="info" %}
-The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](broken-reference)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
+The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
 {% endhint %}
 
 **3 - Pass-the-ticket** :passport\_control:&#x20;
@@ -165,7 +165,7 @@ In [some cases](./#theory), the delegation will not work. Depending on the conte
 {% endhint %}
 
 {% hint style="info" %}
-The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](broken-reference)) to access more service**s**. This technique can be exploited with the `/altservice` flag with Rubeus.
+The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page\_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service**s**. This technique can be exploited with the `/altservice` flag with Rubeus.
 {% endhint %}
 
 **3 - Pass-the-ticket** :passport\_control:&#x20;
@@ -176,7 +176,7 @@ Once the ticket is injected, it can natively be used when accessing the service 
 
 ### RBCD on SPN-less users
 
-In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](broken-reference) is set to 0. In this case, the first (edit the "rbcd" attribute) and last ("Pass-the-ticket") steps are the same. Only the "Obtain a ticket" step changes.
+In 2022, [Jame Forshaw](https://twitter.com/tiraniddo) demonstrated that the SPN requirement wasn't completely mandatory and RBCD could be operated without: [Exploiting RBCD using a normal user](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). While this technique is a bit trickier and should absolutely be avoided on regular user accounts (the technique renders them unusable for normal people), it allows to abuse RBCD even if the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0. In this case, the first (edit the "rbcd" attribute) and last ("Pass-the-ticket") steps are the same. Only the "Obtain a ticket" step changes.
 
 The technique is as follows:
 
@@ -186,7 +186,7 @@ The technique is as follows:
 4. [Pass the ticket](../ptt.md) and access the target, as the delegated other
 
 {% hint style="danger" %}
-While this technique allows for an abuse of the RBCD primitive, even when the [`MachineAccountQuota`](broken-reference) is set to 0, or when the absence of LDAPS limits the creation of computer accounts, it requires a sacrificial user account. In the abuse process, the user account's password hash will be reset with another hash that has no known plaintext, effectively preventing regular users from using this account.
+While this technique allows for an abuse of the RBCD primitive, even when the [`MachineAccountQuota`](../../domain-settings/machineaccountquota.md) is set to 0, or when the absence of LDAPS limits the creation of computer accounts, it requires a sacrificial user account. In the abuse process, the user account's password hash will be reset with another hash that has no known plaintext, effectively preventing regular users from using this account.
 {% endhint %}
 
 {% tabs %}

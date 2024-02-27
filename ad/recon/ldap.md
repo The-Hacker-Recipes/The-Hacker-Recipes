@@ -60,7 +60,7 @@ ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump
 {% endtab %}
 
 {% tab title="ntlmrelayx" %}
-With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), it is possible to gather lots of information regarding the domain users and groups, the computers, [ADCS](../movement/ad-cs/), etc. through a [NTLM authentication relayed](broken-reference) within an LDAP session.
+With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), it is possible to gather lots of information regarding the domain users and groups, the computers, [ADCS](../movement/ad-cs/), etc. through a [NTLM authentication relayed](../movement/ntlm/relay.md) within an LDAP session.
 
 ```bash
 ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa

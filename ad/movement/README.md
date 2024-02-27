@@ -20,16 +20,16 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 ### Patch management
 
 * [ ] Domain Controllers are patched against [ZeroLogon](netlogon/zerologon.md).
-* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](broken-reference).
+* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](kerberos/samaccountname-spoofing.md).
 * [ ] [MS14-068](kerberos/forged-tickets/ms14-068.md) is patched, preventing forging of powerful Kerberos tickets.
-* [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](broken-reference), and [ACE abuse](dacl/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
+* [ ] [PrivExchange](exchange-services/privexchange.md) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse.md), and [ACE abuse](dacl/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync.md).
 * [ ] Patches for NTLM tampering vulnerabilities (e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166) are applied to limit [NTLM relay](ntlm/relay.md) attacks.
 * [ ] Latest security patched are applied (e.g. for ProxyLogon, ProxyShell, PrintNightmare, ...).
 
 ### Access Management (IAM/PAM)
 
 * [ ] Local administrators have a unique, random, complex and rotating password on every server/workstation (e.g. use of LAPS). This can be checked by dumping a local admin password or hash and attempting [credential stuffing](credentials/bruteforcing/stuffing.md) (i.e. trying to log in on other resources with that password/hash).
-* [ ] Strong [password and lockout policies](broken-reference) exist and are applied (complexity enabled, at least 12 chars, 16 for admins, must change every 6 months) and users know not to use simple and guessable passwords (e.g. password == username) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
+* [ ] Strong [password and lockout policies](../recon/password-policy.md) exist and are applied (complexity enabled, at least 12 chars, 16 for admins, must change every 6 months) and users know not to use simple and guessable passwords (e.g. password == username) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
 * [ ] Tier Model is applied (administrative personnel have multiple accounts, one for each tier, with different passwords and security requirements for each one) and a "least requirement" policy is followed (i.e. service accounts don't have domain admin (or equivalent) privileges, ACEs are carefully set) limiting credential [bruteforcing](credentials/bruteforcing/), [guessing](credentials/bruteforcing/guessing.md), [stuffing](credentials/bruteforcing/stuffing.md) and [cracking](credentials/cracking.md) attacks.
 * [ ] Sensitive network shares are not readable by all users. A "need to know" policy is followed, preventing data leak and other [credential-based attacks](credentials/).
 * [ ] No account is configured with [Kerberos Unconstrained Delegation](kerberos/delegations/#unconstrained-delegations) capabilities.
@@ -39,7 +39,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 * [ ] Caching of domain users is limited on workstations and avoided on servers to prevent [credential dumping](credentials/dumping) of LSA secrets from registry.
 * [ ] [Group Policy Preferences Passwords](credentials/dumping/group-policies-preferences.md) are not used.
-* [ ] LSA protection are enabled to prevent [LSASS dumping](broken-reference).
+* [ ] LSA protection are enabled to prevent [LSASS dumping](credentials/dumping/lsass.md).
 * [ ] Network shares readable by all domain users don't contain sensitive data like passwords or certificates limiting [credential dumping](credentials/dumping/network-shares.md).
 
 ### Domain-level configuration and best-practices
@@ -52,8 +52,8 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] SMB is required when possible, especially on sensitive servers, preventing [NTLM relay](ntlm/relay.md) attacks.
 * [ ] LDAP signing is required on Domain Controllers, preventing [NTLM relay](ntlm/relay.md) attacks.
 * [ ] Extended Protection for Authentication (EPA) is required, especially for Domain Controllers supporting LDAPS, preventing [NTLM relay](ntlm/relay.md) attacks.
-* [ ] IPv6 is either fully configured and used or disabled, preventing [DHCPv6 spoofing with DNS poisoning](broken-reference) attacks.
-* [ ] [LLMNR, NBT-NS and mDNS](broken-reference) are disabled, preventing MITM attacks relying on those multicast/broadcast domain name resolution protocols.
+* [ ] IPv6 is either fully configured and used or disabled, preventing [DHCPv6 spoofing with DNS poisoning](mitm-and-coerced-authentications/dhcpv6-spoofing.md) attacks.
+* [ ] [LLMNR, NBT-NS and mDNS](mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md) are disabled, preventing MITM attacks relying on those multicast/broadcast domain name resolution protocols.
 * [ ] WPAD is disabled, preventing [WPAD spoofing](mitm-and-coerced-authentications/wpad-spoofing.md).
 * [ ] A record exists in ADIDNS for the `*` (wildcard) preventing powerful [ADIDNS poisoning](mitm-and-coerced-authentications/adidns-spoofing.md) attacks. Preferably, this is a `TXT` record.
 * [ ] The print spooler is disabled on Domain Controllers and sensitive servers to prevent the [PrinterBug](print-spooler-service/printerbug.md) authentication coercion attack.

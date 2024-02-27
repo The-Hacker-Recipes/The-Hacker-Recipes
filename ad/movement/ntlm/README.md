@@ -53,7 +53,7 @@ The problem is that Microsoft has poorly implemented the zero-knowledge proof co
 [broken-reference](broken-reference/)
 {% endcontent-ref %}
 
-Attackers could also rely on [forced authentications and phishing](../mitm-and-coerced-authentications/) to [relay incoming authentications](broken-reference/).
+Attackers could also rely on [forced authentications and phishing](../mitm-and-coerced-authentications/) to [relay incoming authentications](relay.md).
 
 {% content-ref url="../mitm-and-coerced-authentications/" %}
 [mitm-and-coerced-authentications](../mitm-and-coerced-authentications/)

@@ -2,7 +2,7 @@
 
 ## Theory
 
-DNS is not multicast or broadcast like [LLMNR, NBT-NS or mDNS](broken-reference). In order to answer DNS requests, attacker first need to receive them. For instance, this can be achieved with [ARP spoofing](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-spoofing.md). DNS spoofing is basically setting up a DNS server and answering DNS queries obtained through man-in-the-middle technique.
+DNS is not multicast or broadcast like [LLMNR, NBT-NS or mDNS](llmnr-nbtns-mdns-spoofing.md). In order to answer DNS requests, attacker first need to receive them. For instance, this can be achieved with [ARP spoofing](arp-poisoning.md) or [DHCPv6 spoofing](dhcpv6-spoofing.md). DNS spoofing is basically setting up a DNS server and answering DNS queries obtained through man-in-the-middle technique.
 
 ## Practice
 

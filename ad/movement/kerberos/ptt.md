@@ -72,7 +72,7 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) scripts like [secrets
 secretsdump.py -k $TARGET
 ```
 
-[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](broken-reference)).
+[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/sam-and-lsa-secrets.md)).
 
 ```bash
 crackmapexec smb $TARGETS -k --sam
@@ -80,7 +80,7 @@ crackmapexec smb $TARGETS -k --lsa
 crackmapexec smb $TARGETS -k --ntds
 ```
 
-[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](broken-reference)).
+[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/lsass.md)).
 
 ```bash
 crackmapexec smb $TARGETS -k -M lsassy
