@@ -10,7 +10,7 @@ The long-term key of a service account can be used to forge a Service ticket tha
 When forging tickets, before November 2021 updates, the user-id and groups-ids were useful but the username supplied was mostly useless. As of Nov. 2021 updates, if the username supplied doesn't exist in Active Directory, the ticket gets rejected. This also applies to Silver Tickets.
 {% endhint %}
 
-In order to craft a silver ticket, testers need to find the target service account's RC4 key (i.e. NT hash) or AES key (128 or 256 bits). This can be done by [capturing an NTLM response](../../ntlm/capture.md) (preferably NTLMv1) and [cracking](../../credentials/cracking.md) it, by [dumping LSA secrets](../../../../ad/movement/kerberos/forged-tickets/broken-reference/), by doing a [DCSync](../../credentials/dumping/dcsync.md), etc.
+In order to craft a silver ticket, testers need to find the target service account's RC4 key (i.e. NT hash) or AES key (128 or 256 bits). This can be done by [capturing an NTLM response](../../ntlm/capture.md) (preferably NTLMv1) and [cracking](../../credentials/cracking.md) it, by [dumping LSA secrets](../../credentials/dumping/sam-and-lsa-secrets.md), by doing a [DCSync](../../credentials/dumping/dcsync.md), etc.
 
 _"While the scope is more limited than Golden Tickets, the required hash is easier to get and there is no communication with a DC when using them, so detection is more difficult than Golden Tickets." (_[_adsecurity.org_](https://adsecurity.org/?p=2011)_)_
 

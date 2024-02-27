@@ -24,7 +24,7 @@ There were many concepts to understand in the original exploit scenario (the "[p
 
 ### Authentication relay technique
 
-Another technique, [showcased by Dirk-jan](https://dirkjanm.io/a-different-way-of-abusing-zerologon/) no later than 2 weeks after the public disclosure, highlighted another way of exploiting the vulnerability. That technique relies on a [relayed authentication](../../../ad/movement/netlogon/broken-reference/) to directly operate a [DCSync](../credentials/dumping/dcsync.md), hence having no impact on the continuity of services.
+Another technique, [showcased by Dirk-jan](https://dirkjanm.io/a-different-way-of-abusing-zerologon/) no later than 2 weeks after the public disclosure, highlighted another way of exploiting the vulnerability. That technique relies on a [relayed authentication](../ntlm/relay.md) to directly operate a [DCSync](../credentials/dumping/dcsync.md), hence having no impact on the continuity of services.
 
 In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp/impacket)'s script [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used.
 
