@@ -14,7 +14,7 @@ There are multiple "living off the land" techniques that can be used to force au
 
 ## Practice
 
-Those techniques will usually generate outgoing traffic on SMB or HTTP, hence requiring the attacker to set up an SMB or HTTP server to [capture](../ntlm/capture.md) or [relay](../../../ad/movement/mitm-and-coerced-authentications/broken-reference/) the authentication (e.g. using tools like [Responder](https://github.com/SpiderLabs/Responder) (Python), [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell), [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) or [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell)).
+Those techniques will usually generate outgoing traffic on SMB or HTTP, hence requiring the attacker to set up an SMB or HTTP server to [capture](../ntlm/capture.md) or [relay](../ntlm/relay.md) the authentication (e.g. using tools like [Responder](https://github.com/SpiderLabs/Responder) (Python), [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell), [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) or [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell)).
 
 ### Command execution
 

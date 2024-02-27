@@ -4,7 +4,7 @@ This abuse can be carried out when controlling an object that has a `GenericAll`
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-It can also be achieved from UNIX-like system with [net](https://linux.die.net/man/8/net), a tool for the administration of samba and cifs/smb clients. The [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) can also be used to run net commands with [pass-the-hash](../../../ad/movement/dacl/broken-reference/).
+It can also be achieved from UNIX-like system with [net](https://linux.die.net/man/8/net), a tool for the administration of samba and cifs/smb clients. The [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) can also be used to run net commands with [pass-the-hash](../ntlm/pth.md).
 
 ```bash
 # With net and cleartext credentials (will be prompted)

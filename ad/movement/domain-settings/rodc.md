@@ -39,7 +39,7 @@ When the RODC generates the TGT, it indicates in the `kvno` field the version nu
 
 Several attacks can be performed on RODCs:
 
-* [RODC golden ticket](broken-reference)
+* [RODC golden ticket](../kerberos/forged-tickets/rodc-golden-tickets.md)
 * [Key list attack](../credentials/dumping/kerberos-key-list.md)
 * [Exploiting control over a RODC computer object](../dacl/rights-on-rodc-object.md)
 

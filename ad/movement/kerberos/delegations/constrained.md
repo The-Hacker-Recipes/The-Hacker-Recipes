@@ -12,10 +12,10 @@ If the "impersonated" account is "[is sensitive and cannot be delegated](https:/
 
 Constrained delegation can be configured with or without protocol transition. Abuse methodology differs for each scenario. The paths differ but the result is the same: a Service Ticket to authenticate on a target service on behalf of a user.
 
-Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](broken-reference) to access the target service.&#x20;
+Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service.&#x20;
 
 {% hint style="success" %}
-On a side note, a technique called [AnySPN or "service class modification"](broken-reference) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+On a side note, a technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 {% endhint %}
 
 ![](../../../../.gitbook/assets/Kerberos\_delegations-constrained.png)
@@ -26,7 +26,7 @@ On a side note, a technique called [AnySPN or "service class modification"](brok
 
 ![Domain Controller > Active Directory Users and Computers > delegation properties of a user](<../../../../.gitbook/assets/kcd with protocol transition.png>)
 
-If a service is configured with constrained delegation **with protocol transition**, then it can obtain a service ticket on behalf of a user by combining S4U2self and S4U2proxy requests, as long as the user is not sensitive for delegation, or a member of the "Protected Users" group. The service ticket can then be used with [pass-the-ticket](broken-reference). This process is similar to [resource-based contrained delegation](rbcd.md) exploitation.
+If a service is configured with constrained delegation **with protocol transition**, then it can obtain a service ticket on behalf of a user by combining S4U2self and S4U2proxy requests, as long as the user is not sensitive for delegation, or a member of the "Protected Users" group. The service ticket can then be used with [pass-the-ticket](../ptt.md). This process is similar to [resource-based contrained delegation](rbcd.md) exploitation.
 
 {% content-ref url="rbcd.md" %}
 [rbcd.md](rbcd.md)

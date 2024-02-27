@@ -4,7 +4,7 @@
 
 This attack combines [Kerberos Constrained delegation abuse](delegations/constrained.md) and [DACL abuse](../dacl/). A service configured for Kerberos Constrained Delegation (KCD) can impersonate users on a set of services. The "set of services" is specified in the constrained delegation configuration. It is a list of SPNs (Service Principal Names) written in the `msDS-AllowedToDelegateTo` attribute of the KCD service's object.
 
-In standard KCD abuse scenarios, an attacker that gains control over a "KCD service" can operate lateral movement and obtain access to the other services/SPNs. Since KCD allows for impersonation, the attacker can also impersonate users (e.g. domain admins) on the target services. Depending on the SPNs, or if it's possible to [modify it](broken-reference), the attacker could also gain admin access to the server the "listed SPN" belongs to.
+In standard KCD abuse scenarios, an attacker that gains control over a "KCD service" can operate lateral movement and obtain access to the other services/SPNs. Since KCD allows for impersonation, the attacker can also impersonate users (e.g. domain admins) on the target services. Depending on the SPNs, or if it's possible to [modify it](ptt.md#modifying-the-spn), the attacker could also gain admin access to the server the "listed SPN" belongs to.
 
 On top of all that, if attacker is able to move a "listed SPN" from the original object to the another one, he could be able to compromise it. This is called SPN-jacking and it was intially discovered and explaine by [Elad Shamir](https://twitter.com/elad\_shamir) in [this post](https://www.semperis.com/blog/spn-jacking-an-edge-case-in-writespn-abuse/).
 
@@ -49,7 +49,7 @@ getST -spn "cifs/serverB" -impersonate "administrator" 'domain/serverA$:password
 tgssub.py -in serverB.ccache -out newticket.ccache -altservice "cifs/serverC"
 ```
 
-Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](broken-reference) to access the target.
+Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](ptt.md) to access the target.
 {% endtab %}
 
 {% tab title="Windows" %}
@@ -74,7 +74,7 @@ Rubeus.exe s4u /nowrap /msdsspn:"cifs/serverB" /impersonateuser:"administrator" 
 Rubeus.exe tgssub /nowrap /altservice:"host/serverC" /ticket:"ba64ticket"
 ```
 
-Once the final service ticket is obtained, it can be used with [Pass the Ticket](broken-reference) to access the target.
+Once the final service ticket is obtained, it can be used with [Pass the Ticket](ptt.md) to access the target.
 {% endtab %}
 {% endtabs %}
 

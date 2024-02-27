@@ -6,7 +6,7 @@ When targeting machines connected to a network, identifying which hosts are up a
 
 Once the hosts are identified, attackers then usually proceed to [port scanning](../../sys/recon/port-scanning.md) to attempt at compromising them.
 
-Alternatively, there are common scenarios where most of the hosts and services are managed by a central set of services like [Active Directory Domain Services (AD-DS)](broken-reference/). In this case, attackers usually try to compromise those services first as it would grant them control over many hosts without having to attack them all. A whole category of The Hacker Recipes is dedicated to Active Directory Domain Services (and other associated AD services).
+Alternatively, there are common scenarios where most of the hosts and services are managed by a central set of services like [Active Directory Domain Services (AD-DS)](../../ad/recon). In this case, attackers usually try to compromise those services first as it would grant them control over many hosts without having to attack them all. A whole category of The Hacker Recipes is dedicated to Active Directory Domain Services (and other associated AD services).
 
 ## Practice
 

@@ -38,7 +38,7 @@ _At the time of writing this recipe, September 25th, 2022, no equivalent exists 
 {% endtabs %}
 
 {% hint style="warning" %}
-In 2021, Microsoft issued a patch ([KB5008380](https://support.microsoft.com/en-gb/topic/kb5008380-authentication-updates-cve-2021-42287-9dafac11-e0d0-4cb8-959a-143bd0201041)) for [CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287) (see [Broken link](broken-reference "mention")). The patch is explained a bit more in [this blogpost](https://blog.netwrix.com/2022/01/10/pacrequestorenforcement-and-kerberos-authentication/). When the patch entered its enforcement phase (Oct. 11th 2022), it made the Sapphire Ticket attack harder to conduct.
+In 2021, Microsoft issued a patch ([KB5008380](https://support.microsoft.com/en-gb/topic/kb5008380-authentication-updates-cve-2021-42287-9dafac11-e0d0-4cb8-959a-143bd0201041)) for [CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287) (see [samaccountname-spoofing.md](../samaccountname-spoofing.md)). The patch is explained a bit more in [this blogpost](https://blog.netwrix.com/2022/01/10/pacrequestorenforcement-and-kerberos-authentication/). When the patch entered its enforcement phase (Oct. 11th 2022), it made the Sapphire Ticket attack harder to conduct.
 
 The patch introduced two new structures inside a TGT's PAC: "Requestor" (`PAC_REQUESTOR`) and "Attributes" (`PAC_ATTRIBUTES_INFO`). Those structures are now required in TGTs for all up-to-date environments after the patch enforcement phase, and a `KDC_ERR_TGT_REVOKED` error is raised if a TGT is used without them.
 

@@ -6,9 +6,9 @@ description: MITRE ATT&CK™ Sub-technique T1003.006
 
 ## Theory
 
-DCSync is a technique that uses Windows Domain Controller's API to simulate the replication process from a remote domain controller. This attack can lead to the compromise of major credential material such as the Kerberos `krbtgt` keys used legitimately for tickets creation, but also for [tickets forging](broken-reference) by attackers. The consequences of this attack are similar to an [NTDS.dit dump and parsing](broken-reference) but the practical aspect differ. **A DCSync is not a simple copy & parse of the NTDS.dit file**, it's a `DsGetNCChanges` operation transported in an RPC request to the DRSUAPI (Directory Replication Service API) to replicate data (including credentials) from a domain controller.
+DCSync is a technique that uses Windows Domain Controller's API to simulate the replication process from a remote domain controller. This attack can lead to the compromise of major credential material such as the Kerberos `krbtgt` keys used legitimately for tickets creation, but also for [tickets forging](../../kerberos/forged-tickets) by attackers. The consequences of this attack are similar to an [NTDS.dit dump and parsing](ntds.md) but the practical aspect differ. **A DCSync is not a simple copy & parse of the NTDS.dit file**, it's a `DsGetNCChanges` operation transported in an RPC request to the DRSUAPI (Directory Replication Service API) to replicate data (including credentials) from a domain controller.
 
-**This attack requires domain admin privileges** to succeed (more specifically, it needs the following extended privileges: `DS-Replication-Get-Changes`  and `DS-Replication-Get-Changes-All`). Members of the Administrators, Domain Admins, Enterprise Admins, and Domain Controllers groups have these privileges by default. In some cases, over-privileged accounts can be abused to [grant controlled objects the right to DCSync](broken-reference).
+**This attack requires domain admin privileges** to succeed (more specifically, it needs the following extended privileges: `DS-Replication-Get-Changes`  and `DS-Replication-Get-Changes-All`). Members of the Administrators, Domain Admins, Enterprise Admins, and Domain Controllers groups have these privileges by default. In some cases, over-privileged accounts can be abused to [grant controlled objects the right to DCSync](../../dacl/grant-rights.md).
 
 {% hint style="info" %}
 A setting exists in the account policy or when creating users telling the domain controller to store the user's password using reversible encryption instead of irreversible hashing. This allows attackers to retrieve the passwords in clear-text.
@@ -18,7 +18,7 @@ A setting exists in the account policy or when creating users telling the domain
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](broken-reference) or [pass-the-ticket](broken-reference).
+On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md).
 
 ```bash
 # using a plaintext password
@@ -38,10 +38,10 @@ The secretsdump script creates the following files.
 | .ntds      | LM and NT password hashes                           |
 | .cleartext | Passwords stored using reversible encryption        |
 | .kerberos  | Kerberos keys (DES, AES128 and AES256)              |
-| .sam       | Domain controller's [SAM secrets](broken-reference) |
-| .secrets   | Domain controller's [LSA secrets](broken-reference) |
+| .sam       | Domain controller's [SAM secrets](sam-and-lsa-secrets.md) |
+| .secrets   | Domain controller's [LSA secrets](sam-and-lsa-secrets.md) |
 
-This attack can also be operated with a [relayed NTLM authentication](broken-reference), but only if the target domain controller is vulnerable to [Zerologon](broken-reference) since the DRSUAPI always requires signing.
+This attack can also be operated with a [relayed NTLM authentication](../../ntlm/relay.md), but only if the target domain controller is vulnerable to [Zerologon](../../netlogon/zerologon.md) since the DRSUAPI always requires signing.
 
 ```bash
 # target vulnerable to Zerologon, dump DC's secrets only
@@ -53,7 +53,7 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 {% endtab %}
 
 {% tab title="Windows" %}
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](broken-reference) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](broken-reference) or [pass-the-ticket](broken-reference)).
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets/golden.md) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md)).
 
 ```bash
 # Extract a specific user, in this case the krbtgt

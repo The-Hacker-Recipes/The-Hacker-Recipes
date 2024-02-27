@@ -23,7 +23,7 @@ The attack can be started with the `-d/--DHCP` (WPAD injection) argument. By def
 
 Additional arguments and options should be used when doing DHCP poisoning with the `-d/--DHCP` argument. Those options can also be used along `-D/--DHCP-DNS` since the WPAD DNS entry will be one of the first queries by the poisoned machine.
 
-* The `-w/--wpad` option to start the WPAD rogue server so that fake `wpad.dat` file can be served to requesting clients (i.e. [WPAD spoofing](broken-reference))
+* The `-w/--wpad` option to start the WPAD rogue server so that fake `wpad.dat` file can be served to requesting clients (i.e. [WPAD spoofing](wpad-spoofing.md))
 * The `-P/--ProxyAuth` option to force the Windows client to authenticate after the `wpad.dat` is accessed and when the client starts using the proxy
 
 ```bash
@@ -40,7 +40,7 @@ responder -I "eth0" -wPd
 The proxy auth NTLM authentication can either be
 
 * forced and [captured](../ntlm/capture.md) with Responder with the command line above (with `--wredir` and `--ProxyAuth`)
-* or forced and [relayed](broken-reference) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument
+* or forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument
 
 ```bash
 responder --interface "eth0" --DHCP --DHCP-DNS --wpad

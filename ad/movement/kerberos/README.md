@@ -76,14 +76,14 @@ Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerb
 
 Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 
-* A TGT is encrypted with the `krbtgt`'s NT hash. An attacker knowing the `krbtgt`'s NT hash can forge TGTs impersonating a domain admin. He can then request STs as a domain admin for any service. The attacker would have access to everything. This forged TGT is called a [Golden ticket](broken-reference).
-* A ST is encrypted with the service account's NT hash. An attacker knowing a service account's NT hash can use it to forge a Service ticket and obtain access to that service. This forged Service ticket is called a [Silver ticket](broken-reference).
+* A TGT is encrypted with the `krbtgt`'s NT hash. An attacker knowing the `krbtgt`'s NT hash can forge TGTs impersonating a domain admin. He can then request STs as a domain admin for any service. The attacker would have access to everything. This forged TGT is called a [Golden ticket](forged-tickets/golden.md).
+* A ST is encrypted with the service account's NT hash. An attacker knowing a service account's NT hash can use it to forge a Service ticket and obtain access to that service. This forged Service ticket is called a [Silver ticket](forged-tickets/silver.md).
 
-{% content-ref url="broken-reference" %}
-[Broken link](broken-reference)
+{% content-ref url="forged-tickets/" %}
+[forged-tickets](forged-tickets/)
 {% endcontent-ref %}
 
-[Overpass-the-hash](ptk.md), [silver ticket](broken-reference) and [golden ticket](broken-reference) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](broken-reference).
+[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets/silver.md) and [golden ticket](forged-tickets/golden.md) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](ptt.md).
 
 {% content-ref url="broken-reference" %}
 [Broken link](broken-reference)
@@ -109,7 +109,7 @@ When attackers have a foothold in the domain (i.e. valid domain credentials), th
 [Broken link](broken-reference)
 {% endcontent-ref %}
 
-As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username:  Kerberoast[Broken link](broken-reference "mention").
+As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username:  [Kerberoasting without pre-authentication](./kerberoast.md#kerberoast-wo-pre-authentication "mention").
 
 ## Delegations
 
@@ -121,7 +121,7 @@ In some situations, Kerberos delegations can be abused by attackers to operate l
 [delegations](delegations/)
 {% endcontent-ref %}
 
-In [some cases](delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](broken-reference)vulnerability (CVE-2020-17049) can be used to try to bypass restrictions.
+In [some cases](delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](delegations/bronze-bit.md)vulnerability (CVE-2020-17049) can be used to try to bypass restrictions.
 
 {% content-ref url="delegations/bronze-bit.md" %}
 [bronze-bit.md](delegations/bronze-bit.md)
@@ -211,6 +211,6 @@ This allows to
 
 * operate [RBCD attacks from SPN-less accounts](delegations/rbcd.md#rbcd-on-spn-less-users)
 * operate an [unPAC-the-hash](unpac-the-hash.md) attack
-* retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](broken-reference).
+* retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](forged-tickets/sapphire.md).
 
 </details>

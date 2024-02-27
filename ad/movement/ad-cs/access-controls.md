@@ -21,13 +21,13 @@ Active Directory Certificate Services add multiple objects to AD, including secu
 {% hint style="info" %}
 Maliciously configuring a CA or a certificate template can be insufficient. A controlled AD object (user or computer) must also have the ability to request a certificate for that template. The controlled AD object must have `Certificate-Enrollment` rights over the enrollment services (i.e. CA) **and** over the certificate template ([source](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/#section-2-2-3)).
 
-[PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/dev)'s [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) function (in [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)) can be used to add `Certificate-Enrollment` rights to a "controlled AD object" over a specific template. In order to achieve this, the attacker needs to have enough rights (i.e. [`WriteDacl`](../../../ad/movement/ad-cs/broken-reference/)) over the certificate template.
+[PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/dev)'s [Add-DomainObjectAcl](https://powersploit.readthedocs.io/en/latest/Recon/Add-DomainObjectAcl/) function (in [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)) can be used to add `Certificate-Enrollment` rights to a "controlled AD object" over a specific template. In order to achieve this, the attacker needs to have enough rights (i.e. [`WriteDacl`](../dacl/grant-rights.md)) over the certificate template.
 
 ```powershell
 Add-DomainObjectAcl -TargetIdentity "target template" -PrincipalIdentity "controlled object" -RightsGUID "0e10c968-78fb-11d2-90d4-00c04f79dc55" -TargetSearchBase "LDAP://CN=Configuration,DC=DOMAIN,DC=LOCAL" -Verbose
 ```
 
-The example above shows how to edit a certificate template's DACL (requires [`WriteDacl`](../../../ad/movement/ad-cs/broken-reference/) over the template, i.e. [ESC4](access-controls.md#certificate-templates-esc4)), but modifying a CA's DACL follows the same principle (requires [`WriteDacl`](../../../ad/movement/ad-cs/broken-reference/) over the CA, i.e. [ESC7](access-controls.md#certificate-authority-esc7)).
+The example above shows how to edit a certificate template's DACL (requires [`WriteDacl`](../dacl/grant-rights.md) over the template, i.e. [ESC4](access-controls.md#certificate-templates-esc4)), but modifying a CA's DACL follows the same principle (requires [`WriteDacl`](../dacl/grant-rights.md) over the CA, i.e. [ESC7](access-controls.md#certificate-authority-esc7)).
 {% endhint %}
 
 ### Certificate templates (ESC4)
@@ -44,11 +44,11 @@ In order to obtain an abusable template, some attributes and parameters need to 
    3. PKINIT Client Authentication (OID: `1.3.6.1.5.2.3.4`)
    4. Any Purpose (OID: `2.5.29.37.0`)
    5. No EKU
-6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](../../../ad/movement/ad-cs/broken-reference/).
+6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](../kerberos/ptt.md).
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](../../../ad/movement/ad-cs/broken-reference/)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](./#attack-paths)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
 
 ```bash
 # 1. Save the old configuration, edit the template and make it vulnerable
@@ -185,7 +185,7 @@ This ID can be used by a user with the `ManageCA` and `ManageCertificates` right
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-If the attacker only has the `ManageCA` permission, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](../../../ad/movement/ad-cs/broken-reference/)) and modify some CA's attributes like the officers list (an officer is a user with the `ManageCertificates` right). The attacker could also enable or disable certificate templates.
+If the attacker only has the `ManageCA` permission, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate access rights over the CA object ([how to enumerate](./#attack-paths)) and modify some CA's attributes like the officers list (an officer is a user with the `ManageCertificates` right). The attacker could also enable or disable certificate templates.
 
 ```bash
 # Add a new officier

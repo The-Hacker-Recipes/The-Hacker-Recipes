@@ -2,7 +2,7 @@
 
 ## Theory
 
-The idea behind this technique is to configure [resource-based constrained delegation](../../movement/kerberos/delegations/rbcd.md) on the `krbtgt` account to generate TGTs on-demand as a persistence technique. The requirements for the technique are to have enough privileges (i.e. domain admin rights) to edit the `krbtgt` account's "rbcd" attribute (i.e. `ms-DS-Allowed-To-Act-On-Behalf-Of-Other-Identity`) and to control an account that has an SPN ([or create one](broken-reference), or do [SPN-less RBCD](../../movement/kerberos/delegations/rbcd.md#rbcd-on-spn-less-users)).
+The idea behind this technique is to configure [resource-based constrained delegation](../../movement/kerberos/delegations/rbcd.md) on the `krbtgt` account to generate TGTs on-demand as a persistence technique. The requirements for the technique are to have enough privileges (i.e. domain admin rights) to edit the `krbtgt` account's "rbcd" attribute (i.e. `ms-DS-Allowed-To-Act-On-Behalf-Of-Other-Identity`) and to control an account that has an SPN ([or create one](../../movement/domain-settings/machineaccountquota.md#create-a-computer-account), or do [SPN-less RBCD](../../movement/kerberos/delegations/rbcd.md#rbcd-on-spn-less-users)).
 
 Once the delegation is configured, an attacker can later on obtain a service ticket for the krbtgt on behalf of any user.&#x20;
 
@@ -12,7 +12,7 @@ An example of the abuse goes as follows :
 
 1. Configure RBCD delegation on the `krbtgt` account to allow a controlled account to delegate to it. The controlled account should have at least one SPN (i.e. ServicePrincipalName) for the delegation to work (or, see [SPN-less RBCD](../../movement/kerberos/delegations/rbcd.md#rbcd-on-spn-less-users)). This controlled account will be called "ControlledAccountWithSPN".
 2. Perform a full [S4U](../../movement/kerberos/delegations/) attack to obtain a Service Ticket for the `krbtgt` service, on behalf of another privileged user. Let's call this chosen user "TargetedAccount". The ticket obtained through this process is for the `KRBTGT` service, which basically means the ticket can be used as a TGT for the TargetedAccount.
-3. [Pass-the-ticket](broken-reference) to use the Service-Ticket-that-is-in-fact-a-TGT, act as the target -privileged- user, and authenticate to remote resources.
+3. [Pass-the-ticket](../../movement/kerberos/ptt.md) to use the Service-Ticket-that-is-in-fact-a-TGT, act as the target -privileged- user, and authenticate to remote resources.
 
 ## Practice
 

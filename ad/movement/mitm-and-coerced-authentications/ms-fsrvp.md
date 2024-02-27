@@ -8,7 +8,7 @@ In late 2021, [Lionel GILLES](https://twitter.com/topotam77) published [slides](
 
 Similarly to other MS-RPC abuses, this works by using a specific method relying on remote UNC paths. In this case, at the time of writing, two methods were detected as vulnerable: `IsPathSupported` and `IsPathShadowCopied`.
 
-**The coerced authentications are made over SMB**. Unlike other similar coercion methods (MS-RPRN printerbug, MS-EFSR petitpotam), I doubt MS-FSRVP abuse can be combined with [WebClient abuse](broken-reference) to elicit incoming authentications made over HTTP.
+**The coerced authentications are made over SMB**. Unlike other similar coercion methods (MS-RPRN printerbug, MS-EFSR petitpotam), I doubt MS-FSRVP abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP.
 
 A requirement to the abuse is to have the "File Server VSS Agent Service" enabled on the target server.
 

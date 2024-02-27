@@ -6,7 +6,7 @@ description: MITRE ATT&CK™ Sub-technique T1110.002
 
 ## Theory
 
-Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges (like with [pass-the-hash](broken-reference), [overpass-the-hash](../kerberos/ptk.md)), it is required to crack it.
+Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges (like with [pass-the-hash](../ntlm/pth.md), [overpass-the-hash](../kerberos/ptk.md)), it is required to crack it.
 
 Cracking is an operation that can be carried out through different types of attacks:
 
@@ -35,11 +35,11 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | [LMv2 response](../ntlm/capture.md)                    | [not supported](https://github.com/hashcat/hashcat/issues/78#issuecomment-276048841) |
 | [NTLM response](../ntlm/capture.md)                    | 5500                                                                                 |
 | [NTLMv2 response](../ntlm/capture.md)                  | 5600                                                                                 |
-| [(DCC1) Domain Cached Credentials](broken-reference)   | 1100                                                                                 |
-| [(DCC2) Domain Cached Credentials 2](broken-reference) | 2100                                                                                 |
+| [(DCC1) Domain Cached Credentials](dumping/sam-and-lsa-secrets.md)   | 1100                                                                                 |
+| [(DCC2) Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100                                                                                 |
 | [ASREQroast](../kerberos/asreqroast.md)                | 7500                                                                                 |
-| [ASREProast](broken-reference)                         | 18200                                                                                |
-| [Kerberoast](broken-reference)                         | 13100                                                                                |
+| [ASREProast](../kerberos/asreproast.md)                         | 18200                                                                                |
+| [Kerberoast](../kerberos/kerberoast.md)                         | 13100                                                                                |
 
 ### Dictionnary attack
 
@@ -125,7 +125,7 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 * Google offers services like [Colab](https://colab.research.google.com/) and [Cloud Shell](https://console.cloud.google.com/home/dashboard?cloudshell=true) that can be used for "cloud cracking". There are projects like [penglab](https://github.com/mxrch/penglab), [google-colab-hashcat](https://github.com/ShutdownRepo/google-colab-hashcat) and [cloudtopolis](https://github.com/JoelGMSec/Cloudtopolis) that can help testers to setup a cracking session on such resources
 * Other solutions, cloud-based or not, can be used to improve cracking speed: [setting up a rig](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig) for instance.
 * LM and NTLM ChallengeResponses can be cracked really fast (and for free depending on the hash) on [crack.sh](https://crack.sh/get-cracking/), a remote service that cracks the hash with rainbow tables ([here's how to capture those hashes](../ntlm/capture.md#practice)).
-* Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](broken-reference) to create a custom wordlist for a dictionary attack
+* Testers that manage to pwn a domain admin or a distributed local admin should try to operate multiple [LSASS dumps](dumping/lsass.md) to create a custom wordlist for a dictionary attack
 * Cracking LM and NT hash can be optimized by following [these advice](https://blog.didierstevens.com/2016/07/25/practice-ntds-dit-file-overview/).
 {% endhint %}
 

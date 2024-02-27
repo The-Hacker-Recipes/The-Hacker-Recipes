@@ -20,7 +20,7 @@ Since machine accounts have their own set of SPNs by default at their creation, 
 
 ### OPSEC considerations
 
-The S4U2self abuse is not only a great way to perform Local Privilege Escalation or a lateral move, it's also an way more stealthier alternative to [Silver Tickets](broken-reference) when an attacker has knowledge of a machine account's Kerberos keys. While a Silver Ticket is a Service Ticket featuring a forged PAC, the Service Ticket issued after an S4U2self request will be legitimate and will feature a valid PAC.
+The S4U2self abuse is not only a great way to perform Local Privilege Escalation or a lateral move, it's also an way more stealthier alternative to [Silver Tickets](../forged-tickets/silver.md) when an attacker has knowledge of a machine account's Kerberos keys. While a Silver Ticket is a Service Ticket featuring a forged PAC, the Service Ticket issued after an S4U2self request will be legitimate and will feature a valid PAC.
 
 ## Practice
 
@@ -38,7 +38,7 @@ This step revolves around the `tgtdeleg` feature from [Rubeus](https://github.co
 Rubeus.exe tgtdeleg /nowrap
 ```
 
-The TGT can then be used with [Pass the Ticket](broken-reference) for the next step, which can be conducted remotely if needed, unlike this initial step.
+The TGT can then be used with [Pass the Ticket](../ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step.
 
 Alternatively, if the machine account credentials are known, a TGT can be requested commonly.
 
@@ -66,7 +66,7 @@ The TGT can then be used along with S4U2self to obtain a Service Ticket imperson
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](broken-reference)).
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](../ptt.md)).
 
 ```bash
 export KRB5CCNAME="/path/to/ticket.ccache"
@@ -83,7 +83,7 @@ Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /altservice:"cifs/ma
 {% endtab %}
 {% endtabs %}
 
-Once a Service Ticket is received, it can be used with [pass-the-ticket](broken-reference)/[pass-the-cache](../ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
+Once a Service Ticket is received, it can be used with [pass-the-ticket](../ptt.md)/[pass-the-cache](../ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
 
 {% hint style="info" %}
 This technique can also be used when receiving TGTs during a [Kerberos Unconstrained Delegation abuse](unconstrained.md) in order to gain local admin privileges over the victims.

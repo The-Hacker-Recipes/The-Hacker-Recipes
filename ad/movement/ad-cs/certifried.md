@@ -55,7 +55,7 @@ _At the time of writing this recipe, June 2022, no Windows alternative has been 
 
 #### Creating a computer account
 
-The first step of the attack consists in creating a computer account ([broken-reference](broken-reference/ "mention"), [broken-reference](broken-reference/ "mention")), or have the write permission to the `dNSHostName` and `servicePrincipalName` attributes of another.
+The first step of the attack consists in creating a computer account ([machineaccountquota.md](machineaccountquota.md "mention"), [#create-a-computer-account](/machineaccountquota.md#create-a-computer-account "mention")), or have the write permission to the `dNSHostName` and `servicePrincipalName` attributes of another.
 
 #### `dNSHostName` and `servicePrincipalName` modification
 

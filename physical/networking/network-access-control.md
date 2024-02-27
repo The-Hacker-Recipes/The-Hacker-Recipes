@@ -204,7 +204,7 @@ To manually specify the interfaces, one can do so with the <mark style="color:bl
 
 ![](<../../.gitbook/assets/image (5).png>)
 
-* run other offensive tools for [NTLM capture](../../ad/movement/ntlm/capture.md), [relay](broken-reference/), etc.
+* run other offensive tools for [NTLM capture](../../ad/movement/ntlm/capture.md), [relay](../../ad/movement/ntlm/relay.md), etc.
 
 {% hint style="info" %}
 Responder needs to bet set up to listen on the bridge interface, but change the answering IP address to the one of the victim.
