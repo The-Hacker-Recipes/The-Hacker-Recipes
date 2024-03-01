@@ -94,27 +94,26 @@ For each servers, the extracted informations are :
 * if there are the WSUS and MSSQL services running on it or not
 
 ```bash
-#Find the assets in the LDAP configuration
-python3 sccmhunter.py find -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC
+# Find the assets in the LDAP configuration
+sccmhunter.py find -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC
 
-#Retrieve informations regarding the identified servers
-#And save PXE variables
-python3 sccmhunter.py smb -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC -save
+# Retrieve informations regarding the identified servers and save PXE variables
+sccmhunter.py smb -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC -save
 ```
 
 When informations gathering is finished, the second step is to display the results with the `show` command:
 
 ```bash
-#View the SMB configurations and running services
+# View the SMB configurations and running services
 sccmhunter.py show -smb
 
-#View the users
+# View the users
 sccmhunter.py show -user
 
-#View the servers
+# View the servers
 sccmhunter.py show -computers
 
-#View everything
+# View everything
 sccmhunter.py show -all
 ```
 {% endtab %}
@@ -136,7 +135,7 @@ Using WMI queries or [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) to query 
 Get-WmiObject -Class SMS_Authority -Namespace root\CCM
 
 # SharmSCCP
-.\SharpSCCM.exe local site-info
+SharpSCCM.exe local site-info
 ```
 
 <figure><img src="../../../.gitbook/assets/SCCM_Recon_WMI-SharpSCCM.png" alt=""><figcaption></figcaption></figure>
