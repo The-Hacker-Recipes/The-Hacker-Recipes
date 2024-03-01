@@ -87,7 +87,7 @@ There are a few things to note:
 For each servers, the extracted informations are :
 * the SCCM site code
 * if the server is a Central Administration Site (CAS) or not
-* the SMB signing status (useful to perform later [NTLM relay](ntlm/relay.md) attacks)
+* the SMB signing status (useful to perform later [NTLM relay](../ntlm/relay.md) attacks)
 * if the server is the SCCM Primary Site server or not
 * if it is the SCCM Distribution Point or not
 * if it is the SCCM SMS Provider or not
@@ -147,12 +147,12 @@ Get-WmiObject -Class SMS_Authority -Namespace root\CCM
 
 The different phases of an SCCM environment compromise are detailled in the following sections.
 
-#### Privileges Escalation
+#### Privilege Escalation
 
 This page will describe how to compromise a SCCM infrastructure.
 
-{% content-ref url="privileges-escalation.md" %}
-[privileges-escalation.md](privileges-escalation.md)
+{% content-ref url="privilege-escalation.md" %}
+[privilege-escalation.md](privilege-escalation.md)
 {% endcontent-ref %}
 
 #### Post-exploitation
