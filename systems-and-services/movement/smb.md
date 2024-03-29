@@ -34,10 +34,10 @@ smbmap -u '' -p '' -H $IP
 smbclient //$IP/$SHARE_NAME
 ```
 
-[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used to test for null session on multiple hosts.
+[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) can be used to test for null session on multiple hosts.
 
 ```bash
-crackmapexec smb $TARGETS -u '' -p '' --shares
+netexec smb $TARGETS -u '' -p '' --shares
 ```
 {% endtab %}
 
@@ -77,7 +77,7 @@ Valid credentials can then be used to list accessible shares and enumerate the c
 
 ### Data exfiltration
 
-Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html) and [CrackMapExec](https://github.com/mpgn/CrackMapExec) can be used to recursively download a SMB share's content.
+Tools like [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html) and [NetExec](https://github.com/Pennyw0rth/NetExec) can be used to recursively download a SMB share's content.
 
 ```bash
 # In an smbclient interactive session
@@ -85,8 +85,8 @@ recurse ON
 prompt OFF
 mget *
 
-# With crackmapexec
-crackmapexec smb $TARGETS -u $USERNAME -p $PASSWORD -M spider_plus -o READ_ONLY=False
+# With netexec
+netexec smb $TARGETS -u $USERNAME -p $PASSWORD -M spider_plus -o READ_ONLY=False
 ```
 
 ### 🛠️ Authenticated RCE
@@ -161,11 +161,11 @@ Dcomexec has a similar approach to psexec but it is executing commands through D
 Exploit
 {% endembed %}
 
-Crackmapexec is a swiss army that has featured a lot of the command execution methods mentionned precedently.
+netexec is a swiss army that has featured a lot of the command execution methods mentionned precedently.
 
 One of its feature is to automate the process of executing code via SMB by switching between methods when one fails.
 
-{% embed url="https://github.com/mpgn/CrackMapExec" %}
+{% embed url="https://github.com/Pennyw0rth/NetExec" %}
 
 ### 🛠️ Unauthenticated RCE
 

