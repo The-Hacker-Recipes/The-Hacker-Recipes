@@ -21,19 +21,19 @@ There are three major types of credential guessing.
 Depending on the target service, different lists of common passwords (e.g. [the SecLists ones](https://github.com/danielmiessler/SecLists/tree/master/Passwords/Common-Credentials)) and different tools can be used.
 
 * [Hydra](https://github.com/vanhauser-thc/thc-hydra) (C) can be used against **a lot (50+)** of services like FTP, HTTP, IMAP, LDAP, MS-SQL, MYSQL, RDP, SMB, SSH and many many more.
-* [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used against LDAP, WinRM, SMB, SSH and MS-SQL.
+* [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) can be used against LDAP, WinRM, SMB, SSH and MS-SQL.
 * [Kerbrute](https://github.com/ropnop/kerbrute) (Go) and [smartbrute](https://github.com/ShutdownRepo/smartbrute) (Python) can be used against [Kerberos pre-authentication](../../kerberos/pre-auth-bruteforce.md).
 
 {% hint style="info" %}
-CrackMapExec has useful options for password guessing
+netexec has useful options for password guessing
 
 * `--no-bruteforce`: tries user1 -> password1, user2 -> password2 instead of trying every password for every user
 * `--continue-on-success`: continues authentication attempts even after successes
 
 Smartbrute has equivalent features
 
-* `--line-per-line`: equivalent of crackmapexec's `--no-bruteforce` option
-* `--stop-on-success`: reversed equivalent of crackmapexec's `--continue-on-success` option
+* `--line-per-line`: equivalent of netexec's `--no-bruteforce` option
+* `--stop-on-success`: reversed equivalent of netexec's `--continue-on-success` option
 {% endhint %}
 
 ### Default passwords

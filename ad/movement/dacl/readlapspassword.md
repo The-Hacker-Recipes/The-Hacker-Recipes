@@ -10,14 +10,14 @@ From UNIX-like systems, [pyLAPS](https://github.com/p0dalirius/pyLAPS) (Python) 
 pyLAPS.py --action get -d 'DOMAIN' -u 'USER' -p 'PASSWORD' --dc-ip 192.168.56.101
 ```
 
-Alternatively, [CrackMapExec](https://github.com/mpgn/CrackMapExec) also has this ability (since v5.1.6).. In case it doesn't work [this public module](https://github.com/T3KX/Crackmapexec-LAPS) for CrackMapExec could also be used.
+Alternatively, [NetExec](https://github.com/Pennyw0rth/NetExec) also has this ability. In case it doesn't work [this public module](https://github.com/T3KX/Crackmapexec-LAPS) for CrackMapExec could also be used.
 
 ```bash
 # Default command
-cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps
+nxc ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps
 
 # The COMPUTER filter can be the name or wildcard (e.g. WIN-S10, WIN-* etc. Default: *)
-cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps -O computer="target-*"
+nxc ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --module laps -O computer="target-*"
 ```
 
 Impacket's ntlmrelayx also carries that feature, usable with the `--dump-laps`.

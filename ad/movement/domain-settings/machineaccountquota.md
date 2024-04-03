@@ -18,10 +18,10 @@ There are multiple ways attackers can leverage that power.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [MachineAccountQuota](https://github.com/ShutdownRepo/CrackMapExec-MachineAccountQuota) module (for [CrackMapExec](https://github.com/mpgn/CrackMapExec)) can be used to check the value of the MachineAccountQuota attribute.
+The [MachineAccountQuota](https://github.com/ShutdownRepo/CrackMapExec-MachineAccountQuota) module (for [NetExec](https://github.com/Pennyw0rth/NetExec)) can be used to check the value of the MachineAccountQuota attribute.
 
 ```bash
-cme ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD -M maq
+nxc ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD -M maq
 ```
 
 Alternatively, it can be done manually with the following Python code.
