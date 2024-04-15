@@ -42,10 +42,21 @@ connection.search(target_dn,"(objectClass=*)", attributes=['ms-DS-MachineAccount
 print(connection.entries[0])
 ```
 
-It can also be retrieved with [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+With [bloodyAD](https://github.com/CravateRouge/bloodyAD).
 
 ```bash
 bloodyad -d $DOMAIN -u $USER -p $PASSWORD --host $DOMAIN_CONTROLLER get object 'DC=acme,DC=local' --attr ms-DS-MachineAccountQuota
+```
+
+With [ldeep](https://github.com/franc-pentest/ldeep):
+
+```bash
+ldeep ldap -d $DOMAIN -u $USER -p $PASSWORD -s $DOMAIN_CONTROLLER search '(objectclass=domain)' | jq '.[]."ms-DS-MachineAccountQuota"'
+```
+
+With ldapsearch (openldap):
+```bash
+ldapsearch -x -H ldap://$DOMAIN_CONTROLLER -b 'DC=acme,DC=local' -D "$USER@$DOMAIN" -W -s sub "(objectclass=domain)" | grep ms-DS-MachineAccountQuota 
 ```
 {% endtab %}
 
