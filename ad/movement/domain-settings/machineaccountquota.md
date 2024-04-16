@@ -70,6 +70,8 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [addcomputer](
 addcomputer.py -computer-name 'SomeName$' -computer-pass 'SomePassword' -dc-host "$DC_HOST" -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
 ```
 
+`addcomputer.py` also has an option `-computer-group` for adding a group to which the account will be added. Because if omitted, the group `CN=Computers` will be used by default.
+
 Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) instead with the `--add-computer` option, like [this](https://arkanoidctf.medium.com/hackthebox-writeup-forest-4db0de793f96)
 
 {% hint style="info" %}
@@ -82,6 +84,18 @@ Host/hostname
 Host/hostname.domain_fqdn
 ```
 {% endhint %}
+
+With [bloodyAD](https://github.com/CravateRouge/bloodyAD):
+
+```bash
+bloodyad -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --host "$DC_HOST" add computer 'SomeName$' 'SomePassword'
+```
+
+With [ldeep](https://github.com/franc-pentest/ldeep):
+
+```bash
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_HOST" create_computer 'SomeName$' 'SomePassword'
+```
 {% endtab %}
 
 {% tab title="Windows" %}
