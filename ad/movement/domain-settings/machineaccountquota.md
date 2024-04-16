@@ -18,13 +18,13 @@ There are multiple ways attackers can leverage that power.
 
 {% tabs %}
 {% tab title="UNIX-like" %}
-The [MachineAccountQuota](https://github.com/ShutdownRepo/CrackMapExec-MachineAccountQuota) module (for [NetExec](https://github.com/Pennyw0rth/NetExec)) can be used to check the value of the MachineAccountQuota attribute.
+The [MachineAccountQuota](https://github.com/ShutdownRepo/CrackMapExec-MachineAccountQuota) module (for [NetExec](https://github.com/Pennyw0rth/NetExec) (Python)) can be used to check the value of the MachineAccountQuota attribute:
 
 ```bash
 nxc ldap $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD -M maq
 ```
 
-Alternatively, it can be done manually with the Python library [ldap3](https://pypi.org/project/ldap3/) ([source](https://github.com/cannatag/ldap3)).
+Alternatively, it can be done manually with the Python library [ldap3](https://pypi.org/project/ldap3/) ([source](https://github.com/cannatag/ldap3)):
 
 ```bash
 import ldap3
@@ -42,19 +42,20 @@ connection.search(target_dn,"(objectClass=*)", attributes=['ms-DS-MachineAccount
 print(connection.entries[0])
 ```
 
-With [bloodyAD](https://github.com/CravateRouge/bloodyAD).
+With [bloodyAD](https://github.com/CravateRouge/bloodyAD) (Python):
 
 ```bash
 bloodyad -d $DOMAIN -u $USER -p $PASSWORD --host $DOMAIN_CONTROLLER get object 'DC=acme,DC=local' --attr ms-DS-MachineAccountQuota
 ```
 
-With [ldeep](https://github.com/franc-pentest/ldeep):
+With [ldeep](https://github.com/franc-pentest/ldeep) (Python):
 
 ```bash
 ldeep ldap -d $DOMAIN -u $USER -p $PASSWORD -s $DOMAIN_CONTROLLER search '(objectclass=domain)' | jq '.[]."ms-DS-MachineAccountQuota"'
 ```
 
-With ldapsearch (openldap):
+With ldapsearch (openldap (C)):
+
 ```bash
 ldapsearch -x -H ldap://$DOMAIN_CONTROLLER -b 'DC=acme,DC=local' -D "$USER@$DOMAIN" -W -s sub "(objectclass=domain)" | grep ms-DS-MachineAccountQuota 
 ```
