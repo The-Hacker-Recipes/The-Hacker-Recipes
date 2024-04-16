@@ -96,6 +96,14 @@ With [ldeep](https://github.com/franc-pentest/ldeep):
 ```bash
 ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_HOST" create_computer 'SomeName$' 'SomePassword'
 ```
+
+With [Certipy](https://github.com/ly4k/Certipy):
+
+```bash
+certipy account create -username "$USER"@"$DOMAIN" -password "$PASSWORD" -dc-ip "$DC_HOST" -user 'SomeName$' -pass 'SomePassword' -dns 'SomeDNS'
+```
+
+Certipy also offers option to set the UPN (`-upn`), SAM account name (`-sam`), SPNS (`-spns`) while creating the computer.
 {% endtab %}
 
 {% tab title="Windows" %}
