@@ -12,11 +12,11 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 * **Credential theft** (dubbed THEFT1 to THEFT5)
 * **Account persistence** (dubbed PERSIST1 to PERSIST3)
-* **Domain escalation** (dubbed ESC1 to ESC8)
+* **Domain escalation** (dubbed ESC1 to ESC14)
   * based on [misconfigured certificate templates](../../movement/ad-cs/certificate-templates.md)
   * based on [dangerous CA configuration](../../movement/ad-cs/certificate-authority.md)
   * related to [access control vulnerabilities](../../movement/ad-cs/access-controls.md)
-  * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](../../movement/ad-cs/web-endpoints.md)
+  * based on an NTLM relay vulnerability related to the [unsigned endpoints of AD CS](../../movement/ad-cs/unsigned-endpoints.md)
 * **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
   * by [forging certificates with a stolen CA certificates](certificate-authority.md#stolen-ca)
   * by [trusting rogue CA certificates](certificate-authority.md#rogue-ca)
