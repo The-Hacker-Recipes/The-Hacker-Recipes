@@ -2,7 +2,7 @@
 
 This abuse can be carried out when controlling an object that has `WriteDacl` over another object.
 
-The attacker can write a new ACE to the target object’s DACL (Discretionary Access Control List). This can give the attacker full control of the target object.
+The attacker can write a new ACE to the target object’s DACL (Discretionary Access Control List). This can give the attacker full control of the target object.&#x20;
 
 Instead of giving full control, the same process can be applied to allow an object to [DCSync](../credentials/dumping/dcsync.md) by adding two ACEs with specific Extended Rights (`DS-Replication-Get-Changes` and `DS-Replication-Get-Changes-All`). Giving full control leads to the same thing since `GenericAll` includes all `ExtendedRights`, hence the two extended rights needed for DCSync to work.
 
@@ -16,17 +16,11 @@ If attacker can write an ACE (`WriteDacl`) for a container or organisational uni
 Impacket's dacledit (Python) can be used with the `-inheritance` flag for that purpose ([PR#1291](https://github.com/fortra/impacket/pull/1291)).
 {% endhint %}
 
-{% hint style="info" %}
-**`adminCount=1`**
-
-If `GenericAll`, `GenericWrite` or `Manage Group Policy Links` privileges are available against an Organisational Unit (OU), then it's possible to compromise its child users and computers with `adminCount=1`.
-
-[OUned.py](https://www.synacktiv.com/en/publications/ounedpy-exploiting-hidden-organizational-units-acl-attack-vectors-in-active-directory) can be used to perform this abuse scenario.
-{% endhint %}
-
 {% tabs %}
 {% tab title="UNIX-like" %}
 From UNIX-like systems, this can be done with [Impacket](https://github.com/SecureAuthCorp/impacket)'s dacledit.py (Python).
+
+:warning: _At the time of writing, May 2nd 2022, the_ [_Pull Request (#1291)_](https://github.com/SecureAuthCorp/impacket/pull/1291) _is still pending._
 
 ```bash
 # Give full control
@@ -71,6 +65,7 @@ Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIden
 A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `-Credential` and `-Domain` options in order to work
 {% endhint %}
 {% endtab %}
+
 {% endtabs %}
 
 ## Resources
