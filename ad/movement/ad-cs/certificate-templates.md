@@ -79,7 +79,7 @@ During Kerberos authentication, the certificate mapping process will call the `S
 * `1`: default value after the patch. If **explicit** mapping is present, authentication is allowed. Otherwise, in the **implicit** case, weak mapping is authorised if the certificate does not contain an SID in the `szOID_NTDS_CA_SECURITY_EXT` extension and the account predates the certificate. **This mode will end on 11/02/2025**
 * `2`:  only strong mapping is allowed. In **implicit** the `szOID_NTDS_CA_SECURITY_EXT` extension must be present and contain the object's SID, in **explicit** only strong types are authorised. In all other cases, authentication is refused.
 
-If the registry key value is `0` and the certificate contains an **UPN value** (normally for a user account), as seen previously, the KDC will first try to associate the certificate with a user whose `userPrincipalName` attribute matches. If no validation can be performed, the KDC looks for an account whose `sAMAccountName` property matches. If it doesn't find one, it tries again by adding a `$` to the end of the user name. In this way, a certificate with a UPN **can be associated with a machine account**.
+If the registry key value is `0` and the certificate contains an **UPN value** (normally for a user account), as seen previously, the KDC will first try to associate the certificate with a user whose `userPrincipalName` attribute matches. If no validation can be performed, the KDC looks for an account whose `sAMAccountName` property matches. If it doesn't find one, it tries again by adding a `$` to the end of the user name. That way, a certificate with a UPN **can be associated with a machine account**.
 
 If the registry key value is `0` and the certificate contains an **DNS value** (normally for a machine account), the KDC splits the user and the domain part, i.e. `user.domain.local` becomes `user` and `domain.local`. The domain part is validated against the Active Directory domain, and the user part is validated adding a `$` at the end, and searching for an account with a corresponding `sAMAccountName`.
 
@@ -95,7 +95,7 @@ As indicated by Jonas Bülow Knudsen [in his article](https://posts.specterops.i
 * the `X509SubjectOnly` and `X509IssuerSubject` mappings are blocked by the mail in the `Subject` field: if the certificate template has the `CT_FLAG_SUBJECT_REQUIRE_EMAIL` attribute, so that the certification authority adds the value of the mail attribute to the `Subject` field of the certificate, it is not possible to perform the explicit `X509SubjectOnly` and `X509IssuerSubject` mappings
 * the full DN cannot be used in the `X509SubjectOnly` and `X509IssuerSubject` mappings: the `distinguishedName` cannot be used in the `X509SubjectOnly` and `X509IssuerSubject` mappings, so the certificate template cannot have the `SUBJECT_REQUIRE_DIRECTORY_PATH` flag for these mappings
 
-It is worth to note that registry parameters only apply on the host on which they are configured. This means that domain controllers is the same Active Directory domain (or forest) can have different configurations for `UseSubjectAltName` and `StrongCertificateBindingEnforcement`, some of which allow weak certificates to be mapped, while others do not.
+It is worth noting that registry parameters only apply on the host on which they are configured. This means that domain controllers is the same Active Directory domain (or forest) can have different configurations for `UseSubjectAltName` and `StrongCertificateBindingEnforcement`, some of which allow weak certificates to be mapped, while others do not.
 
 **Schannel authentication**
 
@@ -593,9 +593,9 @@ There are four possible attack scenarios for exploiting ESC14. In all cases, the
 
 {% hint style="warning" %}
 * the attacker has compromised a **victim** account and is able to request certificates with this account, and wants to compromise a **target** account
-* the certificate template allows the **victim** to enrol
+* the certificate template allows the **victim** to enroll
 * the **victim** matches all the prerequisites for issuing the certificate
-* the certificate template permits authentication
+* the certificate template allows for authentication
 * if the template has the value `CT_FLAG_SUBJECT_ALT_REQUIRE_UPN` or `CT_FLAG_SUBJECT_ALT_REQUIRE_SPN` in the `msPKI-Certificate-Name-Flag` attribute, then:
   * The `UseSubjectAltName` registry key on the DC must be set to `0`
   * authentication can only be performed via PKINIT (Kerberos)
@@ -603,7 +603,7 @@ There are four possible attack scenarios for exploiting ESC14. In all cases, the
   * the **victim** must be a machine
   * authentication can only be performed via PKINIT (Kerberos)
 * if the template indicates `CT_FLAG_SUBJECT_ALT_REQUIRE_EMAIL` or `CT_FLAG_SUBJECT_REQUIRE_EMAIL` in the `msPKI-Certificate-Name-Flag` attribute, one of the following prerequisites must be validated:
-  * the certificate template uses version 1 of the scheme
+  * the certificate template uses version `1` of the scheme
   * the **victim** has his `mail` attribute configured
   * the attacker has write access to the **victim**'s `mail` attribute
 {% endhint %}
