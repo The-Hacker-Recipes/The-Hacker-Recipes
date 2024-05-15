@@ -49,7 +49,7 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 
 ### Networking, protocols and services
 
-* [ ] SMB is required when possible, especially on sensitive servers, preventing [NTLM relay](ntlm/relay.md) attacks.
+* [ ] SMB signing is required when possible, especially on sensitive servers, preventing [NTLM relay](ntlm/relay.md) attacks.
 * [ ] LDAP signing is required on Domain Controllers, preventing [NTLM relay](ntlm/relay.md) attacks.
 * [ ] Extended Protection for Authentication (EPA) is required, especially for Domain Controllers supporting LDAPS, preventing [NTLM relay](ntlm/relay.md) attacks.
 * [ ] IPv6 is either fully configured and used or disabled, preventing [DHCPv6 spoofing with DNS poisoning](mitm-and-coerced-authentications/dhcpv6-spoofing.md) attacks.
