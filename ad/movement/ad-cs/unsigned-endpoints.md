@@ -12,9 +12,9 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 >
 > ([specterops.io](https://posts.specterops.io/certified-pre-owned-d95910965cd2#5c3c))
 
-Following this, [Sylvain Heiniger](https://twitter.com/sploutchy) from Compass Security has found a similar vulnerability on the AD CS RPC enrollment endpoint. As described in [his article](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/), RPC interfaces allows you to check the NTLM signature on each independently.
+Following this, [Sylvain Heiniger](https://twitter.com/sploutchy) from Compass Security has found a similar vulnerability on the AD CS RPC enrollment endpoint. As described in [his article](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/), RPC interfaces allow you to check the NTLM signature on each independently.
 
-For certificate request purpose, the `MS-ICPR` (ICertPassage Remote Protocol) RPC interface is used. According to the [Microsoft documentation](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-icpr/0c6f150e-3ead-4006-b37f-ebbf9e2cf2e7), packet privacy is enabled if the `IF_ENFORCEENCRYPTICERTREQUEST` flag is set (default configuration), meaning that NTLM relay attacks are not possible.
+For certificate request purposes, the `MS-ICPR` (ICertPassage Remote Protocol) RPC interface is used. According to the [Microsoft documentation](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-icpr/0c6f150e-3ead-4006-b37f-ebbf9e2cf2e7), packet privacy is enabled if the `IF_ENFORCEENCRYPTICERTREQUEST` flag is set (default configuration), meaning that NTLM relay attacks are not possible.
 
 These attacks, like all [NTLM relay attacks](../ntlm/relay.md), require a victim account to authenticate to an attacker-controlled machine. An attacker can coerce authentication by many means, see [MITM and coerced authentication coercion techniques](../mitm-and-coerced-authentications/). Once the incoming authentication is received by the attacker, it can be relayed to an AD CS web endpoint.
 
