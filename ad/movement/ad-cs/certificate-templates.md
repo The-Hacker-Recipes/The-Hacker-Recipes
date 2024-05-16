@@ -24,6 +24,8 @@ This section focuses on how a certificate is associated with an account object. 
 
 Understanding certificate mapping is essential to understand [ESC9](certificate-templates.md#no-security-extension-esc9), [ESC10](certificate-templates.md#weak-certificate-mapping-esc10) and [ESC14](certificate-templates.md#weak-explicit-mapping-esc14).
 
+Mapping can be **implicit** or **explicit**, and **strong** or **weak**. These two notions work together, and the mapping of a certificate will use one option of each part (implicit and strong, or explicit and strong, and so on).
+
 #### Implicit and explicit mapping
 
 **Implicit certificate mapping**
@@ -46,7 +48,7 @@ In AD CS, the certificate template specifies how the CA should populate the `Sub
 
 #### Certificate attributes
 
-The options in the "Subject Name" tab of the Windows Certificate Template Console correspond to the flags in the `msPKI-Certificate-Name-Flag` attribute of the certificate template. Flags whose names follow the pattern `CT_FLAG_SUBJECT_REQUIRE_<attribute>` relate to the information contained in the `Subject` field of the certificate, and `CT_FLAG_SUBJECT_ALT_REQUIRE_<attribute>` relates to the SAN extension.
+Before explaining weak and strong labels, it is important to talk about certificate attributs. The options in the "Subject Name" tab of the Windows Certificate Template Console correspond to the flags in the `msPKI-Certificate-Name-Flag` attribute of the certificate template. Flags whose names follow the pattern `CT_FLAG_SUBJECT_REQUIRE_<attribute>` relate to the information contained in the `Subject` field of the certificate, and `CT_FLAG_SUBJECT_ALT_REQUIRE_<attribute>` relates to the SAN extension.
 
 When a certificate template requires an attribute from the enrolled account, but the enrolled account does not have that attribute or it is not defined, the behaviour may differ. Most flags are strong requirements (i.e. enrolment fails if the attribute is not defined for the enrolled account), but there are exceptions, as shown in the table below: 
 
@@ -59,7 +61,9 @@ Some flags prevent default users/computers from enrolling in a given certificate
 * `userPrincipalName`: the UPN attribute is not set by default for computers, but it is for users
 * `cn` : all AD objects have a `cn` attribute set by default
 
-#### Strong mapping
+#### Weak and strong mapping
+
+As explained before, _weak_ and _strong_ "labels" are applied to certificate mapping and will influence on the final behavior of explicit and implicit mappings during Kebreros and Schannel authentications.
 
 Following [CVE-2022–26923](https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4) ([certifried.md](certifried.md "mention")) discovered by [Olivier Lyak](https://twitter.com/ly4k\_), Microsoft has implemented a new security extension for the issued certificates, and two new registry keys to properly deal with certificate mapping.
 
@@ -69,7 +73,7 @@ Following [CVE-2022–26923](https://research.ifcr.dk/certifried-active-director
 
 **Kerberos authentication**
 
-In the case of Kerberos authentication, the introduction of strong mapping for **implicit** matching means that the object's SID can be used (via the `szOID_NTDS_CA_SECURITY_EXT` certificate extension) rather than the UPN and DNS, which can be easily spoofed.
+In the case of Kerberos authentication, the introduction of _strong_ mapping for **implicit** matching means that the object's SID can be used (via the `szOID_NTDS_CA_SECURITY_EXT` certificate extension) rather than the UPN and DNS, which can be easily spoofed.
 
 In the case of **explicit** mapping, the update has implemented _weak_ and _strong_ "labels" on the mapping types (see table in the **Explicit certificate mapping** section above). The use of strong mapping implies the use of the corresponding mapping types.
 
@@ -608,9 +612,39 @@ There are four possible attack scenarios for exploiting ESC14. In all cases, the
   * the attacker has write access to the **victim**'s `mail` attribute
 {% endhint %}
 
-Sufficient DACL to write `altSecurityIdentities` attributes can be detected using the [Get-WriteAltSecIDACEs.ps1](https://github.com/JonasBK/Powershell/blob/master/Get-WriteAltSecIDACEs.ps1) script (PowerShell).
+Sufficient DACL to write `altSecurityIdentities` attributes can be detected like this:
 
-Detection of weak explicit mapping can be done with the [Get-AltSecIDMapping.ps1](https://github.com/JonasBK/Powershell/blob/master/Get-AltSecIDMapping.ps1) script (PowerShell).
+{% tabs %}
+{% tab title="UNIX-like" %}
+From UNIX-like systems, this can be done with [Impacket](https://github.com/SecureAuthCorp/impacket)'s dacledit.py (Python).
+
+```bash
+dacledit.py -action 'read' -principal 'controlled_object' -target 'target_object' 'domain'/'user':'password'
+```
+
+It is also possible to view the necessary DACL in BloodHound.
+{% endtab %}
+
+{% tab title="Windows" %}
+From Windows systems, this can be done with [Get-WriteAltSecIDACEs.ps1](https://github.com/JonasBK/Powershell/blob/master/Get-WriteAltSecIDACEs.ps1) (PowerShell).
+
+```powershell
+# Get the ACEs for a single object based on DistinguishedName
+Get-WriteAltSecIDACEs -DistinguishedName "dc=domain,dc=local"
+
+# Get ACEs of all AD objects under domain root by piping them into Get-WriteAltSecIDACEs
+Get-ADObject -Filter * -SearchBase "dc=domain,dc=local" | Get-WriteAltSecIDACEs
+```
+
+It is also possible to view the necessary DACL in BloodHound.
+{% endtab %}
+{% endtabs %}
+
+Detection of weak explicit mapping can be done with the [Get-AltSecIDMapping.ps1](https://github.com/JonasBK/Powershell/blob/master/Get-AltSecIDMapping.ps1) script (PowerShell) from a Windows machine. At the time of writing (May 16st, 2024), there is no solution to perform this check from a UNIX-like system.
+
+```powershell
+Get-AltSecIDMapping -SearchBase "CN=Users,DC=domain,DC=local"
+```
 
 #### ESC14 A - Write access on altSecurityIdentities
 
