@@ -12,7 +12,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 >
 > ([specterops.io](https://posts.specterops.io/certified-pre-owned-d95910965cd2#5c3c))
 
-Following this, [Sylvain Heiniger](https://twitter.com/sploutchy) from Compass Security has found a similar vulnerability on the AD CS RPC enrollment endpoint. As described in [his article](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/), RPC interfaces allow you to check the NTLM signature on each independently.
+Following this, [Sylvain Heiniger](https://twitter.com/sploutchy) from Compass Security has found a similar vulnerability on the AD CS RPC enrollment endpoint. As described in [his article](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/), each RPC interface checks the NTLM signature independently.
 
 For certificate request purposes, the `MS-ICPR` (ICertPassage Remote Protocol) RPC interface is used. According to the [Microsoft documentation](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-icpr/0c6f150e-3ead-4006-b37f-ebbf9e2cf2e7), packet privacy is enabled if the `IF_ENFORCEENCRYPTICERTREQUEST` flag is set (default configuration), meaning that NTLM relay attacks are not possible.
 
@@ -48,12 +48,12 @@ For instance, if the relayed principal is a domain controller, the `DomainContro
 
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) and identify enabled HTTP endpoint ([how to enumerate](./#attack-paths)).
 
-<pre class="language-python"><code class="lang-python"><strong># find ESC8-vulnerable CAs
-</strong><strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep -B20 ESC8
-</strong><strong>
-</strong><strong># find and look through enabled templates for ones that could be used for authentication
-</strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
-</code></pre>
+```bash
+# find ESC8-vulnerable CAs
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep -B20 ESC8
+# find and look through enabled templates for ones that could be used for authentication
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
+```
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -105,12 +105,12 @@ For instance, if the relayed principal is a domain controller, the `DomainContro
 
 [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate information regarding the certificate templates (EKUs allowing for authentication, allowing low-priv users to enroll, etc.) and identify a vulnerable RPC endpoint ([how to enumerate](./#attack-paths)).
 
-<pre class="language-python"><code class="lang-python"><strong># find ESC11-vulnerable CAs
-</strong><strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep -B20 ESC11
-</strong><strong>
-</strong><strong># find and look through enabled templates for ones that could be used for authentication
-</strong>certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
-</code></pre>
+```bash
+# find ESC11-vulnerable CAs
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout | grep -B20 ESC11
+# find and look through enabled templates for ones that could be used for authentication
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
+```
 
 {% hint style="info" %}
 By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
