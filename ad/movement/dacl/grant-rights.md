@@ -14,14 +14,12 @@ Story time, Exchange Servers used to have `WriteDacl` over domain objects, allow
 If attacker can write an ACE (`WriteDacl`) for a container or organisational unit (OU), if inheritance flags are added (`0x01+ 0x02`) to the ACE, and inheritance is enabled for an object in that container/OU, the ACE will be applied to it. By default, all the objects with `AdminCount=0` will inherit ACEs from their parent container/OU.
 
 Impacket's dacledit (Python) can be used with the `-inheritance` flag for that purpose ([PR#1291](https://github.com/fortra/impacket/pull/1291)).
-{% endhint %}
 
-{% hint style="info" %}
-**`adminCount=1`**
+**adminCount=1**
 
-If `GenericAll`, `GenericWrite` or `Manage Group Policy Links` privileges are available against an Organisational Unit (OU), then it's possible to compromise its child users and computers with `adminCount=1`.
+In April 2024, [Synacktiv explained](https://www.synacktiv.com/en/publications/ounedpy-exploiting-hidden-organizational-units-acl-attack-vectors-in-active-directory) that if `GenericAll`, `GenericWrite` or `Manage Group Policy Links` privileges are available against an Organisational Unit (OU), then it's possible to compromise its child users and computers with `adminCount=1` through "gPLink spoofing".
 
-[OUned.py](https://www.synacktiv.com/en/publications/ounedpy-exploiting-hidden-organizational-units-acl-attack-vectors-in-active-directory) can be used to perform this abuse scenario.
+This can be performed with [OUned.py](https://github.com/synacktiv/OUned).
 {% endhint %}
 
 {% tabs %}
