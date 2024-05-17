@@ -107,7 +107,7 @@
     * [Certificate templates](ad/movement/ad-cs/certificate-templates.md)
     * [Certificate authority](ad/movement/ad-cs/certificate-authority.md)
     * [Access controls](ad/movement/ad-cs/access-controls.md)
-    * [Web endpoints](ad/movement/ad-cs/web-endpoints.md)
+    * [Unsigned endpoints](ad/movement/ad-cs/unsigned-endpoints.md)
     * [Certifried](ad/movement/ad-cs/certifried.md)
   * [SCCM / MECM](ad/movement/sccm-mecm/README.md)
     * [Privilege escalation](ad/movement/sccm-mecm/privilege-escalation.md)

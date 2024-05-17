@@ -553,7 +553,7 @@ TODO // Regular permissions, ACE, and whatnot abuses, but now between foreign pr
 
 #### 🛠️ ADCS abuse
 
-When an ADCS is installed and configured in an Active Directory environment, a CA is available for the whole forest. Every usual ADCS attack can be executed through intra-forest trusts. [ESC8](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints) and [ESC11](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/) in particular can be used to pivot to any domain within the forest associated to the C
+When an ADCS is installed and configured in an Active Directory environment, a CA is available for the whole forest. Every usual ADCS attack can be executed through intra-forest trusts. [ESC8](https://www.thehacker.recipes/ad/movement/ad-cs/unsigned-endpoints#web-endpoint-esc8) and [ESC11](https://www.thehacker.recipes/ad/movement/ad-cs/unsigned-endpoints#rpc-endpoint-esc11) in particular can be used to pivot to any domain within the forest associated to the C
 
 #### 🛠️ Group memberships
 

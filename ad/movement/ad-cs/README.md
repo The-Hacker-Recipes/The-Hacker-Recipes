@@ -8,11 +8,11 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 * **Credential theft** (dubbed THEFT1 to THEFT5)
 * **Account persistence** (dubbed PERSIST1 to PERSIST3)
-* **Domain escalation** (dubbed ESC1 to ESC8)
+* **Domain escalation** (dubbed ESC1 to ESC14)
   * based on [misconfigured certificate templates](certificate-templates.md)
   * based on [dangerous CA configuration](certificate-authority.md)
   * related to [access control vulnerabilities](access-controls.md)
-  * based on an NTLM relay vulnerability related to the [web endpoints of AD CS](web-endpoints.md)
+  * based on an NTLM relay vulnerability related to the [web and RPC endpoints of AD CS](unsigned-endpoints.md)
 * **Domain persistence** (dubbed DPERSIST1 to DPERSIST3)
   * by [forging certificates with a stolen CA certificates](certificate-authority.md#stolen-ca)
   * by trusting rogue CA certificates
@@ -131,10 +131,10 @@ The different domain escalation scenarios are detailed in the following parts.
 [access-controls.md](access-controls.md)
 {% endcontent-ref %}
 
-#### Technique dubbed ESC8
+#### Technique dubbed ESC8, ESC11
 
-{% content-ref url="web-endpoints.md" %}
-[web-endpoints.md](web-endpoints.md)
+{% content-ref url="unsigned-endpoints.md" %}
+[unsigned-endpoints.md](unsigned-endpoints.md)
 {% endcontent-ref %}
 
 ## Resources
