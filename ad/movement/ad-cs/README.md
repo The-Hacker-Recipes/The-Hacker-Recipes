@@ -113,13 +113,13 @@ Certify.exe cas
 
 The different domain escalation scenarios are detailed in the following parts.
 
-#### Techniques dubbed ESC1 to ESC3, ESC9 and ESC10
+#### Techniques dubbed ESC1 to ESC3, ESC9, ESC10, ESC13 and ESC14
 
 {% content-ref url="certificate-templates.md" %}
 [certificate-templates.md](certificate-templates.md)
 {% endcontent-ref %}
 
-#### Technique dubbed ESC6
+#### Techniques dubbed ESC6 and ESC12
 
 {% content-ref url="certificate-authority.md" %}
 [certificate-authority.md](certificate-authority.md)
