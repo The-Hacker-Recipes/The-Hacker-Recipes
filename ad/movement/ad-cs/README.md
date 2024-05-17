@@ -20,6 +20,38 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 ## Practice
 
+### Escalation techniques
+
+[#template-allows-san-esc1](certificate-templates.md#template-allows-san-esc1 "mention")
+
+[#any-purpose-eku-esc2](certificate-templates.md#any-purpose-eku-esc2 "mention")
+
+[#certificate-agent-eku-esc3](certificate-templates.md#certificate-agent-eku-esc3 "mention")
+
+[#certificate-templates-esc4](access-controls.md#certificate-templates-esc4 "mention")
+
+[#other-objects-esc5](access-controls.md#other-objects-esc5 "mention")
+
+[#editf\_attributesubjectaltname2-esc6](certificate-authority.md#editf\_attributesubjectaltname2-esc6 "mention")
+
+[#certificate-authority-esc7](access-controls.md#certificate-authority-esc7 "mention")
+
+[#web-endpoint-esc8](unsigned-endpoints.md#web-endpoint-esc8 "mention")
+
+[#no-security-extension-esc9](certificate-templates.md#no-security-extension-esc9 "mention")
+
+[#weak-certificate-mapping-esc10](certificate-templates.md#weak-certificate-mapping-esc10 "mention")
+
+[#rpc-endpoint-esc11](unsigned-endpoints.md#rpc-endpoint-esc11 "mention")
+
+[#shell-access-to-adcs-ca-with-yubihsm-esc12](certificate-authority.md#shell-access-to-adcs-ca-with-yubihsm-esc12 "mention")
+
+[#issuance-policiy-with-privileged-group-linked-esc13](certificate-templates.md#issuance-policiy-with-privileged-group-linked-esc13 "mention")
+
+[#weak-explicit-mapping-esc14](certificate-templates.md#weak-explicit-mapping-esc14 "mention")&#x20;
+
+[certifried.md](certifried.md "mention")
+
 ### Terminology
 
 > * **PKI** (Public Key Infrastructure) — a system to manage certificates/public key encryption
@@ -49,7 +81,7 @@ Alternatively, information like the PKI's CA and DNS names can be gathered throu
 
 {% tabs %}
 {% tab title="netexec" %}
- [netexec](https://github.com/Pennyw0rth/NetExec)'s [adcs](https://github.com/Pennyw0rth/NetExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
+[netexec](https://github.com/Pennyw0rth/NetExec)'s [adcs](https://github.com/Pennyw0rth/NetExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
 
 ```bash
 netexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
