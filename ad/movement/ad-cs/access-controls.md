@@ -67,7 +67,7 @@ If a more precise template modification is needed, [modifyCertTemplate](https://
 
 ```bash
 # 1. Disable Manager Approval Requirement
-modifyCertTemplate.py -template templateName -value 2 -property mspki-enrobashllment-flag "$DOMAIN/$USER:$PASSWORD"
+modifyCertTemplate.py -template templateName -value 2 -property mspki-enrollment-flag "$DOMAIN/$USER:$PASSWORD"
 
 # 2. Disable Authorized Signature Requirement
 modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature "$DOMAIN/$USER:$PASSWORD"
