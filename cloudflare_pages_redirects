@@ -1,0 +1,23 @@
+# https://developers.cloudflare.com/pages/configuration/redirects/
+# [source]  [destination]   [code?]
+
+# Static redirects
+/a-d/movement/credentials/dumping/passwords-in-memory   /ad/movement/credentials/dumping/in-memory
+/a-d/movement/sccm-mecm/post-exploitation   /ad/movement/sccm-mecm/lateral-movement
+/a-d/movement/credentials/bruteforcing/password-spraying    /ad/movement/credentials/bruteforcing/spraying
+/a-d/movement/domain-settings/builtin-groups    /ad/movement/builtins/security-groups
+/a-d/persistence/access-controls    /ad/persistence/dacl
+/a-d/persistence/ad-cs    /ad/persistence/adcs
+/a-d/movement/ad-cs   /ad/movement/adcs
+/web/config/http-headers/cors-cross-origin-resource-sharing /web/config/http-headers/cors
+/web/configuration/oauth-2.0    /web/config/identity-and-access-management/oauth-2.0
+/web/inputs/insecure-json-web-tokens    /web/inputs/jwt
+/web/inputs/xss-cross-site-scripting    /web/inputs/xss
+
+# Dynamic redirects
+/a-d/movement/domain-settings/*   /ad/movement/builtins/:splat
+/a-d/persistence/access-controls/*    /ad/persistence/dacl/:splat
+/a-d/persistence/ad-cs/*    /ad/persistence/adcs/:splat
+/a-d/movement/ad-cs/*   /ad/movement/adcs/:splat
+/ad/movement/ad-cs/*   /ad/movement/adcs/:splat
+/a-d/*   /ad/:splat

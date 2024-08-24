@@ -1,2 +1,0 @@
-# Accounts and sessions
-

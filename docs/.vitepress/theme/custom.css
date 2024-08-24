@@ -1,0 +1,149 @@
+/* SOME VARS */
+
+:root {
+    --vp-c-bg-softer: #e9e9e9;
+    --vp-c-text-20: rgba(109, 109, 122, 0.78);
+    --vp-c-pink-1: #b642c1;
+    --vp-c-pink-2: #bf4cc9;
+    --vp-c-pink-3: #cf5cd9;
+    --vp-c-pink-soft: rgba(225, 122, 234, 0.14);
+}
+  
+.dark {
+    --vp-c-bg-softer: #2f3038;
+    --vp-c-text-20: rgba(235, 235, 245, 0.6);
+    --vp-c-pink-1: #faabef;
+    --vp-c-pink-2: #d979e6;
+    --vp-c-pink-3: #ca5cd9;
+    --vp-c-pink-soft: rgba(225, 122, 234, 0.16);
+}
+
+/* CUSTOM BLOCKS PADDING FIX */
+.custom-block{
+    padding: 16px;
+}
+
+/*SUCCESS BLOCK CSS*/
+
+.custom-block.success {
+    border-color: var(--vp-c-success-soft);
+    color: var(--vp-custom-block-info-text);
+    background-color: var(--vp-c-success-soft);
+    border:0px;
+}
+
+.custom-block.success a,
+.custom-block.success code {
+    color: var(--vp-c-success-1);
+}
+
+.custom-block.success a:hover,
+.custom-block.success a:hover > code {
+    color: var(--vp-c-success-2);
+}
+
+.custom-block.success code {
+    background-color: var(--vp-c-success-soft);
+}
+
+/* CAPTION IMG FRAMES */
+
+.caption {
+    text-align: center;
+}
+
+/* YOUTUBE CONTAINER */
+
+.youtube-embed {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+    margin: 1em 0;
+    text-align: center;
+    border-radius: 8px;
+}
+  
+.youtube-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: None; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+  
+/* EXTENDED MEDIUM-ZOOM-IMAGES */
+
+.medium-zoom-overlay {
+    z-index: 900;
+}
+
+.medium-zoom-image {
+    border-radius: .25rem;
+    border: 1px solid #ececec;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 999;
+}
+
+.dark .medium-zoom-image {
+    border: 1px solid #3b3b3b;
+}
+
+
+/* RAW IMAGES */
+
+.rawimg {
+    border-radius: 0;
+    border: 0;
+}
+
+.dark .rawimg {
+    border-radius: 0;
+    border: 0;
+}
+
+/* DETAILS SUMMARY FIX */
+
+.custom-block.details summary {
+    margin: 0;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* CODE WRAP */
+
+.vp-doc [class*='language-'] pre, .vp-doc [class*='language-'] code {
+    white-space: pre-wrap;
+}
+
+/* LOGO FIX MARGIN */
+
+.logo{
+    margin-left: 0;
+}

@@ -1,0 +1,23 @@
+on: [push]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Build
+        run: npm install && npm run docs:build
+      - name: Move redirections file for CloudFlare Pages
+        run: cp -v cloudflare_pages_redirects docs/.vitepress/dist/_redirects
+      - name: Publish
+        uses: cloudflare/pages-action@main
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: thehackerrecipes-test
+          directory: docs/.vitepress/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
