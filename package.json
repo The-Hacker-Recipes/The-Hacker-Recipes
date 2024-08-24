@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
+    "vitepress-plugin-tabs": "^0.5.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "markdown-it-container": "^4.0.0",
+    "medium-zoom": "^1.1.0"
+  }
+}

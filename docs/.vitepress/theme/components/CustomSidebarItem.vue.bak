@@ -1,0 +1,397 @@
+<script setup lang="ts">
+import type { DefaultTheme } from 'vitepress/theme'
+import { computed, onMounted, ref, watch } from 'vue'  // Importez onMounted, ref et watch
+import { useSidebarControl } from 'vitepress/dist/client/theme-default/composables/sidebar'
+import VPLink from 'vitepress/dist/client/theme-default/components/VPLink.vue'
+
+const props = defineProps<{
+  item: DefaultTheme.SidebarItem
+  depth: number
+}>()
+
+const {
+  collapsed,
+  collapsible,
+  isLink,
+  isActiveLink,
+  hasActiveLink,
+  hasChildren,
+  toggle
+} = useSidebarControl(computed(() => props.item))
+
+const badgeText = computed(() => {
+  if (props.item.badge === 'new') return 'N'
+  if (props.item.badge === 'wip') return 'I'
+  return ''
+})
+
+const badgeHoverText = computed(() => {
+  if (props.item.badge === 'new') return 'New !'
+  if (props.item.badge === 'wip') return 'Incomplete'
+  return ''
+})
+
+const badgeClass = computed(() => {
+  if (badgeText.value === 'N') return 'badge-new'
+  if (badgeText.value === 'I') return 'badge-wip'
+  return ''
+})
+
+const sectionTag = computed(() => (hasChildren.value ? 'section' : 'div'))
+const linkTag = computed(() => (isLink.value ? 'a' : 'div'))
+const textTag = computed(() => {
+  return !hasChildren.value
+    ? 'p'
+    : props.depth + 2 === 7
+      ? 'p'
+      : `h${props.depth + 2}`
+})
+const itemRole = computed(() => (isLink.value ? undefined : 'button'))
+
+const classes = computed(() => [
+  [`level-${props.depth}`],
+  { collapsible: collapsible.value },
+  { collapsed: collapsed.value },
+  { 'is-link': isLink.value },
+  { 'is-active': isActiveLink.value },
+  { 'has-active': hasActiveLink.value }
+])
+
+function onItemInteraction(e: MouseEvent | Event) {
+  if ('key' in e && e.key !== 'Enter') {
+    return
+  }
+  !props.item.link && toggle()
+}
+
+function onCaretClick() {
+  props.item.link && toggle()
+}
+
+const badgeWidth = ref(20); // Largeur initiale du badge
+
+onMounted(() => {
+  updateBadgeWidth('.badge-new');
+  updateBadgeWidth('.badge-wip');
+});
+
+watch(() => props.item.badge, () => {
+  updateBadgeWidth('.badge-new');
+  updateBadgeWidth('.badge-wip');
+});
+
+function updateBadgeWidth(badgeSelector) {
+  const badgeElement = document.querySelector(badgeSelector);
+  const fullTextElement = badgeElement?.querySelector('.badge-full-text');
+  const maxWidth = 150; // Largeur maximale souhaitée
+
+  if (badgeElement && fullTextElement) {
+    badgeElement.style.width = `${badgeWidth.value}px`;
+    
+    badgeElement.addEventListener('mouseover', () => {
+      const fullTextWidth = Math.min(fullTextElement.scrollWidth + 4, maxWidth); // Limite la largeur
+      console.log(`Expanding badge: ${fullTextWidth}px`);
+      badgeElement.style.width = `${fullTextWidth}px`;
+    });
+
+    badgeElement.addEventListener('mouseout', () => {
+      console.log(`Collapsing badge back to: ${badgeWidth.value}px`);
+      badgeElement.style.width = `${badgeWidth.value}px`; // Revenir à la largeur initiale
+    });
+  } else {
+    console.error(`Badge or fullTextElement not found for ${badgeSelector}`); // Debug: Indiquez si l'élément n'est pas trouvé
+  }
+}
+
+
+
+
+</script>
+
+<template>
+  <component :is="sectionTag" class="VPSidebarItem" :class="classes">
+    <div
+      v-if="item.text"
+      class="item"
+      :role="itemRole"
+      v-on="
+        item.items
+          ? { click: onItemInteraction, keydown: onItemInteraction }
+          : {}
+      "
+      :tabindex="item.items && 0"
+    >
+      <div class="indicator" />
+
+      <VPLink
+        v-if="isLink"
+        :tag="linkTag"
+        class="link"
+        :href="item.link"
+        :rel="item.rel"
+        :target="item.target"
+      >
+        <div class="badge-container">
+          <span v-if="badgeText" :class="['badge', badgeClass]">
+            <span class="badge-text">{{ badgeText }}</span>
+            <span class="badge-full-text">{{ badgeHoverText }}</span>
+          </span>
+        </div>
+        <component :is="textTag" class="text">
+          {{ item.text }}
+        </component>
+      </VPLink>
+      <component v-else :is="textTag" class="text">
+        <div class="badge-container">
+          <span v-if="badgeText" :class="['badge', badgeClass]">
+            <span class="badge-text">{{ badgeText }}</span>
+            <span class="badge-full-text">{{ badgeHoverText }}</span>
+          </span>
+        </div>
+        {{ item.text }}
+      </component>
+
+      <div
+        v-if="item.collapsed != null && item.items && item.items.length"
+        class="caret"
+        role="button"
+        aria-label="toggle section"
+        @click="onCaretClick"
+        @keydown.enter="onCaretClick"
+        tabindex="0"
+      >
+        <span class="vpi-chevron-right caret-icon" />
+      </div>
+    </div>
+
+    <div v-if="item.items && item.items.length" class="items">
+      <template v-if="depth < 5">
+        <CustomSidebarItem
+          v-for="i in item.items"
+          :key="i.text"
+          :item="i"
+          :depth="depth + 1"
+        />
+      </template>
+    </div>
+  </component>
+</template>
+
+<style scoped>
+.VPSidebarItem.level-0 {
+  padding-bottom: 24px;
+}
+
+.VPSidebarItem.collapsed.level-0 {
+  padding-bottom: 10px;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.VPSidebarItem.collapsible > .item {
+  cursor: pointer;
+}
+
+.indicator {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: -17px;
+  width: 2px;
+  border-radius: 2px;
+  transition: background-color 0.25s;
+}
+
+.VPSidebarItem.level-2.is-active > .item > .indicator,
+.VPSidebarItem.level-3.is-active > .item > .indicator,
+.VPSidebarItem.level-4.is-active > .item > .indicator,
+.VPSidebarItem.level-5.is-active > .item > .indicator {
+  background-color: var(--vp-c-brand-1);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.text {
+  flex-grow: 1;
+  padding: 4px 0;
+  line-height: 24px;
+  font-size: 14px;
+  transition: color 0.25s;
+}
+
+.VPSidebarItem.level-0 .text {
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+}
+
+.VPSidebarItem.level-1 .text,
+.VPSidebarItem.level-2 .text,
+.VPSidebarItem.level-3 .text,
+.VPSidebarItem.level-4 .text,
+.VPSidebarItem.level-5 .text {
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+}
+
+.VPSidebarItem.level-0.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-1.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-2.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-3.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-4.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-5.is-link > .item > .link:hover .text {
+  color: var(--vp-c-brand-1);
+}
+
+.VPSidebarItem.level-0.has-active > .item > .text,
+.VPSidebarItem.level-1.has-active > .item > .text,
+.VPSidebarItem.level-2.has-active > .item > .text,
+.VPSidebarItem.level-3.has-active > .item > .text,
+.VPSidebarItem.level-4.has-active > .item > .text,
+.VPSidebarItem.level-5.has-active > .item > .text,
+.VPSidebarItem.level-0.has-active > .item > .link > .text,
+.VPSidebarItem.level-1.has-active > .item > .link > .text,
+.VPSidebarItem.level-2.has-active > .item > .link > .text,
+.VPSidebarItem.level-3.has-active > .item > .link > .text,
+.VPSidebarItem.level-4.has-active > .item > .link > .text,
+.VPSidebarItem.level-5.has-active > .item > .link > .text {
+  color: var(--vp-c-text-1);
+}
+
+.VPSidebarItem.level-0.is-active > .item .link > .text,
+.VPSidebarItem.level-1.is-active > .item .link > .text,
+.VPSidebarItem.level-2.is-active > .item .link > .text,
+.VPSidebarItem.level-3.is-active > .item .link > .text,
+.VPSidebarItem.level-4.is-active > .item .link > .text,
+.VPSidebarItem.level-5.is-active > .item .link > .text {
+  color: var(--vp-c-brand-1);
+}
+
+.caret {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -7px;
+  width: 32px;
+  height: 32px;
+  color: var(--vp-c-text-3);
+  cursor: pointer;
+  transition: color 0.25s;
+  flex-shrink: 0;
+}
+
+.item:hover .caret {
+  color: var(--vp-c-text-2);
+}
+
+.item:hover .caret:hover {
+  color: var(--vp-c-text-1);
+}
+
+.caret-icon {
+  font-size: 18px;
+  transform: rotate(90deg);
+  transition: transform 0.25s;
+}
+
+.VPSidebarItem.collapsed .caret-icon {
+  transform: rotate(0);
+}
+
+.VPSidebarItem.level-1 .items,
+.VPSidebarItem.level-2 .items,
+.VPSidebarItem.level-3 .items,
+.VPSidebarItem.level-4 .items,
+.VPSidebarItem.level-5 .items {
+  border-left: 1px solid var(--vp-c-divider);
+  padding-left: 16px;
+}
+
+.VPSidebarItem.collapsed .items {
+  display: none;
+}
+
+/* Styles pour les badges */
+.badge-container {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Centrer le contenu horizontalement */
+  width: 20px; /* Largeur initiale pour le cercle parfait */
+  height: 20px; /* Hauteur pour le cercle parfait */
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 12px; /* Bords arrondis fixes */
+  background-color: var(--vp-c-bg-softer);
+  color: var(--vp-c-text-1);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap; /* Empêche le texte de se répartir sur plusieurs lignes */
+  transition: width 0.6s ease, padding-right 0.6s ease, background-color 0.6s ease; /* Transition pour la largeur, le padding droit, et la couleur de fond */
+}
+
+.badge-new {
+  background-color: var(--vp-c-pink-soft);
+  color: var(--vp-c-pink-2);
+}
+
+.badge-wip {
+  background-color: var(--vp-c-bg-softer);
+  color: var(--vp-c-text-20);
+}
+
+.badge-text {
+  display: inline-block;
+  text-align: center;
+  z-index: 2;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 1;
+  transition: opacity 0.4s ease; /* Transition de fade in/out */
+}
+
+.badge-full-text {
+  display: inline-block;
+  opacity: 0;
+  padding-left: 4px;
+  z-index: 1;
+  transition: opacity 0.4s ease; /* Transition de fade in/out */
+}
+
+/* Transition fluide lors du hover */
+.badge:hover {
+  padding-right: 8px; /* Ajout de padding pour l'espacement */
+  justify-content: flex-start; /* Aligner le contenu à gauche lors du hover */
+}
+
+.badge:hover .badge-text {
+  opacity: 0; /* Disparition de la première lettre avec fade out */
+}
+
+.badge:hover .badge-full-text {
+  opacity: 1; /* Apparition du texte complet avec fade in */
+}
+
+/* Alignement du texte de l'article */
+.text {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0; /* Assurez-vous qu'il n'y a pas de décalage initial */
+}
+
+
+</style>

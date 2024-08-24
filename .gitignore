@@ -1,2 +1,17 @@
-# PyCharm workspace
+# Node modules
+node_modules/
+
+# PyCharm and Python workspace
 .idea/
+
+# VitePress build output
+docs/.vitepress/dist/
+docs/.vitepress/.temp/
+
+# VitePress cache
+docs/.vitepress/cache/
+
+# virtualenv
+.venv
+venv/
+ENV/

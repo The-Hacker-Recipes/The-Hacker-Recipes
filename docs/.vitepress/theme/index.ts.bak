@@ -1,0 +1,34 @@
+import type { Theme } from 'vitepress'
+import './custom.css'
+import { h, defineComponent, onMounted, createApp } from 'vue'
+import DefaultTheme from 'vitepress/theme'
+import Contributors from './Contributors.vue'
+import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
+import ChangelogButton from './components/ChangelogLink.vue'
+
+const CustomLayout = defineComponent({
+  setup() {
+    onMounted(() => {
+      const sidebar = document.querySelector('.VPSidebar');
+      const sidebarNav = document.getElementById('VPSidebarNav');
+      
+      if (sidebar && sidebarNav) {
+        const changelogButton = document.createElement('div');
+        sidebar.insertBefore(changelogButton, sidebarNav);
+        const app = createApp(ChangelogButton);
+        app.mount(changelogButton);
+      }
+    });
+
+    return () => h(DefaultTheme.Layout);
+  }
+});
+
+export default {
+  ...DefaultTheme,
+  Layout: CustomLayout,
+  enhanceApp({ app }) {
+    app.component('ChangelogButton', ChangelogButton);
+    enhanceAppWithTabs(app);
+  }
+} satisfies Theme
