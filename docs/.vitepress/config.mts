@@ -36,9 +36,9 @@ export default defineConfig({
             ['title', {}, pageTitle],
             ['meta', { property: 'og:title', content: pageTitle }],
             ['meta', { property: 'og:description', content: pageDescription }],
-            ['meta', { property: 'og:image', content: '/images/social-preview.png' }],
+            ['meta', { property: 'og:image', content: 'https://thehacker.recipes/images/social-preview.png' }],
             ['meta', { name: 'twitter:title', content: pageTitle }],
-            ['meta', { name: 'twitter:image', content: '/images/social-preview.png' }],
+            ['meta', { name: 'twitter:image', content: 'https://thehacker.recipes/images/social-preview.png' }],
             ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
             ['meta', { name: 'twitter:description', content: pageDescription }]
         ];
