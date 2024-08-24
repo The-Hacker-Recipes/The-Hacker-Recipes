@@ -24,7 +24,7 @@ First of all, testers can look out for access points using WEP with `airodump-ng
 airodump --encrypt WEP $wlan_interface
 ```
 
-![](../../.gitbook/assets/carbon.png)
+![](<../../.gitbook/assets/carbon (1).png>)
 
 ### Find connected clients
 
@@ -34,7 +34,7 @@ Another important thing to know is if clients are authenticated to the access po
 airodump-ng --channel $channel --bssid 'TA:RG:ET:BS:SI:DD' $wlan_interface
 ```
 
-![](../../.gitbook/assets/carbon\(1\).png)
+![](<../../.gitbook/assets/carbon(1) (1).png>)
 
 ### Obtain an associated state
 
@@ -63,7 +63,7 @@ When attacking WEP networks, testers "just" need to gather a sufficient amount (
 airodump-ng --channel $channel --bssid 'TA:RG:ET:BS:SI:DD' --write $output_file $wlan_interface
 ```
 
-![](<../../.gitbook/assets/image (2).png>)
+![](<../../.gitbook/assets/image (12).png>)
 
 While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry cracking the secret key every 5.000 IVs.
 
@@ -71,7 +71,7 @@ While `airodump-ng` is running, testers can launch `aircrack-ng` that will retry
 aircrack-ng $output_file.cap
 ```
 
-![](<../../.gitbook/assets/carbon(17) (1).png>)
+![](../../.gitbook/assets/carbon\(17\).png)
 
 FYI, for the WEP cracking process, the "PTW attack" (named after its creators Pyshkin, Tews, and Weinmann) will be used in the cracking process which is much more efficient that the standard bruteforce one.
 
@@ -83,7 +83,7 @@ When no clients are connected to the AP, or when the tester doesn't want to spoo
 aireplay-ng --fakeauth 0 -a 'TA:RG:ET:BS:SI:DD' $wlan_interface
 ```
 
-![](<../../.gitbook/assets/image (1) (2).png>)
+![](<../../.gitbook/assets/image (10).png>)
 
 When the authentication mode in use is not OPEN, but rather SKA, the tester can either&#x20;
 
@@ -104,7 +104,7 @@ It is possible to send disassociation packets to clients connected to an access 
 aireplay-ng --deauth 10 -a 'TA:RG:ET:BS:SI:DD' $wlan_interface
 ```
 
-![](../../.gitbook/assets/carbon\(4\).png)
+![](<../../.gitbook/assets/carbon(4) (1).png>)
 
 {% hint style="info" %}
 This attack is more effective when targeting a specific connected client withe the `-c` option, and in order to work, the attacker needs to be close to that client since the frames will be sent from his machine to the client directly.
@@ -131,7 +131,7 @@ The "ARP replay" mode of `aireplay-ng` can be used to gather new IVs by listenin
 aireplay-ng --arpreplay -b 'TA:RG:ET:BS:SI:DD' $wlan_interface
 ```
 
-![](../../.gitbook/assets/carbon\(3\).png)
+![](<../../.gitbook/assets/carbon(3) (1).png>)
 
 ### Fragmentation
 

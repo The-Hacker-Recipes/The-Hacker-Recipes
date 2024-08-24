@@ -1,0 +1,2 @@
+# 🛠️ Weak service permissions
+

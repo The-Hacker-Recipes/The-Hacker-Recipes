@@ -1,0 +1,2 @@
+# 🛠️ Cached Kerberos tickets
+

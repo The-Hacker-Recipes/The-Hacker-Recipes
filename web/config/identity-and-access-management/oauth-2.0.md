@@ -17,7 +17,7 @@ The exploitation will depend on the misconfiguration. The next image shows a roa
 
 The misconfiguration types can be better understood with this table:
 
-![](<../../../.gitbook/assets/image (4) (1).png>)
+![](<../../../.gitbook/assets/image (15).png>)
 
 🛠️ **To continue.**
 
@@ -39,7 +39,7 @@ In the case where the client is confidential (requiring authentication with the 
 
 **Implicit Grant**
 
-To test the redirect URI validation misconfiguration with the implicit grant, the client application needs to hold an [open redirect](../../../web-services/inputs/ored.md) vulnerability. The implicit grant is handy for targeting wildcards on query parameters.
+To test the redirect URI validation misconfiguration with the implicit grant, the client application needs to hold an [open redirect](../../inputs/ored.md) vulnerability. The implicit grant is handy for targeting wildcards on query parameters.
 
 Upon getting a `client_id`, it's possible to test this misconfiguration by abusing the open redirect vulnerability and providing the authorization server with a fake URI. Depending on the server's HTTP response, misconfiguration is present.
 

@@ -16,7 +16,7 @@ layout:
 
 <div align="center">
 
-<img src=".gitbook/assets/thr_preview (1).png" alt="">
+<img src=".gitbook/assets/thr_preview.png" alt="">
 
 </div>
 

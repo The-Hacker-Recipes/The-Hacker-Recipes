@@ -41,7 +41,7 @@ By default, the ports are in an unauthorized state and will only be allowed to t
 
 From there everything goes vice versa. As EAP is more a framework than a protocol, it contains several EAP methods for authentication. The most commonly known variants are EAP-TLS, EAP-MD5, EAP-PSK and EAP-IKEv2, allowing to authenticate by preshared keys, passwords, certificates or other mechanisms.
 
-![802.1x auth flow (Wikipedia)](<../../.gitbook/assets/image (6) (1).png>)
+![802.1x auth flow (Wikipedia)](<../../.gitbook/assets/image (4).png>)
 
 When all checks are passed, the port will be switched to authorized and thus be allowed for normal network traffic.
 
@@ -63,7 +63,7 @@ A device, known as "dropbox", is needed to carry out according attacks when cond
 * (optional) Powerbank
 * (optional) LTE USB modem
 
-![Raspberry Pi drop box](<../../.gitbook/assets/image (7).png>)
+![Raspberry Pi drop box](<../../.gitbook/assets/image (6).png>)
 
 The Raspberry can be flushed with [the official ARM image of Kali](https://www.kali.org/get-kali/#kali-arm).
 
@@ -129,8 +129,6 @@ MAC-based and 802.1x are usually managed one of many ways:
 * by having the authenticator (i.e. port) check if the devices than connect support 802.1x and switch to MAC-based if they don't
 * by mixing MAC-based and authentication (i.e. 802.1x): the MAC address is checked and authentication then takes place -> [MAC-based + authentication](network-access-control.md#mac-address-needs-to-be-authorized-and-authentication-required)
 
-
-
 {% hint style="info" %}
 Devices like the [Basilisk](https://ringtail.ch/products/basilisk-automatic-ethernet-ghosting), [Basilisk Zero](https://ringtail.ch/products/basilisk-zero-automatic-ethernet-ghosting), or [Skunk](https://ringtail.ch/products/skunk-gigabit-ethernet-tap-switch) can be helpful in NAC-bypass engagements. _Nota bene: keep in mind ghosted Linux machines will require custom iptable rules to work smoothly._
 {% endhint %}
@@ -194,7 +192,7 @@ The steps are as follows:
 * find a target deivce and put the dropbox in between
 * start the `nac_bypass_setup.sh` script
 
-![](<../../.gitbook/assets/image (9) (1).png>)
+![](<../../.gitbook/assets/image (5).png>)
 
 {% hint style="info" %}
 To manually specify the interfaces, one can do so with the <mark style="color:blue;">-1</mark> and <mark style="color:blue;">-2</mark> switches. By default it will treat the lower device as switch side facing, and the next one as victim facing interface.
@@ -202,9 +200,9 @@ To manually specify the interfaces, one can do so with the <mark style="color:bl
 
 * Wait until the script gathered the MAC address of the attacked system, the IP of the attacked system and the gateway's MAC address in order to perform the attack. If all went well the following info will show up and the device should be able to talk to the network:
 
-![](<../../.gitbook/assets/image (5).png>)
+![](<../../.gitbook/assets/image (16).png>)
 
-* run other offensive tools for [NTLM capture](../../ad/movement/ntlm/capture.md), [relay](../../ad/movement/ntlm/relay.md), etc.
+* run other offensive tools for [NTLM capture](../../a-d/movement/ntlm/capture.md), [relay](../../a-d/movement/ntlm/relay.md), etc.
 
 {% hint style="info" %}
 Responder needs to bet set up to listen on the bridge interface, but change the answering IP address to the one of the victim.

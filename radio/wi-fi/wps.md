@@ -1,14 +1,11 @@
-# WPS
+# 🛠️ WPS
 
 ## Theory
 
-Wi-Fi Protected Setup (WPS) is a simplified configuration protocol designed to make connecting devices to a secure wireless network easier.
-WPS employs an 8-digit PIN for user network connection, verifying the first 4 digits before proceeding to check the remaining 4. This allows for a potential Brute-Force attack on the first set of digits followed by the second set, with a total of only 11,000 possible combinations.
+Wi-Fi Protected Setup (WPS) is a simplified configuration protocol designed to make connecting devices to a secure wireless network easier. WPS employs an 8-digit PIN for user network connection, verifying the first 4 digits before proceeding to check the remaining 4. This allows for a potential Brute-Force attack on the first set of digits followed by the second set, with a total of only 11,000 possible combinations.
 
 {% hint style="info" %}
-
 Initially it's 20k possible combinations (10^8 =100.000.000 to 10^4+10^4=20.000) but as the 8th digit of the PIN is always a checksum of digit one to digit seven, there are at most (10^4 +10^3=11.000) attempts needed to find the correct PIN.
-
 {% endhint %}
 
 Below are some known attacks on Wi-Fi Protected Setup (WPS):
@@ -23,17 +20,12 @@ Below are some known attacks on Wi-Fi Protected Setup (WPS):
 Most WPS attacks mentionned below can be conducted using [airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) (Bash) or [wifite2](https://github.com/derv82/wifite2) (Python).
 
 {% hint style="info" %}
-
 Monitor mode can be activated automatically with these tools. The [monitor](wps.md#monitor-mode) section would not needed then.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Some of the commands listed in this section may require high privileges to run. Containers would also need high privileges on a host.
-
 {% endhint %}
-
 
 There are three main methods for setting up a connection using WPS:
 
@@ -43,13 +35,10 @@ There are three main methods for setting up a connection using WPS:
 
 ### Monitor mode
 
-The default configuration for wireless interfaces is "Managed" mode, restricting packet capture to those with a "Destination MAC" matching the interface's own MAC address.
-To capture all packets within a wireless device's range, switch the mode to "Monitor."
+The default configuration for wireless interfaces is "Managed" mode, restricting packet capture to those with a "Destination MAC" matching the interface's own MAC address. To capture all packets within a wireless device's range, switch the mode to "Monitor."
 
 {% tabs %}
-
 {% tab title="UNIX-like" %}
-
 The following native commands can be used to have a capable network interface in monitor mode.
 
 ```bash
@@ -68,7 +57,6 @@ ifconfig "$INTERFACE" up
 {% endtab %}
 
 {% tab title="Aircrack-ng" %}
-
 With [Aircrack-ng](https://www.aircrack-ng.org/) (C) installed, the following commands can be used.
 
 ```bash
@@ -81,9 +69,7 @@ arimon-ng check kill
 # start a network interface in monitor mode
 airmon-ng start "$INTERFACE"
 ```
-
 {% endtab %}
-
 {% endtabs %}
 
 ### Recon
@@ -114,11 +100,11 @@ bully "$INTERFACE" -b "$BSSID" -c "$CHANNEL" -S -F -B -v 3
 
 ### Pixie Dust
 
-In 2014, [Dominique Bongard](https://twitter.com/Reversity) identified a security vulnerability he dubbed "Pixie Dust". It specifically targets the default WPS implementation found in wireless chips produced by various manufacturers, including Ralink, MediaTek, Realtek, and Broadcom. The attack exploits a randomization deficiency during the generation of the "E-S1" and "E-S2" "secret" nonces. Knowing these nonces, the PIN can be retrieved in a matter of minutes. 
+In 2014, [Dominique Bongard](https://twitter.com/Reversity) identified a security vulnerability he dubbed "Pixie Dust". It specifically targets the default WPS implementation found in wireless chips produced by various manufacturers, including Ralink, MediaTek, Realtek, and Broadcom. The attack exploits a randomization deficiency during the generation of the "E-S1" and "E-S2" "secret" nonces. Knowing these nonces, the PIN can be retrieved in a matter of minutes.
 
 A tool called [pixiewps](https://github.com/wiire-a/pixiewps) was developed, and a new version of [Reaver](https://github.com/t6x/reaver-wps-fork-t6x) was created to automate the attack.
 
-Check [this list](https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A_p7Nnj5Y) to know which router model is vulnerable.
+Check [this list](https://docs.google.com/spreadsheets/d/1tSlbqVQ59kGn8hgmwcPTHUECQ3o9YhXR91A\_p7Nnj5Y) to know which router model is vulnerable.
 
 ```bash
 # Use 5GHz 802.11 channels (for both tools): -5
