@@ -50,7 +50,7 @@ const fetchRepoContributors = async () => {
 }
 
 const fetchFileContributors = async (filePath) => {
-  let baseFileContribsApiUrl = `${BASE_API_URL}/commits?path=`
+  let baseFileContribsApiUrl = `${BASE_API_URL}/commits?sha=v2path=docs/src/`
   let data = await fetchData(`${baseFileContribsApiUrl}${filePath}`)
   if (data.length === 0 && path.value.endsWith('/')) {
     // Fallback to README.md if index.md returns no results
