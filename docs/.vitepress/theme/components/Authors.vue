@@ -50,7 +50,10 @@ const fetchRepoContributors = async () => {
 }
 
 const fetchFileContributors = async (filePath) => {
-  let baseFileContribsApiUrl = `${BASE_API_URL}/commits?path=docs/src`
+  // let baseFileContribsApiUrl = `${BASE_API_URL}/commits?path=docs/src`
+  // Temporarily fetching authors from the gitbook branch while we find a solution for the new structure.
+  // TL;DR since the files have all been moved, the API only returns ShutdownRepo as author which is incorrect
+  let baseFileContribsApiUrl = `${BASE_API_URL}/commits?sha=gitbook&path=`
   let data = await fetchData(`${baseFileContribsApiUrl}${filePath}`)
   if (data.length === 0 && path.value.endsWith('/')) {
     // Fallback to README.md if index.md returns no results
