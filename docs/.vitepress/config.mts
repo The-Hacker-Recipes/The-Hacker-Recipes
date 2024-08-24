@@ -17,7 +17,6 @@ export default defineConfig({
     cleanUrls: true,
     lastUpdated: true,
     head: [
-        ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
         ['meta', { name: 'theme-color', content: '#1b1b1f' }],
         ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/apple-touch-icon.png' }],
         ['link', { rel: 'icon', href: '/images/favicon.ico' }],
@@ -37,7 +36,11 @@ export default defineConfig({
             ['title', {}, pageTitle],
             ['meta', { property: 'og:title', content: pageTitle }],
             ['meta', { property: 'og:description', content: pageDescription }],
-            ['meta', { property: 'og:image', content: '/images/social-preview.png' }]
+            ['meta', { property: 'og:image', content: '/images/social-preview.png' }],
+            ['meta', { name: 'twitter:title', content: pageTitle }],
+            ['meta', { name: 'twitter:image', content: '/images/social-preview.png' }],
+            ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+            ['meta', { name: 'twitter:description', content: pageDescription }]
         ];
     },
     themeConfig: {
