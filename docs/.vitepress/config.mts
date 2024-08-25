@@ -1365,7 +1365,7 @@ export default defineConfig({
         ],
         editLink: {
             text: "Contribute to this page",
-            pattern: 'https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/edit/main/docs/:path'
+            pattern: 'https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/edit/main/docs/src/:path'
         }
     },
     markdown: {
