@@ -19,92 +19,52 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from 'vue'
-import { useRoute } from 'vitepress'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useData } from 'vitepress'
 
 const route = useRoute()
+const { page } = useData()
+
 const authors = ref([])
-const path = computed(() => route.path)
 
-const REPO_OWNER = 'The-Hacker-Recipes'
-const REPO_NAME = 'The-Hacker-Recipes'
-const BASE_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`
-
-const fetchContributors = async () => {
+const checkUserExistsOnGitHub = async (username) => {
   try {
-    if (path.value === '/') {
-      let data = await fetchRepoContributors()
-      authors.value = data
+    const response = await fetch(`https://api.github.com/users/${username}`)
+    if (response.status === 200) {
+      const data = await response.json()
+      return data
     } else {
-      let data = await fetchFileContributors(getFilePath())
-      authors.value = processFileContributors(data)
+      console.log(`User not found on GitHub: ${username}`)
+      return null
     }
   } catch (error) {
-    console.error('Error fetching authors:', error)
-    authors.value = []
+    console.error(`Error checking GitHub user: ${username}`, error)
+    return null
   }
 }
 
-const fetchRepoContributors = async () => {
-  return await fetchData(`${BASE_API_URL}/contributors`)
-}
+const listAuthors = async () => {
+  const frontmatterAuthors = page.value.frontmatter.authors
+    ? page.value.frontmatter.authors.split(',').map(author => author.trim())
+    : []
 
-const fetchFileContributors = async (filePath) => {
-  // let baseFileContribsApiUrl = `${BASE_API_URL}/commits?path=docs/src`
-  // Temporarily fetching authors from the gitbook branch while we find a solution for the new structure.
-  // TL;DR since the files have all been moved, the API only returns ShutdownRepo as author which is incorrect
-  let baseFileContribsApiUrl = `${BASE_API_URL}/commits?sha=gitbook&path=`
-  let data = await fetchData(`${baseFileContribsApiUrl}${filePath}`)
-  if (data.length === 0 && path.value.endsWith('/')) {
-    // Fallback to README.md if index.md returns no results
-    data = await fetchData(`${baseFileContribsApiUrl}${getReadmePath()}`)
-  }
-  return data || []
-}
+  const existingAuthors = []
 
-const fetchData = async (url) => {
-  let allData = []
-  let page = 1
-  let hasMorePages = true
-
-  while (hasMorePages) {
-    const fullUrl = `${url}${url.includes('?') ? '&' : '?'}per_page=100&page=${page}`
-    const response = await fetch(fullUrl)
-    console.log('Contributors request url:', fullUrl)
-    const data = await response.json()
-    
-    if (!Array.isArray(data)) {
-      console.error('Received non-array data:', data)
-      break
+  for (const author of frontmatterAuthors) {
+    const authorData = await checkUserExistsOnGitHub(author)
+    if (authorData) {
+      existingAuthors.push(authorData)
     }
-
-    allData = allData.concat(data)
-    hasMorePages = data.length === 100
-    page++
   }
 
-  return allData
+  authors.value = existingAuthors
 }
 
-const getFilePath = () => {
-  if (path.value.endsWith('/')) {
-    return `${path.value}index.md`
-  }
-  return `${path.value}.md`
-}
+// Fetch authors on initial page load
+onMounted(listAuthors)
 
-const getReadmePath = () => {
-  return `${path.value}README.md`
-}
-
-const processFileContributors = (data) => {
-  return Array.from(new Set(data.filter(commit => commit.author).map(commit => commit.author.id)))
-    .map(id => data.find(commit => commit.author && commit.author.id === id).author)
-    .filter(Boolean)
-}
-
-onMounted(fetchContributors)
-watch(path, fetchContributors)
+// Watch for route changes and update the authors list when a new page is loaded
+watch(() => route.path, listAuthors)
 </script>
 
 <style scoped>
