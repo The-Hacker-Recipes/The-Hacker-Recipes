@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, mauricelambert, sckdev
+---
+
 # Silver tickets
 
 ## Theory

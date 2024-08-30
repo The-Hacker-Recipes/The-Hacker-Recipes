@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, ShutdownRepo
+---
+
 # Rights on RODC object
 
 With administrative control over the [RODC](../builtins/rodc.md) computer object in the Active Directory, there is a path to fully compromise the domain. It is possible to modify the RODC’s `msDS-NeverRevealGroup` and `msDS-RevealOnDemandGroup` attributes to allow a Domain Admin to authenticate and dump his credentials via administrative access over the RODC host.

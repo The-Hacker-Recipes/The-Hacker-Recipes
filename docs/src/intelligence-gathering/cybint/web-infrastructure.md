@@ -1,3 +1,7 @@
+---
+authors: Bnder1, ShutdownRepo
+---
+
 # Web infrastructure
 
 ## Theory 

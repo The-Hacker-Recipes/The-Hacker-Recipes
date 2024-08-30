@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, ShutdownRepo
+---
+
 # Logon script
 
 > [!NOTE]

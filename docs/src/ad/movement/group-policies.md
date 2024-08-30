@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Group policies
 
 ## Theory

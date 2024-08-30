@@ -114,8 +114,8 @@ export default defineConfig({
                     },
                     {
                         "text": "Movement",
-                        "link": "/ad/movement/index.md",
                         "collapsed": true,
+                        "link": "/ad/movement/index.md",
                         "items": [
                             {
                                 "text": "Credentials",

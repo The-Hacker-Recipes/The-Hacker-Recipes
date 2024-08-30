@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Guide for authors
 
 As an author contributing to this project, it's essential to follow a consistent structure to ensure that your article is easy to read and understand. 

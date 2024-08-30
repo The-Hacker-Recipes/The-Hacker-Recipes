@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, mpgn, sckdev
+---
+
 # WebClient abuse (WebDAV)
 
 ## Theory

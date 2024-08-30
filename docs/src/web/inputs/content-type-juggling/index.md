@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Content-Type juggling
 
 ## Theory

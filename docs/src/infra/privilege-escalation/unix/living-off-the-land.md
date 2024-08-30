@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, p0dalirius
+---
+
 # 🛠️ Living off the land
 
 ## Theory

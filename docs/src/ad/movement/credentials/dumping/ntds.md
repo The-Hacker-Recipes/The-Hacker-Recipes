@@ -1,5 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1003.003
+authors: ShutdownRepo, almandin, sckdev
 ---
 
 # NTDS secrets

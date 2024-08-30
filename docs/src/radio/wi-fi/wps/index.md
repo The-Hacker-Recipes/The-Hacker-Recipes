@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, joker2a
+---
+
 # WPS
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # ADIDNS poisoning
 
 ## Theory

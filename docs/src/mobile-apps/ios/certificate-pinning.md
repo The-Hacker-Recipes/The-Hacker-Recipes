@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Certificate pinning
 
 bypass (need jailbroken)

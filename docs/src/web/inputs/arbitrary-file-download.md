@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🛠️ Arbitrary file download
 
 talk about functions like download.php?id=123.php

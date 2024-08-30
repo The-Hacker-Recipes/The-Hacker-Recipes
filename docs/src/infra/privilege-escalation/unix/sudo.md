@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, dreamkinn, p0dalirius
+---
+
 # SUDO
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Password policy
 
 When attacking Active Directory domains, directly targeting accounts is usually a great start. It could provide initial access and help the attackers operate lateral movement. The easiest way to compromise accounts is to operate some password [guessing](../movement/credentials/bruteforcing/guessing) or [spraying](../movement/credentials/bruteforcing/spraying). This kind of attack usually yields good results depending on the user's awareness. There are however technical measures that usually are in place, forcing the attackers to balance the number and speed of password attempts.

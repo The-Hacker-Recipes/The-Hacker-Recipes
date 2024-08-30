@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, Hackndo, Pri3st, ShutdownRepo, mpgn
+---
+
 # DNS
 
 ## Finding Domain Controllers

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, ThePirateWhoSmellsOfSunflowers
+---
+
 # Pass the Certificate
 
 > [!NOTE]

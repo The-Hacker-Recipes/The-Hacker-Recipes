@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🍌 Banana & chocolate cake
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # SID History
 
 ## Theory

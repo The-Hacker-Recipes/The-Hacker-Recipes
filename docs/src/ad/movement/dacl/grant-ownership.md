@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, ShutdownRepo, sckdev
+---
+
 # Grant ownership
 
 t has the following command-line arguments.This abuse can be carried out when controlling an object that has `WriteOwner` or `GenericAll` over any object.

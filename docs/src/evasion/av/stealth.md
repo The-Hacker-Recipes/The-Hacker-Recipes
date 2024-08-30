@@ -2,6 +2,7 @@
 description: >-
  This technique can be used only after having obtained an initial access on the
  target
+authors: ShutdownRepo
 ---
 
 # 🛠️ Stealth with C2

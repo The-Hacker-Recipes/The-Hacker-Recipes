@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Reconnaissance
 
 When attacking an Active Directory, or in fact any system, it is essential to gather useful information that will help define who, what, when and where. Here are some examples of what information to look for.

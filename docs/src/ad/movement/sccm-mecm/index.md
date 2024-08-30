@@ -1,3 +1,7 @@
+---
+authors: BlWasp, ShutdownRepo
+---
+
 # SCCM / MECM
 
 ## Theory

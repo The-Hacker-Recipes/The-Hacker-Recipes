@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, fransosiche
+---
+
 # HTTP request smuggling
 
 ## Theory

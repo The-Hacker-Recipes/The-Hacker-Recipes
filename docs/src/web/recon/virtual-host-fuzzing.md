@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Subdomain & vhost fuzzing
 
 ## Theory

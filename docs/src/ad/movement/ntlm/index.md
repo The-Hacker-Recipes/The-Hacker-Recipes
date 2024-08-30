@@ -1,3 +1,7 @@
+---
+authors: CryingWelkin, ShutdownRepo, sckdev
+---
+
 # NTLM
 
 ![](<../assets/Pass the things (dark).png>)

@@ -11,7 +11,7 @@
         class="author"
         :title="author.login"
       >
-        <img :src="author.avatar_url + '&s=64'" :alt="author.login" />
+        <img :src="author.avatar_url + '?s=64'" />
       </a>
     </div>
     <p v-else class="no-authors">Error occured...</p>
@@ -27,35 +27,17 @@ const { page } = useData()
 
 const authors = ref([])
 
-const checkUserExistsOnGitHub = async (username) => {
-  try {
-    const response = await fetch(`https://api.github.com/users/${username}`)
-    if (response.status === 200) {
-      const data = await response.json()
-      return data
-    } else {
-      console.log(`User not found on GitHub: ${username}`)
-      return null
-    }
-  } catch (error) {
-    console.error(`Error checking GitHub user: ${username}`, error)
-    return null
-  }
-}
-
-const listAuthors = async () => {
+const listAuthors = () => {
   const frontmatterAuthors = page.value.frontmatter.authors
     ? page.value.frontmatter.authors.split(',').map(author => author.trim())
     : []
 
-  const existingAuthors = []
-
-  for (const author of frontmatterAuthors) {
-    const authorData = await checkUserExistsOnGitHub(author)
-    if (authorData) {
-      existingAuthors.push(authorData)
-    }
-  }
+  const existingAuthors = frontmatterAuthors.map(author => ({
+    id: author,
+    login: author,
+    html_url: `https://github.com/${author}`,
+    avatar_url: `https://avatars.githubusercontent.com/${author}`
+  }))
 
   authors.value = existingAuthors
 }
@@ -127,3 +109,4 @@ watch(() => route.path, listAuthors)
   }
 }
 </style>
+``

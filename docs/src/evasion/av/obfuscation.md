@@ -1,5 +1,6 @@
 ---
 description: Lists of techniques used to hide your payload
+authors: ShutdownRepo
 ---
 
 # 🛠️ Obfuscation

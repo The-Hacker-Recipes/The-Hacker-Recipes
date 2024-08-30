@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # PHP session
 
 When a web server wants to handle sessions, it can use PHP session cookies (`PHPSESSID`).

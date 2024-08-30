@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Golden tickets
 
 ## Theory
