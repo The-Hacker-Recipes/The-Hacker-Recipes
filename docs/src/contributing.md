@@ -7,7 +7,7 @@ authors: ShutdownRepo
 As an author contributing to this project, it's essential to follow a consistent structure to ensure that your article is easy to read and understand. 
 This guide outlines the typical structure, file organization, and best practices for writing articles that align with the project's standards.
 
-## File structure
+## Files and folders
 
 All articles are stored in the `/docs/src` folder. 
 
@@ -250,6 +250,18 @@ Which will output the following
 ## Article template
 
 An article template is available for a quick start: [Template](template).
+
+## Highlighting contributors
+
+For contributors to be listed, they need to be listed in the `authors` property of the [frontmatter](https://vitepress.dev/guide/frontmatter) configuration of the corresponding page(s).
+
+When contributing to a page, an author must add its GitHub username to it:
+
+```markdown
+---
+authors: author1, author2, ...
+---
+```
 
 ## Get started :rocket:
 
