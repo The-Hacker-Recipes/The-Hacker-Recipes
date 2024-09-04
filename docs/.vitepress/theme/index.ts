@@ -12,11 +12,12 @@ import { useMediaQuery } from '@vueuse/core'
 import { useRoute } from 'vitepress'
 import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 
+const isMobileorTablet = useMediaQuery('(max-width: 1279px)')
+
 export default {
   extends: DefaultTheme,
   
   Layout() {
-    const isMobile = useMediaQuery('(max-width: 768px)')
 
     return h(DefaultTheme.Layout, null, {
       // 'aside-ads-before': () => h(Placeholder),
@@ -24,7 +25,7 @@ export default {
       // 'doc-before': () => h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
-      'doc-footer-before': () => isMobile.value ? h(Authors) : null,
+      'doc-footer-before': () => isMobileorTablet.value ? h(Authors) : null,
       // 'aside-outline-after': () => isMobile.value ? null : h(Authors),
       // 'nav-screen-content-after': () => h(Placeholder),
       'sidebar-nav-before': () => h(News),
@@ -40,10 +41,9 @@ export default {
   // IMG ZOOM SETUP
   setup() {
     const route = useRoute()
-    const isMobile = useMediaQuery('(max-width: 768px)')
 
     const initZoom = () => {
-      const margin = isMobile.value ? 0 : 150
+      const margin = isMobileorTablet.value ? 0 : 150
       mediumZoom('.main img', { background: 'var(--vp-c-bg)', margin })
     }
 
