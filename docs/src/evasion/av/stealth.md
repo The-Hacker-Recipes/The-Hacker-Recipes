@@ -2,7 +2,7 @@
 description: >-
  This technique can be used only after having obtained an initial access on the
  target
-authors: ShutdownRepo
+authors: Jenaye, ShutdownRepo
 ---
 
 # 🛠️ Stealth with C2
@@ -18,7 +18,7 @@ once you have a shell on the victim, one of the most discreet ways to execute co
 
 #### Object file
 
-Here is an example of how to launch the BoF (Beacon Object File) once compiled. The source code is available [here ](https://github.com/CMEPW/bof-collection/blob/main/src/checkVM/checkVM2.c)and the goal is to verify if we are dealing with a virtual machine or not.
+Here is an example of how to launch the BoF (Beacon Object File) once compiled. The source code is available [here ](https://github.com/matro7sh/bof-collection/blob/main/src/checkVM/checkVM2.c)and the goal is to verify if we are dealing with a virtual machine or not.
 
 ![](./assets/bof-VM.png)
 
@@ -55,6 +55,6 @@ It is also possible to load a library and then call the method using methods lik
 
 Below is an example of how to use this approach:
 
-[https://github.com/CMEPW/bof-collection/blob/main/src/getAV/getAV-ll.c](https://github.com/CMEPW/bof-collection/blob/main/src/getAV/getAV-ll.c)
+[https://github.com/matro7sh/bof-collection/blob/main/src/getAV/getAV-ll.c](https://github.com/matro7sh/bof-collection/blob/main/src/getAV/getAV-ll.c)
 
 More information at this URL: [https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_main.htm](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_main.htm).

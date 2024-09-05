@@ -2,7 +2,7 @@
 description: >-
  This technique aims at increasing privilege and/or escaping the protections
  applied to the processes
-authors: ShutdownRepo
+authors: Jenaye, ShutdownRepo
 ---
 
 # 🛠️ Process injection
