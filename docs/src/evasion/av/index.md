@@ -1,5 +1,5 @@
 ---
-authors: Jenaye, ShutdownRepo
+authors: Jenaye, ShutdownRepo, AzeTIIx
 ---
 
 # (AV) Anti-Virus
@@ -62,7 +62,7 @@ Stageless malware, on the other hand, is more of a single file that contains all
 
 ## Resources
 
-Below is a map listing techniques and tools used for anti-virus evasion. For an interactive view, an [HTML version]( matro7sh.github.io/BypassAV/) is available (refer to [matro7sh github repository](https://github.com/matro7sh/BypassAV)).
+Below is a map listing techniques and tools used for anti-virus evasion. For an interactive view, an [HTML version](https://matro7sh.github.io/BypassAV/) is available (refer to [matro7sh github repository](https://github.com/matro7sh/BypassAV)).
 
 ![](<./assets/Bypass-AV.svg>)
 
