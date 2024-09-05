@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, AzeTIIx
 ---
 
 # Guide for authors
