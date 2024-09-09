@@ -25,7 +25,9 @@ Telnet (teletype network) is a  network protocol used to gain access to virtual 
 | `logout`  | Logs out from the remote system (not available on all systems) |
 
 
-## Enumeration
+
+## Practice
+### Enumeration
 #### Banner Grabbing
 To initiate a connection with telnet server and get any information about the target .
 
@@ -34,34 +36,40 @@ To initiate a connection with telnet server and get any information about the ta
 > The $TARGET_PORT is optional, but the default port is 23
 
 
-##### CLI tool
+#### CLI tool
 ::: tabs
 
 === Unix-like
 
 ```bash
+#Using Netcat
 nc -nv $TARGET_IP $TARGET_PORT
+#Using Telnet
 telnet $TARGET_IP $TARGET_PORT
+#Using Shodan-cli
 shodan stream --ports 23,1023,2323 --datadir telnet-data/ --limit 10000
+#Using nmap
 nmap -p  $TARGET_PORT -sVC  --script "*telnet* and safe" $TARGET_IP
 ```
 
 
 === Windows
 
-```cmd
+```powershell
 nc.exe -nv $TARGET_IP $TARGET_PORT
 telnet $TARGET_IP $TARGET_PORT
 nmap -p  $TARGET_PORT   --script telnet-ntlm-info.nse $TARGET_IP
 ```
 :::
 
-##### Automated tools
+#### Automated tools
+The following commands is typed in msfconsole (The Cli for Metasploit Framework)
+
 ::: tabs
 
 === Metasploit 
 
-```msfconsole
+```
 msf > use auxiliary/scanner/telnet/telnet_version
 msf > set rhosts $TARGET_IP 
 msf > set rport $TARGET_PORT
@@ -71,7 +79,7 @@ msf > exploit
 :::
 
 
-## Attacks 
+### Attacks 
 
 #### Passwordless Authentication
 
@@ -82,7 +90,7 @@ To connect without a password, you would use the following command:
 ```bash
 telnet $TARGET_IP
 
-#send username
+#provide username
 #but not provide any password
 ```
 #### Common Credentials
@@ -117,7 +125,7 @@ hydra -l root -P $PATH_TO/seclists/Passwords/Default-Credentials/telnet-betterde
 
 === Metasploit
 
-```msfconsole
+```
 use auxiliary/scanner/telnet/telnet_login
 msf auxiliary(telnet_login) > set rhosts  $TARGET_IP
 msf auxiliary(telnet_login) > set user_file /path/to/user.txt
@@ -125,13 +133,11 @@ msf auxiliary(telnet_login) > set pass_file /path/to/pass.txt
 msf auxiliary(telnet_login) > set stop_on_success true
 msf auxiliary(telnet_login) > exploit
 ```
-::: 
- ----
- 
+:::
 
-### Resources 
+---
+## Resources 
 https://book.hacktricks.xyz/network-services-pentesting/pentesting-telnet  
 https://secybr.com/posts/telnet-pentesting-best-practices/  
 https://github.com/InfoSecWarrior/Offensive-Pentesting-Host/blob/main/Telnet/README.md  
-https://hackviser.com/tactics/pentesting/services/telnet
 
