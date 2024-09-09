@@ -25,7 +25,6 @@ Telnet (teletype network) is a  network protocol used to gain access to virtual 
 | `logout`  | Logs out from the remote system (not available on all systems) |
 
 
-
 ## Practice
 ### Enumeration
 #### Banner Grabbing
@@ -95,7 +94,7 @@ telnet $TARGET_IP
 ```
 #### Common Credentials
 
-If anonymous login is disabled on the Telnet server, trying common usernames and passwords like admin, administrator , root , user, or test can be a good initial step. This approach is less aggressive than attempting to guess passwords through brute force and is recommended to try first when accessing a server.
+If anonymous login is disabled on the Telnet server, trying common usernames and passwords like admin, administrator, root, user, or test can be a good initial step. This approach is less aggressive than attempting to guess passwords through brute force and is recommended to try first when accessing a server.
 
 ```bash
 telnet $TARGET_IP
@@ -123,6 +122,8 @@ hydra [-L users.txt or -l user_name] [-P pass.txt or -p password] -f [-S $TARGET
 hydra -l root -P $PATH_TO/seclists/Passwords/Default-Credentials/telnet-betterdefaultpasslist.txt $TARGET_IP telnet
 ```
 
+The following commands is typed in msfconsole.
+
 === Metasploit
 
 ```
@@ -135,9 +136,9 @@ msf auxiliary(telnet_login) > exploit
 ```
 :::
 
----
+
 ## Resources 
 https://book.hacktricks.xyz/network-services-pentesting/pentesting-telnet  
 https://secybr.com/posts/telnet-pentesting-best-practices/  
 https://github.com/InfoSecWarrior/Offensive-Pentesting-Host/blob/main/Telnet/README.md  
-
+https://techyrick.com/pentesting-telnet/
