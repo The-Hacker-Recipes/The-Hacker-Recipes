@@ -1,6 +1,6 @@
 ---
 description: Read-Only Domain Controller
-authors: ShutdownRepo, sckdev, skileau
+authors: BlWasp, ShutdownRepo, sckdev, skileau
 ---
 
 # RODC
