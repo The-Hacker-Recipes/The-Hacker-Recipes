@@ -10,9 +10,9 @@ The API pentesting methodology begins with reconnaissance, where information is 
 
 ## Practice 
 
-### API Types
+### API types
 * SOAP/XML Web Services : SOAP (Simple Object Access Protocol) is an XML-based protocol for exchanging structured information in the implementation of web services. 
-* REST APIs (JSON) : The specificity of a REST API lies in its statelessness, use of standard HTTP methods (GET, POST, PUT, DELETE), and resource-based structure with responses typically formatted in JSON or XML.
+* REST APIs (JSON) : The specificity of a REST API lies in its statelessness, use of standard HTTP methods (`GET`, `POST`, `PUT`, `DELETE`), and resource-based structure with responses typically formatted in JSON or XML.
 * GraphQL : A query language for APIs offering a complete and understandable description of the data in your API.
 
 ### Endpoints discovering
@@ -55,7 +55,7 @@ Wordlist for discover API endpoints
 
 [yassineaboukir/List of API endpoints & objects](https://gist.github.com/yassineaboukir/8e12adefbd505ef704674ad6ad48743d)
 
-### HTTP Method
+### HTTP method
 
 Identify HTTP Method used on the endpoints
 
@@ -63,7 +63,7 @@ Identify HTTP Method used on the endpoints
 
 === HTTPMethods
 
-[HTTPMethods](https://github.com/ShutdownRepo/httpmethods) his can be useful to look for HTTP verb tampering vulnerabilities and dangerous HTTP methods.
+[HTTPMethods](https://github.com/ShutdownRepo/httpmethods) this can be useful to look for HTTP verb tampering vulnerabilities and dangerous HTTP methods.
 
 ```bash
 httpmethods -u http://www.example.com/
@@ -71,18 +71,18 @@ httpmethods -u http://www.example.com/
 
 :::
 
-### Parameter Tampering
+### Parameter tampering
 
 Experiment with adding or replacing parameters in requests to access unauthorized data or functionalities.
 
 Example:
 ```
-https://taget.com/api/users/1 --> 401
+https://target.com/api/users/1 --> 401
 https://taget.com/api?users=1 --> 200
 https://taget.com/api/users?1 --> 200
 ```
 
-### Version Testing
+### Version testing
 
 Older API versions might be more susceptible to attacks. Always check for and test against multiple API versions.
 
@@ -92,6 +92,6 @@ https://taget.com/api/v2/users/1 --> 401
 https://taget.com/api/v1/users/1 --> 200
 ```
 
-## Sources
+## Resources
 
 [hacktricks](https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/web-api-pentesting)
