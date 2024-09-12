@@ -274,3 +274,7 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 [https://www.tiraniddo.dev/2015/03/starting-webclient-service.html](https://www.tiraniddo.dev/2015/03/starting-webclient-service.html)
 
 [https://www.webdavsystem.com/server/access/windows](https://www.webdavsystem.com/server/access/windows)
+
+---
+authors: [Pri3st](https://github.com/Pri3st)
+---
