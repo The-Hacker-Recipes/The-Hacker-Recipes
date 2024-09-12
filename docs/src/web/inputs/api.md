@@ -78,8 +78,8 @@ Experiment with adding or replacing parameters in requests to access unauthorize
 Example:
 ```
 https://target.com/api/users/1 --> 401
-https://taget.com/api?users=1 --> 200
-https://taget.com/api/users?1 --> 200
+https://target.com/api?users=1 --> 200
+https://target.com/api/users?1 --> 200
 ```
 
 ### Version testing
@@ -88,8 +88,8 @@ Older API versions might be more susceptible to attacks. Always check for and te
 
 Example:
 ```
-https://taget.com/api/v2/users/1 --> 401
-https://taget.com/api/v1/users/1 --> 200
+https://target.com/api/v2/users/1 --> 401
+https://target.com/api/v1/users/1 --> 200
 ```
 
 ## Resources
