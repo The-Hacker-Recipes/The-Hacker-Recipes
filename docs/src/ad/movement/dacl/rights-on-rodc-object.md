@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, ShutdownRepo
+authors: BlWasp, CravateRouge, ShutdownRepo
 ---
 
 # Rights on RODC object
@@ -34,7 +34,6 @@ Set-DomainObject -Identity RODC-server$ -Append msDS-RevealOnDemandGroup='CN=All
 
 #If needed, remove the admin from the msDS-NeverRevealGroup attribute
 Set-DomainObject -Identity RODC-server$ -Clear msDS-NeverRevealGroup
-
 ```
 
 
