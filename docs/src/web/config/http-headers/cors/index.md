@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🛠️ CORS (Cross-Origin Resource Sharing)
 
 ## Theory

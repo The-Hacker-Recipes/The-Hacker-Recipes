@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, mauricelambert, sckdev
+---
+
 # Pass the key
 
 ## Theory

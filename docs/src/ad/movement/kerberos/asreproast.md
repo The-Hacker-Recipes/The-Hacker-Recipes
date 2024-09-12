@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, Yaxxine7, mpgn
+---
+
 # ASREProast
 
 ## Theory

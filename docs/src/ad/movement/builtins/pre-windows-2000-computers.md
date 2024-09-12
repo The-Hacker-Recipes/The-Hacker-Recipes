@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, mpgn
+---
+
 # Pre-Windows 2000 computers
 
 ## Theory

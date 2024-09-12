@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # WPAD spoofing
 
 ## Theory

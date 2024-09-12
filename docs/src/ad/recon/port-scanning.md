@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Port scanning
 
 In an Active Directory domain, domain controllers can be easily spotted depending on what services they host. Each service is usually accessible specific TCP and/or UDP port(s) making the DCs stand out in the network. Here is a list of ports to look for when hunting for domain controllers.

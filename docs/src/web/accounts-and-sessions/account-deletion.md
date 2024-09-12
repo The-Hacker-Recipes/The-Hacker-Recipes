@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🛠️ Account deletion
 
 ## Theory

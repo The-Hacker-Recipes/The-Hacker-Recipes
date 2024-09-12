@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, p0dalirius
+---
+
 # 🛠️ CSP (Content Security Policy)
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # (RBCD) Resource-based constrained
 
 ## Theory

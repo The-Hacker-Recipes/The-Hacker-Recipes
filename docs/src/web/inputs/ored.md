@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Open redirect
 
 ## Theory

@@ -13,9 +13,12 @@ import type { LinkToCardPluginOptions } from '@luckrya/markdown-it-link-to-card'
 export default defineConfig({
     title: "The Hacker Recipes",
     srcDir: 'src',
-    description: "test",
+    description: "The Hacker Recipes is aimed at freely providing technical guides on various hacking topics",
     cleanUrls: true,
     lastUpdated: true,
+    sitemap: {
+        hostname: 'https://thehacker.recipes'
+    },
     head: [
         ['meta', { name: 'theme-color', content: '#1b1b1f' }],
         ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/apple-touch-icon.png' }],
@@ -114,8 +117,8 @@ export default defineConfig({
                     },
                     {
                         "text": "Movement",
-                        "link": "/ad/movement/index.md",
                         "collapsed": true,
+                        "link": "/ad/movement/index.md",
                         "items": [
                             {
                                 "text": "Credentials",
@@ -1365,7 +1368,7 @@ export default defineConfig({
         ],
         editLink: {
             text: "Contribute to this page",
-            pattern: 'https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/edit/main/docs/:path'
+            pattern: 'https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/edit/main/docs/src/:path'
         }
     },
     markdown: {

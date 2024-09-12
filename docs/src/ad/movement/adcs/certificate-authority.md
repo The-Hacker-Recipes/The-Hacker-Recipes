@@ -1,3 +1,7 @@
+---
+authors: BlWasp, ShutdownRepo, sckdev
+---
+
 # Certificate authority
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, ShutdownRepo, mpgn
+---
+
 # ReadLAPSPassword
 
 This abuse can be carried out when controlling an object that has `GenericAll` or `AllExtendedRights` (or combination of `GetChanges` and (`GetChangesInFilteredSet` or `GetChangesAll`) for domain-wise synchronization) over the target computer configured for LAPS. The attacker can then read the LAPS password of the computer account (i.e. the password of the computer's local administrator).

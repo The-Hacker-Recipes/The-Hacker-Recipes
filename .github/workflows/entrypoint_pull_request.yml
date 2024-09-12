@@ -1,0 +1,15 @@
+on: [push]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Build locally
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Build
+        run: npm install && npm run docs:build
+      - name: Move redirections file for CloudFlare Pages
+        run: cp -v cloudflare_pages_redirects docs/.vitepress/dist/_redirects

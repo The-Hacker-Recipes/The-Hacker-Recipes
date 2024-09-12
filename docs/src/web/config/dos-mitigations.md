@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🛠️ Denial of Service (DoS)
 
 ## Theory

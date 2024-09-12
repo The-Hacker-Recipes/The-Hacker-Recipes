@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, KenjiEndo15, ShutdownRepo
+---
+
 # Grant rights
 
 This abuse can be carried out when controlling an object that has `WriteDacl` over another object.

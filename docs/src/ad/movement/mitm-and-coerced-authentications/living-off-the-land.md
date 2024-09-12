@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, joker2a, mpgn, nuts7, sckdev
+---
+
 # 🛠️ Living off the land
 
 > [!WARNING]

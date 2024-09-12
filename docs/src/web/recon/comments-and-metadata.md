@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Comments and metadata
 
 ## Theory

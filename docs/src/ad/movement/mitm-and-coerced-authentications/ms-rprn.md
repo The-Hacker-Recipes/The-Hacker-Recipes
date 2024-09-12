@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # MS-RPRN abuse (PrinterBug)
 
 ## Theory

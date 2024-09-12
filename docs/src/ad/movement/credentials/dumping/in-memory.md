@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # In-memory secrets
 
 ## Theory

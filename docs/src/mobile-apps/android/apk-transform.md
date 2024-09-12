@@ -1,5 +1,6 @@
 ---
 description: Pimp my APK
+authors: ShutdownRepo
 ---
 
 # APK transform

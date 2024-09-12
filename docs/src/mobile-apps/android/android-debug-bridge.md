@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Android Debug Bridge ⚙️
 
 ## Theory

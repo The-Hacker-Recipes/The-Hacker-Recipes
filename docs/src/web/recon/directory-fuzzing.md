@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Directory fuzzing
 
 ## Theory

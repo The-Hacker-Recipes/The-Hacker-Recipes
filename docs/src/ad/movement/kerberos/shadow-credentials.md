@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, WoBuGs, mpgn, p0dalirius, sckdev
+---
+
 # Shadow Credentials
 
 ## Theory

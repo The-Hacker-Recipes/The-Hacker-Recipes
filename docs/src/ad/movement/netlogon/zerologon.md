@@ -1,5 +1,6 @@
 ---
 description: CVE-2020-1472
+authors: ShutdownRepo, sckdev
 ---
 
 # ZeroLogon

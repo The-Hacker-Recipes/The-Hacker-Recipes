@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # Forged tickets
 
 Silver, Golden, Diamond and Sapphire tickets are similar variants of forged Kerberos tickets, for different purposes and stealth levels, that can be used with [pass-the-ticket](../../movement/kerberos/ptt.md) to access services in an Active Directory domain.

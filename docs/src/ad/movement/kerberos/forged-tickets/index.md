@@ -1,5 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-techniques T1558.001 and T1558.002
+authors: ShutdownRepo
 ---
 
 # Forged tickets

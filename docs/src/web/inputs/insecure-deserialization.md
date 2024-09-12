@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🛠️ Insecure deserialization
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # HTTP security headers
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🍔 Burger du seigneur
 
 ## Theory

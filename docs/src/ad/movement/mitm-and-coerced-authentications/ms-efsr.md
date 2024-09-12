@@ -1,3 +1,7 @@
+---
+authors: KenjiEndo15, ShutdownRepo, sckdev
+---
+
 # MS-EFSR abuse (PetitPotam)
 
 ## Theory

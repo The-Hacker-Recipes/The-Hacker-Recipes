@@ -1,5 +1,6 @@
 ---
 title: CVE-2022–26923
+authors: CravateRouge, ShutdownRepo, sckdev
 ---
 
 # Certifried

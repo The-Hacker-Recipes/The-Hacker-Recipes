@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # IDOR (Insecure Direct Object Reference)
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # Kerberos
 
 A Kerberos realm is a logical group of networked computers that share a common authentication database. The authentication database is used to store the Kerberos tickets that are issued to users and services when they authenticate to the network.

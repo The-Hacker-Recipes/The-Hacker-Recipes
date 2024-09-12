@@ -2,6 +2,7 @@
 description: >-
  This is a top secret recipe, only shared to brave (much curious) hackers that
  made it to this section
+authors: ShutdownRepo
 ---
 
 # 🥞 The Pancakes of Heaven

@@ -1,3 +1,7 @@
+---
+authors: KenjiEndo15, ShutdownRepo
+---
+
 # Other technologies
 
 ## Theory

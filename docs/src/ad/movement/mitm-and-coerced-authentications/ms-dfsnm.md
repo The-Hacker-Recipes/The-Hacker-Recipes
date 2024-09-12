@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # MS-DFSNM abuse (DFSCoerce)
 
 ## Theory
