@@ -5,13 +5,19 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
+    "nodemon": "^3.1.4",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "vitepress-plugin-tabs": "^0.5.0"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase": "^10.13.1",
     "markdown-it-container": "^4.0.0",
-    "medium-zoom": "^1.1.0"
+    "medium-zoom": "^1.1.0",
+    "react-axios": "^2.0.6"
   }
 }
