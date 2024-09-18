@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, mpgn, sckdev
+---
+
 # LDAP
 
 A lot of information on an AD domain can be obtained through LDAP. Most of the information can only be obtained with an authenticated bind but metadata (naming contexts, DNS server name, Domain Functional Level (DFL)) can be obtainable anonymously, even with anonymous binding disabled.

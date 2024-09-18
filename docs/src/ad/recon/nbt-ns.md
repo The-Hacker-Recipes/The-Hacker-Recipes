@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # NBT-NS
 
 Just like DNS, the NTB-NS (NetBIOS name service) protocol is used to translate names to IP addresses. By default, it's used as a fallback in AD-DS.

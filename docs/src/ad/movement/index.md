@@ -1,3 +1,7 @@
+---
+authors: BlWasp, ShutdownRepo, itbelongsinamuseum, sckdev
+---
+
 # Movement
 
 > [!WARNING]

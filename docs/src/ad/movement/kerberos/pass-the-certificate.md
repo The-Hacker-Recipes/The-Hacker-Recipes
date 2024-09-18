@@ -1,3 +1,7 @@
+---
+authors: PfiatDe, ShutdownRepo, sckdev
+---
+
 # Pass the Certificate
 
 ## Theory

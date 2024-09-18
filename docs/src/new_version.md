@@ -2,6 +2,7 @@
 next: false
 editLink: false
 lastUpdated: false
+authors: ShutdownRepo
 ---
 
 # Welcome to THR v2!

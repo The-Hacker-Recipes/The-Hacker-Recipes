@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # UNIX-like
 
 linpeas

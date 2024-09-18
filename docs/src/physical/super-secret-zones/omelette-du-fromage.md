@@ -1,3 +1,7 @@
+---
+authors: KenjiEndo15, ShutdownRepo
+---
+
 # 🍳 Omelette du fromage
 
 ## Theory

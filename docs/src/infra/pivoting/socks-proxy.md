@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # 🛠️ SOCKS proxy
 
 ## Theory

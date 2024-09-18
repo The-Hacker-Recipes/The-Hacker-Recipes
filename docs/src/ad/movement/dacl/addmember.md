@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, ShutdownRepo, sckdev
+---
+
 # AddMember
 
 This abuse can be carried out when controlling an object that has a `GenericAll`, `GenericWrite`, `Self`, `AllExtendedRights` or `Self-Membership`, over the target group.

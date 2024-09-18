@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, ShutdownRepo, sckdev
+---
+
 # ForceChangePassword
 
 This abuse can be carried out when controlling an object that has a `GenericAll`, `AllExtendedRights` or `User-Force-Change-Password` over the target user.

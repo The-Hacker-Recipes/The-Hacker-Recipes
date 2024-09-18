@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # MS-FSRVP abuse (ShadowCoerce)
 
 ## Theory

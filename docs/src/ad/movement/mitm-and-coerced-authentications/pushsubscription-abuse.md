@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # PushSubscription abuse
 
 ## Theory

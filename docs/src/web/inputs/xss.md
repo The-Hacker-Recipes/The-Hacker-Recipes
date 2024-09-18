@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # XSS (Cross-Site Scripting)
 
 ## Theory

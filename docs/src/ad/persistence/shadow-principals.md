@@ -1,3 +1,7 @@
+---
+authors: Pri3st, ShutdownRepo
+---
+
 # Shadow Principals (PAM)
 
 ## Theory

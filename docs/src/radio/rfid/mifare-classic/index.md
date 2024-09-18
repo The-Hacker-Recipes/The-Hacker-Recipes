@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Mifare Classic
 
 > [!WARNING]

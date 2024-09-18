@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, sckdev
+---
+
 # Impersonation
 
 When credentials are found (through [dumping](dumping/index) or [cracking](cracking.md) for instance), attackers try to use them to obtain access to new resources. Depending on the harvested credential material type, the impersonation can be done in different ways.

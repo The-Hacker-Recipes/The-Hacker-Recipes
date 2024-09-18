@@ -1,3 +1,7 @@
+---
+authors: KenjiEndo15, ShutdownRepo
+---
+
 # Password change
 
 Websites that manage user accounts usually offer a "password change" feature. This offers attackers an interesting vector as it could potentially lead to Account Takeover (ATO).

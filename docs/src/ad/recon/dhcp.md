@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # DHCP
 
 When connecting a computer to most enterprise networks, if the Dynamic Host Configuration Protocol (DHCP) is enabled, it will assign an IP address to that computer, and send a lot of information. Nameservers and domain names are usually set through DHCP offer packets.

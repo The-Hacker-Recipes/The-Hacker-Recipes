@@ -1,5 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-techniques T1003.002, T1003.004 and T1003.005
+authors: ShutdownRepo, mpgn, p0dalirius, sckdev
 ---
 
 # SAM & LSA secrets

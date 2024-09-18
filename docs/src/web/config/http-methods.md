@@ -1,3 +1,7 @@
+---
+authors: KenjiEndo15, ShutdownRepo, fransosiche, p0dalirius
+---
+
 # HTTP methods
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: CravateRouge, PfiatDe, ShutdownRepo
+---
+
 # ReadGMSAPassword
 
 This abuse stands out a bit from other abuse cases. It can be carried out when controlling an object that has enough permissions listed in the target gMSA account's `msDS-GroupMSAMembership` attribute's DACL. Usually, these objects are principals that were configured to be explictly allowed to use the gMSA account.

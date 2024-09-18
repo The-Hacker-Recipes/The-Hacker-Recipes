@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, mpgn
+---
+
 # 🛠️ SMB
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: 4ndr3w6, ShutdownRepo, sckdev
+---
+
 # Diamond tickets
 
 ## Theory

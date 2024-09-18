@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # Certificate authority
 
 ## Theory

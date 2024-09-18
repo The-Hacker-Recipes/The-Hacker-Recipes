@@ -1,3 +1,7 @@
+---
+authors: Jenaye, ShutdownRepo
+---
+
 # 🛠️ Loader
 
 > [!WARNING]

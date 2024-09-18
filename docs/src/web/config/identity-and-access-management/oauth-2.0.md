@@ -1,3 +1,7 @@
+---
+authors: KenjiEndo15, ShutdownRepo
+---
+
 # 🛠️ OAuth 2.0
 
 ## Theory

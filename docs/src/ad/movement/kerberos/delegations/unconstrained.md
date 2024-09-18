@@ -1,3 +1,7 @@
+---
+authors: A1vinSmith, ShutdownRepo, sckdev
+---
+
 # (KUD) Unconstrained
 
 ## Theory

@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # CSRF (Cross-Site Request Forgery)
 
 ## Theory

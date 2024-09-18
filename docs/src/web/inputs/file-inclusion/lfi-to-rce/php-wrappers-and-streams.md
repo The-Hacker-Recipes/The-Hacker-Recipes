@@ -1,3 +1,7 @@
+---
+authors: LucasParsy, ShutdownRepo
+---
+
 # PHP wrappers and streams
 
 ::: details data://

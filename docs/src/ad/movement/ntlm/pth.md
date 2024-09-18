@@ -1,5 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1550.002
+authors: ShutdownRepo, mpgn, sckdev
 ---
 
 # Pass the hash

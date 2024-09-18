@@ -1,3 +1,7 @@
+---
+authors: BlWasp, ShutdownRepo
+---
+
 # Privilege escalation
 
 ## Theory

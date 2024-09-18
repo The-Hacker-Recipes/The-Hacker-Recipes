@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, clem9669, sckdev
+---
+
 # 🛠️ Hosts discovery
 
 ## Theory

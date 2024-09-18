@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # RODC Golden tickets
 
 ## Theory

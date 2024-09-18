@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo
+---
+
 # /proc
 
 ::: details /proc/self/environ
