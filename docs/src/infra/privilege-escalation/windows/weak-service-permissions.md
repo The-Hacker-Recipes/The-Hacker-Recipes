@@ -1,3 +1,7 @@
+---
+authors: ShutdownRepo, Anh4ckin3
+---
+
 # 🛠️ Weak service permissions
 
 ## Theory
