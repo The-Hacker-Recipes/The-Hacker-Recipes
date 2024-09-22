@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, resiakeht
 ---
 
 # Insecure Cookies
@@ -8,7 +8,7 @@ authors: ShutdownRepo
 
 Most web applications use cookies for stateful authentication and access control. Some implementations are insecure and allow attackers to bypass controls, impersonate users, or retrieve secrets.
 
-The browser makes a POST request to the server that contains the user’s identification and password. The server responds with a cookie, which is set on the user’s browser using the HTTP header `Set-Cookie`, and includes a session ID to identify the user. On every subsequent request, the server needs to find that session and deserialize it, because user data is stored on the server ([source](https://blog.imaginea.com/stateless-authentication-using-jwt-2/)).
+The browser makes a POST request to the server that contains the user’s identification and password. The server responds with a cookie, which is set on the user’s browser using the HTTP header `Set-Cookie`, and includes a session ID to identify the user. On every subsequent request, the server needs to find that session and deserialize it, because user data is stored on the server ([source](https://web.archive.org/web/20201128073316/https://blog.imaginea.com/stateless-authentication-using-jwt-2/)).
 
 ## Practice
 
@@ -39,6 +39,6 @@ Cookies have a key/value pair along with attributes too. The attributes tell the
 
 [https://medium.com/@muratkaraoz/web-app-pentest-cheat-sheet-c17394af773](https://medium.com/@muratkaraoz/web-app-pentest-cheat-sheet-c17394af773)
 
-[https://blog.imaginea.com/stateless-authentication-using-jwt-2/](https://blog.imaginea.com/stateless-authentication-using-jwt-2/)
+[https://web.archive.org/web/20201128073316/https://blog.imaginea.com/stateless-authentication-using-jwt-2/)
 
 [https://web.dev/samesite-cookies-explained/](https://web.dev/samesite-cookies-explained/)
