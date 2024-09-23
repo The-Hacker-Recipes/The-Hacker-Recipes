@@ -13,15 +13,16 @@ The Hacker Recipes was created in 2020, using [GitBook](https://github.com/Gitbo
 
 Sadly, GitBook changed a lot. Relying on it has been very painful for about 2 years now...
 - resolving conflicts was horrible
-- buggy editor at times, weird UX overall, bad assets management
+- buggy editor at times, weird and complexe UX overall (lots of settings everywhere for accounts, orgs, sites, spaces)
+- poor assets management (e.g. all in the same directory)
 - introduced a lot of deadlinks by constantly changing the "slug" ([read more](https://github.com/orgs/GitbookIO/discussions/275))
 - inability to show the contributors of a page publicly ([read more](https://github.com/orgs/GitbookIO/discussions/261#discussioncomment-6500714))
-- inability to integrate Google Ads (or similar), which is needed for this project to thrive (more about that down below)
 - inability to build the website locally, preventing some contexts to use The Hacker Recipes offline ([read more](https://github.com/orgs/GitbookIO/discussions/7))
+- inability to integrate Google Ads (or similar), which is needed for this project to thrive (actually, this was made possible around mid-2024, far too late, through one ads provider only).
 
 Relying on GitBook has become increasingly uncomfortable. We also realized that some GitBook features, which initially seemed beneficial, were actually locking us in (e.g., the discontinued gitbook-cli, lack of control over slugs and redirection settings, new custom blocks, native markdown blocks modified and becoming incompatible with other md renderers).
 
-Last but not least, given GitBook's high pricing, we were concerned that losing the "Community" plan for any reason would be risky, as we wouldn't be able to afford the paid plans and would have no viable alternatives.
+Last but not least, given GitBook's expensiveness, we were concerned that losing the "Community" plan for any reason would be risky, as we wouldn't be able to afford the paid plans and would have no viable alternatives.
 
 ## Version 2.0 :rocket:
 
