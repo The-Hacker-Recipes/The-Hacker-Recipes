@@ -2,7 +2,7 @@
 next: false
 editLink: false
 lastUpdated: false
-authors: blepdoge, 4ndr3w6, A1vinSmith, AzeTIIx, BlWasp, Bnder1, CravateRouge, Croumi, CryingWelkin, CyrilleFranchet, Hackndo, KenjiEndo15, Lamber-maybe, LucasParsy, NaxnN, PfiatDe, Pri3st, ShutdownRepo, ThePirateWhoSmellsOfSunflowers, WoBuGs, Yaxxine7, almandin, amirr0r, clem9669, dreamkinn, fransosiche, itbelongsinamuseum, joker2a, lap1nou, mauricelambert, mpgn, noraj, nuts7, p0dalirius, sckdev, skileau
+authors: 4ndr3w6, A1vinSmith, AzeTIIx, BlWasp, blepdoge, Bnder1, CravateRouge, Croumi, CryingWelkin, CyrilleFranchet, Hackndo, KenjiEndo15, Lamber-maybe, LucasParsy, NaxnN, PfiatDe, Pri3st, ShutdownRepo, ThePirateWhoSmellsOfSunflowers, WoBuGs, Yaxxine7, almandin, amirr0r, clem9669, dreamkinn, fransosiche, itbelongsinamuseum, joker2a, lap1nou, mauricelambert, mpgn, noraj, nuts7, p0dalirius, sckdev, skileau
 ---
 
 ![](<assets/welcome.png>){.rawimg}
