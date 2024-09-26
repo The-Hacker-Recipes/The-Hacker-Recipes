@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, mpgn, sckdev
+authors: ShutdownRepo, mpgn, sckdev, Pri3st
 ---
 
 # WebClient abuse (WebDAV)
@@ -113,6 +113,7 @@ By opening an interactive session with the target (e.g. RDP), opening the Explor
 
 According to [tiraniddo's research](https://www.tiraniddo.dev/2015/03/starting-webclient-service.html), the webclient service is registered with a service trigger, meaning it can be started automatically in response to a specific system event.
 A simple way to start the service in an unprivileged session is by compiling and executing the following [C# PoC](https://gist.github.com/klezVirus/af004842a73779e1d03d47e041115797) created by [klezVirus](https://gist.github.com/klezVirus).
+::: details
 ```c#
 using System.Runtime.InteropServices;
 using System;
@@ -223,7 +224,7 @@ namespace EtwStartWebClient
     }
 }
 ```
-
+:::
 === SharpStartWebclient
 
 By compiling and executing the [SharpStartWebclient](https://github.com/eversinc33/SharpStartWebclient) tool created by [eversinc33](https://github.com/eversinc33)
@@ -231,7 +232,8 @@ By compiling and executing the [SharpStartWebclient](https://github.com/eversinc
 === Beacon Object File
 
 [BOF](https://github.com/outflanknl/C2-Tool-Collection/blob/main/BOF/StartWebClient/SOURCE/StartWebClient.c) created by [outflanknl](https://github.com/outflanknl)
-```
+::: details
+```c
 #include <windows.h>
 #include <evntprov.h>
 
@@ -264,17 +266,13 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 	BeaconPrintf(CALLBACK_OUTPUT, "[+] WebClient service started successfully.\n");
 }
 ```
+:::
 
 :::
 
 
 ## Resources
 
+[https://www.webdavsystem.com/server/access/windows](https://www.webdavsystem.com/server/access/windows)
 [https://pentestlab.blog/2021/10/20/lateral-movement-webclient](https://pentestlab.blog/2021/10/20/lateral-movement-webclient)
 [https://www.tiraniddo.dev/2015/03/starting-webclient-service.html](https://www.tiraniddo.dev/2015/03/starting-webclient-service.html)
-
-[https://www.webdavsystem.com/server/access/windows](https://www.webdavsystem.com/server/access/windows)
-
----
-authors: [Pri3st](https://github.com/Pri3st)
----
