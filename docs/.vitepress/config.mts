@@ -178,7 +178,7 @@ export default defineConfig({
                                                 "link": "/ad/movement/credentials/dumping/cached-kerberos-tickets.md"
                                             },
                                             {
-                                                "text": "🛠️ Windows Credential Manager",
+                                                "text": "Windows Credential Manager",
                                                 "link": "/ad/movement/credentials/dumping/windows-credential-manager.md"
                                             },
                                             {
@@ -249,7 +249,7 @@ export default defineConfig({
                                         "link": "/ad/movement/mitm-and-coerced-authentications/wsus-spoofing.md"
                                     },
                                     {
-                                        "text": "🛠️ LLMNR, NBT-NS, mDNS spoofing",
+                                        "text": "LLMNR, NBT-NS, mDNS spoofing",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md"
                                     },
                                     {
@@ -261,15 +261,15 @@ export default defineConfig({
                                         "link": "/ad/movement/mitm-and-coerced-authentications/wpad-spoofing.md"
                                     },
                                     {
-                                        "text": "🛠️ MS-EFSR abuse (PetitPotam)",
+                                        "text": "MS-EFSR abuse (PetitPotam)",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/ms-efsr.md"
                                     },
                                     {
-                                        "text": "🛠️ MS-RPRN abuse (PrinterBug)",
+                                        "text": "MS-RPRN abuse (PrinterBug)",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/ms-rprn.md"
                                     },
                                     {
-                                        "text": "🛠️ MS-FSRVP abuse (ShadowCoerce)",
+                                        "text": "MS-FSRVP abuse (ShadowCoerce)",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/ms-fsrvp.md"
                                     },
                                     {
