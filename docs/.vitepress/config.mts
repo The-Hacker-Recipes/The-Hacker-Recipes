@@ -931,6 +931,10 @@ export default defineConfig({
                             {
                                 "text": "🛠️ Null-byte injection",
                                 "link": "/web/inputs/null-byte-injection.md"
+                            },
+                            {
+                                "text": "🛠️ API Pentest",
+                                "link": "/web/inputs/api.md"
                             }
                         ]
                     }
