@@ -29,7 +29,7 @@ export default defineConfig({
         ['link', { rel: 'mask-icon', href: '/images/safari-pinned-tab.svg', color: '#5bbad5' }],
         ['meta', { name: 'msapplication-TileColor', content: '#da532c' }],
         ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0' }],
-        ['script', { async: "", src: 'https://www.googletagmanager.com/gtag/js?id=G-211RDJSM3Y' }],
+        ['script', { async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-211RDJSM3Y' }],
         ['script', {}, "window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-211RDJSM3Y');" ]
     ],
     transformHead: ({ pageData }) => {
