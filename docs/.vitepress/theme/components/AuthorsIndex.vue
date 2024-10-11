@@ -14,48 +14,38 @@
           <img :src="author.avatar_url + '?s=64'" />
         </a>
       </div>
-      <p v-else class="no-authors">Error occurred or no authors found.</p>
+      <p v-else class="no-authors">No authors found.</p>
     </div>
   </template>
   
   <script setup>
   import { ref, onMounted } from 'vue'
-  import { createContentLoader } from 'vitepress'
+  
+  // Importation du loader des auteurs
+  import loadAuthors from '../composables/authorsLoader'
   
   const authors = ref([])
   
-  const fetchAllAuthors = async () => {
-    const contentLoader = createContentLoader('**/*.md', {
-      includeMeta: true,
-      transform(page) {
-        const frontmatterAuthors = page.frontmatter.authors
-          ? page.frontmatter.authors.split(',').map(author => author.trim())
-          : []
-        
-        return frontmatterAuthors.map(author => ({
-          id: author,
-          login: author,
-          html_url: `https://github.com/${author}`,
-          avatar_url: `https://avatars.githubusercontent.com/${author}`
-        }))
-      }
-    })
+  onMounted(async () => {
+    // Charger tous les auteurs à partir du loader
+    const result = await loadAuthors()
   
-    const allPages = await contentLoader.load()
-    const allAuthors = allPages.flatMap(page => page).filter(Boolean)
+    // Extraction des auteurs uniques et triés
+    const allAuthors = result.map(item => item.authors).flat()
+    const uniqueAuthors = Array.from(new Set(allAuthors))
   
-    // Remove duplicates and sort alphabetically by login
-    const uniqueAuthors = Array.from(new Set(allAuthors.map(a => a.login)))
-      .map(login => allAuthors.find(a => a.login === login))
-      .sort((a, b) => a.login.localeCompare(b.login))
-  
-    authors.value = uniqueAuthors
-  }
-  
-  onMounted(fetchAllAuthors)
+    // Convertir chaque auteur en objet avec ses infos GitHub
+    authors.value = uniqueAuthors.map(author => ({
+      id: author,
+      login: author,
+      html_url: `https://github.com/${author}`,
+      avatar_url: `https://avatars.githubusercontent.com/${author}`
+    })).sort((a, b) => a.login.localeCompare(b.login))
+  })
   </script>
   
   <style scoped>
+  /* Styles identiques à Authors.vue */
   .authors-container {
     justify-content: center;
     align-items: center;
@@ -97,22 +87,6 @@
   .no-authors {
     font-size: 14px;
     color: var(--vp-c-text-2);
-  }
-  
-  @media (max-width: 768px) {
-    .authors-container {
-      border-left: none;
-      padding-top: 24px;
-      padding-bottom: 24px;
-      border-top: 1px solid var(--vp-c-divider);
-      border-bottom: 1px solid var(--vp-c-divider);
-      margin-bottom: 18px;
-    }
-  
-    .authors-title {
-      border-top: none;
-      padding-top: 0;
-    }
   }
   </style>
   
