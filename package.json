@@ -12,6 +12,7 @@
   "dependencies": {
     "cheerio": "^1.0.0",
     "markdown-it-container": "^4.0.0",
-    "medium-zoom": "^1.1.0"
+    "medium-zoom": "^1.1.0",
+    "vitepress": "^1.4.0"
   }
 }
