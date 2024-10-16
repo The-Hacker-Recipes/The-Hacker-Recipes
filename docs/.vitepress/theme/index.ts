@@ -24,8 +24,7 @@ export default {
 
     return h(DefaultTheme.Layout, null, {
       // 'aside-ads-before': () => h(Placeholder),
-      'aside-ads-before': () =>
-        route.path === '/' ? h(AuthorsIndex) : h(Authors),
+      'aside-ads-before': () => h(Authors),
       // 'doc-before': () => h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
