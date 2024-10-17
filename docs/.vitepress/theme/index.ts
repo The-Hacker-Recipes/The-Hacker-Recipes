@@ -5,7 +5,8 @@ import Placeholder from './components/Placeholder.vue'
 import PageNotFound from "./components/PageNotFound.vue"
 import News from './components/News.vue'
 import Authors from './components/Authors.vue'
-import CustomSidebarItem from './components/CustomSidebarItem.vue';
+import AuthorsIndex from './components/AuthorsIndex.vue'
+import CustomSidebarItem from './components/CustomSidebarItem.vue'
 import './custom.css'
 import mediumZoom from 'medium-zoom'
 import { useMediaQuery } from '@vueuse/core'
@@ -18,6 +19,8 @@ export default {
   extends: DefaultTheme,
   
   Layout() {
+
+    const route = useRoute()
 
     return h(DefaultTheme.Layout, null, {
       // 'aside-ads-before': () => h(Placeholder),
