@@ -103,7 +103,7 @@ Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /pass
 > > [!TIP]
 > To generate a b64 for Rubeus:
 > 
-> ```bash
+> ```powershell
 > $pfx_cert = get-content 'c:\certificate.pfx' -Encoding Byte
 > $base64 = [System.Convert]::ToBase64String($pfx_cert)
 > $base64
