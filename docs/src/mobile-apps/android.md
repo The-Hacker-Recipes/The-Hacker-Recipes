@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: blepdoge, ShutdownRepo
 ---
 
 # Android
