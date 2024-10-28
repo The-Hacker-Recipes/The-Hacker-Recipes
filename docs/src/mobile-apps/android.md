@@ -14,7 +14,7 @@ This could be done using a real rooted phone, or a simulated one (e.g. MobSF, Ge
 
 Several tools allow to enumerate the attack surface of an APK (e.g. Drozer or AndroidManifest.xml showing exported services and features).
 
-Android pentesting can be time-consuming. a reading of decompiled files allows to understand the role of functions used (APK transformation), hooks can be placed during the execution of the application in order to bypass its original behaviour (i.e. Frida, Objection).
+Android pentesting can be time-consuming. A reading of decompiled files allows to understand the role of functions used (APK transformation), hooks can be placed during the execution of the application in order to bypass its original behaviour (i.e. Frida, Objection).
 
 ## Audits
 
