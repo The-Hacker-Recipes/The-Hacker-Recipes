@@ -1,8 +1,8 @@
 ---
-authors: KenjiEndo15, ShutdownRepo
+authors: KenjiEndo15, ShutdownRepo, Fantabc
 ---
 
-# 🛠️ HTTP parameter pollution
+# HTTP parameter pollution
 
 ## Theory
 
@@ -45,6 +45,36 @@ After discovering a few HTTP parameters, one should know the server's behavior w
 
 The payload that would be used to conduct a HPP will depend on the browser's behavior (found previously).
 
+### Server parameter handling order
+
+Depending on the web server, a parameter may not be processed in the same way. Here's a list of the parameters used by some web servers.
+
+| Server                | Parameter             |
+|-----------------------|-----------------------|
+| ASP.NET / IIS         | All (array of values) |
+| ASP / IIS             | All (array of values) |
+| PHP / Apache          | Last                  |
+| JSP, Servlet / Tomcat | First                 |
+| Perl CGI / Apache     | First                 |
+| Python Flask          | First                 |
+| Python Django         | Last                  |
+| NodeJS                | All (array of values) |
+| Ruby on Rails         | Last                  |
+
+### Example
+
+From the **Under Construction** web challenge of the 2023 Google CTF.
+
+This challenge had 2 web servers : a **Flask** one and a **PHP (Apache)** one. When reaching the main page, a register form asked to choose a username, a password and a tier. The goal was to get the **"Gold tier"**. When registering, the first web server (Flask) checked the tier wasn't the "Gold tier" that only the CEO had access to. If the check passed, it then forwarded the HTTP request to the PHP server that stored the registration in the database.
+
+To bypass the check, the user had to abuse a parameter pollution. As seen in the table above, Python Flask performs the check on the first parameter but PHP (Apache) stores the last parameter. This was the URL to trigger to get the much-desired **Gold tier** :
+
+> ```
+> http://<url>/signup?username=X&password=Y&tier=blue&tier=gold
+> ```
+
 ## Resources
 
 [https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/04-Testing_for_HTTP_Parameter_Pollution](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/04-Testing_for_HTTP_Parameter_Pollution)
+
+[https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/HTTP%20Parameter%20Pollution](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/HTTP%20Parameter%20Pollution)
