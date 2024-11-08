@@ -25,7 +25,7 @@ Depending on the template engine in use, testers will be able to fully exploit t
 > [!TIP]
 > Many template engines offer a sandboxed mode for intentional template injection (to offer rich functionalities). A server-side template injection can sometimes be a feature and not a vulnerability.
 
-## Creating the payload from scratch
+## Creating a payload from scratch
 
 After finding a vulnerable field with a basic payload, the attacker still needs to exploit it. The next step is to find a variable that can be used to access classes, variables or modules to run shell commands and get a RCE. The variables to search for depends on the detected render engine. For example, **Jinja2** has the `request` variable, it may be a good idea to try it first.
 
