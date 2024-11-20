@@ -1356,11 +1356,15 @@ export default defineConfig({
                 "items": [
                     {
                         "text": "Guide",
-                        "link": "/contributing.md"
+                        "link": "/contributing/contributing.md"
                     },
                     {
                         "text" : "Template",
-                        "link" :"/template.md"
+                        "link" :"/contributing/template.md"
+                    },
+                    {
+                        "text": "Donate ❤️",
+                        "link": "/contributing/donate.md"
                     }
                 ]
             },
