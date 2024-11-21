@@ -23,4 +23,8 @@ Your donations play a crucial role in sustaining the platform, covering
 
 # Donaters
 
+You can choose to remain anonymous or share your name or profile link (GitHub or X/Twitter) in the donation form (`Name or GitHub/X link to add in our supporters` input. Example: `Nickname`, or `https://github.com/nickname`, or `https://x.com/nickname`).
+
+That being said, we thank all of you for your generosity and support below (and those who chose to remain anonymous of course 🤫).
+
 <Donaters />
