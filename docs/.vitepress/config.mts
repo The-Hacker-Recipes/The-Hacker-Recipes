@@ -1368,7 +1368,7 @@ export default defineConfig({
                     },
                     {
                         "text": "Shop 🛍️",
-                        "link": "https://shop.thehackers.recipes/"
+                        "link": "https://thehackers.recipes/"
                     }
                 ]
             },
