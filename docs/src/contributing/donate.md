@@ -25,7 +25,7 @@ Your donations play a crucial role in sustaining the platform, covering
 > If you're a company, you can also [sponsor](/contributing/sponsor.md) the project.
 
 > [!IMPORTANT] Shop 🛍️
-> If you prefer to support the project while getting something in return, you can also [shop](/shop.md) some of our merch.
+> If you prefer to support the project while getting something in return, you can also [shop](https://thehacker.recipes/) some of our merch.
 
 # Last donaters
 
