@@ -1355,16 +1355,20 @@ export default defineConfig({
                 "collapsed": false,
                 "items": [
                     {
-                        "text": "Guide",
-                        "link": "/contributing/contributing.md"
-                    },
-                    {
-                        "text" : "Template",
-                        "link" :"/contributing/template.md"
+                        "text": "Write 📝",
+                        "link": "/contributing/write.md"
                     },
                     {
                         "text": "Donate ❤️",
                         "link": "/contributing/donate.md"
+                    },
+                    {
+                        "text": "Sponsor 🌟",
+                        "link": "/contributing/sponsor.md"
+                    },
+                    {
+                        "text": "Shop 🛍️",
+                        "link": "https://shop.thehackers.recipes/"
                     }
                 ]
             },

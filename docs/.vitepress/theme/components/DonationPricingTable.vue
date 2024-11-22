@@ -5,32 +5,18 @@ const tiers = [
     name: 'Choco Chip',
     price: '$any',
     period: 'one-time',
-    description: 'Support us with a one-time donation with the amount of your choice 💖',
-    stripeLink: 'https://buy.stripe.com/custom-one-time-link'
-  },
-  {
-    emoji: '🥣',
-    name: 'Cereal Bowl',
-    price: '$20',
-    period: 'per year',
-    description: 'The Hacker Recipes needs you ❤️ If you like the project, please consider donating to keep it growing 🙏',
-    stripeLink: 'https://buy.stripe.com/20-dollar-subscription'
-  },
-  {
-    emoji: '👥',
-    name: 'Breakfast Club',
-    price: '$50',
-    period: 'per year',
-    description: 'For frequent users of The Hacker Recipes who want the project to deliver fresh content regularly 🫡',
-    stripeLink: 'https://buy.stripe.com/50-dollar-subscription'
+    description: 'Support us with a one-time donation. Every donation, no matter the size, makes a difference.',
+    stripeLink: 'https://buy.stripe.com/custom-one-time-link',
+    donateButtonText: 'Donate once'
   },
   {
     emoji: '🧑‍🍳',
-    name: 'Golden Chef',
-    price: '$100',
+    name: 'Breakfast Club',
+    price: '$50',
     period: 'per year',
-    description: 'Be one of the top supporters 🚀 You want the project to grow fast and provide new quality content soon.',
-    stripeLink: 'https://buy.stripe.com/100-dollar-subscription'
+    description: 'For frequent users of The Hacker Recipes who want the project to cover more ground as soon as possible.',
+    stripeLink: 'https://buy.stripe.com/50-dollar-subscription',
+    donateButtonText: 'Donate yearly'
   }
 ]
 </script>
@@ -54,7 +40,7 @@ const tiers = [
            class="donate-button" 
            target="_blank" 
            rel="noopener">
-          Donate
+          {{ tier.donateButtonText }}
         </a>
       </div>
     </div>
@@ -82,7 +68,6 @@ const tiers = [
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  min-height: 300px;
   align-items: center;
 }
 
@@ -93,7 +78,7 @@ const tiers = [
 .emoji {
   font-size: 2.5rem;
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .tier-name {
