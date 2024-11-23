@@ -70,19 +70,13 @@ function normalizeAmount(amount: number, currency: string): { amount: number; wa
 function getColorStyle(amount: number, maxAmount: number): { backgroundColor: string; color: string } {
   const normalizedValue = amount / maxAmount
   
-  // Fixed red value for the red-orange-yellow spectrum
-  const red = 255
-  // Green varies from 0 (red) to 255 (yellow) based on exact amount
-  // Invert the normalizedValue to make higher amounts more red
-  const green = Math.round(255 * normalizedValue)
-  
-  // Make the color more vibrant by adjusting opacity based on amount
-  // Invert the opacity calculation too
-  const opacity = 0.15 + (0.05 * (1 - normalizedValue)) // Lower amounts get slightly more opaque
+  const red = Math.round(161 + (255 - 161) * normalizedValue)
+  const green = Math.round(98 + (126 - 98) * normalizedValue)
+  const blue = Math.round(247 * (1 - normalizedValue))
   
   return {
-    backgroundColor: `rgba(${red}, ${green}, 0, ${opacity})`,
-    color: `rgb(${red}, ${green}, 0)`
+    backgroundColor: `rgba(${red}, ${green}, ${blue}, 0.1)`,
+    color: `rgb(${red}, ${green}, ${blue})`
   }
 }
 
