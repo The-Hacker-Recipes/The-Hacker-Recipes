@@ -15,7 +15,7 @@ The attacker can update the owner of the target object. Once the object owner ha
 From UNIX-like systems, this can be done with [Impacket](https://github.com/SecureAuthCorp/impacket)'s owneredit.py (Python).
 
 ```bash
-owneredit.py -action write -owner 'attacker' -target 'victim' 'DOMAIN'/'USER':'PASSWORD'
+owneredit.py -action write -new-owner 'attacker' -target 'victim' 'DOMAIN'/'USER':'PASSWORD'
 ```
 
 Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
