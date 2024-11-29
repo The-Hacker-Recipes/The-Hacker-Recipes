@@ -210,3 +210,5 @@ After the SCCM infrastructure compromise, this page will describe how to pivot t
 [https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087](https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087)
 
 [https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43](https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43)
+
+[https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial](https://www.synacktiv.com/publications/sccmsecretspy-exploiting-sccm-policies-distribution-for-credentials-harvesting-initial)
