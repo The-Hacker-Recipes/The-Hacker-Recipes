@@ -40,6 +40,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 - [ESC12  "shell-access-to-adcs-ca-with-yubihsm"](certificate-authority.md#shell-access-to-adcs-ca-with-yubihsm-esc12)
 - [ESC13  "issuance-policiy-with-privileged-group-linked"](certificate-templates.md#esc13-issuance-policiy-with-privileged-group-linked)
 - [ESC14  "weak-explicit-mapping"](certificate-templates.md#esc14-weak-explicit-mapping)
+- [ESC15  "arbitrary application policy"](certificate-templates.md#esc15-arbitrary-application-policy)
 - [Certifried.md](certifried.md)
 
 ### Terminology
@@ -51,6 +52,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 > * Certificate Template — a collection of settings and policies that defines the contents of a certificate issued by an enterprise CA
 > * CSR (Certificate Signing Request) — a message sent to a CA to request a signed certificate
 > * EKU (Extended/Enhanced Key Usage) — one or more object identifiers (OIDs) that define how a certificate can be used
+> * Application Policy — this does the same thing as EKUs, but with a few more options. Specific to Windows environments
 >
 > ([specterops.io](https://posts.specterops.io/certified-pre-owned-d95910965cd2))
 
@@ -141,7 +143,7 @@ Certify.exe cas
 
 The different domain escalation scenarios are detailed in the following parts.
 
-- ESC1 to ESC3, ESC9, ESC10, ESC13 and ESC14: [Certificate Templates](certificate-templates.md)
+- ESC1 to ESC3, ESC9, ESC10, ESC13, ESC14 and ESC15: [Certificate Templates](certificate-templates.md)
 - ESC6 and ESC12: [Certificate Authority](certificate-authority.md)
 - ESC4, ESC5 & ESC7: [Access Controls](access-controls.md)
 - ESC8, ESC11: [Unsigned Endpoints](unsigned-endpoints.md)
@@ -158,3 +160,5 @@ The different domain escalation scenarios are detailed in the following parts.
 [https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks](https://http418infosec.com/ad-cs-the-certified-pre-owned-attacks)
 
 [https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6](https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6)
+
+[https://trustedsec.com/blog/ekuwu-not-just-another-ad-cs-esc](https://trustedsec.com/blog/ekuwu-not-just-another-ad-cs-esc)
