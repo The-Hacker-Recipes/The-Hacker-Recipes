@@ -62,3 +62,7 @@ GIF89a
 [https://www.acunetix.com/websitesecurity/upload-forms-threat/](https://www.acunetix.com/websitesecurity/upload-forms-threat/)
 
 [https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files)
+
+https://zerothreat.ai/blog/security-misconfiguration-example-impact-strategies
+
+
