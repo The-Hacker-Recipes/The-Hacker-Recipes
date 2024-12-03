@@ -147,3 +147,14 @@
 .logo{
     margin-left: 0;
 }
+
+/* GRID IMAGE CHANGE */
+.vp-sponsor-grid.mini .vp-sponsor-grid-image {
+    max-width: 200px;
+    max-height: 75px;
+}
+
+.vp-sponsor-grid.xmini .vp-sponsor-grid-image {
+    max-width: 80px;
+    max-height: 40px;
+}

@@ -1,3 +1,8 @@
+---
+category: demo
+authors: AzeTIIx, ShutdownRepo
+---
+
 # Sponsor 🌟
 
 The Hacker Recipes is a free platform, created in 2020, dedicated to theoretical and practical guides on offensive security.
