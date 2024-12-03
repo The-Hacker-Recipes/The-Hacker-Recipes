@@ -905,7 +905,7 @@ export default defineConfig({
                                 "link": "/web/inputs/jwt.md"
                             },
                             {
-                                "text": "🛠️ HTTP parameter pollution",
+                                "text": "HTTP parameter pollution",
                                 "link": "/web/inputs/http-parameter-pollution.md"
                             },
                             {
