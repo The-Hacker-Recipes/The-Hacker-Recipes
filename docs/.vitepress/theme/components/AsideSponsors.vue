@@ -1,3 +1,7 @@
+<!-- USE FOR ALL PAGES ON PROD --> 
+<!-- TODO: ADD PER COUNTRY FEATURE --> 
+
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { VPDocAsideSponsors } from 'vitepress/theme'
@@ -8,7 +12,7 @@ const { data } = useSponsor()
 const sponsors = computed(() => {
   return (
     data?.value
-     .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') // Exclure les sponsors bannière
+     .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') 
       .map((sponsor) => {
         return {
           size: sponsor.size === 'big' ? 'mini' : 'xmini',
@@ -20,18 +24,6 @@ const sponsors = computed(() => {
 </script>
 
 <template>
-  <!--<a
-    class="sponsor"
-    href="https://sponsor.org/?utm=vite-sidebar"
-    target="_blank"
-  >
-    <img width="22" height="22" src="/sponsor.svg" />
-    <span>
-      <p class="extra-info">Building Together</p>
-      <p class="heading">sponsor 24 - Oct 3</p>
-      <p class="extra-info">Get your free ticket!</p>
-    </span>
-  </a>-->
   <VPDocAsideSponsors v-if="data" :data="sponsors" />
 </template>
 

@@ -1,10 +1,12 @@
+<!-- USE FOR DEMO PAGE ONLY --> 
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { VPDocAsideSponsors } from 'vitepress/theme'
 import { useData } from 'vitepress'
 import { useSponsor } from '../composables/sponsors'
 
-const { page } = useData() // Récupération des données de la page actuelle
+const { page } = useData() 
 const { data } = useSponsor()
 
 // Vérifie si la catégorie est "demo"
@@ -14,7 +16,7 @@ const isDemoCategory = computed(() => page.value.frontmatter.category === 'demo'
 const sponsors = computed(() => {
   return (
     data?.value
-      .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') // Exclure les sponsors bannière
+      .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') 
       .map((sponsor) => {
         return {
           size: sponsor.size === 'big' ? 'mini' : 'xmini',
@@ -26,12 +28,10 @@ const sponsors = computed(() => {
 </script>
 
 <template>
-  <!-- N'affiche les sponsors que si la catégorie est "demo" -->
   <VPDocAsideSponsors v-if="data && isDemoCategory" :data="sponsors" />
 </template>
 
 <style>
-/* Styles inchangés */
 .sponsor {
   margin-top: 1rem;
   margin-bottom: 1rem;
