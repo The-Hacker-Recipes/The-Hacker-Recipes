@@ -63,6 +63,8 @@ Depending on the web server, a parameter may not be processed in the same way. H
 
 ### Example
 
+::: details Google CTF Challenge
+
 From the **Under Construction** web challenge of the 2023 Google CTF.
 
 This challenge had 2 web servers : a **Flask** one and a **PHP (Apache)** one. When reaching the main page, a register form asked to choose a username, a password and a tier. The goal was to get the **"Gold tier"**. When registering, the first web server (Flask) checked the tier wasn't the "Gold tier" that only the CEO had access to. If the check passed, it then forwarded the HTTP request to the PHP server that stored the registration in the database.
@@ -72,6 +74,8 @@ To bypass the check, the user had to abuse a parameter pollution. As seen in the
 > ```
 > http://<url>/signup?username=X&password=Y&tier=blue&tier=gold
 > ```
+
+:::
 
 ## Resources
 
