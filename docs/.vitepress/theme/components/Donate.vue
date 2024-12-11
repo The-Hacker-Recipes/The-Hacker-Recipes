@@ -7,7 +7,7 @@
       <span>
         <p class="extra-info">Keep us growing</p>
         <p class="heading">Support THR</p>
-        <p class="extra-info">Donate or buy merch!</p>
+        <p class="extra-info">Consider donating</p>
       </span>
     </a>
   </template>

@@ -1371,8 +1371,7 @@ export default defineConfig({
         ],
         socialLinks: [
             { icon: 'github', link: 'https://github.com/The-Hacker-Recipes/The-Hacker-Recipes' },
-            { icon: 'x', link: 'https://x.com/_nwodtuhs' },
-            { icon: 'linkedin', link: 'https://www.linkedin.com/in/nwodtuhs/' }
+
         ],
         editLink: {
             text: "Contribute to this page",
