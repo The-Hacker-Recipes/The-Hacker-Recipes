@@ -28,8 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    left:4px;
-    width: 95%;
+    width: 100%;
     gap: 1rem;
     background-color: var(--vp-c-bg-alt);
     border: 2px solid transparent; 

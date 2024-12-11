@@ -29,8 +29,7 @@ export default {
     const route = useRoute()
 
     return h(DefaultTheme.Layout, null, {
-      'aside-ads-before': () => h(AsideSponsorsDemo), 
-      'aside-outline-after': () => h(Donate), 
+      'aside-ads-before': () => h('div', {}, [h(Donate),h(AsideSponsorsDemo)]),
       //'aside-ads-before': () => h(AsideSponsors), //Final grid
       'aside-ads-after': () => h(Authors),
       // 'doc-before': () => h(Placeholder),
@@ -39,7 +38,7 @@ export default {
       'doc-before': () => h(BannerSponsor),
       'doc-bottom': () => h(FooterLinks),
       //'doc-after': () => isMobileorTablet.value ? h(AsideSponsors, { style: { marginTop: '24px' } }) : null, //Final grid
-      'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Authors), h(Donate)]): null,
+      'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Donate), h(Authors)]): null,
       'doc-after': () =>isMobileorTablet.value? h(AsideSponsorsDemo, { style: { marginTop: '24px' } }): null,
       'sidebar-nav-before': () => h(News),
       'not-found': () => h(PageNotFound),
