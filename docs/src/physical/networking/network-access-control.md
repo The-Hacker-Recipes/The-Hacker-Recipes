@@ -1,13 +1,13 @@
 ---
 description: Bypassing Network Access Control Systems
-authors: ShutdownRepo, sckdev
+authors: ShutdownRepo, sckdev, blepdoge
 ---
 
 # Network Access Control
 
 ## Theory
 
-[NAC](https://en.wikipedia.org/wiki/Network_Access_Control) (Network Access Control) acts as a kind of a gatekeeper to the local network infrastructure. Its usually works with whitelists, blacklists, authentication requirements or host scanning to restrict access and keep unwanted devices out of the network.
+[NAC](https://en.wikipedia.org/wiki/Network_Access_Control) (Network Access Control) acts as a kind of a gatekeeper to the local network infrastructure. It usually works with whitelists, blacklists, authentication requirements or host scanning to restrict access and keep unwanted devices out of the network.
 
 ### Basics
 
@@ -141,9 +141,9 @@ MAC-based and 802.1x are usually managed one of many ways:
 
 [MAC Authentication Bypass (MAB)](https://networklessons.com/cisco/ccie-routing-switching-written/mac-authentication-bypass-mab) can be done by spoofing an authorized MAC address.
 
-The first step in spoofing an authorized MAC address is to find one. This can be done by physically searching addresses on printers, labels, IP phones and similar equipment, or by using [Wireshark](https://www.wireshark.org/) to manually inspect broadcast and multicast packets that travel on the network and obtain some MAC addresses in the traffic.c.
+The first step in spoofing an authorized MAC address is to find one. This can be done by physically searching addresses on printers, labels, IP phones and similar equipment, or by using [Wireshark](https://www.wireshark.org/) to manually inspect broadcast and multicast packets that travel on the network and obtain some MAC addresses in the traffic.
 
-[macchanger](https://github.com/alobbs/macchanger) can then be used to spoof the a MAC address. Once there, cables can be swapped to access the customer's network.
+[macchanger](https://github.com/alobbs/macchanger) can then be used to spoof a MAC address. Once there, cables can be swapped to access the customer's network.
 
 ```bash
 # manually set the address
@@ -185,13 +185,13 @@ Use a Hub, switch the MAC address to the victim's one, connect the drop box and 
 
 #### Using a transparent bridge
 
-This idea involves a device that - simply spoken - in a first instance just lets all the traffic traverse it by means of forwarding rules, being totally transparent to the network and all the participants. Tt then does some tcpdump magic to sniff traffic like ARP, NetBIOS but also Kerberos, Active Directory, web etc., extracting the needed info to spoof the victim and the networks gateway to stay under the radar. With this info the needed rules in ebtables, iptables etc. are automatically created, and will allow an attacker to interact with the network mimicking the victim.
+This idea involves a device that - simply spoken - in a first instance just lets all the traffic traverse it by means of forwarding rules, being totally transparent to the network and all the participants. It then does some tcpdump magic to sniff traffic like ARP, NetBIOS but also Kerberos, Active Directory, web etc., extracting the needed info to spoof the victim and the networks gateway to stay under the radar. With this info the needed rules in ebtables, iptables etc. are automatically created, and will allow an attacker to interact with the network mimicking the victim.
 
 There is an awesome tool called [nac_bypass](https://github.com/scipag/nac_bypass) from [Mick Schneider](https://twitter.com/0x6d69636b) which he walks through in [this](https://www.scip.ch/?labs.20190207) blog post.
 
 The steps are as follows:
 
-* find a target deivce and put the dropbox in between
+* find a target device and put the dropbox in between
 * start the `nac_bypass_setup.sh` script
 
 ![](<./assets/nac bypass setup.png>)

@@ -29,7 +29,7 @@ export default defineConfig({
         ['link', { rel: 'mask-icon', href: '/images/safari-pinned-tab.svg', color: '#5bbad5' }],
         ['meta', { name: 'msapplication-TileColor', content: '#da532c' }],
         ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0' }],
-        ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-211RDJSM3Y' }],
+        ['script', { async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-211RDJSM3Y' }],
         ['script', {}, "window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-211RDJSM3Y');" ]
     ],
     transformHead: ({ pageData }) => {
@@ -178,7 +178,7 @@ export default defineConfig({
                                                 "link": "/ad/movement/credentials/dumping/cached-kerberos-tickets.md"
                                             },
                                             {
-                                                "text": "🛠️ Windows Credential Manager",
+                                                "text": "Windows Credential Manager",
                                                 "link": "/ad/movement/credentials/dumping/windows-credential-manager.md"
                                             },
                                             {
@@ -249,7 +249,7 @@ export default defineConfig({
                                         "link": "/ad/movement/mitm-and-coerced-authentications/wsus-spoofing.md"
                                     },
                                     {
-                                        "text": "🛠️ LLMNR, NBT-NS, mDNS spoofing",
+                                        "text": "LLMNR, NBT-NS, mDNS spoofing",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md"
                                     },
                                     {
@@ -261,15 +261,15 @@ export default defineConfig({
                                         "link": "/ad/movement/mitm-and-coerced-authentications/wpad-spoofing.md"
                                     },
                                     {
-                                        "text": "🛠️ MS-EFSR abuse (PetitPotam)",
+                                        "text": "MS-EFSR abuse (PetitPotam)",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/ms-efsr.md"
                                     },
                                     {
-                                        "text": "🛠️ MS-RPRN abuse (PrinterBug)",
+                                        "text": "MS-RPRN abuse (PrinterBug)",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/ms-rprn.md"
                                     },
                                     {
-                                        "text": "🛠️ MS-FSRVP abuse (ShadowCoerce)",
+                                        "text": "MS-FSRVP abuse (ShadowCoerce)",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/ms-fsrvp.md"
                                     },
                                     {
@@ -931,6 +931,10 @@ export default defineConfig({
                             {
                                 "text": "🛠️ Null-byte injection",
                                 "link": "/web/inputs/null-byte-injection.md"
+                            },
+                            {
+                                "text": "🛠️ API Pentest",
+                                "link": "/web/inputs/api.md"
                             }
                         ]
                     }
