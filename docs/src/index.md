@@ -11,7 +11,7 @@ lastUpdated: false
 This project is aimed at providing technical guides on various hacking topics. The most advanced topics are Active Directory and Web services. Other topics will be added. The ultimate goal is to centralize all hacking techniques :eyes:
 
 > [!SUCCESS] Exegol
-> Almost all tools mentioned in theses notes can be found in [Exegol](https://exegol.rtfd.io) (a professional alternative to offsec operating systems such as Kali Linux).
+> Almost all tools mentioned in these notes can be found in [Exegol](https://exegol.rtfd.io) (a professional alternative to offsec operating systems such as Kali Linux).
 
 Cheatsheets are valuable resources, but they often either overwhelm with complexity or fall short by not providing enough context and explanation. This is not a cheatsheet project. Most of the content published here is original content, that's verified and tested whenever possible.
 
