@@ -1363,12 +1363,8 @@ export default defineConfig({
                         "link": "/contributing/donate.md"
                     },
                     {
-                        "text": "Sponsor 🌟",
-                        "link": "/contributing/sponsor.md"
-                    },
-                    {
-                        "text": "Shop 🛍️",
-                        "link": "https://thehacker.recipes/"
+                        "text": "Buy ads 🌟",
+                        "link": "/contributing/ads.md"
                     }
                 ]
             },

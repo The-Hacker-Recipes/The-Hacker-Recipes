@@ -7,6 +7,7 @@
     --vp-c-pink-2: #bf4cc9;
     --vp-c-pink-3: #cf5cd9;
     --vp-c-pink-soft: rgba(225, 122, 234, 0.14);
+    --vp-c-text-legal: rgba(80, 80, 87, 0.38);
 }
   
 .dark {
@@ -16,6 +17,7 @@
     --vp-c-pink-2: #d979e6;
     --vp-c-pink-3: #ca5cd9;
     --vp-c-pink-soft: rgba(225, 122, 234, 0.16);
+    --vp-c-text-legal: rgba(181, 181, 187, 0.38);
 }
 
 /* CUSTOM BLOCKS PADDING FIX */

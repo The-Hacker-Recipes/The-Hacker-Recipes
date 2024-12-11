@@ -15,6 +15,8 @@ import Donaters from './components/Donaters.vue'
 import DonationPricingTable from './components/DonationPricingTable.vue'
 import BannerSponsor from './components/BannerSponsor.vue'
 import AsideSponsorsDemo from './components/AsideSponsorsDemo.vue'
+import Donate from './components/Donate.vue'
+import FooterLinks from './components/FooterLinks.vue';
 
 
 const isMobileorTablet = useMediaQuery('(max-width: 1279px)')
@@ -28,17 +30,17 @@ export default {
 
     return h(DefaultTheme.Layout, null, {
       'aside-ads-before': () => h(AsideSponsorsDemo), 
+      'aside-outline-after': () => h(Donate), 
       //'aside-ads-before': () => h(AsideSponsors), //Final grid
       'aside-ads-after': () => h(Authors),
       // 'doc-before': () => h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
       'doc-before': () => h(BannerSponsor),
-      'doc-footer-before': () => isMobileorTablet.value ? h(Authors) : null,
-      'doc-after': () => isMobileorTablet.value ? h(AsideSponsorsDemo, { style: { marginTop: '24px' } }) : null,
+      'doc-bottom': () => h(FooterLinks),
       //'doc-after': () => isMobileorTablet.value ? h(AsideSponsors, { style: { marginTop: '24px' } }) : null, //Final grid
-      // 'aside-outline-after': () => isMobile.value ? null : h(Authors),
-      // 'nav-screen-content-after': () => h(Placeholder),
+      'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Authors), h(Donate)]): null,
+      'doc-after': () =>isMobileorTablet.value? h(AsideSponsorsDemo, { style: { marginTop: '24px' } }): null,
       'sidebar-nav-before': () => h(News),
       'not-found': () => h(PageNotFound),
     })

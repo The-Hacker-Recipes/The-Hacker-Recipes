@@ -73,13 +73,13 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
       description: "This is a placeholder for impactful text designed to attract and engage users. Showcase your vision, values, and why people should trust and choose your services.",
       categories: ['demo'], 
       lightTheme: {
-        primaryColor: '#7b42f6',
-        secondaryColor: '#42aaff',
+        primaryColor: '#e141d999',
+        secondaryColor: '#8071f199',
         logo: '/images/sponsors/logo_light.png'
       },
       darkTheme: {
-        primaryColor: '#9e6eff',
-        secondaryColor: '#66bbff',
+        primaryColor: '#ba66ff99',
+        secondaryColor: '#ff6ee799',
         logo: '/images/sponsors/logo_dark.png'
       }
     }

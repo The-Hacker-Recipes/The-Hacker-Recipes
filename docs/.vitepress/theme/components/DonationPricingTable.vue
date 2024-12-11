@@ -6,7 +6,7 @@ const tiers = [
     price: '$any',
     period: 'one-time',
     description: 'Support us with a one-time donation. Every donation, no matter the size, makes a difference.',
-    stripeLink: 'https://buy.stripe.com/custom-one-time-link',
+    stripeLink: 'https://donate.stripe.com/5kA03P73O2vv2pqcMM',
     donateButtonText: 'Donate once'
   },
   {
@@ -15,7 +15,7 @@ const tiers = [
     price: '$50',
     period: 'per year',
     description: 'For frequent users of The Hacker Recipes who want the project to cover more ground as soon as possible.',
-    stripeLink: 'https://buy.stripe.com/50-dollar-subscription',
+    stripeLink: 'https://donate.stripe.com/8wM17Tbk41rre88001',
     donateButtonText: 'Donate yearly'
   }
 ]

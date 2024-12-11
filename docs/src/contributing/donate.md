@@ -21,11 +21,11 @@ Your donations play a crucial role in sustaining the platform, covering
 
 <DonationPricingTable />
 
-> [!TIP] Sponsor 🌟
-> If you're a company, you can also [sponsor](/contributing/sponsor.md) the project.
+> [!TIP] Buy ads 🌟
+> If you're a company, you can also [buy ads](/contributing/ads.md).
 
-> [!IMPORTANT] Shop 🛍️
-> If you prefer to support the project while getting something in return, you can also [shop](https://thehacker.recipes/) some of our merch.
+<!-- > [!IMPORTANT] Shop 🛍️
+> If you prefer to support the project while getting something in return, you can also [shop](https://thehacker.recipes/) some of our merch.-->
 
 # Last donaters
 
