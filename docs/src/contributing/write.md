@@ -2,9 +2,11 @@
 authors: ShutdownRepo, AzeTIIx
 ---
 
-# Guide for authors
+# Guide for authors 📝
 
-As an author contributing to this project, it's essential to follow a consistent structure to ensure that your article is easy to read and understand. 
+The Hacker Recipes is a community-driven project, and we welcome contributions from anyone who wants to share their knowledge and help others learn.
+In order to keep the quality of the content high, in terms of readability and structure, we ask contributors to follow a consistent structure and best practices when writing articles.
+
 This guide outlines the typical structure, file organization, and best practices for writing articles that align with the project's standards.
 
 ## Files and folders

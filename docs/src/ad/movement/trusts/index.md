@@ -9,7 +9,7 @@ authors: ShutdownRepo
 > [!WARNING]
 > Attacking Active Directory trust relationships requires a good understanding of a lot of concepts (what forests and domains are, how trusts work, what security mechanisms are involved and how they work, ...). Consequently, this page is lengthy, especially in the [theory](index#theory) and [resources](index#resources) parts, but I did my best to include all the necessary info here.
 >
-> **Pro tip**: use the page outline on the right panel, to brwose it more easily.
+> **Pro tip**: use the page outline on the right panel, to browse it more easily.
 
 
 ### Forest, domains & trusts
