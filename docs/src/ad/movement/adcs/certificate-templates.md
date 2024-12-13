@@ -862,7 +862,10 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 
 :::
 
-### (ESC15) Arbitrary application policy
+### (ESC15 - CVE-2024-49019) Arbitrary application policy
+
+> [!NOTE] NOTE
+> This privilege escalation has been marked as [CVE-2024-49019](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-49019) by Microsoft, and will therefore no longer be exploitable on patched systems.
 
 By default, the X509 standard uses EKUs to indicate the possible uses of a certificate. Under Windows, a field called `Application Policy` is added to certificates, and this does the same thing as EKUs, but with a few more options. If both EKUs and *application policies* are present in a certificate, the latter takes precedence.
 

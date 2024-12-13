@@ -40,7 +40,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 - [ESC12  "shell-access-to-adcs-ca-with-yubihsm"](certificate-authority.md#shell-access-to-adcs-ca-with-yubihsm-esc12)
 - [ESC13  "issuance-policiy-with-privileged-group-linked"](certificate-templates.md#esc13-issuance-policiy-with-privileged-group-linked)
 - [ESC14  "weak-explicit-mapping"](certificate-templates.md#esc14-weak-explicit-mapping)
-- [ESC15  "arbitrary application policy"](certificate-templates.md#esc15-arbitrary-application-policy)
+- [ESC15  "arbitrary application policy"](certificate-templates.md#esc15-CVE-2024-49019-arbitrary-application-policy)
 - [Certifried.md](certifried.md)
 
 ### Terminology
