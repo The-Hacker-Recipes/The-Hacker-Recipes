@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, joker2a
+authors: ShutdownRepo, joker2a, blepdoge
 ---
 
 # WPS
@@ -21,7 +21,7 @@ Below are some known attacks on Wi-Fi Protected Setup (WPS):
 
 ## Practice
 
-Most WPS attacks mentionned below can be conducted using [airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) (Bash) or [wifite2](https://github.com/derv82/wifite2) (Python).
+Most WPS attacks mentioned below can be conducted using [airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) (Bash) or [wifite2](https://github.com/derv82/wifite2) (Python).
 
 > [!TIP]
 > Monitor mode can be activated automatically with these tools. The [monitor](#monitor-mode) section would not needed then.

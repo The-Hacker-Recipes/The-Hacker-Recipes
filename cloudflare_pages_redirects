@@ -21,3 +21,4 @@
 /a-d/movement/ad-cs/*   /ad/movement/adcs/:splat
 /ad/movement/ad-cs/*   /ad/movement/adcs/:splat
 /a-d/*   /ad/:splat
+/ad-ds/*   /ad/:splat

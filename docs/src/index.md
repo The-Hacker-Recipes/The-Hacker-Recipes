@@ -2,7 +2,6 @@
 next: false
 editLink: false
 lastUpdated: false
-authors: 4ndr3w6, A1vinSmith, AzeTIIx, BlWasp, Bnder1, CravateRouge, Croumi, CryingWelkin, CyrilleFranchet, Hackndo, KenjiEndo15, Lamber-maybe, LucasParsy, NaxnN, PfiatDe, Pri3st, ShutdownRepo, ThePirateWhoSmellsOfSunflowers, WoBuGs, Yaxxine7, almandin, amirr0r, clem9669, dreamkinn, fransosiche, itbelongsinamuseum, joker2a, lap1nou, mauricelambert, mpgn, noraj, nuts7, p0dalirius, sckdev, skileau
 ---
 
 ![](<assets/welcome.png>){.rawimg}
@@ -12,7 +11,7 @@ authors: 4ndr3w6, A1vinSmith, AzeTIIx, BlWasp, Bnder1, CravateRouge, Croumi, Cry
 This project is aimed at providing technical guides on various hacking topics. The most advanced topics are Active Directory and Web services. Other topics will be added. The ultimate goal is to centralize all hacking techniques :eyes:
 
 > [!SUCCESS] Exegol
-> Almost all tool mentioned in theses notes all in [Exegol](https://exegol.rtfd.io) (a professional alternative to offsec operating systems such as Kali Linux).
+> Almost all tools mentioned in these notes can be found in [Exegol](https://exegol.rtfd.io) (a professional alternative to offsec operating systems such as Kali Linux).
 
 Cheatsheets are valuable resources, but they often either overwhelm with complexity or fall short by not providing enough context and explanation. This is not a cheatsheet project. Most of the content published here is original content, that's verified and tested whenever possible.
 
