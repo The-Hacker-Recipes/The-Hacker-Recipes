@@ -905,7 +905,7 @@ export default defineConfig({
                                 "link": "/web/inputs/jwt.md"
                             },
                             {
-                                "text": "🛠️ HTTP parameter pollution",
+                                "text": "HTTP parameter pollution",
                                 "link": "/web/inputs/http-parameter-pollution.md"
                             },
                             {
@@ -1355,20 +1355,23 @@ export default defineConfig({
                 "collapsed": false,
                 "items": [
                     {
-                        "text": "Guide",
-                        "link": "/contributing.md"
+                        "text": "Write 📝",
+                        "link": "/contributing/write.md"
                     },
                     {
-                        "text" : "Template",
-                        "link" :"/template.md"
+                        "text": "Donate ❤️",
+                        "link": "/contributing/donate.md"
+                    },
+                    {
+                        "text": "Buy ads 🌟",
+                        "link": "/contributing/ads.md"
                     }
                 ]
             },
         ],
         socialLinks: [
             { icon: 'github', link: 'https://github.com/The-Hacker-Recipes/The-Hacker-Recipes' },
-            { icon: 'x', link: 'https://x.com/_nwodtuhs' },
-            { icon: 'linkedin', link: 'https://www.linkedin.com/in/nwodtuhs/' }
+
         ],
         editLink: {
             text: "Contribute to this page",
