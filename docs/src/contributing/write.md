@@ -78,6 +78,12 @@ When writing your article, one should keep the following tone & voice.
 * **Professional and Authoritative**: The content should maintain a professional tone, suitable for a technical audience familiar with cybersecurity concepts.
 * **Instructional and Informative**: The writing aims to educate the reader, with clear instructions and explanations. It avoids being overly casual, focusing instead on delivering detailed, technical knowledge.
 
+> [!WARNING] Example to avoid
+> "You can conduct the attack with tool XYZ" --> "The attack can be conducted with tool XYZ"
+
+> [!TIP]
+> ChatGPT (or similar LLM agents) can be used to review content before creating a Pull Request :wink:
+
 ## Block Types
 
 The project uses a variety of block types to organize and present content.
