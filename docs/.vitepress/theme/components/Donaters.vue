@@ -95,7 +95,14 @@ function processSupporter(supporter: Supporter, maxAmount: number): ProcessedSup
     wasConverted
   }
 
-  if (supporter.name_or_link.includes('github.com')) {
+  // Check for Markdown link format: [name](link)
+  const markdownLinkMatch = supporter.name_or_link.match(/\[(.*?)\]\((.*?)\)/)
+  if (markdownLinkMatch) {
+    processed.displayName = markdownLinkMatch[1] // The name part
+    processed.link = markdownLinkMatch[2] // The URL part
+  }
+  // Only process platform-specific logic if it's not a Markdown link
+  else if (supporter.name_or_link.includes('github.com')) {
     const username = supporter.name_or_link.replace(/\/$/, '').split('/').pop() || ''
     processed.displayName = username
     processed.link = supporter.name_or_link

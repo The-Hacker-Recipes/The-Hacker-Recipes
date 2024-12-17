@@ -29,7 +29,7 @@ Your donations play a crucial role in sustaining the platform, covering
 
 # Last donaters
 
-You can choose to remain anonymous or share your name or profile link (GitHub or X/Twitter) in the donation form (`Name or GitHub/X link to add in our supporters` input. Example: `Nickname`, `https://github.com/nickname`, `https://x.com/nickname`, or `https://www.linkedin.com/in/nickname`).
+You can choose to remain anonymous or share your name or profile link (GitHub or X/Twitter) in the donation form (`Name or GitHub/X link to add in our supporters` input. Name or link examples : `Nickname`, `https://github.com/nickname`, `https://x.com/nickname`, `https://www.linkedin.com/in/nickname`, `[Nickname](https://github.com/nickname)`
 
 That being said, we thank all of you for your generosity and support (and those who chose to remain anonymous of course 🤫). 
 Below is the list of our donaters of the last 12 months, ordered by donation amount, from highest to lowest.
