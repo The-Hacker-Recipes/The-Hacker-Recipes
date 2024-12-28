@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, AzeTIIx
+authors: ShutdownRepo, AzeTIIx, WodenSec
 ---
 
 # Guide for authors 📝
@@ -17,7 +17,7 @@ All articles are stored in the `/docs/src` folder.
 
 === Article without images
 
-If the article doesn't include images (or other assets), if should be a markdown file with the `.md` extension, and named after the topic it covers.
+If the article doesn't include images (or other assets), it should be a markdown file with the `.md` extension, and named after the topic it covers.
 
 === Article with images
 
@@ -80,13 +80,13 @@ When writing your article, one should keep the following tone & voice.
 * **Impersonal and Objective**: The writing should avoid directly addressing the reader (e.g., “you") or using personal pronouns. Instead, use passive constructions or neutral phrasing (e.g., “The attack can be conducted using tool XYZ" rather than “You can conduct the attack with tool XYZ").
 
 > [!WARNING] Examples to avoid
-> * "This attack is super easy to pull off!" → “This attack is straightforward to execute."
-> * "Here’s a cool trick you can use to bypass the firewall" → “A technique to bypass the firewall involves…"
-> * "Just try running this command and see what happens" → “Run this command to observe its effect."
-> * "Don’t forget to check the logs!" → “Ensure that the logs are reviewed."
-> * "You can conduct the attack with tool XYZ" → “The attack can be conducted with tool XYZ"
-> * "We recommend using tool ABC for this process" → “Tool ABC is recommended for this process"
-> * "First, you should verify the configuration settings" → “The configuration settings should first be verified"
+> * "This attack is super easy to pull off!" → "This attack is straightforward to execute."
+> * "Here’s a cool trick you can use to bypass the firewall" → "A technique to bypass the firewall involves…"
+> * "Just try running this command and see what happens" → "Run this command to observe its effect."
+> * "Don’t forget to check the logs!" → "Ensure that the logs are reviewed."
+> * "You can conduct the attack with tool XYZ" → "The attack can be conducted with tool XYZ"
+> * "We recommend using tool ABC for this process" → "Tool ABC is recommended for this process"
+> * "First, you should verify the configuration settings" → "The configuration settings should first be verified"
 
 > [!TIP]
 > ChatGPT (or similar LLM agents) can be used to review content before creating a Pull Request :wink: Below is an example prompt.
@@ -157,13 +157,13 @@ b content
 THR uses GitHub-flavored alerts to render most callouts. The most common callouts in The Hacker Recipes are:
 
 > [!NOTE] NOTE
-> Note from the author, not critical to the main content. To calrify, offer references, add content or background.
+> Note from the author, not critical to the main content. To clarify, offer references, add content or background.
 
 > [!TIP] TIP
-> Offer helpful advice or best practices. Providing shortcut or expert recommandation.
+> Offer helpful advice or best practices. Providing shortcuts or expert recommandations.
 
 > [!WARNING] WARNING
-> Alert the reader to potentiel dangers. Provide OPSEC advice.
+> Alert the reader to potential dangers. Provide OPSEC advice.
 
 > [!CAUTION] CAUTION
 > When there's critical information the reader needs to be aware of.
@@ -179,13 +179,13 @@ The input for this goes like this:
 
 ```markdown
 > [!NOTE] NOTE
-> Note from the author, not critical to the main content. To calrify, offer references, add content or background.
+> Note from the author, not critical to the main content. To clarify, offer references, add content or background.
 
 > [!TIP] TIP
-> Offer helpful advice or best practices. Providing shortcut or expert recommandation.
+> Offer helpful advice or best practices. Providing shortcuts or expert recommandations.
 
 > [!WARNING] WARNING
-> Alert the reader to potentiel dangers. Provide OPSEC advice.
+> Alert the reader to potential dangers. Provide OPSEC advice.
 
 > [!CAUTION] CAUTION
 > When there's critical information the reader needs to be aware of.
@@ -199,10 +199,10 @@ Details blocks can also be used
 ```
 
 > [!NOTE]
-> The title of a callout is optionnal.
+> The title of a callout is optional.
 > ```
 > > [!NOTE]
-> The title of a callout is optionnal.
+> The title of a callout is optional.
 > ```
 
 ---
@@ -282,7 +282,7 @@ authors: author1, author2, ...
 ## Get started :rocket:
 
 1. Fork the repository (https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/fork)
-2. (optionnal) create a new branch in your fork, if you plan on working on different topics
+2. (optional) create a new branch in your fork, if you plan on working on different topics
 3. Create your content using this guide, and the template if needed
 4. Make sure the content builds fine with `npm install && npm run docs:dev`
 5. Make a Pull Request (https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/compare)
