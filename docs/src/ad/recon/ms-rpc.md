@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, Sud0Ru
 ---
 
 # MS-RPC
@@ -66,9 +66,21 @@ The Python script [ridenum](https://github.com/trustedsec/ridenum) can be used t
 > [!SUCCESS]
 > The enum4linux tool can be used to easily operate fast recon through MS-RPC, with Null session or not (see [this page](enum4linux.md)).
 
+### Enumerate Doamin users and computers
+Using auth-level = 1 (No authentication) against the MS-NRPC (Netlogon) interface on domain controllers.
+The method calls the `DsrGetDcNameEx2` function after binding MS-NRPC interface to check if the user or computer exists without any credentials. 
+The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implments this type of enumeration
+```bash 
+python3 nauth.py -t target -u users_file.txt -f computers_file.txt
+```
+
+
+
 ## Resources
 
 [https://mucomplex.medium.com/remote-procedure-call-and-active-directory-enumeration-616b234468e5](https://mucomplex.medium.com/remote-procedure-call-and-active-directory-enumeration-616b234468e5)
 
 [https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf](https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf)
+
+[https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2024/05/22190247/A-journey-into-forgotten-Null-Session-and-MS-RPC-interfaces.pdf](https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2024/05/22190247/A-journey-into-forgotten-Null-Session-and-MS-RPC-interfaces.pdf)
 
