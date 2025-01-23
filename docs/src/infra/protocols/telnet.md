@@ -139,7 +139,7 @@ hydra -l root -P $PATH_TO/seclists/Passwords/Default-Credentials/telnet-betterde
 
 
 ## Resources
-https://book.hacktricks.xyz/network-services-pentesting/pentesting-telnet
-https://secybr.com/posts/telnet-pentesting-best-practices/
-https://github.com/InfoSecWarrior/Offensive-Pentesting-Host/blob/main/Telnet/README.md
-https://techyrick.com/pentesting-telnet/
+https://book.hacktricks.xyz/network-services-pentesting/pentesting-telnet  
+https://secybr.com/posts/telnet-pentesting-best-practices/  
+https://github.com/InfoSecWarrior/Offensive-Pentesting-Host/blob/main/Telnet/README.md  
+https://techyrick.com/pentesting-telnet/  
