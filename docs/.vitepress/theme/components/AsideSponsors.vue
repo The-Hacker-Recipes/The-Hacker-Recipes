@@ -15,7 +15,7 @@ const fetchUserCountry = async () => {
   try {
     const response = await fetch('https://ipapi.co/json/');
     const result = await response.json();
-    userCountry.value = result.country_code || 'US'; // Default to US if not found
+    userCountry.value = result.country_code || 'FR'; // Default to FR if not found
   } catch (error) {
     console.error('Error fetching user country:', error);
   }
