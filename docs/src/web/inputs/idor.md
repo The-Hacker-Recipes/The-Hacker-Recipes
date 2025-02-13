@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: web
 ---
 
 # IDOR (Insecure Direct Object Reference)

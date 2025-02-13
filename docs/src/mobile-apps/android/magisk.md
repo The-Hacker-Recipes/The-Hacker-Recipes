@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: mobile-apps
 ---
 
 # Magisk

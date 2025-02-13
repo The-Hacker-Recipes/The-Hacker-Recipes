@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # NBT-NS

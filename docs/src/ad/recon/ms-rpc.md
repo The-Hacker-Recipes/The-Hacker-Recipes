@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # MS-RPC

@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1110.003
-authors: ShutdownRepo, mpgn, sckdev
+authors: 'ShutdownRepo, mpgn, sckdev'
+category: ad
 ---
 
 # Spraying

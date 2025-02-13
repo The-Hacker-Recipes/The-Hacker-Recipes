@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, mpgn, sckdev
+authors: 'ShutdownRepo, mpgn, sckdev'
+category: ad
 ---
 
 # LDAP

@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1557.001
-authors: ShutdownRepo, sckdev
+authors: 'ShutdownRepo, sckdev'
+category: ad
 ---
 
 # LLMNR, NBT-NS, mDNS spoofing

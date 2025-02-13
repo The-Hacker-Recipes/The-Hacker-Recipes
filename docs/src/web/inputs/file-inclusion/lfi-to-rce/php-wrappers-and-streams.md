@@ -1,5 +1,6 @@
 ---
-authors: LucasParsy, ShutdownRepo
+authors: 'LucasParsy, ShutdownRepo'
+category: web
 ---
 
 # PHP wrappers and streams

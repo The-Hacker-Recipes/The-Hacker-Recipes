@@ -1,5 +1,6 @@
 ---
-authors: Jenaye, ShutdownRepo
+authors: 'Jenaye, ShutdownRepo'
+category: evasion
 ---
 
 # 🛠️ Dropper

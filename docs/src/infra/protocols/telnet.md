@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, Tednoob17
+authors: 'ShutdownRepo, Tednoob17'
+category: infra
 ---
 
 # 🛠️ Telnet

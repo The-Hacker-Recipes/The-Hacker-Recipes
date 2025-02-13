@@ -1,8 +1,9 @@
 ---
 description: >-
- This technique can be used only after having obtained an initial access on the
- target
-authors: Jenaye, ShutdownRepo
+  This technique can be used only after having obtained an initial access on the
+  target
+authors: 'Jenaye, ShutdownRepo'
+category: evasion
 ---
 
 # 🛠️ Stealth with C2

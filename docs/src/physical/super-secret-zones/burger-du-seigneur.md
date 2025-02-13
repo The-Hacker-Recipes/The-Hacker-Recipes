@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: physical
 ---
 
 # 🍔 Burger du seigneur

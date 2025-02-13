@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1552.006
-authors: ShutdownRepo, p0dalirius, sckdev
+authors: 'ShutdownRepo, p0dalirius, sckdev'
+category: ad
 ---
 
 # Group Policy Preferences

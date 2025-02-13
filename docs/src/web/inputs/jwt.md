@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: web
 ---
 
 # Insecure JSON Web Tokens

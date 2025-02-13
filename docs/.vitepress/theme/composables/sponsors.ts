@@ -52,6 +52,13 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
       country: 'FR',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo1.svg',
+    },
+    {
+      name: 'Exegol',
+      categories: ['intro','ad', 'web','infra','evasion','physical','intelligence-gathering','radio','mobile-apps','contribute'],
+      country: 'FR',
+      url: 'https://exegol.readthedocs.io/en/latest/index.html',
+      img: '/images/sponsors/exegol.svg',
     }
   ],
   gold: [
@@ -69,6 +76,20 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo3.svg',
     },
+    {
+      name: 'Algosecure',
+      categories: ['intro','ad', 'web','infra','evasion','physical','intelligence-gathering','radio','mobile-apps','contribute'],
+      country: 'FR',
+      url: 'https://www.algosecure.fr/',
+      img: '/images/sponsors/algosecure.svg',
+    },
+    {
+      name: 'EPIEOS',
+      categories: ['intro','ad', 'web','infra','evasion','physical','intelligence-gathering','radio','mobile-apps','contribute'],
+      country: 'FR',
+      url: 'https://epieos.com/',
+      img: '/images/sponsors/epieos.svg',
+    }
   ],
   banner: [
     {

@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Techniques T1003 and T1552 (kind of)
 authors: ShutdownRepo
+category: ad
 ---
 
 # Shuffling
