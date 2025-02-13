@@ -1,22 +1,41 @@
-<!-- USE FOR ALL PAGES ON PROD --> 
-<!-- TODO: ADD PER COUNTRY FEATURE --> 
-
-
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { VPDocAsideSponsors } from 'vitepress/theme'
 import { useSponsor } from '../composables/sponsors'
+import { useData } from 'vitepress';
 
 const { data } = useSponsor()
+const { page } = useData();
+
+const currentCategory = computed(() => page.value.frontmatter.category || '');
+const userCountry = ref('');
+
+// Function to determine user's country using an external API
+const fetchUserCountry = async () => {
+  try {
+    const response = await fetch('https://ipapi.co/json/');
+    const result = await response.json();
+    userCountry.value = result.country_code || 'US'; // Default to US if not found
+  } catch (error) {
+    console.error('Error fetching user country:', error);
+  }
+};
+
+onMounted(() => {
+  fetchUserCountry();
+});
 
 const sponsors = computed(() => {
   return (
     data?.value
-     .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') 
+      .filter((sponsor) => sponsor.tier !== 'Banner Sponsors')
       .map((sponsor) => {
         return {
           size: sponsor.size === 'big' ? 'mini' : 'xmini',
-          items: sponsor.items,
+          items: sponsor.items.filter(item => 
+            item.categories.includes(currentCategory.value) && 
+            (item.country === userCountry.value || item.country === 'ALL')
+          ),
         }
       }) ?? []
   )

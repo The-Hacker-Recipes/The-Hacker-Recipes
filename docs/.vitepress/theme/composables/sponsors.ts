@@ -13,6 +13,7 @@ interface Sponsors {
 interface Sponsor {
   name: string
   categories: string[]
+  country: string
   img: string
   url: string
   hasDark?: true
@@ -23,7 +24,8 @@ interface BannerSponsor {
   url: string
   tagline: string
   description: string
-  categories: string[] 
+  categories: string[]
+  country: string
   lightTheme: {
     primaryColor: string
     secondaryColor: string
@@ -46,7 +48,8 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
   special: [
     {
       name: 'Demo1',
-      categories: ['demo'], 
+      categories: ['demo'],
+      country: 'FR',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo1.svg',
     }
@@ -54,13 +57,15 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
   gold: [
     {
       name: 'Demo2',
-      categories: ['demo'], 
+      categories: ['demo'],
+      country: 'FR',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo2.svg',
     },
     {
       name: 'Demo3',
-      categories: ['demo'], 
+      categories: ['demo'],
+      country: 'FR',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo3.svg',
     },
@@ -71,7 +76,8 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
       url: 'https://www.example.com',
       tagline: 'Your trusted partner in innovation.',
       description: "This is a placeholder for impactful text designed to attract and engage users. Showcase your vision, values, and why people should trust and choose your services.",
-      categories: ['demo'], 
+      categories: ['demo'],
+      country: 'FR',
       lightTheme: {
         primaryColor: '#e141d999',
         secondaryColor: '#8071f199',
