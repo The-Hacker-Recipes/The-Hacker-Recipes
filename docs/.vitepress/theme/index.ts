@@ -31,12 +31,8 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'aside-ads-before': () =>  h('div', {}, [h(Donate),h(AsideSponsors)]), //Final grid
       'aside-ads-after': () => h(Authors),
-      // 'doc-before': () => h(Placeholder),
-      // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
-      // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
       'doc-before': () => h(BannerSponsor),
       'doc-bottom': () => h(FooterLinks),
-      //'doc-after': () => isMobileorTablet.value ? h(AsideSponsors, { style: { marginTop: '24px' } }) : null, //Final grid
       'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Donate), h(Authors)]): null,
       'doc-after': () =>isMobileorTablet.value? h(AsideSponsors, { style: { marginTop: '24px' } }): null,
       'sidebar-nav-before': () => h(News),

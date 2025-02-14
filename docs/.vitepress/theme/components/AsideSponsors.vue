@@ -8,7 +8,7 @@ const { data } = useSponsor()
 const { page } = useData();
 
 const currentCategory = computed(() => page.value.frontmatter.category || '');
-const userCountry = ref('');
+const userCountry = ref(null);
 
 // Function to determine user's country using an external API
 const fetchUserCountry = async () => {
@@ -26,6 +26,10 @@ onMounted(() => {
 });
 
 const sponsors = computed(() => {
+  if (userCountry.value === null) {
+    return null; // Attendre la récupération du pays
+  }
+
   return (
     data?.value
       .filter((sponsor) => sponsor.tier !== 'Banner Sponsors')
@@ -38,12 +42,12 @@ const sponsors = computed(() => {
           ),
         }
       }) ?? []
-  )
-})
+  );
+});
 </script>
 
 <template>
-  <VPDocAsideSponsors v-if="data" :data="sponsors" />
+  <VPDocAsideSponsors v-if="data && sponsors !== null" :data="sponsors" />
 </template>
 
 <style>
