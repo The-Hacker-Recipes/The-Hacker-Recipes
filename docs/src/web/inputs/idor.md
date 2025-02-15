@@ -32,7 +32,7 @@ While self-XSS are usually out-of-scope in bug bounty programs, and considered i
 
 ## Resources
 
-[https://enciphers.com/insecure-direct-object-reference-a-modern-age-sqli/](https://enciphers.com/insecure-direct-object-reference-a-modern-age-sqli/)
+[https://enciphers.com/web-app-security/insecure-direct-object-reference-a-modern-age-sqli](https://enciphers.com/web-app-security/insecure-direct-object-reference-a-modern-age-sqli)
 
 [https://portswigger.net/web-security/access-control/idor](https://portswigger.net/web-security/access-control/idor)
 
