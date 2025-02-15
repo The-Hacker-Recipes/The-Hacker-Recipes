@@ -38,6 +38,24 @@ interface BannerSponsor {
   }
 }
 
+
+const ALL_CATEGORIES = ['intro', 'ad', 'web', 'infra', 'evasion', 'physical', 'intelligence-gathering', 'radio', 'mobile-apps', 'contribute', 'policies']
+
+const ALL_COUNTRIES = [
+  "AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE",
+  "BZ", "BJ", "BM", "BT", "BO", "BQ", "BA", "BW", "BV", "BR", "IO", "BN", "BG", "BF", "BI", "CV", "KH", "CM", "CA", "KY", "CF", "TD",
+  "CL", "CN", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CW", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG",
+  "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD",
+  "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HK", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT",
+  "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MO", "MK",
+  "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA",
+  "NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN",
+  "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN", "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC",
+  "SL", "SG", "SX", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ",
+  "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN",
+  "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"
+];
+
 // shared data across instances so we load only once.
 const data = ref()
 
@@ -49,44 +67,44 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
     {
       name: 'Demo1',
       categories: ['demo'],
-      country: 'FR',
+      country: 'all',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo1.svg',
     },
     {
-      name: 'Exegol',
-      categories: ['intro','ad', 'web','infra','evasion','physical','intelligence-gathering','radio','mobile-apps','contribute'],
-      country: 'FR',
-      url: 'https://exegol.readthedocs.io/en/latest/index.html',
-      img: '/images/sponsors/exegol.svg',
+      name: 'Advertise',
+      categories: ['all'],
+      country: 'all',
+      url: '/contributing/ads',
+      img: '/images/sponsors/advertise.svg',
     }
   ],
   gold: [
     {
       name: 'Demo2',
       categories: ['demo'],
-      country: 'FR',
+      country: 'all',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo2.svg',
     },
     {
       name: 'Demo3',
       categories: ['demo'],
-      country: 'FR',
+      country: 'all',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo3.svg',
     },
     {
       name: 'Algosecure',
-      categories: ['intro','ad', 'web','infra','evasion','physical','intelligence-gathering','radio','mobile-apps','contribute'],
+      categories: ['all'],
       country: 'FR',
       url: 'https://www.algosecure.fr/',
       img: '/images/sponsors/algosecure.svg',
     },
     {
       name: 'EPIEOS',
-      categories: ['intro','ad', 'web','infra','evasion','physical','intelligence-gathering','radio','mobile-apps','contribute'],
-      country: 'FR',
+      categories: ['all'],
+      country: 'all',
       url: 'https://epieos.com/',
       img: '/images/sponsors/epieos.svg',
     }
@@ -146,8 +164,16 @@ export function useSponsor() {
       return
     }
 
-    // Use local static data
-    data.value = mapSponsors(viteSponsors)
+    const mappedSponsors = mapSponsors(viteSponsors).map(sponsorGroup => ({
+      ...sponsorGroup,
+      items: sponsorGroup.items.map(sponsor => ({
+        ...sponsor,
+        categories: sponsor.categories.includes('all') ? [...ALL_CATEGORIES] : sponsor.categories,
+        country: sponsor.country.includes('all') ? [...ALL_COUNTRIES] : sponsor.country
+      }))
+    }))
+
+    data.value = mappedSponsors
     toggleDarkLogos()
   })
 

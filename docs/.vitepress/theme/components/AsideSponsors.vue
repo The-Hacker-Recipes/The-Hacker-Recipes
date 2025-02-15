@@ -2,28 +2,28 @@
 import { computed, ref, onMounted } from 'vue'
 import { VPDocAsideSponsors } from 'vitepress/theme'
 import { useSponsor } from '../composables/sponsors'
-import { useData } from 'vitepress';
+import { useData } from 'vitepress'
 
 const { data } = useSponsor()
-const { page } = useData();
+const { page } = useData()
 
-const currentCategory = computed(() => page.value.frontmatter.category || '');
-const userCountry = ref(null);
+const currentCategory = computed(() => page.value.frontmatter.category || '')
+const userCountry = ref(null)
 
-// Function to determine user's country using an external API
 const fetchUserCountry = async () => {
   try {
-    const response = await fetch('https://ipapi.co/json/');
-    const result = await response.json();
-    userCountry.value = result.country_code || 'FR'; // Default to FR if not found
+    const response = await fetch('https://api.country.is/')
+    const result = await response.json()
+    userCountry.value = result.country_code || 'FR' // Défaut à FR si inconnu
   } catch (error) {
-    console.error('Error fetching user country:', error);
+    console.error('Erreur lors de la récupération du pays:', error)
+    userCountry.value = 'FR' 
   }
-};
+}
 
 onMounted(() => {
-  fetchUserCountry();
-});
+  fetchUserCountry()
+})
 
 const sponsors = computed(() => {
   if (userCountry.value === null) {
@@ -36,14 +36,16 @@ const sponsors = computed(() => {
       .map((sponsor) => {
         return {
           size: sponsor.size === 'big' ? 'mini' : 'xmini',
-          items: sponsor.items.filter(item => 
-            item.categories.includes(currentCategory.value) && 
-            (item.country === userCountry.value || item.country === 'ALL')
+          items: sponsor.items.filter(
+            (item) =>
+              item.categories.includes(currentCategory.value) &&
+              (item.country.includes(userCountry.value) || item.country.includes('ALL'))
           ),
-        }
+        };
       }) ?? []
   );
 });
+
 </script>
 
 <template>
