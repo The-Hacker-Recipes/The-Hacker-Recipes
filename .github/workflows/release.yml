@@ -1,0 +1,40 @@
+name: Monthly Release
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Runs at 00:00 on the first day of every month
+  workflow_dispatch:      # Allows manual triggering
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y.%m')" >> $GITHUB_OUTPUT
+
+      - name: Create Release ZIP
+        run: |
+          zip -r release.zip \
+          Dockerfile \
+          docker-compose.yml \
+          package.json \
+          package-lock.json \
+          docs/ \
+          README.md
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.date.outputs.date }}
+          name: Release ${{ steps.date.outputs.date }}
+          files: release.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true 
