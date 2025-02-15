@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, Sud0Ru
+authors: Anh4ckin3, Sud0Ru, ShutdownRepo
 ---
 
 # MS-RPC
@@ -66,6 +66,25 @@ The Python script [ridenum](https://github.com/trustedsec/ridenum) can be used t
 > [!SUCCESS]
 > The enum4linux tool can be used to easily operate fast recon through MS-RPC, with Null session or not (see [this page](enum4linux.md)).
 
+### IObjectExporter(IOXIDResolver)
+
+DCOM (Distributed Component Object Model) is a group of Microsoft programs in which client program objects can request services on other computers on a network. DCOM is based on the Component Object Model (COM), which provides a set of interfaces for clients and servers to communicate within the same network.
+
+Among these services is IObjectExporter(OXIDResolver GUID=99fcfec4–5260–101b-bbcb-00aa0021347a), which runs on all machines that can support COM+. The DCE-RPC requests allows to invoke the OXIDResolver service and subsequently from this service we can invoke the [ServerAlive2()](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dcom/c898afd6-b75d-4641-a2cd-b50cb9f5556d) methods. The ServerAlive2 method retrieves information about network interfaces available on a remote machine in a DCOM/COM environment. Specifically, it provides a list of links (bindings) associated with the network interfaces active on the target machine.
+
+To sum up, if the IOXIDResolver service is active and accessible on a windows host, it is possible to find new network endpoints(like IPv6 address) on this last one (via anonymous connection or with credentials). A python script exists to do this task remotly [IOXIDResolver-ng](https://github.com/Anh4ckin3/IOXIDResolver-ng).
+```bash
+python IOXIDResolver-ng.py -t $TARGET_IP
+
+# OUTPUT EXEMPLE
+[*] Anonymous connection on MSRPC
+[+] Retriev Network Interfaces for 192.168.5.20...
+[+] ServerAlive2 methode find 3 interface(s)
+[+] aNetworkAddr addresse : DC01 (Hostname)
+[+] aNetworkAddr addresse : 192.168.5.20 (IPv4)
+[+] aNetworkAddr addresse : db69:ecdc:d85:1b54:1676:7fa4:f3fe:4249 (IPv6)
+```
+
 ### Enumerate Doamin users and computers
 Using auth-level = 1 (No authentication) against the MS-NRPC (Netlogon) interface on domain controllers.
 The method calls the `DsrGetDcNameEx2` function after binding MS-NRPC interface to check if the user or computer exists without any credentials. 
@@ -74,13 +93,14 @@ The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implments this type of
 python3 nauth.py -t target -u users_file.txt -f computers_file.txt
 ```
 
-
-
 ## Resources
 
 [https://mucomplex.medium.com/remote-procedure-call-and-active-directory-enumeration-616b234468e5](https://mucomplex.medium.com/remote-procedure-call-and-active-directory-enumeration-616b234468e5)
 
 [https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf](https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf)
 
+[https://medium.com/nets3c/remote-enumeration-of-network-interfaces-without-any-authentication-the-oxid-resolver-896cff530d37](https://medium.com/nets3c/remote-enumeration-of-network-interfaces-without-any-authentication-the-oxid-resolver-896cff530d37)
+
 [https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2024/05/22190247/A-journey-into-forgotten-Null-Session-and-MS-RPC-interfaces.pdf](https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2024/05/22190247/A-journey-into-forgotten-Null-Session-and-MS-RPC-interfaces.pdf)
 
+[https://web.archive.org/web/20220625011947/https://airbus-cyber-security.com/the-oxid-resolver-part-1-remote-enumeration-of-network-interfaces-without-any-authentication/](https://web.archive.org/web/20220625011947/https://airbus-cyber-security.com/the-oxid-resolver-part-1-remote-enumeration-of-network-interfaces-without-any-authentication/)
