@@ -1,6 +1,9 @@
 # Use Node.js as the base image
 FROM node:20-slim as builder
 
+# Install Git (important pour VitePress)
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 # Set working directory
 WORKDIR /app
 
@@ -26,4 +29,4 @@ COPY --from=builder /app/docs/.vitepress/dist /usr/share/nginx/html
 EXPOSE 80
 
 # Default command
-CMD ["nginx", "-g", "daemon off;"] 
+CMD ["nginx", "-g", "daemon off;"]
