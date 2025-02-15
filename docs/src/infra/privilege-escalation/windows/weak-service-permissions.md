@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, Anh4ckin3
+authors: Anh4ckin3
 ---
 
 # 🛠️ Weak service permissions
