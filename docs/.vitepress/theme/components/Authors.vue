@@ -1,6 +1,6 @@
 <template>
   <div class="authors-container">
-    <p class="authors-title">Authors</p>
+    <p class="authors-title">{{ title }}</p>
     <div v-if="authors.length" class="authors-grid">
       <a
         v-for="author in authors"
@@ -11,42 +11,67 @@
         class="author"
         :title="author.login"
       >
-        <img :src="author.avatar_url + '?s=64'" />
+        <img :src="author.avatar_url + avatarSize" />
       </a>
     </div>
-    <p v-else class="no-authors">Error occured...</p>
+    <p v-else class="no-authors">{{ noAuthorsMessage }}</p>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useData } from 'vitepress'
+import { data as authorsData } from '../../authors.data.ts' 
 
+const authors = ref([])
 const route = useRoute()
 const { page } = useData()
 
-const authors = ref([])
+const title = ref('')
+const noAuthorsMessage = ref('')
+const avatarSize = ref('')
 
+//Load authors
 const listAuthors = () => {
-  const frontmatterAuthors = page.value.frontmatter.authors
-    ? page.value.frontmatter.authors.split(',').map(author => author.trim())
-    : []
+  if (route.path === '/') {
+    //Load from authors.data.ts for index
+    authors.value = authorsData
+  } else {
+    //Load authors from current page frontmatter
+    const frontmatterAuthors = page.value.frontmatter?.authors
+      ? page.value.frontmatter.authors.split(',').map((author) => author.trim())
+      : []
 
-  const existingAuthors = frontmatterAuthors.map(author => ({
-    id: author,
-    login: author,
-    html_url: `https://github.com/${author}`,
-    avatar_url: `https://avatars.githubusercontent.com/${author}`
-  }))
-
-  authors.value = existingAuthors
+    authors.value = frontmatterAuthors.map((author) => ({
+      id: author,
+      login: author,
+      html_url: `https://github.com/${author}`,
+      avatar_url: `https://avatars.githubusercontent.com/${author}`
+    }))
+  }
 }
 
-// Fetch authors on initial page load
-onMounted(listAuthors)
+const setupContentBasedOnRoute = () => {
+  if (route.path === '/') {
+    title.value = 'Authors'
+    noAuthorsMessage.value = 'No contributors found...'
+    avatarSize.value = ''
+  } else {
+    title.value = 'Authors'
+    noAuthorsMessage.value = 'Error occurred...'
+    avatarSize.value = '?s=64'
+  }
+}
 
-// Watch for route changes and update the authors list when a new page is loaded
-watch(() => route.path, listAuthors)
+onMounted(() => {
+  setupContentBasedOnRoute()
+  listAuthors()
+})
+
+watch(() => route.path, () => {
+  setupContentBasedOnRoute()
+  listAuthors()
+})
 </script>
 
 <style scoped>
@@ -109,4 +134,3 @@ watch(() => route.path, listAuthors)
   }
 }
 </style>
-``

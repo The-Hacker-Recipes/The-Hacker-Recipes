@@ -2,9 +2,11 @@
 authors: ShutdownRepo, AzeTIIx
 ---
 
-# Guide for authors
+# Guide for authors 📝
 
-As an author contributing to this project, it's essential to follow a consistent structure to ensure that your article is easy to read and understand. 
+The Hacker Recipes is a community-driven project, and we welcome contributions from anyone who wants to share their knowledge and help others learn.
+In order to keep the quality of the content high, in terms of readability and structure, we ask contributors to follow a consistent structure and best practices when writing articles.
+
 This guide outlines the typical structure, file organization, and best practices for writing articles that align with the project's standards.
 
 ## Files and folders
@@ -75,6 +77,20 @@ When writing your article, one should keep the following tone & voice.
 
 * **Professional and Authoritative**: The content should maintain a professional tone, suitable for a technical audience familiar with cybersecurity concepts.
 * **Instructional and Informative**: The writing aims to educate the reader, with clear instructions and explanations. It avoids being overly casual, focusing instead on delivering detailed, technical knowledge.
+* **Impersonal and Objective**: The writing should avoid directly addressing the reader (e.g., “you") or using personal pronouns. Instead, use passive constructions or neutral phrasing (e.g., “The attack can be conducted using tool XYZ" rather than “You can conduct the attack with tool XYZ").
+
+> [!WARNING] Examples to avoid
+> * "This attack is super easy to pull off!" → “This attack is straightforward to execute."
+> * "Here’s a cool trick you can use to bypass the firewall" → “A technique to bypass the firewall involves…"
+> * "Just try running this command and see what happens" → “Run this command to observe its effect."
+> * "Don’t forget to check the logs!" → “Ensure that the logs are reviewed."
+> * "You can conduct the attack with tool XYZ" → “The attack can be conducted with tool XYZ"
+> * "We recommend using tool ABC for this process" → “Tool ABC is recommended for this process"
+> * "First, you should verify the configuration settings" → “The configuration settings should first be verified"
+
+> [!TIP]
+> ChatGPT (or similar LLM agents) can be used to review content before creating a Pull Request :wink: Below is an example prompt.
+> > "Please proofread the following text for tone, voice, and style consistency based on these guidelines: professional, instructional, and impersonal. Highlight any instances where casual language, direct address (e.g., 'you'), or personal pronouns are used, and suggest revisions. Here is the text: [insert your content]."
 
 ## Block Types
 

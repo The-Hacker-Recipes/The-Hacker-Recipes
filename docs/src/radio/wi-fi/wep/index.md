@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: blepdoge, ShutdownRepo
 ---
 
 # 🛠️ WEP
@@ -50,7 +50,7 @@ When no clients are connected to the AP, or when the tester doesn't want to spoo
 ## Attacks
 
 > [!TIP]
-> Basically, the easiest attacks paths come down to the following. "Client spoofing" means using a legitimate client's MAC address with `aireplay-ng`'s `-h` option when operating packet injection attacks to the router (i.e. arpreplay, fragmentation, chopchop).
+> Basically, the easiest attack paths come down to the following. "Client spoofing" means using a legitimate client's MAC address with `aireplay-ng`'s `-h` option when operating packet injection attacks to the router (i.e. arpreplay, fragmentation, chopchop).
 
 | Scenarios | Open | SKA |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -90,7 +90,7 @@ aireplay-ng --fakeauth 0 -a 'TA:RG:ET:BS:SI:DD' $wlan_interface
 When the authentication mode in use is not OPEN, but rather SKA, the tester can either 
 
 * spoof a legitimate client's MAC address when attacking with `aireplay-ng` with option `-h`.
-* wait a legitimate client to connect to the AP (or [force it](#de-authentication)), capture the authentication, have airodump-ng extract the keystream from it, and use it with a known-plaintext attack to bypass the SKA mode requirement (.i.e the need to know the secret key).
+* wait for a legitimate client to connect to the AP (or [force it](#de-authentication)), capture the authentication, have airodump-ng extract the keystream from it, and use it with a known-plaintext attack to bypass the SKA mode requirement (.i.e the need to know the secret key).
 
 > [!WARNING]
 > TODO : I've had issues with my AP, I need to try again with a RPi or something...
