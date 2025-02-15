@@ -23,7 +23,9 @@ export default createContentLoader('../src/**/*.md', {
     })
 
     //Sort
-    const uniqueAuthors = Array.from(authorSet).sort((a, b) => a.localeCompare(b))
+    const uniqueAuthors = Array.from(
+      new Set(Array.from(authorSet).map(author => author.toLowerCase()))
+    ).sort((a, b) => a.localeCompare(b));
 
     //DEBUG
     //console.log('Auteurs trouvés :', uniqueAuthors)
