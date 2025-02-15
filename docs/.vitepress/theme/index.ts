@@ -3,7 +3,6 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import Placeholder from './components/Placeholder.vue'
 import PageNotFound from "./components/PageNotFound.vue"
-import News from './components/News.vue'
 import Authors from './components/Authors.vue'
 import CustomSidebarItem from './components/CustomSidebarItem.vue'
 import './custom.css'
@@ -40,7 +39,6 @@ export default {
       //'doc-after': () => isMobileorTablet.value ? h(AsideSponsors, { style: { marginTop: '24px' } }) : null, //Final grid
       'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Donate), h(Authors)]): null,
       'doc-after': () =>isMobileorTablet.value? h(AsideSponsorsDemo, { style: { marginTop: '24px' } }): null,
-      'sidebar-nav-before': () => h(News),
       'not-found': () => h(PageNotFound),
     })
   },
