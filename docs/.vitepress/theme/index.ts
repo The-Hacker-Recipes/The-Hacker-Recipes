@@ -34,7 +34,6 @@ export default {
       'doc-bottom': () => h(FooterLinks),
       'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Donate), h(Authors)]): null,
       'doc-after': () =>isMobileorTablet.value? h(AsideSponsors, { style: { marginTop: '24px' } }): null,
-      'sidebar-nav-before': () => h(News),
       'not-found': () => h(PageNotFound),
     })
   },
