@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1558.003
-authors: BlWasp, Lamber-maybe, ShutdownRepo, amirr0r, mpgn, sckdev
+authors: 'BlWasp, Lamber-maybe, ShutdownRepo, amirr0r, mpgn, sckdev'
+category: ad
 ---
 
 # Kerberoast

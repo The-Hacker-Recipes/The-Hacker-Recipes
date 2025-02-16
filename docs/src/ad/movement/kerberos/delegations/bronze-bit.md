@@ -1,6 +1,7 @@
 ---
 description: CVE-2020-17049
 authors: ShutdownRepo
+category: ad
 ---
 
 # Bronze Bit

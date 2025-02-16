@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, p0dalirius
+authors: 'ShutdownRepo, p0dalirius'
+category: web
 ---
 
 # 🛠️ CSP (Content Security Policy)

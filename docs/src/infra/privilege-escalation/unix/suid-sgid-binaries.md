@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, dreamkinn, p0dalirius
+authors: 'ShutdownRepo, dreamkinn, p0dalirius'
+category: infra
 ---
 
 # SUID/SGID binaries

@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, sckdev
+authors: 'ShutdownRepo, sckdev'
+category: ad
 ---
 
 # MS-RPRN abuse (PrinterBug)

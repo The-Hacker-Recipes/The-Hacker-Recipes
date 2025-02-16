@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, Aegide
+category: intelligence-gathering
 ---
 
 # OSINT

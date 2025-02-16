@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # DHCPv6 spoofing

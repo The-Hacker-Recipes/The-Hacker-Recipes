@@ -1,5 +1,6 @@
 ---
-authors: Anh4ckin3
+authors: Anh4ckin3, ShutdownRepo
+category: infra
 ---
 
 # 🛠️ Weak service permissions

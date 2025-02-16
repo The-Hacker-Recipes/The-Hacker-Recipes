@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: web
 ---
 
 # XSS (Cross-Site Scripting)

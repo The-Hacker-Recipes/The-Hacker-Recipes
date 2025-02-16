@@ -1,5 +1,6 @@
 ---
 authors: AzeTIIx, ShutdownRepo
+category: contribute
 ---
 
 # Donate ❤️

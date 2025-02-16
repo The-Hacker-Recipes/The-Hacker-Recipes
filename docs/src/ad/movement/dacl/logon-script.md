@@ -1,5 +1,6 @@
 ---
-authors: CravateRouge, ShutdownRepo
+authors: 'CravateRouge, ShutdownRepo'
+category: ad
 ---
 
 # Logon script

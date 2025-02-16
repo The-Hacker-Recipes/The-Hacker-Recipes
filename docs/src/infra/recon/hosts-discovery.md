@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, clem9669, sckdev
+authors: 'ShutdownRepo, clem9669, sckdev'
+category: infra
 ---
 
 # 🛠️ Hosts discovery

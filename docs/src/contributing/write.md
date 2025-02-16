@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, AzeTIIx, WodenSec
+category: contribute
 ---
 
 # Guide for authors 📝

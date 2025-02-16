@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1110.001
-authors: ShutdownRepo, mpgn
+authors: 'ShutdownRepo, mpgn'
+category: ad
 ---
 
 # Password guessing
