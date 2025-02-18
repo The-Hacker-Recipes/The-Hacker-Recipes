@@ -7,7 +7,7 @@ authors: ShutdownRepo, mpgn
 
 ## Theory
 
-After successfully [forcing a victim to authenticate](../mitm-and-coerced-authentications/) with LM or NTLM to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
+After successfully [forcing a victim to authenticate](../mitm-and-coerced-authentications/) with Net-NTLM Hashes to an attacker's server, the attacker can try to relay that authentication to targets of his choosing. Depending on the mitigations in place, he will be able to move laterally and escalate privileges within an Active Directory domain.
 
 The NTLM authentication messages are embedded in the packets of application protocols such as SMB, HTTP, MSSQL, SMTP, IMAP. The LM and NTLM authentication protocols are "application protocol-independent". It means one can relay LM or NTLM authentication messages over a certain protocol, say HTTP, over another, say SMB. That is called cross-protocols LM/NTLM relay. It also means the relays and attacks possible depend on the application protocol the authentication messages are embedded in.
 
