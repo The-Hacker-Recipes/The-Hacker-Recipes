@@ -697,6 +697,10 @@ export default defineConfig({
                                 "link": "/web/recon/site-crawling.md"
                             },
                             {
+                                "text": "403 Error Bypass",
+                                "link": "/web/recon/403-error-bypass.md"
+                            },
+                            {
                                 "text": "Directory fuzzing",
                                 "link": "/web/recon/directory-fuzzing.md"
                             },
@@ -955,7 +959,11 @@ export default defineConfig({
                             {
                                 "text": "Port scanning",
                                 "link": "/infra/recon/port-scanning.md"
-                            }
+                            },
+                            {
+                                "text": "NMAP-101",
+                                "link": "/infra/recon/Nmap-101.md"
+                            },
                         ]
                     },
                     {
@@ -996,8 +1004,24 @@ export default defineConfig({
                                 "link": "/infra/protocols/smb.md"
                             },
                             {
+                                "text": "🛠️ snmp",
+                                "link": "/infra/protocols/snmp.md"
+                            },
+                            {
                                 "text": "🛠️ RTSP",
                                 "link": "/infra/protocols/rtsp.md"
+                            },
+                            {
+                                "text": "🛠️ IMAP",
+                                "link": "/infra/protocols/IMAP.md"
+                            },
+                            {
+                                "text": "🛠️ POP3",
+                                "link": "/infra/protocols/POP3.md"
+                            },
+                            {
+                                "text": "🛠️ SMTP",
+                                "link": "/infra/protocols/SMTP.md"
                             },
                             {
                                 "text": "🛠️ MSSQL",

@@ -3,7 +3,7 @@ authors: ShutdownRepo
 ---
 
 # 🛠️ SSH
-
+# `22 TCP`
 ## Theory
 
 The SSH protocol (Secure Shell) is used to login from one machine to another securely. It offers several options for strong authentication, as it protects the connections and communications security and integrity with strong encryption. This connection can be used for terminal access, file transfers, and for tunneling other applications.
