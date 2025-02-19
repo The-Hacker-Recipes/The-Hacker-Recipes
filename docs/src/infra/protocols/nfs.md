@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, 0xbugatti
 ---
 
 # 🛠️ NFS
@@ -13,7 +13,14 @@ A NFS server determines what ressources to make available and ensures to recogni
 This service is located on the port 2049.
 
 ## Practice
+### Implement
+```bash
 
+echo '/mnt/sharedfolder 10.129.14.0/24(sync,no_subtree_check)' >> /etc/exports # editing NFS conf file
+systemctl restart nfs-kernel-server # new configuration affect
+exportfs
+
+```
 ### Enumerate mountable directories.
 
 To check which share is available for mount, _showmount_ can be used.
@@ -21,7 +28,11 @@ To check which share is available for mount, _showmount_ can be used.
 ```
 showmount -e  
 / * -> means that the root directory is shared to everyone on the network
-/  -> means that the root directory is shared with 
+/  -> means that the root directory is shared with
+
+-o nolock -> (No Write Block) 
+-o nfsvers=4 -> Important for NFS v4
+
 ```
 
 ### Mounting directories.
@@ -33,6 +44,9 @@ mkdir /tmp/local_directory
 mount -t nfs :/directory /tmp/infosec
 ```
 
+
+
+
 ### Exploiting NFS weak permissions
 
 #### no_root_squash
@@ -43,4 +57,12 @@ Alternatively "no_root_squash" parameter turns off this configuration and gives 
 
 [https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no_root_squash-misconfiguration-pe](https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no_root_squash-misconfiguration-pe)
 
+#### rw
+
+Read and write permissions.
+
+#### nohide
+If another file system was mounted below an exported directory, this directory is exported by its own exports entry.
+
+> [!TIP] TIP : within nmap scan use  --script=*nfs*
 ## Resources
