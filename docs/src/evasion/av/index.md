@@ -1,5 +1,6 @@
 ---
-authors: Jenaye, ShutdownRepo, AzeTIIx
+authors: 'Jenaye, ShutdownRepo, AzeTIIx'
+category: evasion
 ---
 
 # (AV) Anti-Virus

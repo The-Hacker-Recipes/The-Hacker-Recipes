@@ -1,5 +1,6 @@
 ---
-authors: CravateRouge, ShutdownRepo, sckdev
+authors: 'CravateRouge, ShutdownRepo, sckdev'
+category: ad
 ---
 
 # AddMember

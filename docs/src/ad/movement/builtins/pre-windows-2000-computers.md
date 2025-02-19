@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, mpgn
+authors: 'ShutdownRepo, mpgn'
+category: ad
 ---
 
 # Pre-Windows 2000 computers

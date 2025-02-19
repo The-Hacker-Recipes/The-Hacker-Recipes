@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, mauricelambert, sckdev
+authors: 'ShutdownRepo, mauricelambert, sckdev'
+category: ad
 ---
 
 # Pass the key

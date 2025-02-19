@@ -1,5 +1,6 @@
 ---
-authors: CravateRouge, Hackndo, Pri3st, ShutdownRepo, mpgn
+authors: 'CravateRouge, Hackndo, Pri3st, ShutdownRepo, mpgn'
+category: ad
 ---
 
 # DNS

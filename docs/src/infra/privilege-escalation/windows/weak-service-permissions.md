@@ -1,5 +1,6 @@
 ---
 authors: Anh4ckin3
+category: infra
 ---
 
 # 🛠️ Weak service permissions

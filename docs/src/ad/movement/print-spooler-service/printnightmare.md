@@ -1,6 +1,7 @@
 ---
 description: CVE-2021-1675 & CVE-2021-34527
 authors: ShutdownRepo
+category: ad
 ---
 
 # PrintNightmare

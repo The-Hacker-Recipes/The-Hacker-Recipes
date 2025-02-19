@@ -1,5 +1,6 @@
 ---
-authors: Anh4ckin3, Sud0Ru, ShutdownRepo
+authors: 'Anh4ckin3, Sud0Ru, ShutdownRepo'
+category: ad
 ---
 
 # MS-RPC

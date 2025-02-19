@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: radio
 ---
 
 # 🛠️ WPA2

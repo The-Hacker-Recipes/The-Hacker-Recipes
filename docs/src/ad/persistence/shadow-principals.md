@@ -1,5 +1,6 @@
 ---
-authors: Pri3st, ShutdownRepo
+authors: 'Pri3st, ShutdownRepo'
+category: ad
 ---
 
 # Shadow Principals (PAM)

@@ -1,5 +1,6 @@
 ---
-authors: PfiatDe, ShutdownRepo, sckdev, Joker2a, mpgn
+authors: 'PfiatDe, ShutdownRepo, sckdev, Joker2a, mpgn'
+category: ad
 ---
 
 # Pass the Certificate

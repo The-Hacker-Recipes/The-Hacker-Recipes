@@ -2,6 +2,7 @@
 next: false
 editLink: false
 lastUpdated: false
+category: intro
 ---
 
 ![](<assets/welcome.png>){.rawimg}

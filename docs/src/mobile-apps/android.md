@@ -1,5 +1,6 @@
 ---
-authors: blepdoge, ShutdownRepo
+authors: 'blepdoge, ShutdownRepo'
+category: mobile-apps
 ---
 
 # Android

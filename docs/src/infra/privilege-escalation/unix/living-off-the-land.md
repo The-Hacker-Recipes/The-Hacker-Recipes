@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, p0dalirius
+authors: 'ShutdownRepo, p0dalirius'
+category: infra
 ---
 
 # 🛠️ Living off the land

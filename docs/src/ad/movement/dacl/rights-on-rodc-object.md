@@ -1,5 +1,6 @@
 ---
-authors: BlWasp, CravateRouge, ShutdownRepo
+authors: 'BlWasp, CravateRouge, ShutdownRepo'
+category: ad
 ---
 
 # Rights on RODC object

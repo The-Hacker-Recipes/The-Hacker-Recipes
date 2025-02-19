@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1550.003
-authors: CyrilleFranchet, ShutdownRepo, mpgn, sckdev
+authors: 'CyrilleFranchet, ShutdownRepo, mpgn, sckdev'
+category: ad
 ---
 
 # Pass the ticket

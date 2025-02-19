@@ -1,5 +1,6 @@
 ---
-authors: Hakumarachi, ShutdownRepo
+authors: 'Hakumarachi, ShutdownRepo'
+category: ad
 ---
 
 # 🛠️ Cached Kerberos tickets

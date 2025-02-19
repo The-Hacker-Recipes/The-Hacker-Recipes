@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, AzeTIIx, WodenSec
+authors: 'AzeTIIx, ShutdownRepo, WodenSec'
+category: contributing
 ---
 
 # Guide for authors 📝

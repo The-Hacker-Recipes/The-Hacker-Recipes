@@ -3,6 +3,7 @@ next: false
 editLink: false
 lastUpdated: false
 authors: ShutdownRepo
+category: policies
 ---
 
 # Terms and conditions
