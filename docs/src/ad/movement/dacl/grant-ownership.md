@@ -1,5 +1,5 @@
 ---
-authors: 'CravateRouge, ShutdownRepo, sckdev'
+authors: CravateRouge, ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -35,4 +35,3 @@ Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_princ
 ```
 
 :::
-

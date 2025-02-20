@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, Yaxxine7, mpgn'
+authors: ShutdownRepo, Yaxxine7, mpgn
 category: ad
 ---
 

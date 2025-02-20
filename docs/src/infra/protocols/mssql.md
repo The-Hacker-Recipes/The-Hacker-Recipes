@@ -4,4 +4,3 @@ category: infra
 ---
 
 # 🛠️ MSSQL
-

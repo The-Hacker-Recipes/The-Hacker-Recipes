@@ -1,5 +1,5 @@
 ---
-authors: 'LucasParsy, ShutdownRepo'
+authors: LucasParsy, ShutdownRepo
 category: web
 ---
 
@@ -117,4 +117,3 @@ curl --user-agent "PENTEST" "$URL/?parameter=phar://./shell.jpg%2Fshell.txt&cmd=
 ```
 
 :::
-

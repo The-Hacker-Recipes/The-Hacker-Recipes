@@ -81,4 +81,3 @@ The same can be done when the request uses an API:
 ```
 ("form": {"email":"victim@email.tld","password":"12345678"})
 ```
-

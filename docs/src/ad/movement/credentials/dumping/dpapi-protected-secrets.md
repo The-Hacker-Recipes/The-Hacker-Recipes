@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1555.003
-authors: 'Hackndo, ShutdownRepo, sckdev'
+authors: Hackndo, ShutdownRepo, sckdev
 category: ad
 ---
 

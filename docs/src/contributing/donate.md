@@ -1,5 +1,5 @@
 ---
-authors: 'AzeTIIx, ShutdownRepo'
+authors: AzeTIIx, ShutdownRepo
 category: contributing
 ---
 

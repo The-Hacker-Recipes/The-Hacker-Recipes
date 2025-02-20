@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, p0dalirius, Fantabc'
+authors: ShutdownRepo, p0dalirius, Fantabc
 category: web
 ---
 

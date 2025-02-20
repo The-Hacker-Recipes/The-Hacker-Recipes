@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, sckdev'
+authors: ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -69,4 +69,3 @@ Rubeus.exe asktgs /service:"cifs/target" /ticket:"base64ticket...." /ptt
 
 
 [rbcd.md](../../movement/kerberos/delegations/rbcd.md)
-

@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, sckdev'
+authors: ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -56,4 +56,3 @@ Rubeus.exe asktgt /getcredentials /user:"TARGET_SAMNAME" /certificate:"BASE64_CE
 [https://shenaniganslabs.io/2021/06/21/Shadow-Credentials.html](https://shenaniganslabs.io/2021/06/21/Shadow-Credentials.html)
 
 [https://www.sstic.org/2014/presentation/secrets_dauthentification_pisode_ii__kerberos_contre-attaque/](https://www.sstic.org/2014/presentation/secrets_dauthentification_pisode_ii__kerberos_contre-attaque/)
-

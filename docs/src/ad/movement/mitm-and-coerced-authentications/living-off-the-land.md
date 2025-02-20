@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, joker2a, mpgn, nuts7, sckdev'
+authors: ShutdownRepo, joker2a, mpgn, nuts7, sckdev
 category: ad
 ---
 

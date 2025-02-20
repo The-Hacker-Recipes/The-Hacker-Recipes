@@ -58,4 +58,3 @@ The various preparations can be assembled.
 
 * Burger: bottom bun, a little bit of sauce, a tomato slice, the steak, the lard and the top bun.
 * Fries: the fries, cheddar on top, and slices bacon
-

@@ -1,5 +1,5 @@
 ---
-authors: 'Jenaye, ShutdownRepo, AzeTIIx'
+authors:  AzeTIIx, Jenaye, ShutdownRepo
 category: evasion
 ---
 

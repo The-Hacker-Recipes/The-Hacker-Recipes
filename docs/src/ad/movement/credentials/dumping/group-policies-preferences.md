@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1552.006
-authors: 'ShutdownRepo, p0dalirius, sckdev'
+authors: ShutdownRepo, p0dalirius, sckdev
 category: ad
 ---
 
@@ -98,4 +98,3 @@ The decryption process is as follows
 [https://podalirius.net/en/articles/exploiting-windows-group-policy-preferences/](https://podalirius.net/en/articles/exploiting-windows-group-policy-preferences/)
 
 [https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be)
-

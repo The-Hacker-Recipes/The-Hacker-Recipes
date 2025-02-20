@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1003.001
-authors: 'NaxnN, ShutdownRepo, mpgn'
+authors: NaxnN, ShutdownRepo, mpgn
 category: ad
 ---
 

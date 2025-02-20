@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, mpgn, sckdev, Pri3st, rtpt-romankarwacik'
+authors: ShutdownRepo, mpgn, sckdev, Pri3st, rtpt-romankarwacik
 category: ad
 ---
 

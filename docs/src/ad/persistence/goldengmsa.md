@@ -1,5 +1,5 @@
 ---
-authors: '4ndr3w6, ShutdownRepo, sckdev'
+authors: 4ndr3w6, ShutdownRepo, sckdev
 category: ad
 ---
 

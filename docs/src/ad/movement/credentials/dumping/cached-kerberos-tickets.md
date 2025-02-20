@@ -1,5 +1,5 @@
 ---
-authors: 'Hakumarachi, ShutdownRepo'
+authors: Hakumarachi, ShutdownRepo
 category: ad
 ---
 

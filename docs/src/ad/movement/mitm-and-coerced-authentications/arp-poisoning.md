@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1557.002
-authors: 'ShutdownRepo, sckdev'
+authors: ShutdownRepo, sckdev
 category: ad
 ---
 

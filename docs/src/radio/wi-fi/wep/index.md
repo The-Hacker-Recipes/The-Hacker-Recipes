@@ -1,5 +1,5 @@
 ---
-authors: 'blepdoge, ShutdownRepo'
+authors: blepdoge, ShutdownRepo
 category: radio
 ---
 
@@ -211,8 +211,3 @@ aireplay-ng --interactive -F -r crafted-packet $wlan_interface
 [https://lesperance.io/](https://lesperance.io/)
 
 [https://connect.ed-diamond.com/MISC/MISC-053/Cassage-de-WEP-hors-des-sentiers-battus](https://connect.ed-diamond.com/MISC/MISC-053/Cassage-de-WEP-hors-des-sentiers-battus)
-
-
-
-
-

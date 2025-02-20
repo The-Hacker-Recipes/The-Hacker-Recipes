@@ -1,6 +1,6 @@
 ---
 description: Lists of techniques used to hide your payload
-authors: 'Jenaye, ShutdownRepo'
+authors: Jenaye, ShutdownRepo
 category: evasion
 ---
 

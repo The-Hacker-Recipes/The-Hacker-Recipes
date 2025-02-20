@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, fransosiche'
+authors: ShutdownRepo, fransosiche
 category: web
 ---
 

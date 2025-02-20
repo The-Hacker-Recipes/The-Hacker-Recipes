@@ -50,4 +50,3 @@ Get-DomainPolicy
 
 > [!TIP]
 > Accounts that lockout can be attacked with [sprayhound](https://github.com/Hackndo/sprayhound) ([credential spraying](../movement/credentials/bruteforcing/spraying)) while those that don't can be directly bruteforced with [kerbrute](https://github.com/ropnop/kerbrute) ([Kerberos pre-auth bruteforcing](../movement/kerberos/pre-auth-bruteforce))
-

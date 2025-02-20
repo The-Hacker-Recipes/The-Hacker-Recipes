@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, ThePirateWhoSmellsOfSunflowers'
+authors: ShutdownRepo, ThePirateWhoSmellsOfSunflowers
 category: ad
 ---
 

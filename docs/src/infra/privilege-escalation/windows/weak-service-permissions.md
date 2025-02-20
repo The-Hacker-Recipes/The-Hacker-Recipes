@@ -142,5 +142,3 @@ A small nuance when adding a local user: there is a registry key named **LocalAc
 [https://kb.cybertecsecurity.com/knowledge/localaccounttokenfilterpolicy](https://kb.cybertecsecurity.com/knowledge/localaccounttokenfilterpolicy)
 
 [https://offsec.blog/hidden-danger-how-to-identify-and-mitigate-insecure-windows-services/](https://offsec.blog/hidden-danger-how-to-identify-and-mitigate-insecure-windows-services/)
-
-

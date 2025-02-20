@@ -1,5 +1,5 @@
 ---
-authors: 'KenjiEndo15, ShutdownRepo, sckdev'
+authors: KenjiEndo15, ShutdownRepo, sckdev
 category: ad
 ---
 

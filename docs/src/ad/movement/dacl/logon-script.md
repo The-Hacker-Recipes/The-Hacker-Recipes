@@ -1,5 +1,5 @@
 ---
-authors: 'CravateRouge, ShutdownRepo'
+authors: CravateRouge, ShutdownRepo
 category: ad
 ---
 

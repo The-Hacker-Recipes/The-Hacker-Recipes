@@ -1,5 +1,5 @@
 ---
-authors: 'Bnder1, ShutdownRepo'
+authors: Bnder1, ShutdownRepo
 category: intelligence-gathering
 ---
 

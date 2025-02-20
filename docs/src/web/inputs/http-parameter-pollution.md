@@ -1,5 +1,5 @@
 ---
-authors: 'KenjiEndo15, ShutdownRepo, Fantabc'
+authors: KenjiEndo15, ShutdownRepo, Fantabc
 category: web
 ---
 

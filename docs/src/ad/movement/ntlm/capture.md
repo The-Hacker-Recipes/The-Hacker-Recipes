@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, sckdev'
+authors: ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -61,4 +61,3 @@ Start poisoning LLMNR, NBT-NS and mDNS with a custom challenge, enable HTTPS cap
 ```
 
 :::
-

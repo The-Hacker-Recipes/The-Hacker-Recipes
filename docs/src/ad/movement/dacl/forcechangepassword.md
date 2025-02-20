@@ -1,5 +1,5 @@
 ---
-authors: 'CravateRouge, ShutdownRepo, sckdev'
+authors: CravateRouge, ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -50,4 +50,3 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 Mimikatz's [`lsadump::setntlm`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/setntlm) can also be used for that purpose.
 
 :::
-

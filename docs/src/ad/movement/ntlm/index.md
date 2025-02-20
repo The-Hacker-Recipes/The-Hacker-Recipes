@@ -1,5 +1,5 @@
 ---
-authors: 'CryingWelkin, ShutdownRepo, sckdev'
+authors: CryingWelkin, ShutdownRepo, sckdev
 category: ad
 ---
 

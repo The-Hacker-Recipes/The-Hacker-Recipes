@@ -1,6 +1,6 @@
 ---
 description: Read-Only Domain Controller
-authors: 'BlWasp, ShutdownRepo, sckdev, skileau'
+authors: BlWasp, ShutdownRepo, sckdev, skileau
 category: ad
 ---
 

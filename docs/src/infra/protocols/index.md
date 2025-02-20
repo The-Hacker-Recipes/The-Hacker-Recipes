@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, blepdoge'
+authors: ShutdownRepo, blepdoge
 category: infra
 ---
 

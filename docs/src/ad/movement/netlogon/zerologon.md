@@ -1,6 +1,6 @@
 ---
 description: CVE-2020-1472
-authors: 'ShutdownRepo, sckdev'
+authors: ShutdownRepo, sckdev
 category: ad
 ---
 

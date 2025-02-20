@@ -1,5 +1,5 @@
 ---
-authors: 'CravateRouge, ShutdownRepo, sckdev'
+authors: CravateRouge, ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -47,4 +47,3 @@ Add-DomainGroupMember -Identity 'Domain Admins' -Members 'user'
 ```
 
 :::
-

@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, resiakeht'
+authors: ShutdownRepo, resiakeht
 category: web
 ---
 

@@ -1,6 +1,6 @@
 ---
 category: demo
-authors: 'AzeTIIx, ShutdownRepo'
+authors: AzeTIIx, ShutdownRepo
 ---
 
 # Sponsor 🌟

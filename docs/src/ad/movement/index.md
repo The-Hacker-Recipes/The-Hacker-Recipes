@@ -1,5 +1,5 @@
 ---
-authors: 'BlWasp, ShutdownRepo, itbelongsinamuseum, sckdev'
+authors: BlWasp, ShutdownRepo, itbelongsinamuseum, sckdev
 category: ad
 ---
 
@@ -71,4 +71,3 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 * [ ] The CA is configured correctly (the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag is not set). This prevents [the corresponding domain escalation attack](adcs/certificate-authority).
 * [ ] There are no certificate templates that are badly configured. This prevents [the corresponding domain escalation attack](adcs/certificate-templates).
 * [ ] AD-CS web and RPC endpoints are secured against [AD-CS NTLM relay attacks](adcs/unsigned-endpoints) (HTTPS, EPA (Extended Protection for Authentication) and encryption enforced).
-

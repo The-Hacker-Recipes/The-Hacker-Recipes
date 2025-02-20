@@ -1,5 +1,5 @@
 ---
-authors: 'BlWasp, ShutdownRepo'
+authors: BlWasp, ShutdownRepo
 category: ad
 ---
 

@@ -1,5 +1,5 @@
 ---
-authors: 'ShutdownRepo, WoBuGs, mpgn, p0dalirius, sckdev'
+authors: ShutdownRepo, WoBuGs, mpgn, p0dalirius, sckdev
 category: ad
 ---
 
