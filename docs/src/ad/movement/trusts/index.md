@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, WodenSec
+category: ad
 ---
 
 # Trusts

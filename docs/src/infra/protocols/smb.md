@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, mpgn
+category: infra
 ---
 
 # 🛠️ SMB

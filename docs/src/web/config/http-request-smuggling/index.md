@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, fransosiche
+category: web
 ---
 
 # HTTP request smuggling

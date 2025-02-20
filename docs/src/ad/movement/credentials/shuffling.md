@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Techniques T1003 and T1552 (kind of)
 authors: ShutdownRepo
+category: ad
 ---
 
 # Shuffling
@@ -12,6 +13,3 @@ When credentials are found (through [dumping](dumping/) or [cracking](cracking.m
 > This usually quickly results in Domain Admin credentials since most Active Directory admins logon to their workstation with a user account and then use RunAs (which places their admin credentials on the local workstation) or RDP to connect to a server \[...\].
 >  
 > (quote from Sean Metcalf in [the part 4 "Credential Theft Shuffle" of adsecurity's "Attack Methods for gaining Domain Admin Rights in Active Directory" article](https://adsecurity.org/?p=2362))
-
-
-

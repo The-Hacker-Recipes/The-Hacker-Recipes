@@ -1,5 +1,6 @@
 ---
 authors: KenjiEndo15, ShutdownRepo
+category: web
 ---
 
 # Content Management System (CMS)
@@ -64,4 +65,3 @@ droopescan scan $cms_name -u $URL
 ```
 
 :::
-

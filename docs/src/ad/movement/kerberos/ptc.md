@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # Pass the cache
@@ -9,5 +10,3 @@ This technique is equivalent to pass the ticket. Instead of using Kerberos ticke
 
 > [!TIP]
 > Read the [Pass the ticket](ptt.md) article for more insight
-
-

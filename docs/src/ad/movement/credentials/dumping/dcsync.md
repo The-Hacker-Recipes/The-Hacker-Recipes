@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1003.006
 authors: ShutdownRepo
+category: ad
 ---
 
 # DCSync

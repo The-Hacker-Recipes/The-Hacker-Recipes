@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # DACL abuse
@@ -120,4 +121,3 @@ The following table should help for better understanding of the ACE types and wh
 
 [https://posts.specterops.io/introducing-bloodhound-4-2-the-azure-refactor-1cff734938bd](https://posts.specterops.io/introducing-bloodhound-4-2-the-azure-refactor-1cff734938bd)
 :::
-

@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, sckdev
+category: ad
 ---
 
 # Kerberos
@@ -198,4 +199,3 @@ This allows to
 * operate an [unPAC-the-hash](unpac-the-hash.md) attack
 * retrieve and decrypt the PAC (Privileged Attribute Certificate) of any account. Could be used to obtain a [sapphire ticket](forged-tickets/sapphire.md).
 :::
-

@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: web
 ---
 
 # XXE injection
@@ -280,4 +281,3 @@ Content-Length: 107
 [https://blog.zsec.uk/blind-xxe-learning/](https://blog.zsec.uk/blind-xxe-learning/)
 
 [https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection)
-

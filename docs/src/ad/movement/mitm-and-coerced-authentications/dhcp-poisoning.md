@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, sckdev
+category: ad
 ---
 
 # DHCP poisoning
@@ -54,4 +55,3 @@ responder -I "eth0" -wPd
 ## Resources
 
 [https://g-laurent.blogspot.com/2021/08/responders-dhcp-poisoner.html](https://g-laurent.blogspot.com/2021/08/responders-dhcp-poisoner.html)
-

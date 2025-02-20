@@ -1,5 +1,6 @@
 ---
 authors: KenjiEndo15, ShutdownRepo, Fantabc
+category: web
 ---
 
 # HTTP parameter pollution

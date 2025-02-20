@@ -1,5 +1,6 @@
 ---
 authors: WodenSec
+category: ad
 ---
 
 # DSRM Persistence

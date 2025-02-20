@@ -1,5 +1,6 @@
 ---
 authors: BlWasp, ShutdownRepo, q-roland
+category: ad
 ---
 
 # Privilege escalation

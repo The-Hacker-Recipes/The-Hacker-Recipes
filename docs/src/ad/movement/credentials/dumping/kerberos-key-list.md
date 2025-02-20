@@ -1,5 +1,6 @@
 ---
 authors: BlWasp, ShutdownRepo, sckdev
+category: ad
 ---
 
 # Kerberos key list

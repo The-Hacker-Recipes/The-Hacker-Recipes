@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # 🛠️ Windows Credential Manager
@@ -41,5 +42,3 @@ Get-WebCredentials
 ```
 
 Alternatively, [Mimkatz](https://github.com/gentilkiwi/mimikatz) (C) can be used for that purpose, with [`sekurlsa::credman`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/credman).
-
-

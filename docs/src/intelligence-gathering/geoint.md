@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: intelligence-gathering
 ---
 
 # GEOINT

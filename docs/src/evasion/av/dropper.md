@@ -1,5 +1,6 @@
 ---
 authors: Jenaye, ShutdownRepo
+category: evasion
 ---
 
 # 🛠️ Dropper
@@ -50,4 +51,4 @@ By using the previous source code the anti-virus will have more difficulty to un
 > [!CAUTION]
 > Once the binary is ready to be executed, access to the internet should be cut in the test environment in order not to send the signature of the bypass to Microsoft or to the editor.
 
-To optimize the probability to bypass the protections we will have to combine several techniques, for example encrypt the active load, de-activate Microsoft logs or choose a special way to inject the virus (cf [process injection](process-injection.md)). 
+To optimize the probability to bypass the protections we will have to combine several techniques, for example encrypt the active load, de-activate Microsoft logs or choose a special way to inject the virus (cf [process injection](process-injection.md)).

@@ -1,5 +1,6 @@
 ---
 authors: Bnder1, ShutdownRepo
+category: intelligence-gathering
 ---
 
 # Web infrastructure

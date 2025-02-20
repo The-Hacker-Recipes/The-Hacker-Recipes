@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # ADIDNS poisoning
@@ -148,4 +149,3 @@ Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LL
 [https://blog.netspi.com/adidns-revisited/](https://blog.netspi.com/adidns-revisited/)
 
 [https://snovvcrash.rocks/2020/12/28/htb-hades.html#spoofing-active-directory-integrated-dns](https://snovvcrash.rocks/2020/12/28/htb-hades.html#spoofing-active-directory-integrated-dns)
-

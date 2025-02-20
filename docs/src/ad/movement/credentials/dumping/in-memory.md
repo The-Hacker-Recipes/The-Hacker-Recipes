@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, sckdev
+category: ad
 ---
 
 # In-memory secrets

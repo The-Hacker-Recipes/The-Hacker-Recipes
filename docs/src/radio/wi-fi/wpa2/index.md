@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: radio
 ---
 
 # 🛠️ WPA2
@@ -52,4 +53,3 @@ cracking
 
 
 ## Resources
-

@@ -1,5 +1,6 @@
 ---
 authors: CravateRouge, ShutdownRepo, sckdev
+category: ad
 ---
 
 # Grant ownership
@@ -34,4 +35,3 @@ Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_princ
 ```
 
 :::
-

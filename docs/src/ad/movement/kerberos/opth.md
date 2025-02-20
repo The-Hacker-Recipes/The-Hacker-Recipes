@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # Overpass the hash
@@ -12,5 +13,3 @@ When attackers know the RC4 key (which is in fact the user's NT hash), and when 
 
 > [!TIP]
 > Read the [Pass the key](ptk.md) article for more insight
-
-    

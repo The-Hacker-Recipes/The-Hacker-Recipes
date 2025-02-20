@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, blepdoge
+category: infra
 ---
 
 # Initial access (protocols)

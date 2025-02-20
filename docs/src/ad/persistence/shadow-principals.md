@@ -1,5 +1,6 @@
 ---
 authors: Pri3st, ShutdownRepo
+category: ad
 ---
 
 # Shadow Principals (PAM)
@@ -16,5 +17,3 @@ When a Bastion Forest is compromised, there are multiple ways to obtain persiste
 [https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html](https://www.labofapenetrationtester.com/2019/04/abusing-PAM.html)
 
 [https://posts.specterops.io/not-a-security-boundary-breaking-forest-trusts-cd125829518d](https://posts.specterops.io/not-a-security-boundary-breaking-forest-trusts-cd125829518d)
-
-

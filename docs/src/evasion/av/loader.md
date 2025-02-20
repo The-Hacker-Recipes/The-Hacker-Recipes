@@ -1,5 +1,6 @@
 ---
 authors: Jenaye, ShutdownRepo
+category: evasion
 ---
 
 # 🛠️ Loader
@@ -26,7 +27,3 @@ int main(void) {
 Once the payload is completed, [pe-sieve](https://github.com/hasherezade/pe-sieve) can be used to identify if it is stealthy or not.
 
 ![](./assets/ps-sieve.png)
-
-
-
-

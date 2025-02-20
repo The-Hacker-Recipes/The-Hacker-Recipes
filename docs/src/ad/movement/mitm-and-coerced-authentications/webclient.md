@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, mpgn, sckdev, Pri3st, rtpt-romankarwacik
+category: ad
 ---
 
 # WebClient abuse (WebDAV)

@@ -1,5 +1,6 @@
 ---
 authors: PfiatDe, ShutdownRepo, sckdev, Joker2a, mpgn
+category: ad
 ---
 
 # Pass the Certificate
@@ -125,4 +126,3 @@ The ticket obtained can then be used to
 * obtain access to the account's SPN with an S4U2Self.
 
 :::
-

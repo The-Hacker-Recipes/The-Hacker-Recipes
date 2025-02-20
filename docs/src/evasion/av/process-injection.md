@@ -1,8 +1,7 @@
 ---
-description: >-
- This technique aims at increasing privilege and/or escaping the protections
- applied to the processes
+description: This technique aims at increasing privilege and/or escaping the protections applied to the processes
 authors: Jenaye, ShutdownRepo
+category: evasion
 ---
 
 # 🛠️ Process injection

@@ -1,5 +1,6 @@
 ---
 authors: CravateRouge, ShutdownRepo, mpgn
+category: ad
 ---
 
 # ReadLAPSPassword

@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # NBT-NS
@@ -20,6 +21,3 @@ nmblookup -A $IPAdress
 > Some NBT-NS recon can be carried out with the enum4linux tool (see [this page](enum4linux.md)).
 
 [https://wiki.wireshark.org/NetBIOS/NBNS](https://wiki.wireshark.org/NetBIOS/NBNS)
-
-
-

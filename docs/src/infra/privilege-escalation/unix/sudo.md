@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, dreamkinn, p0dalirius
+category: infra
 ---
 
 # SUDO
@@ -113,4 +114,3 @@ More info about this vulnerability can be found [here](https://nvd.nist.gov/vuln
 [https://jamesluo-843.medium.com/exploiting-cve-2019-14287-37eac7023a4](https://jamesluo-843.medium.com/exploiting-cve-2019-14287-37eac7023a4)
 
 [https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit](https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit)
-

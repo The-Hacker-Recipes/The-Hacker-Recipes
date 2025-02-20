@@ -1,30 +1,55 @@
-<!-- USE FOR ALL PAGES ON PROD --> 
-<!-- TODO: ADD PER COUNTRY FEATURE --> 
-
-
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { VPDocAsideSponsors } from 'vitepress/theme'
 import { useSponsor } from '../composables/sponsors'
+import { useData } from 'vitepress'
 
 const { data } = useSponsor()
+const { page } = useData()
+
+const currentCategory = computed(() => page.value.frontmatter.category || '')
+const userCountry = ref(null)
+
+const fetchUserCountry = async () => {
+  try {
+    const response = await fetch('https://api.country.is/')
+    const result = await response.json()
+    userCountry.value = result.country_code || 'FR' // Défaut à FR si inconnu
+  } catch (error) {
+    console.error('Erreur lors de la récupération du pays:', error)
+    userCountry.value = 'FR' 
+  }
+}
+
+onMounted(() => {
+  fetchUserCountry()
+})
 
 const sponsors = computed(() => {
+  if (userCountry.value === null) {
+    return null; // Attendre la récupération du pays
+  }
+
   return (
     data?.value
-     .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') 
+      .filter((sponsor) => sponsor.tier !== 'Banner Sponsors')
       .map((sponsor) => {
         return {
           size: sponsor.size === 'big' ? 'mini' : 'xmini',
-          items: sponsor.items,
-        }
+          items: sponsor.items.filter(
+            (item) =>
+              item.categories.includes(currentCategory.value) &&
+              (item.country.includes(userCountry.value) || item.country.includes('ALL'))
+          ),
+        };
       }) ?? []
-  )
-})
+  );
+});
+
 </script>
 
 <template>
-  <VPDocAsideSponsors v-if="data" :data="sponsors" />
+  <VPDocAsideSponsors v-if="data && sponsors !== null" :data="sponsors" />
 </template>
 
 <style>

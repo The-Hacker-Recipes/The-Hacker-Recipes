@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1110.003
 authors: ShutdownRepo, mpgn, sckdev
+category: ad
 ---
 
 # Spraying
@@ -20,8 +21,3 @@ smartbrute brute -bU users.txt -bp "password" kerberos --kdc-ip "$KDC"
 
 > [!TIP]
 > Read the ["Password guessing"](guessing) article for more insight.
-
-
-
-
-

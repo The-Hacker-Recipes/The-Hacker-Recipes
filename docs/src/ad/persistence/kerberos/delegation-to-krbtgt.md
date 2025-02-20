@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, sckdev
+category: ad
 ---
 
 # Delegation to KRBTGT
@@ -68,4 +69,3 @@ Rubeus.exe asktgs /service:"cifs/target" /ticket:"base64ticket...." /ptt
 
 
 [rbcd.md](../../movement/kerberos/delegations/rbcd.md)
-

@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, sckdev
+category: ad
 ---
 
 # Security groups
@@ -34,4 +35,3 @@ Below is a table summing up some groups' rights and abuse paths.
 [https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/security-identifiers-in-windows](https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/security-identifiers-in-windows)
 
 [https://cube0x0.github.io/Pocing-Beyond-DA/](https://cube0x0.github.io/Pocing-Beyond-DA/)
-

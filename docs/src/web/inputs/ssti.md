@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo, p0dalirius, Fantabc
+category: web
 ---
 
 # 🛠️ SSTI (Server-Side Template Injection)

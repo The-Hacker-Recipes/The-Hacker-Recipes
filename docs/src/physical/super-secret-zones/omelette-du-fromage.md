@@ -1,5 +1,6 @@
 ---
 authors: KenjiEndo15, ShutdownRepo
+category: physical
 ---
 
 # 🍳 Omelette du fromage

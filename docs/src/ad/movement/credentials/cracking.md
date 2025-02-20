@@ -1,6 +1,7 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1110.002
 authors: ShutdownRepo
+category: ad
 ---
 
 # Cracking
@@ -128,4 +129,3 @@ A robust alternative to hashcat is [John the Ripper](https://github.com/openwall
 > * Cracking LM and NT hash can be optimized by following [these advice](https://blog.didierstevens.com/2016/07/25/practice-ntds-dit-file-overview/).
 >
 > See [hashcat.net](https://hashcat.net/wiki/doku.php?id=example_hashes)
-

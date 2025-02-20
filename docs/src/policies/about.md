@@ -3,6 +3,7 @@ next: false
 editLink: false
 lastUpdated: false
 authors: ShutdownRepo
+category: policies
 ---
 
 # About us
@@ -19,7 +20,3 @@ _Last updated: December 11, 2024_
 | **Address**          | 122 rue Amelot, 75011 Paris              |
 | **Contact**          | [contact@thehacker.recipes](mailto:contact@thehacker.recipes) |
 | **Hosting**          | CloudFlare Pages                         |
-
-
-
-

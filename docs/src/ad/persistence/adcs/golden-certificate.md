@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # Golden certificate
@@ -22,4 +23,3 @@ Most tools ([certsync](https://github.com/zblurx/certsync), [certipy](https://gi
 [https://san3ncrypt3d.com/2022/02/19/gc/](https://san3ncrypt3d.com/2022/02/19/gc/)
 
 > [!YOUTUBE] https://www.youtube.com/watch?v=2KZCsfplSlI
-

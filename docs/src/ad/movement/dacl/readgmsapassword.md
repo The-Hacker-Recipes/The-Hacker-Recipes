@@ -1,5 +1,6 @@
 ---
 authors: CravateRouge, PfiatDe, ShutdownRepo
+category: ad
 ---
 
 # ReadGMSAPassword

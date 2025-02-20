@@ -1,5 +1,6 @@
 ---
 authors: CravateRouge, Hackndo, Pri3st, ShutdownRepo, mpgn
+category: ad
 ---
 
 # DNS
@@ -120,5 +121,3 @@ If zone transfers are allowed, `dig` can be used to request a zone transfer.
 ```bash
 dig axfr @<DC_IP> <DOMAIN_FQDN>
 ```
-
-

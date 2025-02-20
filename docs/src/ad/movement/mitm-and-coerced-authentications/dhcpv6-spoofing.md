@@ -1,5 +1,6 @@
 ---
 authors: ShutdownRepo
+category: ad
 ---
 
 # DHCPv6 spoofing
@@ -43,4 +44,3 @@ dns.spoof on
 [https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
 
 [https://www.bettercap.org/modules/ethernet/spoofers/dhcp6.spoof/](https://www.bettercap.org/modules/ethernet/spoofers/dhcp6.spoof/)
-
