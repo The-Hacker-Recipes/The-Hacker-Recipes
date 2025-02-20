@@ -268,7 +268,9 @@ Which will output the following
 
 An article template is available for a quick start: [Template](template).
 
-## Highlighting contributors
+## Frontmatter configuration
+
+### Highlighting contributors
 
 For contributors to be listed, they need to be listed in the `authors` property of the [frontmatter](https://vitepress.dev/guide/frontmatter) configuration of the corresponding page(s).
 
@@ -277,6 +279,16 @@ When contributing to a page, an author must add its GitHub username to it:
 ```markdown
 ---
 authors: author1, author2, ...
+---
+```
+
+### Category attribute
+
+It is mandatory to specify the category of the article in the frontmatter configuration of the page (it can be `ad`, `infra`, `web`, etc.).
+
+```markdown
+---
+category: ad
 ---
 ```
 
