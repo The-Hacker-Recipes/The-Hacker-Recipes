@@ -128,8 +128,6 @@ Section [4.1.2.2](https://docs.microsoft.com/en-us/openspecs/windows_protocols/m
 > > * If the `TRUST_ATTRIBUTE_TREAT_AS_EXTERNAL (0x00000040)` flag is set, then inter-forest ticket can be forged, spoofing an RID >= 1000. Of course, this doesn't apply if TAQD (`TRUST_ATTRIBUTE_QUARANTINED_DOMAIN`) is set.
 > >
 > > _(sources: section_ [_6.1.6.7.9_](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/e9a2d23c-c31e-4a6f-88a0-6646fdb51a3c?redirectedfrom=MSDN) _of \[MS-ADTS], and section_ [_4.1.2.2_](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280) _of \[MS-PAC])._
->
-> Above are some key, usually valid, elements. But as [Carsten Sandker](https://twitter.com/0xcsandker) puts it: "the logic that sits behind this might be too complex to put it in text". To really know the behavior of SID filtering for a trust, refer to the lookup tables [here](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/OC-b4We5WFiXhTirzI_Dyw.png) (for default trusts setups) and [there](https://www.securesystems.de/images/blog/active-directory-spotlight-trusts-part-2-operational-guidance/99icUS7SKCscWq6VzW0o5g.png) (for custom configs).
 
 
 > [!TIP]
@@ -201,7 +199,7 @@ Understanding how Kerberos works is required here: [the Kerberos protocol](../ke
 >
 > When a user in domain A tries to authenticate or access a resource in domain B that he has established access to, he presents his ticket-granting-ticket (TGT) and request for a service ticket to the KDC for domain A. The KDC for A determines that the resource is not in its realm, and issues the user a referral ticket.
 >
-> This referral ticket is a ticket-granting-ticket (TGT) encrypted with the inter-realm key shared by domain A and B. The user presents this referral ticket to the KDC for domain B, which decrypts it with the inter-realm key, checks if the user in the ticket has access to the requested resource, and issues a service ticket. This process is described in detail in [Microsoft’s documentation](https://technet.microsoft.com/en-us/library/cc772815(v=ws.10).aspx#w2k3tr_kerb_how_pzvx) in the Simple Cross-Realm Authentication and Examples section.
+> This referral ticket is a ticket-granting-ticket (TGT) encrypted with the inter-realm key shared by domain A and B. The user presents this referral ticket to the KDC for domain B, which decrypts it with the inter-realm key, checks if the user in the ticket has access to the requested resource, and issues a service ticket. This process is described in detail in [Microsoft's documentation](https://technet.microsoft.com/en-us/library/cc772815(v=ws.10).aspx#w2k3tr_kerb_how_pzvx) in the Simple Cross-Realm Authentication and Examples section.
 >
 > _(by_ [_Will Schroeder_](https://twitter.com/harmj0y) _on_ [_blog.harmj0y.net_](https://blog.harmj0y.net/redteaming/domain-trusts-were-not-done-yet/)_)_
 
@@ -281,7 +279,7 @@ Bastion ROOT (DC=BASTION,DC=LOCAL)
 
 While domain trusts don't necessarily give access to resources, they allow the trusted domain's principal to query another -trusting- domain's AD info.
 
-> And remember that all parent->child (intra-forest domain trusts) retain an implicit two way transitive trust with each other. Also, due to how child domains are added, the “Enterprise Admins” group is automatically added to Administrators domain local group in each domain in the forest. This means that trust “flows down” from the forest root, making it our objective to move from child to forest root at any appropriate step in the attack chain. (from [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d)).
+> And remember that all parent->child (intra-forest domain trusts) retain an implicit two way transitive trust with each other. Also, due to how child domains are added, the "Enterprise Admins" group is automatically added to Administrators domain local group in each domain in the forest. This means that trust "flows down" from the forest root, making it our objective to move from child to forest root at any appropriate step in the attack chain. (from [Will Schroeder's " A Guide to Attacking Domain Trusts"](https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d)).
 
 Attacking AD trusts comes down to the following process.
 
@@ -391,81 +389,92 @@ To enumerate the Shadow Security Principals, and LDAP query can be made to list 
 
 ### Forging tickets
 
-When forging a [referral ticket](index#kerberos-authentication), or a [golden ticket](../kerberos/forged-tickets/golden), additional security identifiers (SIDs) can be added as "extra SID" and be considered as part of the user's [SID history](index#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
+When authenticating across trusts, an attacker can forge either:
 
-Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](index#sid-filtering) is configured in the trust)
+1. A [referral ticket](#referral-ticket) (inter-realm TGT) using the inter-realm trust key
+2. A [golden ticket](#golden-ticket) using the compromised domain's krbtgt hash
+
+In both cases, additional security identifiers (SIDs) can be added as "extra SID" to be considered as part of the user's [SID history](index#sid-history) when authenticating. Alternatively, the SID could be added beforehand, directly in the SID history attribute, with mimikatz [`sid:add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) command, but that's a topic for another day.
+
+> [!IMPORTANT]
+> When forging tickets, before November 2021 updates, the `username` supplied was mostly useless. As of Nov. 2021 updates, if the `username` supplied doesn't exist in Active Directory, the ticket gets rejected. This applies to both referral tickets and golden tickets.
+
+Then, when using the ticket, the SID history would be taken into account and could grant elevated privileges (depending on how [SID filtering](index#sid-filtering) is configured in the trust):
 
 * If the attacker is moving across an intra-forest trust, it would allow to compromise the forest root, and by extension, all the forest, since Enterprise Admins can access all domains' domain controllers as admin (because the security boundary is the forest, not the domain).
 * If the attacker is moving across an inter-forest trust, it could allow to compromise the trusting domain, depending on how [SID filtering](index#sid-filtering) is configured, and if there are some groups that have sufficient permissions.
 
 In conclusion, before attacking trusts, it's required to enumerate them, as well as enumerate the target (trusting) domain's resources. See [enumeration](index#enumeration).
 
-* If SID filtering is disabled in the targeted trust relationship (see [SID filtering](index#sid-filtering) and [Enumeration](index#enumeration)), a ticket (inter-realm/referral ticket, or golden ticket) can be forged with an extra SID that contains the root domain and the RID of the "Enterprise Admins" group (i.e. `S-1-5-21--519`). The ticket can then be used to access the trusting domain controller as admin and conduct a [DCSync](../credentials/dumping/dcsync) attack.
+* If SID filtering is disabled in the targeted trust relationship (see [SID filtering](index#sid-filtering) and [Enumeration](index#enumeration)), a ticket ([referral ticket](#referral-ticket), or [golden ticket](#golden-ticket)) can be forged with an extra SID that contains the root domain and the RID of the "Enterprise Admins" group (i.e. `S-1-5-21--519`). The ticket can then be used to access the trusting domain controller as admin and conduct a [DCSync](../credentials/dumping/dcsync) attack.
 * If SID filtering is partially enabled (sometimes referred to as [SID history enabled](index#sid-history)), effectively only filtering out RID <1000, a ticket can be forged with an extra SID that contains the target domain and the RID of any group, with RID >= 1000). The ticket can then be used to conduct more attacks depending on the group's privileges.
-
- > For example the Exchange security groups, which allow for a [privilege escalation to DA](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/) in many setups all have RIDs larger than 1000. Also many organisations will have custom groups for workstation admins or helpdesks that are given local Administrator privileges on workstations or servers.
- >
- > _(by_ [_Dirk-jan Mollema_](https://twitter.com/_dirkjan) _on_ [_dirkjanm.io_](https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/)_)_
 * If SID filtering is fully enabled, the techniques presented above will not work since all SIDs that differ from the trusted domain will be filtered out. This is usually the case with standard inter-forest trusts. Attackers must then fall back to other methods of [permissions abuse](index#abusing-permissions). Alternatively, there are a few SIDs that won't be filtered out (see [SID filtering](index#sid-filtering) theory and [SID filtering bypass](index#sid-filtering-bypass) practice).
 
 > [!TIP]
-> If the attacker chooses to forge an inter-realm ticket forgery (i.e. referral ticket), a service ticket request must be conducted before trying to access the domain controller. In the case of a golden ticket, the target domain controller will do the hard work itself. Once the last ticket is obtained, it can be used with [pass-the-ticket](../kerberos/ptt) for the [DCSync](../credentials/dumping/dcsync) (if enough privileges, or any other operation if not).
+> If the goal is to perform a DCSync attack on the target domain - and if SID filtering is disabled - a stealthier approach consists in injecting the "Domain Controllers" (516) and "Enterprise Domain Controllers" (S-1-5-9) RID in the SID history. This can help avoid suspicious logs and detection.
 
+#### Referral ticket
+
+When forging a referral ticket, a service ticket request must be conducted before trying to access the domain controller. The referral ticket is encrypted with the inter-realm key shared between the two domains.
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, [Impacket](https://github.com/fortra/impacket) scripts (Python) can be used for that purpose.
+From UNIX-like systems, [Impacket](https://github.com/fortra/impacket) scripts (Python) can be used:
 
-* ticketer.py to forge tickets
-* getST.py to request service tickets
-* lookupsid.py to retrieve the domains' SIDs
-
-If SID filtering is disabled, set the RID to 519 to act as Enterprise Admin.
-
-If SID filtering is partially enabled, set the RID >=1000.
-
-##### Referral ticket
 ```bash
-# 1. forge the ticket
+# 1. forge the referral ticket
 ticketer.py -nthash "inter-realm key" -domain-sid "compromised_domain_SID" -domain "compromised_domain_FQDN" -extra-sid "<target_domain_SID>-<RID>" -spn "krbtgt/target_domain_fqdn" "someusername"
 
 # 2. use it to request a service ticket
 KRB5CCNAME="someusername.ccache" getST.py -k -no-pass -debug -spn "CIFS/domain_controller" "target_domain_fqdn/someusername@target_domain_fqdn"
 ```
 
+=== Windows
 
-```bash
-ticketer.py -nthash "compromised_domain_krbtgt_NT_hash" -domain-sid "compromised_domain_SID" -domain "compromised_domain_FQDN" -extra-sid "-" "someusername"
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used:
+
+```powershell
+# TODO
 ```
 
+:::
 
-Impacket's [raiseChild.py](https://github.com/fortra/impacket/blob/master/examples/raiseChild.py) script can also be used to conduct the golden ticket technique automatically when SID filtering is disabled (retrieving the SIDs, dumping the trusted domain's krbtgt, forging the ticket, dumping the forest root keys, etc.). It will forge a ticket with the Enterprise Admins extra SID.
+#### Golden ticket
+
+When forging a golden ticket, the target domain controller will handle the service ticket generation itself. The golden ticket is encrypted with the compromised domain's krbtgt hash.
+
+::: tabs
+
+=== UNIX-like
+
+From UNIX-like systems, [Impacket](https://github.com/fortra/impacket) scripts (Python) can be used:
+
+```bash
+# Generate golden ticket with extra SID
+ticketer.py -nthash "compromised_domain_krbtgt_NT_hash" -domain-sid "compromised_domain_SID" -domain "compromised_domain_FQDN" -extra-sid "<target_domain_SID>-<RID>" "someusername"
+
+# The ticket can be used directly with any tool supporting Kerberos auth
+KRB5CCNAME="someusername.ccache" secretsdump.py -k -no-pass "target_domain_fqdn/someusername@domain_controller"
+```
+
+Impacket's [raiseChild.py](https://github.com/fortra/impacket/blob/master/examples/raiseChild.py) script can also be used to conduct the golden ticket technique automatically when SID filtering is disabled:
 
 ```bash
 raiseChild.py "compromised_domain"/"compromised_domain_admin":"$PASSWORD"
 ```
 
-
 === Windows
 
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used:
 
-If SID filtering is disabled, set the RID to 519 to act as Enterprise Admin.
-
-If SID filtering is partially enabled, set the RID >=1000.
-
-##### Referral ticket
 ```powershell
-# Generate the ticket and use Pass-the-Ticket
-Rubeus.exe golden /user:Administrator /id:500 /domain:<compromised_domain_FQDN> /sid:<compromised_domain_SID> /groups:513 /sids:<target_domain_SID>-<RID> /aes256:<compromised_domain_krbtgt_aes256_key> /ptt
+# Generate golden ticket with extra SID and use Pass-the-Ticket
+Rubeus.exe golden /user:Administrator /domain:<compromised_domain_FQDN> /sid:<compromised_domain_SID> /sids:<target_domain_SID>-<RID> /krbtgt:<compromised_domain_krbtgt_NT_hash> /ptt
+
+# The ticket can be used directly with any tool supporting Kerberos auth
 ```
-
-:::
-
-> [!TIP]
-> If the goal is to perform a DCSync attack on the target domain - and if SID filtering is disabled - a stealthier approach consists in injecting the "Domain Controllers" (516) and "Enterprise Domain Controllers" (S-1-5-9) RID in the SID history. This can help avoid suspicious logs and detection.
 
 :::
 
@@ -484,8 +493,8 @@ The idea behind [CVE-2020-0665](https://msrc.microsoft.com/update-guide/en-US/vu
 The attack is conducted as follows:
 
 1. Get the local domain's SID of the target server. This step requires Windows older than Windows 10 build 1607, or before Server 2016, as it uses MS-LSAT RPC to query the target server for the SID of its local domain, that is restricted on newer versions and requires administrative privileges on the target.
-2. Spoof the local domain's SID of the target server. This steps must be run as `SYSTEM` on the trusted forest's domain controller. The Frida script used for this step is made for Windows Server 2016 version 1607. If the target runs a different version, the address offset might be different and some additional preparation must be done.
-3. Forging tickets. For this step, refer to [Kerberos authentication](index#kerberos-authentication) theory chapter for more details about the trust key being used, the ticket forgery is then highly similar to the [Forging ticket](index#forging-tickets) practice part.
+2. Spoof the local domain's SID of the target server. This steps must be run as `SYSTEM` on the trusted DC. The Frida script used for this step is made for Windows Server 2016 version 1607. If the target runs a different version, the address offset might be different and some additional preparation must be done.
+3. Forging tickets. For this step, refer to [Kerberos authentication](index#kerberos-authentication) theory chapter for more details about the trust key being used, the ticket forgery is then highly similar to the [Forging tickets](#forging-tickets) practice part.
 
 > [!TIP]
 > For more details about how this attack works under the hood, refer to the article on [dirkjanm.io](https://dirkjanm.io/active-directory-forest-trusts-part-two-trust-transitivity/) by [Dirk-jan Mollema](https://twitter.com/_dirkjan).
@@ -567,7 +576,7 @@ In addition to that, the ideal setup would be to have a two-way trust between th
 1. (trusting B -> trusted A), allows access from A to B, allows to coerce authentications
 2. (trusting A -> trusted B), allows access from B to A, allows the coerced account to authenticate to the attacker-controlled KUD account.
 
-Other regular KUD-abuse-specific requirements apply (e.g. accounts not sensitive for delegation or member of the protected users group), see the [Kerberos Unconstrained Delegation](../kerberos/delegations/unconstrained) page.
+Other regular KUD-abuse-specific requirements apply (e.g. accounts not sensitive for delegation or member of the protected users group), see the [Kerberos Unconstrained Delegation](../kerberos/delegations/unconstrained#practice) page.
 
 If an attacker manages to gain control over an account configured for unconstrained delegation, he could escalate to domain admin privileges. Across trusts, the scenario is very similar. An attacker needs to gain control over a trusted account, configured for KUD (Kerberos Unconstrained Delegation), in order to act on a trusting resource (e.g. trusting domain's DC) as another principal (i.e. domain admin).
 
@@ -585,7 +594,7 @@ In most cases, the attacker will have to:
 
 
 > [!TIP]
-> Read the [Unconstrained](../kerberos/delegations/unconstrained) article for more insight
+> Read the [Unconstrained](../kerberos/delegations/unconstrained#practice) article for more insight
 
 
 #### 🛠️ DACL abuse
