@@ -10,7 +10,8 @@ category: ad
 ## Theory
 
 > [!WARNING]
-> A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are hashing formats used to store user passwords: LM, NT. And there are authentication protocols used to authenticate users to remote resources: LM, NTLMv1, and NTLMv2.
+> A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are hashing formats used to store user passwords: LM, NT. And there are authentication protocols used to authenticate users to remote resources: LM, NTLMv1, and NTLMv2 (
+[source](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level)).
 > 
 > * LM hash and NT hash will refer to the hashing formats
 > * LM, NTLM(v1), and NTLMv2, will refer to the authentication protocols
