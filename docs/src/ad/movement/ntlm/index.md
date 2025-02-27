@@ -1,5 +1,5 @@
 ---
-authors: CryingWelkin, ShutdownRepo, sckdev
+authors: AzeTIIx, CryingWelkin, ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -10,7 +10,8 @@ category: ad
 ## Theory
 
 > [!WARNING]
-> A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are hashing formats used to store user passwords: LM, NT. And there are authentication protocols used to authenticate users to remote resources: LM, NTLMv1, and NTLMv2.
+> A common error people do is mix LM, NT, NTLM, Net-NTLM etc. Let's make things clear. There are hashing formats used to store user passwords: LM, NT. And there are authentication protocols used to authenticate users to remote resources: LM, NTLMv1, and NTLMv2 (
+[source](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level)).
 > 
 > * LM hash and NT hash will refer to the hashing formats
 > * LM, NTLM(v1), and NTLMv2, will refer to the authentication protocols
@@ -74,3 +75,5 @@ Attackers could also rely on [forced authentications and phishing](../mitm-and-c
 [http://davenport.sourceforge.net/ntlm.html](http://davenport.sourceforge.net/ntlm.html)
 
 [https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nlmp/b38c36ed-2804-4868-a9ff-8dd3182128e4](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nlmp/b38c36ed-2804-4868-a9ff-8dd3182128e4)
+
+[https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level)
