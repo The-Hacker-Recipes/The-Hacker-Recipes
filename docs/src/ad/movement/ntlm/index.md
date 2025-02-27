@@ -1,5 +1,5 @@
 ---
-authors: CryingWelkin, ShutdownRepo, sckdev
+authors: AzeTIx, CryingWelkin, ShutdownRepo, sckdev
 category: ad
 ---
 
@@ -74,3 +74,5 @@ Attackers could also rely on [forced authentications and phishing](../mitm-and-c
 [http://davenport.sourceforge.net/ntlm.html](http://davenport.sourceforge.net/ntlm.html)
 
 [https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nlmp/b38c36ed-2804-4868-a9ff-8dd3182128e4](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nlmp/b38c36ed-2804-4868-a9ff-8dd3182128e4)
+
+[https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level)
