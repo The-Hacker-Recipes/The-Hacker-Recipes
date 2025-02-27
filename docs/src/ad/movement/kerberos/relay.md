@@ -37,7 +37,7 @@ Dirk-jan Mollema has demonstrated in [this blog post](https://dirkjanm.io/relayi
 >  
 > _(Cloudflare, [source](https://www.cloudflare.com/learning/dns/dns-records/dns-soa-record/))_
 
-An interesting service for relaying authentications is the AD CS HTTP service, which by default is vulnerable to relay attacks as it does not enforce signing with HTTP, allowing an [ESC8](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8) to be exploited via Kerberos from a [mitm6 DNS poisoning](/mitm-and-coerced-authentications/dhcpv6-spoofing.md).
+An interesting service for relaying authentications is the AD CS HTTP service, which by default is vulnerable to relay attacks as it does not enforce signing with HTTP, allowing an [ESC8](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8) to be exploited via Kerberos from a [mitm6 DNS poisoning](../mitm-and-coerced-authentications/dhcpv6-spoofing.md).
 
 DNS is used in Kerberos authentication operations in Active Directory. In particular, it is used through [Secure dynamic updates](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/configure-dns-dynamic-updates-windows-server-2003), which are used to keep DNS records synchronised with the IP addresses of dynamically addressed clients.
 
@@ -79,7 +79,7 @@ mitm6 -i $ATTACKER_IP -d $DOMAIN -hw $TARGET_FQDN --relay $ADCS_FQDN -v
 
 ### Abuse from a coerced authentication
 
-As demonstrated by Synacktiv in [this blog post](https://www.synacktiv.com/publications/relaying-kerberos-over-smb-using-krbrelayx), it is also possible to relay a Kerberos authentication from, and to, unsigned SMB services, when it comes [from a coercion](..mitm-and-coerced-authentications/index.md).
+As demonstrated by Synacktiv in [this blog post](https://www.synacktiv.com/publications/relaying-kerberos-over-smb-using-krbrelayx), it is also possible to relay a Kerberos authentication from, and to, unsigned SMB services, when it comes [from a coercion](../mitm-and-coerced-authentications/index.md).
 
 When an SMB client builds the SPN from the service class and its name, the `SecMakeSPNEx2` method is called, which calls the `CredMarshalTargetInfo` API function. This API takes a list of target information in a `CREDENTIAL_TARGET_INFORMATION` structure, *marshalizes* it in Base64, and appends it to the end of the actual SPN.
 
