@@ -74,7 +74,13 @@ In a different way, under certain conditions it is possible to force a WebDAV au
 
 In fact, as explained in the article, [Responder](https://github.com/lgandx/Responder) normally ends the authentication exchange with a `STATUS_ACCESS_DENIED` status code in the context of the SMB exchange, closing the connection immediatly. However, by changing the code to `STATUS_LOGON_FAILURE` (`0xc000006d`) or `STATUS_BAD_NETWORK_NAME` (`0xc00000cc`), the SMB client will not immediatly close the connection and will attempt to fallback to the WebDAV client (if the WebClient service is running).
 
-Below, a simple technique to perform this trick. By default, [smbserver.py](https://github.com/fortra/impacket/blob/master/examples/smbserver.py) (Python) from Impacket ends the communications with `STATUS_LOGON_FAILURE`.
+Below, an example to perform the attack with Responder (Python). At the time of writing, [this pull request](https://github.com/lgandx/Responder/pull/308) must be used.
+
+```bash
+responder --interface "eth0" -E
+```
+
+Alternatively, by default, [smbserver.py](https://github.com/fortra/impacket/blob/master/examples/smbserver.py) (Python) from Impacket ends the communications with `STATUS_LOGON_FAILURE`.
 
 ```bash
 # Start smbserver in a first terminal with authentication required
