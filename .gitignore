@@ -15,3 +15,5 @@ docs/.vitepress/cache/
 .venv
 venv/
 ENV/
+
+.DS_Store

@@ -16,8 +16,8 @@ import BannerSponsor from './components/BannerSponsor.vue'
 import AsideSponsors from './components/AsideSponsors.vue'
 import Donate from './components/Donate.vue'
 import FooterLinks from './components/FooterLinks.vue';
-
-
+import variableCommands from '../plugins/variableCommands'
+import ExegolHistoryImport from './components/ExegolHistoryImport.vue'
 const isMobileorTablet = useMediaQuery('(max-width: 1279px)')
 
 export default {
@@ -43,6 +43,7 @@ export default {
     enhanceAppWithTabs(app);
     app.component('Donaters', Donaters)
     app.component('DonationPricingTable', DonationPricingTable)
+    app.component('ExegolHistoryImport', ExegolHistoryImport)
   },
 
   // IMG ZOOM SETUP
@@ -62,5 +63,7 @@ export default {
       () => route.path,
       () => nextTick(() => initZoom())
     )
+
+    variableCommands({route})
   },
 } satisfies Theme
