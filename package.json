@@ -8,6 +8,7 @@
   "devDependencies": {
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
+    "vitepress-md-var": "^0.1.0",
     "vitepress-plugin-tabs": "^0.5.0"
   },
   "dependencies": {
