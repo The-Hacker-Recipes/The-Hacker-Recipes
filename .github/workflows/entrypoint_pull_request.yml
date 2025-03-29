@@ -1,3 +1,4 @@
+name: Build for Pull Requests
 on: [pull_request]
 jobs:
   deploy:
@@ -11,5 +12,3 @@ jobs:
         uses: actions/checkout@main
       - name: Build
         run: npm install && npm run docs:build
-      - name: Move redirections file for CloudFlare Pages
-        run: cp -v cloudflare_pages_redirects docs/.vitepress/dist/_redirects
