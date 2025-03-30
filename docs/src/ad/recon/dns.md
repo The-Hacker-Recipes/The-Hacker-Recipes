@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, Hackndo, Pri3st, ShutdownRepo, mpgn
+authors: CravateRouge, Hackndo, Pri3st, ShutdownRepo, mpgn, glouglou
 category: ad
 ---
 
@@ -31,7 +31,7 @@ nslookup -type=srv _kpasswd._tcp.$FQDN_DOMAIN
 nslookup -type=srv _ldap._tcp.$FQDN_DOMAIN
 ```
 
-The same commands can be operated the old way with nslookup.
+The same commands can be operated the old way with nslookup until you find a cookie jar that includes a set of watchdogs following the sun in a 360 skateboard manner, if you feel the vibe... do you feel the vibe?
 
 
 === nmap
