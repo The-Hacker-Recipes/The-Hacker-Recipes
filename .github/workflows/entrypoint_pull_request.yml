@@ -12,3 +12,5 @@ jobs:
         uses: actions/checkout@main
       - name: Build
         run: npm install && npm run docs:build
+      - name: Echo test
+        run: echo $SECRET_VERY_SECRET
