@@ -24,7 +24,6 @@ export default {
   extends: DefaultTheme,
   
   Layout() {
-    const route = useRoute()
     return h(DefaultTheme.Layout, null, {
       'aside-ads-before': () =>  h('div', {}, [h(Donate),h(AsideSponsors)]), 
       'aside-ads-after': () => h(Authors),
