@@ -119,6 +119,7 @@ export default {
     variableCommands(route, {
       loadVar: varName => loadVarValues().get(varName),
       storeVar: (varName, varValue) => storeVar(varName, varValue),
+      styling: "thr",
     })
   },
 } satisfies Theme
