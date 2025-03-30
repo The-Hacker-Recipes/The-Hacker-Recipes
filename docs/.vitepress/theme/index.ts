@@ -24,9 +24,7 @@ export default {
   extends: DefaultTheme,
   
   Layout() {
-
     const route = useRoute()
-
     return h(DefaultTheme.Layout, null, {
       'aside-ads-before': () =>  h('div', {}, [h(Donate),h(AsideSponsors)]), 
       'aside-ads-after': () => h(Authors),
@@ -38,15 +36,12 @@ export default {
     })
   },
 
-  enhanceApp({ app, router }) {
+  enhanceApp({ app }) {
     app.component('VPSidebarItem', CustomSidebarItem);
     enhanceAppWithTabs(app);
     app.component('Donaters', Donaters)
     app.component('DonationPricingTable', DonationPricingTable)
     app.component('ExegolHistoryImport', ExegolHistoryImport)
-    
-    // Initialize thrHistory plugin with router
-    thrHistory(router.route);
   },
 
   // IMG ZOOM SETUP
@@ -60,6 +55,8 @@ export default {
 
     onMounted(() => {
       initZoom()
+      // Initialize thrHistory plugin after the app is mounted
+      thrHistory(route)
     })
 
     watch(
