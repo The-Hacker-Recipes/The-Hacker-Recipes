@@ -56,7 +56,7 @@ In the end, an RBCD abuse results in a Service Ticket to authenticate on the tar
 
 **Step 1**: edit the target's "rbcd" attribute ([DACL abuse](../../dacl/)) :pencil2: 
 
-[Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) _c_an be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
+[Impacket](https://github.com/SecureAuthCorp/impacket/)'s [rbcd.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rbcd.py) script (Python) can be used to read, write or clear the delegation rights, using the credentials of a domain user that has the needed permissions.
 
 
 ```bash
