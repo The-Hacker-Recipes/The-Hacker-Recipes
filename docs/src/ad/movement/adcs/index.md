@@ -65,7 +65,7 @@ While AD CS offers attackers a wide range of exploitation and persistence scenar
 
 An initial indicator is the "Cert Publishers" built-in group whose members usually are the servers where AD CS is installed (i.e. PKI/CA).
 
-* From UNIX-like systems: `rpc net group members "Cert Publishers" -U "DOMAIN"/"User"%"Password" -S "DomainController"`
+* From UNIX-like systems: `net rpc group members "Cert Publishers" -U "DOMAIN"/"User"%"Password" -S "DomainController"`
 * From Windows systems: `net group "Cert Publishers" /domain`
 
 #### `pKIEnrollmentService` objects
