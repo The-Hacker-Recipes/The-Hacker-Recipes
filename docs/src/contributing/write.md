@@ -292,6 +292,31 @@ category: ad
 ---
 ```
 
+## Variable commands
+
+When adding or editing content, please use the standardized variable names listed above to ensure a consistent experience across all documentation pages for [variable commands](variables)
+
+### Variable Naming Standards
+
+| Use This          | Instead Of                                      |
+|-------------------|------------------------------------------------|
+| `$NT_HASH`        | `$NThash`, `$nthash`, `$Nthash`                |
+| `$LM_HASH`        | `$LMhash`, `$lmhash`, `$Lmhash`                |
+| `$ATTACKER_IP`    | `$attackerIP`, `$attacker_ip`, `$LHOST`        |
+| `$TARGET`         | `$TARGET_IP`, `$targetIP`, `$target_ip`        |
+| `$DOMAIN`         | `$domain`, `$DOMAIN_NAME`                      |
+| `$DC_IP`          | `$dc_ip`, `$dcIP`, `$domainController`         |
+| `$USER`           | `$user`, `$username`, `$USER_NAME`             |
+| `$INTERFACE`      | `$interface`, `$network_interface`             |
+
+### Implementation Tips
+
+1. When updating documentation, standardize any variable names you encounter
+2. Use ALL_CAPS with underscore separators for all variables
+3. For tool-specific variables, maintain consistency with our naming convention
+4. Include brief comments when introducing new variables
+5. Variables must be prefixed with `$` to be recognized by our substitution system 
+
 ## Get started :rocket:
 
 1. Fork the repository (https://github.com/The-Hacker-Recipes/The-Hacker-Recipes/fork)

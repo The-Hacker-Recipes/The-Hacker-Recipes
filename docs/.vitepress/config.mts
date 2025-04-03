@@ -1351,7 +1351,7 @@ export default defineConfig({
                 ]
             },
             {
-                "text": "Contributing to THR",
+                "text": "Contributing & misc",
                 "collapsed": false,
                 "items": [
                     {
@@ -1365,6 +1365,10 @@ export default defineConfig({
                     {
                         "text": "Buy ads 🌟",
                         "link": "/contributing/ads.md"
+                    },
+                    {
+                        "text": "Variables 🔄",
+                        "link": "/contributing/variables.md"
                     }
                 ]
             },
