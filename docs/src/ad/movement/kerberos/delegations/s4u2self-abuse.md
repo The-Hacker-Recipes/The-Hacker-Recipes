@@ -60,7 +60,7 @@ getTGT.py -dc-ip "$DC_IP" -hashes :"$NT_HASH" "$DOMAIN"/"machine$"
 
 === Windows
 
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. However, this step is optional if Rubeus is to be used later on for the S4U2sel requestf. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. However, this step is optional if Rubeus is to be used later on for the S4U2self request. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
 
 ```powershell
 Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
