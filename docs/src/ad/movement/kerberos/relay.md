@@ -93,7 +93,7 @@ So, if an attacker registers the DNS record `target1UWhRCAAAAAAAAAAUAAAAAAAAAAAA
 
 In his [original article](https://googleprojectzero.blogspot.com/2021/10/using-kerberos-for-authentication-relay.html), James Forshaw notes this point:
 
-> Another issue is that the size limit of a single name in DNS is 63 characters. The minimum valid marshaled buffer is 44 characters long leaving only 19 characters for the SPN part. This is at least larger than the minimum NetBIOS name limit of 15 characters so as long as there's an SPN for that shorter name registered it should be sufficient. However if there's no short SPN name registered then it's going to be more difficult to exploit.
+> Another issue is that the size limit of a single name in DNS is 63 characters. The minimum valid marshaled buffer is 44 characters long leaving only 19 characters for the SPN part. This is at least larger than the minimum NetBIOS name limit of 15 characters so as long as there's an SPN for that shorter name registered it should be sufficient. However if there's no short SPN name registered, then it's going to be more difficult to exploit.
 >
 > _(James Forshaw, October 20, 2021, [source](https://googleprojectzero.blogspot.com/2021/10/using-kerberos-for-authentication-relay.html))_
 

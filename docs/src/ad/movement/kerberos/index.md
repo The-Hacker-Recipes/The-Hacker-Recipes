@@ -129,7 +129,7 @@ In [some cases](delegations/#theory), the delegation will not work. Depending on
 
 ## Relays
 
-Like NTLM, the Kerberos protocole is also prone to authentication relay attacks.
+Like NTLM, the Kerberos protocol is also prone to authentication relay attacks.
 
 > [!TIP]
 > Read the [Relay](relay.md) article for more insight
