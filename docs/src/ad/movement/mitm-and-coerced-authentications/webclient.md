@@ -92,7 +92,7 @@ responder --interface "eth0"
 
 The obtained authentications from multicast poisonings in Responder will come from WebDAV, in case the WebClient service is running on the targets.
 
-::: Limitations
+::: details
 As indicated in the article, limitations are present on this attack, and not all the functionalities involving SMB operations on a Windows machine will result in the SMB client automatically falling back to WebDav.
 
 > During our research, we were able to confirm that the following actions do **trigger the behaviour**:
