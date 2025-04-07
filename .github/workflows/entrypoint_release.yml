@@ -1,3 +1,4 @@
+name: Deploy to Cloudflare Pages
 on: [push]
 jobs:
   deploy:
@@ -14,10 +15,9 @@ jobs:
       - name: Move redirections file for CloudFlare Pages
         run: cp -v cloudflare_pages_redirects docs/.vitepress/dist/_redirects
       - name: Publish
-        uses: cloudflare/pages-action@main
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: the-hacker-recipes
-          directory: docs/.vitepress/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy docs/.vitepress/dist --project-name=the-hacker-recipes

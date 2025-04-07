@@ -31,7 +31,7 @@ Kerberos is an authentication protocol based on tickets. It basically works like
 A Service Ticket (ST) allows access to a specific service. 
 
 > [!TIP] cname formats
-> When requesting a service ticket, the client (`cname`) specifies the service it wants to obtain access to by supplying it's `sname`, which can be one of 9 types ([RPC 4120 section 6.2](https://www.rfc-editor.org/rfc/rfc4120#section-6.2)). Shortly put, the following formats are supported:
+> When requesting a service ticket, the client (`cname`) specifies the service it wants to obtain access to by supplying it's `sname`, which can be one of 9 types ([RFC 4120 section 6.2](https://www.rfc-editor.org/rfc/rfc4120#section-6.2)). Shortly put, the following formats are supported:
 > 
 > * servicePrincipalName
 > * userPrincipalName
