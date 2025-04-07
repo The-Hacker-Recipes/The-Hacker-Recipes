@@ -343,6 +343,10 @@ export default defineConfig({
                                         "link": "/ad/movement/kerberos/ptc.md"
                                     },
                                     {
+                                        "text": "Relay",
+                                        "link": "/ad/movement/kerberos/relay.md"
+                                    },
+                                    {
                                         "text": "Forged tickets",
                                         "link": "/ad/movement/kerberos/forged-tickets/index.md",
                                         "collapsed": true,
