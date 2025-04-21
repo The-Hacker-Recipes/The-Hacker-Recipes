@@ -4,7 +4,7 @@ authors: ShutdownRepo, mpgn
 category: ad
 ---
 
-# Relay
+# NTLM relay
 
 ## Theory
 
