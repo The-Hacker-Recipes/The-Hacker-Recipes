@@ -51,7 +51,7 @@ Alternatively, if the machine account credentials are known, a TGT can be reques
 
 === UNIX-like
 
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getTGT.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getTGT.py) (Python) script can be used for that purpose. Howerver, this step is optional if getST.py is to be used later on for the S4U2self request. In this case, with the appropriate arguments, it will request a TGT automatically
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getTGT.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getTGT.py) (Python) script can be used for that purpose. However, this step is optional if getST.py is to be used later on for the S4U2self request. In this case, with the appropriate arguments, it will request a TGT automatically
 
 ```bash
 getTGT.py -dc-ip "$DC_IP" -hashes :"$NT_HASH" "$DOMAIN"/"machine$"
@@ -60,7 +60,7 @@ getTGT.py -dc-ip "$DC_IP" -hashes :"$NT_HASH" "$DOMAIN"/"machine$"
 
 === Windows
 
-From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. Howerver, this step is optional if Rubeus is to be used later on for the S4U2sel requestf. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
+From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. However, this step is optional if Rubeus is to be used later on for the S4U2self request. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
 
 ```powershell
 Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
