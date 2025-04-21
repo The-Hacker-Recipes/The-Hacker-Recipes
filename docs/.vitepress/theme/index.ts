@@ -16,17 +16,14 @@ import BannerSponsor from './components/BannerSponsor.vue'
 import AsideSponsors from './components/AsideSponsors.vue'
 import Donate from './components/Donate.vue'
 import FooterLinks from './components/FooterLinks.vue';
-
-
+import ExegolHistoryImport from './components/ExegolHistoryImport.vue'
+import thrHistory from '../plugins/thrHistory.ts'
 const isMobileorTablet = useMediaQuery('(max-width: 1279px)')
 
 export default {
   extends: DefaultTheme,
   
   Layout() {
-
-    const route = useRoute()
-
     return h(DefaultTheme.Layout, null, {
       'aside-ads-before': () =>  h('div', {}, [h(Donate),h(AsideSponsors)]), 
       'aside-ads-after': () => h(Authors),
@@ -43,6 +40,7 @@ export default {
     enhanceAppWithTabs(app);
     app.component('Donaters', Donaters)
     app.component('DonationPricingTable', DonationPricingTable)
+    app.component('ExegolHistoryImport', ExegolHistoryImport)
   },
 
   // IMG ZOOM SETUP
@@ -56,6 +54,8 @@ export default {
 
     onMounted(() => {
       initZoom()
+      // Initialize thrHistory plugin after the app is mounted
+      thrHistory(route)
     })
 
     watch(
