@@ -127,6 +127,12 @@ In [some cases](delegations/#theory), the delegation will not work. Depending on
 > [!TIP]
 > Read the [Bronze bit](delegations/bronze-bit.md) article for more insight
 
+## Relays
+
+Like NTLM, the Kerberos protocol is also prone to authentication relay attacks.
+
+> [!TIP]
+> Read the [Relay](relay.md) article for more insight
 
 ## Service-for-User extensions
 
