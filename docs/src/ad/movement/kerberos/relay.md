@@ -4,7 +4,7 @@ authors: BlWasp
 category: ad
 ---
 
-# Relay
+# Kerberos relay
 
 ## Theory
 
