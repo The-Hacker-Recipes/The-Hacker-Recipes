@@ -46,4 +46,42 @@ $INTERFACE    # Network interface (e.g., "eth0" or "tun0")
 
 ## Resetting variables
 
-All saved variables automatically expire after 24 hours. If you need to reset them before that, you can clear your browser's local storage for this website.
+All saved variables automatically expire after 24 hours. If you need to reset them before that, click the button below:
+
+<style>
+    .reset-button {
+        background-color: #ff4d4d;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .reset-button:hover {
+        background-color: #cc0000;
+    }
+
+    .reset-button:active {
+        background-color: #990000;
+    }
+</style>
+
+<button class="reset-button" @click="resetVariables()">Reset variables</button>
+
+<script setup>
+function resetVariables(){
+  const dataToStore = {
+    timestamp: Date.now(),
+    values: {}
+  }
+  localStorage.setItem("thr_commands_variables", JSON.stringify(dataToStore))
+
+  setTimeout(() => {
+    window.location.reload()
+  }, 500)
+}
+</script>
