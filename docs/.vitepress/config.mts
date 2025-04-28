@@ -671,6 +671,10 @@ export default defineConfig({
                             {
                                 "text": "Shadow Principals (PAM)",
                                 "link": "/ad/persistence/shadow-principals.md"
+                            },
+                            {
+                                "text": "DSRM",
+                                "link": "/ad/persistence/dsrm.md"
                             }
                         ]
                     }
