@@ -30,6 +30,8 @@ This is a USB device connected to the CA server via a USB port, or a USB device 
 
 > In order to generate and use keys in the YubiHSM, the Key Storage Provider must use an authentication key (sometimes dubbed "password"). This key/password is stored in the registry under `HKEY_LOCAL_MACHINE\SOFTWARE\Yubico\YubiHSM\AuthKeysetPassword` in cleartext. 
 >  
+> Furthermore, the YubiHSM Key Storage Provider does not check under which user account processes calling it via CNG are running.
+>
 > ([Hans-Joachim Knobloch](https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm))
 
 ## Practice
@@ -115,11 +117,8 @@ Then, find a way to configure the USB device server to connect to the attacker c
 
 #### Forge a certificate
 
-If the CA's private key is stored on a physical USB device such as "YubiHSM2", and a shell access is obtained on the PKI server (even with low privileges), it is possible to modify and sign new certificates. This can be used to replicate an ESC1 abuse path and impersonate privileged users.
-
-::: details
-The root Certification Authority relies on the "YubiHSM Key Storage Provider" to access its private key stored on the YubiHSM2. However as identified by Hans-Joachim Knobloch, "the YubiHSM Key Storage Provider does not check under which user account processes calling it via CNG are running", allowing unprivileged users to access the private key and sign new certificates.
-:::
+If the CA's private key is stored on a physical USB device such as "YubiHSM2", and a shell access is obtained on the PKI server (even with low privileges), it is possible to modify and sign new certificates.  
+This can be used to replicate an ESC1 abuse path and impersonate privileged users.
 
 ::: tabs
 
@@ -130,7 +129,7 @@ At the time of writing, no solution exists to perform this attack from a UNIX-li
 
 === Windows
 
-Retrieve a valid certificate allowing `Client Authentication` and extract the .crt :
+Retrieve a valid certificate  :
 ```powershell
 certipy req -target dc-esc.esc.local -dc-ip 10.10.10.10 -u "user_esc12@esc.local" -p 'P@ssw0rd' -template User -ca <CA-Common-Name>
 certipy cert -pfx user_esc12.pfx -nokey -out user_esc12.crt
@@ -158,7 +157,7 @@ Use the CA certificate and its private key with the [`certutil -sign`](https://l
 certutil -sign ./user_esc12.crt new.crt @extension.inf
 ```
 
-The following `.inf` file can be used to add a `SubjectAltName`, similarly to the ESC1 abuse.
+The following `.inf` file can be used to add a custom `SubjectAltName`, similarly to the ESC1 abuse.
 
 ```powershell
 [Extensions]
