@@ -671,6 +671,10 @@ export default defineConfig({
                             {
                                 "text": "Shadow Principals (PAM)",
                                 "link": "/ad/persistence/shadow-principals.md"
+                            },
+                            {
+                                "text": "DSRM",
+                                "link": "/ad/persistence/dsrm.md"
                             }
                         ]
                     }
@@ -1355,7 +1359,7 @@ export default defineConfig({
                 ]
             },
             {
-                "text": "Contributing to THR",
+                "text": "Contributing & misc",
                 "collapsed": false,
                 "items": [
                     {
@@ -1369,6 +1373,10 @@ export default defineConfig({
                     {
                         "text": "Buy ads 🌟",
                         "link": "/contributing/ads.md"
+                    },
+                    {
+                        "text": "Variables 🔄",
+                        "link": "/contributing/variables.md"
                     }
                 ]
             },
