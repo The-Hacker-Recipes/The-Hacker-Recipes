@@ -250,8 +250,6 @@ Which will output the following
 | [Tables](https://vitepress.dev/guide/markdown#github-style-tables) | Tables (like this one)                                  |
 | [Emojis](https://vitepress.dev/guide/markdown#emoji)               | Emojis :tada:                                           |
 
-```
-
 ### Quotes
 
 > "Someone said something important and it should be highlighted in the article? Please quote it and attribute it to the initial author."
