@@ -106,7 +106,7 @@ It is worth noting that registry parameters only apply on the host on which they
 
 Schannel authentication
 
-During Kerberos authentication, the certificate mapping process will call the `CertificateMappingMethods` registry key. This key can be a combinaison of the following values:
+During Schannel authentication, the certificate mapping process will call the `CertificateMappingMethods` registry key. This key can be a combinaison of the following values:
 
 * `0x0001`: subject/issuer explicit mapping
 * `0x0002`: issuer explicit mapping
