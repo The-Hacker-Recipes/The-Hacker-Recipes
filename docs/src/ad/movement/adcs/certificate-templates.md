@@ -160,6 +160,9 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 > [!TIP]
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
 
+> [!NOTE]
+> If you get an "Object SID mismatch" error during the authentication, this could means that Kerberos is enforcing strong certificate mapping. This is the default behavior since february 2025 ([more information](https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16#bkmk_certmap). To exploit ESC1, it is then needed to specify the security identifier (`-sid`) corresponding at the specified `subjectAltName`.
+
 === Windows
 
 From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used.
