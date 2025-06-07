@@ -77,6 +77,13 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
       country: 'all',
       url: '/contributing/ads',
       img: '/images/sponsors/advertise.svg',
+    },
+    {
+      name: 'Exegol',
+      categories: ['all'],
+      country: 'all',
+      url: 'https://exegol.com/',
+      img: '/images/sponsors/Exegol_Logo_LightVersion_Horizontal.svg',
     }
   ],
   gold: [
