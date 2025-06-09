@@ -106,7 +106,7 @@ It is worth noting that registry parameters only apply on the host on which they
 
 Schannel authentication
 
-During Kerberos authentication, the certificate mapping process will call the `CertificateMappingMethods` registry key. This key can be a combinaison of the following values:
+During Schannel authentication, the certificate mapping process will call the `CertificateMappingMethods` registry key. This key can be a combination of the following values:
 
 * `0x0001`: subject/issuer explicit mapping
 * `0x0002`: issuer explicit mapping
@@ -159,6 +159,9 @@ The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-th
 
 > [!TIP]
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
+
+> [!NOTE]
+> If you get an "Object SID mismatch" error during the authentication, this could mean that Kerberos is enforcing [strong certificate mapping](certificate-templates.md#weak-and-strong-mapping). This is the default behavior since february 2025 ([more information](https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16#bkmk_certmap)). It is then possible to specify the security identifier (using the certipy's flag `-sid`) corresponding at the specified `subjectAltName`.
 
 === Windows
 

