@@ -97,7 +97,7 @@ https://target.com/api/v1/users/1 --> 200
 
 Mass assignment (also known as over-posting) is a web application vulnerability where an attacker can modify properties of an object by submitting additional fields in HTTP requests (typically in JSON or form data) that the developer did not intend to be user-controlled.
 
-Exemple of normal path:
+Example of normal path:
 ```
 curl -X POST https://target.com/api/v1/register -H "Content-Type: application/json" -d '{"username":"pentester", "password":"pentester"}'
 ```
