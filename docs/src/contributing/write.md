@@ -1,5 +1,5 @@
 ---
-authors: AzeTIIx, ShutdownRepo, WodenSec
+authors: AzeTIIx, ShutdownRepo, NevaSec
 category: contributing
 ---
 
