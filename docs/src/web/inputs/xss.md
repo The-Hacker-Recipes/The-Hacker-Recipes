@@ -42,7 +42,7 @@ The following payload is used for testing [SQL injections](sqli.md), XSS (Cross-
 '"<svg/onload=prompt(5);>{{7*7}}
 ```
 
-Tools like [XSStrike](https://github.com/s0md3v/XSStrike) (Python) and [XSSer](https://github.com/epsylon/xsser) (Python) can also help in finding and exploiting XSS vulnerable input vectors by fuzzing them with unique payloads and then searching for unique patterns in the responses.
+Tools like [XSStrike](https://github.com/s0md3v/XSStrike) (Python), [XSSer](https://github.com/epsylon/xsser) (Python), and [Dalfox](https://github.com/hahwul/dalfox) (Go) can also help in finding and exploiting XSS vulnerable input vectors by fuzzing them with unique payloads and then searching for unique patterns in the responses.
 
 ## Resources
 
