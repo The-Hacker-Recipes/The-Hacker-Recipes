@@ -18,10 +18,10 @@ The key to unlocking an RTSP stream is its URL. These URLs typically follow a pr
 ```bash
 rtsp://[username]:[password]@[ip_address]:[port]/[path_to_stream]
 ```
-- `rtsp://` : The protocol, clearly stating "Hey, this is an RTSP stream."
-- `[username]:[password]@` : Often optional, but required for authenticated streams (e.g., most IP cameras).
-- `[ip_address]` : The IP address or hostname of the device serving the stream (e.g., 192.168.1.42).
-- `[port]` : The RTSP port, usually 554 (often omitted if it's the default).
+- `rtsp://` : The protocol, clearly stating "Hey, this is an RTSP stream."  
+- `[username]:[password]@` : Often optional, but required for authenticated streams (e.g., most IP cameras).  
+- `[ip_address]` : The IP address or hostname of the device serving the stream (e.g., 192.168.1.42).  
+- `[port]` : The RTSP port, usually 554 (often omitted if it's the default).  
 - `[path_to_stream]` : The specific path on the device that identifies the stream (e.g., `/stream1` , `/live/ch0` , `/onvif/profile1/media.smp`).  
 This is the part that varies wildly between manufacturers!
 
@@ -49,6 +49,7 @@ For those who live in the terminal, ffmpeg is your friend. It's incredibly power
 First, ensure you have FFmpeg installed. If you're on Linux, it's often sudo apt install ffmpeg or sudo dnf install ffmpeg. On macOS, brew install ffmpeg. Windows users, grab a static build.
 
 To view an RTSP stream with ffplay (which comes with FFmpeg):
+
 ```bash
 ffplay rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4
 ```
@@ -67,12 +68,10 @@ What's happening here?:
 You'll see a lot of verbose output: connection attempts, stream details (codec, resolution, FPS), and potentially error messages if it fails.
 
 ## Footprinting and Passive Recon
+
+### Information Gathering
+
 - OSINT (Open-Source Intelligence):
-
-- Network Sniffing (Wireshark)
-
-## Information Gathering
-
 
 :::tabs
 
@@ -81,6 +80,7 @@ The dig utility performs DNS lookups and displays responses from name servers.
 
 ```bash
 # publicly exposed camera feeds, security system
+
 inurl:/view.shtml intitle:"Live View" or inurl:/CGI_Stream.cgi
 ```
 
@@ -89,6 +89,7 @@ The search engine for the Internet of Things
 
 ```bash
 # find publicly exposed RTSP services
+
 port:554 or rtsp
 ```
 :::
@@ -99,7 +100,8 @@ port:554 or rtsp
 
 - Port Scanning (Nmap):
 
-You can gently probe the network for active RTSP services
+You can gently probe the network for active RTSP services.
+
 ```bash
 # -sV: Attempts to determine service versions, which can often reveal camera manufacturers and models.
 nmap -p 544,8554 -sV $TARGET_IP
@@ -130,7 +132,7 @@ hydra -L userlist.txt -P passlist.txt rtsp://$TARGET_IP -s 554 -t 10
 - Anonymous/Unauthenticated Access:
  A shockingly common misconfiguration. Some cameras are set to allow anyone to view the stream if they know the RTSP URL, without any authentication.
 ```bash
-vlc rtsp://$TARGET_IP:$PORT/<stream_path>
+vlc rtsp://$TARGET_IP:$PORT/$STREAM_PATH
 ```
 - Unencrypted Streams: RTSP, in its basic form, does not encrypt the actual video/audio data (RTP). Even if the RTSP control channel is authenticated, the media payload might be sent in the clear.
 
