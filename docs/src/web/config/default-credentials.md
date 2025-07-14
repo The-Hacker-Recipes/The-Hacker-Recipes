@@ -25,6 +25,7 @@ Default passwords can be found through the following means
     * [Default Creds Cheatsheet](https://github.com/ihebski/DefaultCreds-cheat-sheet/blob/main/DefaultCreds-Cheat-Sheet.csv)
     * [CIRT.net passwords](https://cirt.net/passwords)
     * [Datarecovery default password](https://datarecovery.com/rd/default-passwords/)
+* [defaulty.io Default Passwords Platform](https://defaulty.io)
 * [Wikipedia's list of most common passwords](https://en.wikipedia.org/wiki/List_of_the_most_common_passwords)
 * Google Dorks: `intext:'password' intext:'default' Application Name`
 * Manual or vendor documentation
