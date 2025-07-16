@@ -1094,10 +1094,9 @@ _At the time of writing, no solution exists to perform this attack from a Window
 
 ### (ESC16) Security Extension Disabled on CA
 
-The ESC16 vulnerability is introduced when a CA is configured to disable the inclusion of the OID `1.3.6.1.4.1.311.25.2` (security extension) in all the certificate it issues or if the `KB5014754` patch has not been applied.
-This flaw makes the CA behave as if all it's published template were vulnerable to the ESC9 vector.
+The ESC16 vulnerability occurs when a Certification Authority (CA) is configured to disable the inclusion of the OID `1.3.6.1.4.1.311.25.2` (the security extension) in all certificates it issues, or if the `KB5014754` patch has not been applied. This flaw causes the CA to behave as if all its published templates are vulnerable to the ESC9 vector.
 
-There are two possible attacks scenarios for exploiting ESC16. In all cases, **one** of the following prerequisites must be met:
+There are two possible attack scenarios for exploiting ESC16. In all cases, **one** of the following prerequisites must be met:
 
 > [!WARNING]
 > * `szOID_NTDS_CA_SECURITY_EXT` (`OID 1.3.6.1.4.1.311.25.2`) included into the `policy\DisableExtensionList` of the CA.
@@ -1106,20 +1105,18 @@ There are two possible attacks scenarios for exploiting ESC16. In all cases, **o
 
 #### (ESC16 A) Compatibility mode
 
-In this scenario, the attacker has a `GenericWrite` permission over a victim which can be used to overwrite the victim's UPN.
-Using the victim's NT hash obtained via a [Shadow Credentials](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials.md#shadow-credentials) attack,
-it's possible to request a certificate to the CA on it's behalf. Thanks to the UPN manipulation, a valid certificate can be obtain for every user of the domain.
+In this scenario, the attacker has `GenericWrite` permission over a victim account, which can be used to overwrite the victim's UPN. Using the victim's NT hash obtained via a [Shadow Credentials](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials.md#shadow-credentials) attack, it's possible to request a certificate from the CA on the victim's behalf. Thanks to the UPN manipulation, a valid certificate can be obtained for any user in the domain.
 
 To conduct this scenario, the following additional prerequisites must be met:
 > [!WARNING]
-> * For PKINIT, `StrongCertificateBindingEnforcement` is set to `0` or `1`. This will cause the KDC to check only the UPN of the SAN included into the certificate request
-> * The *attacker user* needs to have a `GenericWrite` or equivalent permission over the *victim user* 
+> * For PKINIT, `StrongCertificateBindingEnforcement` is set to `0` or `1`. This will cause the KDC to check only the UPN of the SAN included in the certificate request
+> * The attacker user needs to have a `GenericWrite` or equivalent permission over the victim user
 
 ::: tabs
 
 === UNIX-like
 
-**- Step 1: Read the UPN of the victim**
+**Step 1: Read the UPN of the victim**
 ```bash
 certipy account \
     -u "$USER@$DOMAIN" -p "$PASSWORD" \
@@ -1205,10 +1202,10 @@ The certificate can then be used with [Pass-the-Certificate](https://www.thehack
 
 #### (ESC16 B) Full enforcement
 
-In this scenario, the DC `StrongCertificateBindingEnforcement` attribute is set to `2`, implying that the SID present in the SAN will be verified by the KDC.
-If the CA is vulnerable to ESC6, the SID can be manipulated directly into the SAN sent with the certificate request, bypassing the enforcement policy.
+In this scenario, the DC's `StrongCertificateBindingEnforcement` attribute is set to `2`, meaning the KDC will verify the SID present in the certificate's security extension. 
+If the CA is vulnerable to ESC6, the SID can be manipulated directly in the SAN field of the certificate request, bypassing the enforcement policy.
 
-To conduct this scenario, the following additionnal prerequisites must be met:
+To conduct this scenario, the following additional prerequisites must be met:
 > [!WARNING]
 > * For PKINIT, `StrongCertificateBindingEnforcement` is set to `2`
 > * CA vulnerable to [ESC6](./certificate-authority.md#esc6-editf_attributesubjectaltname2)
@@ -1217,7 +1214,7 @@ To conduct this scenario, the following additionnal prerequisites must be met:
 
 === UNIX-like
 
-From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, we can for example use the `User` template.
+From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, for example, the `User` template.
 
 ```bash
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" -ca "$CA" -template "User" -upn "administrator@$DOMAIN" -sid "$ADMIN_SID"
@@ -1226,11 +1223,11 @@ certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" 
 The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 > [!NOTE]
-> * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modify into the `SAN`
+> * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modified in the `SAN`.
 
 === Windows
 
-From Windows, [Certify](https://github.com/GhostPack/Certify) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, we can for example use the `User` template.
+From Windows, [Certify](https://github.com/GhostPack/Certify) can be used to request a certificate with a specific UPN and SID. As the whole CA is vulnerable to ESC16, any certificate template can be used to enroll at, for example, the `User` template.
 
 ```powershell
 ./Certify.exe request /ca:SERVER\CA /template:User /altname:administrator /url:tag:microsoft.com,2007-09-14:sid:<ADMINISTRATOR_SID>
@@ -1239,7 +1236,7 @@ From Windows, [Certify](https://github.com/GhostPack/Certify) can be used to req
 The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 > [!NOTE]
-> * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modify into the `SAN`
+> * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modified in the `SAN`.
 
 :::
 
