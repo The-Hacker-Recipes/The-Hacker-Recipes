@@ -59,7 +59,6 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can 
 
 > [!WARNING] Certipy v5
 > Certipy introduced new behavior and flags in version 5.0. Some commands were renamed or replaced, and automatic backup of the template configuration is now performed.
-> If you're using older versions, switch to **UNIX-like (legacy Certipy)**.
 
 > [!WARNING] Template backup
 > Running the command twice will override the backup file, make sure to keep a second backup of the old configuration somewhere.
