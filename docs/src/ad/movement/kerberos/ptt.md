@@ -130,11 +130,11 @@ On Windows, legitimate tools like the [sysinternals](https://docs.microsoft.com/
 
 ### Modifying the SPN
 
-When requesting access to a service, a Service Ticket is used. It contains enough information about the user to allow the destination service to decide to grant access or not, without asking the Domain Controller. These information are stored in a protected blob inside the ST called PAC (Privilege Attribute Certificate). In theory, the user requesting access can't tamper with that PAC.
+When requesting access to a service, a Service Ticket is used. It contains enough information about the user to allow the destination service to decide to grant access or not, without asking the Domain Controller. These pieces of information are stored in a protected blob inside the ST called PAC (Privilege Attribute Certificate). In theory, the user requesting access can't tamper with that PAC.
 
 Another information stored in the ST, outside of the PAC, and unprotected, called `sname`, indicates what service the ticket is destined to be used for. This information is basically the SPN (Service Principal Name) of the target service. It's split into two elements: the service class, and the hostname.
 
-Their are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
+There are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
 
 ::: tabs
 
