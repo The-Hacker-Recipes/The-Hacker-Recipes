@@ -73,7 +73,7 @@ Step 2: add the user to the local admin group
 
 ### MultiTasking Attack
 
-An attacker can edit the GPO to add a two-stage scheduled task that escalates to Domain Admin when controlling a GPO linked to an OU. The attack creates an immediate task that executes as NT Authority\SYSTEM, using SYSVOL as an open share to drop a batch file, which then registers a second scheduled task running with "highest available privileges". When a domain admin is logged into the workstation, the second task executes in that context, adding the attacker to the domain admin group.
+In a scenario where a domain admin session is present on a workstation/server which is not a domain controller, an attacker can edit the GPO to add a two-stage scheduled task that escalates to domain admin when controlling a GPO linked to the correlating OU. The attack creates an immediate task that executes as NT Authority\SYSTEM, using SYSVOL as an open share to drop a batch file, which then registers a second scheduled task running with "highest available privileges". The second task executes in the context of the domain admin, adding the attacker to the domain admins group.
 
 ::: tabs
 
