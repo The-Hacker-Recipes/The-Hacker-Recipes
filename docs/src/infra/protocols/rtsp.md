@@ -7,7 +7,7 @@ category: infra
 
 ## Theory
 Real-Time Streaming Protocol also know as RTSP is a network control protocol designed for controls streaming media systems. The protocol facilitates the creation and management of media sessions between endpoints.
-The default that RTSP can use is 554 on tcp and udp and 8554 in others case.
+The default RTSP control port is 554 (commonly over TCP). Media usually streams via RTP over UDP on negotiated ports. Some servers also use 8554 as a non-standard alternative.
 
 ## Basic usage
 Connect to an RTSP service
@@ -22,6 +22,7 @@ rtsp://[username]:[password]@[ip_address]:[port]/[path_to_stream]
 - `[username]:[password]@` : Often optional, but required for authenticated streams (e.g., most IP cameras).  
 - `[ip_address]` : The IP address or hostname of the device serving the stream (e.g., 192.168.1.42).  
 - `[port]` : The RTSP port, usually 554 (often omitted if it's the default).  
+Some devices use non-standard ports (e.g., 8554), support TLS as `rtsps://` (commonly TCP 322 or 8554), or require RTSP over TCP (interleaved). In VLC/FFmpeg you can force TCP (e.g., ffplay -rtsp_transport tcp ...).
 - `[path_to_stream]` : The specific path on the device that identifies the stream (e.g., `/stream1` , `/live/ch0` , `/onvif/profile1/media.smp`).  
 This is the part that varies wildly between manufacturers!
 
@@ -104,11 +105,11 @@ You can gently probe the network for active RTSP services.
 
 ```bash
 # -sV: Attempts to determine service versions, which can often reveal camera manufacturers and models.
-nmap -p 544  -sV $TARGET_IP
+nmap -p 544  -sV "$TARGET_IP"
 # --script=rtsp-methods: This script connects to the RTSP service and issues an OPTIONS * request to determine which RTSP methods the server supports.
-nmap -p 554 --script=rtsp-methods $TARGET_IP
+nmap -p 554 --script=rtsp-methods "$TARGET_IP"
 # --script=rtsp-url-brute: This is a more intrusive but often highly effective script.
-nmap -p 554 --script=rtsp-url-brute $TARGET_IP
+nmap -p 554 --script=rtsp-url-brute "sq$TARGET_IP"
 ```
 
 - Banner Grabbing
