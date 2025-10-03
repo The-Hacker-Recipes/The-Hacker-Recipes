@@ -1,5 +1,5 @@
 ---
-authors: Anh4ckin3, Sud0Ru, ShutdownRepo
+authors: Anh4ckin3, AzeTIIx, Sud0Ru, ShutdownRepo
 category: ad
 ---
 
@@ -55,7 +55,7 @@ The Samba utility named [rpcclient](https://www.samba.org/samba/docs/current/man
 * `getdompwinfo`: get password policy
 
 ```bash
-rpcclient -c "command1,command2" $TARGET_IP
+rpcclient -c "command" -U "" -N $TARGET_IP
 ```
 
 ### RID Cycling
