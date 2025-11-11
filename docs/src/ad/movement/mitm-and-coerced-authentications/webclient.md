@@ -157,6 +157,22 @@ With a [searchConnector-ms](https://docs.microsoft.com/en-us/windows/win32/searc
 </searchConnectorDescription>
 ```
 
+In cases where outgoing network traffic is blocked and/or not available, this will not work. Changing the "simpleLocation" URL to a domain controller's NETBIOS name solves the issue as shown below:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<searchConnectorDescription xmlns="http://schemas.microsoft.com/windows/2009/searchConnector">
+    <description>Microsoft Outlook</description>
+    <isSearchOnlyItem>false</isSearchOnlyItem>
+    <includeInStartMenuScope>true</includeInStartMenuScope>
+    <templateInfo>
+        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
+    </templateInfo>
+    <simpleLocation>
+        <url>https://DC-HOSTNAME/</url>
+    </simpleLocation>
+</searchConnectorDescription>
+```
 
 === Explorer
 
