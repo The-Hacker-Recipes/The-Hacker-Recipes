@@ -86,10 +86,10 @@ python IOXIDResolver-ng.py -t $TARGET_IP
 [+] aNetworkAddr addresse : db69:ecdc:d85:1b54:1676:7fa4:f3fe:4249 (IPv6)
 ```
 
-### Enumerate Doamin users and computers
+### Enumerate Domain users and computers
 Using auth-level = 1 (No authentication) against the MS-NRPC (Netlogon) interface on domain controllers.
 The method calls the `DsrGetDcNameEx2` function after binding MS-NRPC interface to check if the user or computer exists without any credentials. 
-The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implments this type of enumeration
+The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implements this type of enumeration
 ```bash 
 python3 nauth.py -t target -u users_file.txt -f computers_file.txt
 ```
