@@ -41,11 +41,13 @@ The [Timeroast](https://github.com/SecuraBV/Timeroast) (Python) tool can extract
 python3 timeroast.py $DC_IP
 ```
 
-The extracted SNTP hashes are not compatible with standard [Hashcat](https://github.com/hashcat/hashcat) releases due to format differences. While [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) could theoretically support them through custom hash formats, the salt length (corresponding to NTP response packet bodies) exceeds the tool's built-in limitations.
-
-The [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks against the extracted hashes. Although slower than optimized Hashcat operations, it remains substantially faster than online brute-forcing attempts and proves effective against weak or legacy NT password formats.
+The extracted SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300 (requires a recent or beta version). Alternatively, the [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks, though it is slower than optimized Hashcat operations.
 
 ```bash
+# Using Hashcat (mode 31300)
+hashcat -m 31300 -a 0 -O hashes.txt $wordlist --username
+
+# Using timecrack.py (alternative)
 timecrack.py extracted_hashes.txt $wordlist
 ```
 
@@ -88,7 +90,7 @@ Invoke-AuthenticatedTimeRoast -DomainController $DC_IP -GenerateWordlist
 
 ### Cracking SNTP hashes
 
-SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300.
+SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300. Note that this mode requires a recent or beta version of Hashcat.
 
 ```bash
 hashcat -m 31300 -a 0 -O hashes.txt $wordlist --username
