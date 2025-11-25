@@ -22,7 +22,7 @@ On Linux and other UNIX-like systems, tickets can be stored in different ways:
 | Storage     | Description                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | **FILE**    | Stores tickets in files, typically under `/tmp` directory, in the format `krb5cc_%{uid}`                                                   |
-| **DIR** | Stores tickets in a hierarchical directory-based cache, typically under `/tmp` which contains contains a primary file referencing the active ccache entry.                                                    | 
+| **DIR** | Stores tickets in a hierarchical directory-based cache, typically under `/tmp` which contains a primary file referencing the active ccache entry.                                                    | 
 | **KEYRING** | Stores tickets in a dedicated kernel keyring space, only accessible to the ticket owner                            |
 | **KCM**     | Stores tickets in an LDAP-like database, typically at `/var/lib/sss/secrets/secrets.ldb` (default when using sssd-kcm)                        |
 
@@ -62,7 +62,7 @@ Tickets are stored as files in the configured directory (default: `/tmp`). These
 
 Unlike the `FILE:` cache type, which stores all credentials in a single binary blob, `the DIR:` cache spreads the ccache content across multiple artifacts.
 
-These files can still be extracted and used for [Pass-the-Ticket](../../kerberos/ptt.md)t attacks, but require collecting the entire directory rather than a single file.
+These files can still be extracted and used for [Pass-the-Ticket](../../kerberos/ptt.md) attacks, but require collecting the entire directory rather than a single file.
 
 == KEYRING Storage
 
