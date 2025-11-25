@@ -1,13 +1,15 @@
 ---
-authors: Hakumarachi, ShutdownRepo
+authors: Hakumarachi, ShutdownRepo, onSec-fr
 category: ad
 ---
 
-# 🛠️ Cached Kerberos tickets
+# Cached Kerberos tickets
 
 ## Theory
 
-Kerberos tickets can be cached on systems to allow for faster authentication without requiring users to re-enter credentials. Understanding how these tickets are stored is crucial for both defensive and offensive operations.
+Kerberos tickets can be cached on systems to allow for faster authentication without requiring users to re-enter credentials. **Understanding how these tickets are stored is crucial for both defensive and offensive operations.**
+
+From a red-team perspective, even though Linux and Windows use different cache formats to store Kerberos tickets (Kerberos on Linux uses `ccache` files, while Windows uses `kirbi` formats), the actual Kerberos ticket data (encrypted TGT/TGS blobs) are compatible, **which can enable cross-platform pivoting**.
 
 ### Storage Methods
 
@@ -15,24 +17,34 @@ Kerberos tickets can be cached on systems to allow for faster authentication wit
 
 == UNIX-like
 
-On Linux and other UNIX-like systems, tickets can be stored in 3 different ways:
+On Linux and other UNIX-like systems, tickets can be stored in different ways:
 
 | Storage     | Description                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | **FILE**    | Stores tickets in files, typically under `/tmp` directory, in the format `krb5cc_%{uid}`                                                   |
-| **KEYRING** | Stores tickets in a dedicated kernel keyring space, only accessible to the ticket owner                                                     | 
-| **KCM**     | Stores tickets in an LDAP-like database, typically at `/var/lib/sss/secrets/secrets.ldb` (default when using SSSD)                        |
+| **DIR** | Stores tickets in a hierarchical directory-based cache, typically under `/tmp` which contains contains a primary file referencing the active ccache entry.                                                    | 
+| **KEYRING** | Stores tickets in a dedicated kernel keyring space, only accessible to the ticket owner                            |
+| **KCM**     | Stores tickets in an LDAP-like database, typically at `/var/lib/sss/secrets/secrets.ldb` (default when using sssd-kcm)                        |
 
 The storage method is configured via the `default_ccache_name` parameter in `/etc/krb5.conf`, which is readable by all users.
 
 > [!NOTE]
 > This configuration can be overridden by files in `/etc/krb5.conf.d/`. When using SSSD, the value is typically set in `/etc/krb5.conf.d/kcm_default_ccache`
 
-== Windows 🛠️
+== Windows️
 
-On Windows systems, Kerberos tickets are stored in memory by the Local Security Authority Subsystem Service (LSASS) process.
+On Windows systems, Kerberos tickets are stored in-memory within the Local Security Authority Subsystem Service (`LSASS`).
+LSASS maintains an internal set of Kerberos logon sessions, each associated with a Logon Session ID (`LUID`). 
 
-// TODO: Add more details
+These structures contain all credential material required by the Kerberos package, including:
+- Ticket Granting Ticket (TGT)
+- Ticket Granting Service (TGS)
+- Session keys
+- Associated metadata (encryption types, flags, validity periods)
+
+**Tickets are never stored on disk by the operating system.**  
+- Accessing or manipulating them requires **interacting with LSASS memory and the Kerberos authentication package (via standard LSA functions such as `LsaCallAuthenticationPackage`)**. 
+- This allows tickets to be enumerated, extracted as serialized blobs, or injected into existing logon sessions for later use.
 
 :::
 
@@ -45,6 +57,12 @@ On Windows systems, Kerberos tickets are stored in memory by the Local Security 
 == FILE Storage
 
 Tickets are stored as files in the configured directory (default: `/tmp`). These files can be directly used for [Pass-the-Ticket](../../kerberos/ptt.md) attacks.
+
+== DIR Storage
+
+Unlike the `FILE:` cache type, which stores all credentials in a single binary blob, `the DIR:` cache spreads the ccache content across multiple artifacts.
+
+These files can still be extracted and used for [Pass-the-Ticket](../../kerberos/ptt.md)t attacks, but require collecting the entire directory rather than a single file.
 
 == KEYRING Storage
 
@@ -125,18 +143,72 @@ KRB5CCNAME=KEYRING:persistent:$UID
 > [keyringCCacheDumper](https://github.com/Hakumarachi/keyringCCacheDumper) can automatically extract all tickets.
 
 == KCM Storage
+KCM stores credential material inside the SSSD secrets databas located at `/var/lib/sss/secrets/secrets.ldb`, typically only readable by root.
 
-KCM stores tickets in an LDB database file, typically only readable by root. [CCacheExtractor](https://github.com/Hakumarachi/ccacheExtractor) can be used to extract tickets:
+[CCacheExtractor](https://github.com/Hakumarachi/ccacheExtractor) can be used to extract tickets:
+
 
 ```bash
 # Extract all tickets from LDB database
 python3 ccacheExtractor.py kcm ./secrets.ldb
 ```
 
+> [!WARNING]
+> Before SSSD 2.0.0 (2018‑08‑13), the KCM back‑end encrypted Kerberos payloads in the secrets database using AES_256_CBC. The encryption key used to protect values stored in secrets.ldb is located at /var/lib/sss/secrets/.secrets.mkey.
+>
+> Extracting or decrypting these payloads in such environments requires using [SSSDKCMExtractor](https://github.com/mandiant/SSSDKCMExtractor)
+
 Extracted tickets can then be used with [Pass-the-cache](../../kerberos/ptc.md) or [Pass-the-tickets](../../kerberos/ptt.md) depending on the ticket type.
+
+
+:::
+
+> [!SUCCESS]
+> [KrbNixPwn](https://github.com/onSec-fr/KrbNixPwn) can automatically extract all tickets - supporting FILE, DIR, KCM, and KEYRING caches in a single workflow.
+> ```bash
+> ./KrbNixPwn.sh dump
+> ```
+> or
+> ```bash
+> ./KrbNixPwn.sh monitor
+> ```
 
 ### From Windows
 
-// TODO: Add more details
+Two practical approaches exist to extract Kerberos tickets on Windows systems:
+- Extracting tickets directly from an LSASS memory dump, and
+- Querying tickets through LSA APIs, which does not require reading raw LSASS memory.
 
-:::
+Both require elevated permissions.
+
+#### Dumping from LSASS Memory
+
+This method relies on parsing LSASS memory, where Kerberos tickets are stored in internal LSASS structures.
+It **is especially useful when you already exfiltrated an LSASS dump (.dmp, .bin, etc.).**
+
+Examples with [mimikatz](https://github.com/gentilkiwi/mimikatz) :
+```powershell
+# Load a previously obtained lsass.dmp file
+sekurlsa::minidump lsass.dmp
+
+# Extract Kerberos tickets from the dump
+sekurlsa::tickets
+```
+
+#### Dumping from LSA APIs
+This method uses documented LSA APIs to enumerate, extract, or renew tickets through the Kerberos authentication package.
+It still requires elevated rights but:
+- Works even on systems where LSASS is PPL-protected
+- Is more OPSEC-friendly (no suspicious LSASS read handle)
+
+Example with [Rubeus](https://github.com/GhostPack/Rubeus) :
+```powershell
+# Detailed logon session and ticket info
+Rubeus.exe klist
+
+# Extract detailed logon session and ticket data
+Rubeus.exe dump
+
+# Monitor logon events and dump new tickets
+Rubeus.exe monitor /interval:30
+```
