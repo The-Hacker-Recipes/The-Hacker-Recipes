@@ -6,7 +6,7 @@ category: ad
 
 # LLMNR, NBT-NS, mDNS spoofing
 
-In some environments (like Windows ones), multicast name resolution protocols are enabled by default, such as LLMNR (Local-Link Multicast Name Resolution), NBT-NS (NetBIOS Name Service) and mDNS (multicast Domain Name System). Those environments can fallback to those protocols when standard domain name resolution protocols fail. Windows systems attempt to resolve names in the following order: DNS, LLMNR and NBT-NS.
+In some environments (like Windows ones), multicast name resolution protocols are enabled by default, such as LLMNR (Local-Link Multicast Name Resolution), NBT-NS (NetBIOS Name Service) and mDNS (multicast Domain Name System). Those environments can fallback to those protocols when standard domain name resolution protocols fail. Windows systems attempt to resolve names in the following order: DNS, NBT-NS and LLMNR.
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
