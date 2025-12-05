@@ -110,7 +110,7 @@ SharpSCCM.exe get user-sid
 
 #### Step 2: setup NTLM relay server
 
-The target of the [NTLM relay attack](../../../ntlm/relay) must be set to the site database server, either on the MS-SQL (port `1433/tcp`), or SMB service (port `445/tcp`) if the relayed user has admin privileges on the target. The rest of this page is focusing on relaying the authentication on the MS-SQL service.
+The target of the [NTLM relay attack](../../ntlm/relay.md) must be set to the site database server, either on the MS-SQL (port `1433/tcp`), or SMB service (port `445/tcp`) if the relayed user has admin privileges on the target. The rest of this page is focusing on relaying the authentication on the MS-SQL service.
 
 ::: tabs
 
@@ -132,17 +132,17 @@ From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh
 
 :::
 
-For more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../../../ntlm/relay).
+For more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../../ntlm/relay.md).
 
 #### Step 3: coerce authentication
 
-The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../../print-spooler-service/printerbug), [PetitPotam](../../../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../../../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../../../mitm-and-coerced-authentications/ms-dfsnm), etc.).
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, authentication can be coerced through [PrinterBug](../../../print-spooler-service/printerbug), [PetitPotam](../../../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../../../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../../../mitm-and-coerced-authentications/ms-dfsnm), etc. (not based on triggering the client push installation).
+From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
 
 There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
 
@@ -204,7 +204,7 @@ Post exploitation via SCCM can now be performed on the network.
 
 #### Step 1: setup an NTLM relay server
 
-The target of the [NTLM relay attack](../../../ntlm/relay) must be set to the SMS Provider server, on the HTTP/S service (port `80/tcp` or `443/tcp`).
+The target of the [NTLM relay attack](../../ntlm/relay.md) must be set to the SMS Provider server, on the HTTP/S service (port `80/tcp` or `443/tcp`).
 
 ::: tabs
 
@@ -222,17 +222,17 @@ From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh
 
 :::
 
-For more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../../../ntlm/relay).
+For more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../../ntlm/relay.md).
 
 #### Step 2: Authentication coercion
 
-The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../../print-spooler-service/printerbug), [PetitPotam](../../../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../../../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../../../mitm-and-coerced-authentications/ms-dfsnm), etc.).
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, authentication can be coerced through [PrinterBug](../../../print-spooler-service/printerbug), [PetitPotam](../../../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../../../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../../../mitm-and-coerced-authentications/ms-dfsnm), etc. (not based on triggering the client push installation).
+From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
 
 There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
 
@@ -264,7 +264,7 @@ SharpSCCM.exe get site-push-settings -mp "SCCM-Server" -sc "$SITE_CODE"
 
 #### Step 1: setup an NTLM relay server
 
-The target of the [NTLM relay attack](../../../ntlm/relay) must be set to the active site server, on the SMB service.
+The target of the [NTLM relay attack](../../ntlm/relay.md) must be set to the active site server, on the SMB service.
 
 ::: tabs
 
@@ -282,11 +282,11 @@ From Windows systems, [Inveigh-Relay](https://github.com/Kevin-Robertson/Inveigh
 
 :::
 
-For more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../../../ntlm/relay).
+For more insight on NTLM relay attacks and tools options, see the corresponding page on The Hacker Recipes: [NTLM Relay](../../ntlm/relay.md).
 
 #### Step 2: authentication coercion
 
-The passive site server's authentication can be coerced with ([PrinterBug](../../../print-spooler-service/printerbug), [PetitPotam](../../../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../../../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../../../mitm-and-coerced-authentications/ms-dfsnm), etc.).
+The passive site server's authentication can be coerced with ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
 
 If the NTLM relay attack is a success and ntlmrelayx.py has effectively sent the request to the active server, a SMB session through socks proxy has been opened with administrative rights.
 
