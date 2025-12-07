@@ -10,17 +10,20 @@ In some environments (like Windows ones), multicast name resolution protocols ar
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
-[Responder](https://github.com/lgandx/Responder) (Python) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers (listeners) that will [capture authentications](../ntlm/capture.md) and echo the NTLM hashes to the attacker. Another possibility would be to start similar listeners, and relay the [NTLM](../ntlm/relay.md) or [Kerberos](../kerberos/relay.md#abuse-from-multicast-poisoning) authentications to other resources the attacker wants to access.
+[Responder](https://github.com/lgandx/Responder) (Python), [Dementor](https://github.com/MatrixEditor/dementor) (Python) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers (listeners) that will [capture authentications](../ntlm/capture.md) and echo the NTLM hashes to the attacker. Another possibility would be to start similar listeners, and relay the [NTLM](../ntlm/relay.md) or [Kerberos](../kerberos/relay.md#abuse-from-multicast-poisoning) authentications to other resources the attacker wants to access.
 
 ::: tabs
 
 === UNIX-like
 
-The following command will make Responder analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
+The following command will make Responder/Dementor analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
 
 ```bash
 responder --interface "eth0" --analyze
 responder -I "eth0" -A
+
+Dementor --interface "eth0" --analyze
+Dementor -I "eth0" -A
 ```
 
 The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md).
@@ -28,6 +31,9 @@ The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution 
 ```bash
 responder --interface "eth0"
 responder -I "eth0"
+
+Dementor --interface "eth0"
+Dementor -I "eth0"
 ```
 
 
@@ -64,3 +70,5 @@ Flags like `-ADIDNS,` `-ADIDNSForest,` `-ADIDNSCleanup`, `-ADIDNSThreshold` and 
 [http://remivernier.com/index.php/2018/08/26/protocoles-nbt-ns-llmnr-et-exploitation-des-failles/](http://remivernier.com/index.php/2018/08/26/protocoles-nbt-ns-llmnr-et-exploitation-des-failles/)
 
 [https://www.sternsecurity.com/blog/local-network-attacks-llmnr-and-nbt-ns-poisoning](https://www.sternsecurity.com/blog/local-network-attacks-llmnr-and-nbt-ns-poisoning)
+
+[https://matrixeditor.github.io/dementor/examples/multicast.html](https://matrixeditor.github.io/dementor/examples/multicast.html)
