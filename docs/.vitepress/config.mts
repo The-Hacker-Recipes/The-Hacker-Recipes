@@ -731,6 +731,22 @@ export default defineConfig({
                             {
                                 "text": "Known vulnerabilities",
                                 "link": "/web/recon/known-vulnerabilities.md"
+                            },
+                            {
+                                "text": "GraphQL",
+                                "link": "/web/recon/graphql.md"
+                            },
+                            {
+                                "text": "Source code discovery",
+                                "link": "/web/recon/source-code-discovery.md"
+                            },
+                            {
+                                "text": "JavaScript analysis",
+                                "link": "/web/recon/javascript-analysis.md"
+                            },
+                            {
+                                "text": "Parameter fuzzing",
+                                "link": "/web/recon/parameter-fuzzing.md"
                             }
                         ]
                     },
