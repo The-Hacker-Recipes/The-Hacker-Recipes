@@ -5,31 +5,17 @@ category: web
 
 # Source code discovery
 
-## Theory
+Web applications sometimes expose source code, version control systems, or configuration files that should not be publicly accessible. Discovering these files can reveal sensitive information such as API keys and secrets, database credentials, application logic and business rules, internal endpoints and functionality, comments with sensitive information, and hardcoded passwords or tokens.
 
-Web applications sometimes expose source code, version control systems, or configuration files that should not be publicly accessible. Discovering these files can reveal sensitive information such as:
+Common exposed files and directories include version control systems (`.git/`, `.svn/`, `.hg/`), backup files (`.bak`, `.old`, `.swp`, `.tmp`), configuration files (`.env`, `config.php`, `web.config`), IDE files (`.idea/`, `.vscode/`, `.DS_Store`), and temporary files and logs.
 
-* API keys and secrets
-* Database credentials
-* Application logic and business rules
-* Internal endpoints and functionality
-* Comments with sensitive information
-* Hardcoded passwords or tokens
-
-Common exposed files and directories include:
-* Version control systems (`.git/`, `.svn/`, `.hg/`)
-* Backup files (`.bak`, `.old`, `.swp`, `.tmp`)
-* Configuration files (`.env`, `config.php`, `web.config`)
-* IDE files (`.idea/`, `.vscode/`, `.DS_Store`)
-* Temporary files and logs
-
-## Practice
-
-### Git repository discovery
+## Git repository discovery
 
 Git repositories can be exposed if the `.git/` directory is accessible. This allows attackers to download the entire source code, commit history, and potentially sensitive information.
 
-#### GitHack
+::: tabs
+
+=== GitHack
 
 [GitHack](https://github.com/lijiejie/GitHack) (Python) is a tool that can download and reconstruct a Git repository from a publicly accessible `.git/` directory.
 
@@ -37,11 +23,10 @@ Git repositories can be exposed if the `.git/` directory is accessible. This all
 # Download exposed Git repository
 python3 GitHack.py http://target.com/.git/
 
-# Reconstruct repository in current directory
-python3 GitHack.py http://target.com/.git/ -o output/
+# Note: Some versions/forks may support specifying output directory with -o option
 ```
 
-#### GitDumper
+=== GitDumper
 
 [GitDumper](https://github.com/arthaud/git-dumper) (Python) is another tool for downloading Git repositories from exposed `.git/` directories.
 
@@ -50,7 +35,7 @@ python3 GitHack.py http://target.com/.git/ -o output/
 python3 git_dumper.py http://target.com/.git/ output/
 ```
 
-#### Manual testing
+=== Manual testing
 
 ```bash
 # Check if .git directory is accessible
@@ -66,7 +51,9 @@ curl http://target.com/.git/index
 curl http://target.com/.git/objects/
 ```
 
-### SVN repository discovery
+:::
+
+## SVN repository discovery
 
 Subversion (SVN) repositories can also be exposed, typically through the `.svn/` directory.
 
@@ -80,7 +67,7 @@ curl http://target.com/.svn/wc.db
 
 Tools like [SVN Dumper](https://github.com/anantshri/svn-extractor) can be used to extract information from exposed SVN repositories.
 
-### Backup files discovery
+## Backup files discovery
 
 Backup files are often created during development or deployment and may be left on the server.
 
@@ -95,7 +82,7 @@ curl http://target.com/index.php.orig
 curl http://target.com/index.php.save
 ```
 
-#### Automated discovery
+### Automated discovery
 
 Use directory fuzzing tools with backup file wordlists:
 
@@ -107,7 +94,7 @@ ffuf -w /path/to/wordlist.txt -u http://target.com/FUZZ -e .bak,.old,.swp,.tmp,.
 gobuster dir -u http://target.com -w /path/to/wordlist.txt -x bak,old,swp,tmp
 ```
 
-### Configuration files discovery
+## Configuration files discovery
 
 Configuration files often contain sensitive information and should not be publicly accessible.
 
@@ -123,7 +110,7 @@ curl http://target.com/.htaccess
 curl http://target.com/.gitignore
 ```
 
-### IDE and editor files
+## IDE and editor files
 
 IDE and editor files can reveal project structure and sometimes sensitive information.
 
@@ -141,7 +128,7 @@ curl http://target.com/.vimrc
 curl http://target.com/.emacs
 ```
 
-### DS_Store files
+## DS_Store files
 
 `.DS_Store` files on macOS can reveal directory structure and file names.
 
@@ -149,11 +136,11 @@ curl http://target.com/.emacs
 # Download and parse DS_Store file
 curl http://target.com/.DS_Store -o ds_store_file
 
-# Use tools like ds_store_parser
+# Use tools like ds_store_parser (various implementations available on GitHub)
 python3 ds_store_parser.py ds_store_file
 ```
 
-### Robots.txt and sitemap analysis
+## Robots.txt and sitemap analysis
 
 While `robots.txt` and sitemaps are meant to be public, they can reveal hidden directories and files.
 
@@ -166,18 +153,21 @@ curl http://target.com/sitemap.xml
 curl http://target.com/sitemap.txt
 ```
 
-### Automated scanning
+## Automated scanning
 
-#### Dumpall
+::: tabs
 
-[Dumpall](https://github.com/GoSecure/dumpall) (Python) is a tool that can discover and download exposed version control repositories, backup files, and configuration files.
+=== Dumpall
+
+[Dumpall](https://github.com/0xHJK/dumpall) (Python) is a tool that can discover and download exposed version control repositories, backup files, and configuration files.
 
 ```bash
 # Scan for exposed files
+# Note: Check the project README for exact syntax as options may vary by version
 python3 dumpall.py -u http://target.com
 ```
 
-#### GitLeaks
+=== GitLeaks
 
 [GitLeaks](https://github.com/gitleaks/gitleaks) can scan Git repositories for secrets and sensitive information. Useful after downloading an exposed repository.
 
@@ -186,11 +176,10 @@ python3 dumpall.py -u http://target.com
 gitleaks detect --source-path ./downloaded_repo --verbose
 ```
 
-## Resources
+:::
 
-[https://github.com/lijiejie/GitHack](https://github.com/lijiejie/GitHack)
+> [!TIP]
+> Source code discovery can reveal critical information. Always check for exposed `.git/` directories and configuration files, as they often contain credentials and sensitive application logic.
 
-[https://github.com/arthaud/git-dumper](https://github.com/arthaud/git-dumper)
-
-[https://github.com/GoSecure/dumpall](https://github.com/GoSecure/dumpall)
-
+> [!CAUTION]
+> Downloaded source code may contain hardcoded credentials or sensitive information. Use tools like GitLeaks to scan for secrets before manually reviewing code.

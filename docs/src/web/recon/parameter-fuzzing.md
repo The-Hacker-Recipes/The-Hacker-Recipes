@@ -5,27 +5,11 @@ category: web
 
 # Parameter fuzzing
 
-## Theory
-
 Parameter fuzzing (also known as parameter discovery) is the process of finding hidden or undocumented HTTP parameters in web applications. These parameters may not be visible in the HTML forms or API documentation but can still be accepted by the server.
 
-Hidden parameters can lead to:
-* Unauthorized access to functionality
-* Information disclosure
-* Parameter pollution vulnerabilities
-* Business logic flaws
-* Bypass of security controls
+Hidden parameters can lead to unauthorized access to functionality, information disclosure, parameter pollution vulnerabilities, business logic flaws, and bypass of security controls. Parameters can be found in GET query strings (`?param=value`), POST form data, JSON request bodies, HTTP headers, and cookies.
 
-Parameters can be found in:
-* GET query strings (`?param=value`)
-* POST form data
-* JSON request bodies
-* HTTP headers
-* Cookies
-
-## Practice
-
-### Manual testing
+## Manual testing
 
 Start by identifying visible parameters and then test variations:
 
@@ -42,9 +26,11 @@ curl "http://target.com/page?id=1&callback=test"
 curl "http://target.com/page?id=1&output=xml"
 ```
 
-### Automated tools
+## Automated tools
 
-#### Arjun
+::: tabs
+
+=== Arjun
 
 [Arjun](https://github.com/s0md3v/Arjun) (Python) is a fast HTTP parameter discovery suite that can find GET, POST, JSON, and XML parameters.
 
@@ -62,37 +48,34 @@ arjun -u http://target.com/page --data '{"existing":"param"}' -m POST
 arjun -u http://target.com/api -m POST -H 'Content-Type: application/json' --data '{}'
 
 # Set delay between requests (useful for rate limiting)
-arjun -u http://target.com/page --delay 1
+arjun -u http://target.com/page -d 1
 
 # Export results to file
 arjun -u http://target.com/page -o results.json
 ```
 
-#### ParamSpider
+=== ParamSpider
 
 [ParamSpider](https://github.com/devanshbatham/ParamSpider) (Python) is a tool that finds parameters from web archive (Wayback Machine) and common crawlers.
 
 ```bash
 # Discover parameters from Wayback Machine
-python3 paramspider.py --domain target.com
+python3 paramspider.py -d target.com
 
 # Include subdomains
-python3 paramspider.py --domain target.com --subs
+python3 paramspider.py -d target.com --subs
 
 # Use custom output directory
-python3 paramspider.py --domain target.com -o /path/to/output/
+python3 paramspider.py -d target.com -o /path/to/output/
 ```
 
-#### ParamMiner
+=== ParamMiner
 
-[ParamMiner](https://github.com/PortSwigger/param-miner) is a Burp Suite extension that can discover parameters through various techniques including:
-* Wayback Machine analysis
-* Common parameter wordlists
-* Response comparison
+[ParamMiner](https://github.com/PortSwigger/param-miner) is a Burp Suite extension that can discover parameters through various techniques including Wayback Machine analysis, common parameter wordlists, and response comparison.
 
 Install via Burp Suite's BApp Store and use through the context menu or active scan.
 
-#### x8
+=== x8
 
 [x8](https://github.com/Sh1Yo/x8) (Rust) is a fast parameter discovery tool that supports various HTTP methods and data formats.
 
@@ -107,11 +90,13 @@ x8 -u "http://target.com/api" -X POST -w /path/to/wordlist.txt
 x8 -u "http://target.com/api" -X POST -H "Content-Type: application/json" -w /path/to/wordlist.txt
 ```
 
-### Wordlists
+:::
+
+## Wordlists
 
 Common parameter wordlists can be found in:
 * [SecLists](https://github.com/danielmiessler/SecLists) - `Discovery/Web-Content/burp-parameter-names.txt`
-* [ParamMiner wordlists](https://github.com/PortSwigger/param-miner/tree/master/wordlists)
+* [ParamMiner](https://github.com/PortSwigger/param-miner) - Check the repository for available wordlists
 * Custom wordlists based on technology stack
 
 ```bash
@@ -119,7 +104,7 @@ Common parameter wordlists can be found in:
 arjun -u http://target.com/page -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
 ```
 
-### Response comparison
+## Response comparison
 
 Parameter discovery relies on comparing responses. A parameter is considered "found" if the response differs from the baseline:
 
@@ -134,27 +119,23 @@ curl "http://target.com/page?test=1" > test.html
 diff baseline.html test.html
 ```
 
-Tools like Arjun automatically handle response comparison and can detect:
-* Different response lengths
-* Different status codes
-* Different response times
-* Different content (using similarity algorithms)
+Tools like Arjun automatically handle response comparison and can detect different response lengths, different status codes, different response times, and different content (using similarity algorithms).
 
-### Testing different parameter locations
+## Testing different parameter locations
 
-#### GET parameters
+### GET parameters
 
 ```bash
 arjun -u "http://target.com/page?existing=param" -m GET
 ```
 
-#### POST form data
+### POST form data
 
 ```bash
 arjun -u http://target.com/page -m POST --data "existing=param"
 ```
 
-#### JSON parameters
+### JSON parameters
 
 ```bash
 arjun -u http://target.com/api -m POST \
@@ -162,7 +143,7 @@ arjun -u http://target.com/api -m POST \
   --data '{"existing":"param"}'
 ```
 
-#### XML parameters
+### XML parameters
 
 ```bash
 arjun -u http://target.com/api -m POST \
@@ -170,7 +151,7 @@ arjun -u http://target.com/api -m POST \
   --data '<?xml version="1.0"?><root><existing>param</existing></root>'
 ```
 
-#### HTTP headers
+### HTTP headers
 
 Some applications accept parameters via custom headers:
 
@@ -180,7 +161,7 @@ curl -H "X-API-Key: test" http://target.com/api
 curl -H "X-Admin: true" http://target.com/admin
 ```
 
-### Common parameter patterns
+## Common parameter patterns
 
 Look for parameters that might indicate:
 * Debug modes: `debug`, `test`, `dev`, `verbose`
@@ -190,7 +171,7 @@ Look for parameters that might indicate:
 * Pagination: `page`, `limit`, `offset`, `count`
 * Filtering: `filter`, `search`, `q`, `query`
 
-### Integration with other tools
+## Integration with other tools
 
 Parameter discovery can be combined with other reconnaissance techniques:
 
@@ -204,26 +185,20 @@ for endpoint in $(cat discovered_endpoints.txt); do
 done
 ```
 
-### Rate limiting considerations
+## Rate limiting considerations
 
-Parameter fuzzing can generate many requests. Be mindful of:
-* Rate limiting on the target
-* WAF detection and blocking
-* Server load
+Parameter fuzzing can generate many requests. Be mindful of rate limiting on the target, WAF detection and blocking, and server load.
 
 ```bash
 # Use delays to avoid rate limiting
-arjun -u http://target.com/page --delay 0.5
+arjun -u http://target.com/page -d 0.5
 
-# Limit number of parameters tested
-arjun -u http://target.com/page --passive
+# Passive mode with explicit scope
+arjun -u http://target.com/page --passive target.com
 ```
 
-## Resources
+> [!TIP]
+> Parameter fuzzing is most effective when combined with other reconnaissance techniques. Always test discovered parameters for actual vulnerabilities, not just their existence.
 
-[https://github.com/s0md3v/Arjun](https://github.com/s0md3v/Arjun)
-
-[https://github.com/devanshbatham/ParamSpider](https://github.com/devanshbatham/ParamSpider)
-
-[https://github.com/PortSwigger/param-miner](https://github.com/PortSwigger/param-miner)
-
+> [!CAUTION]
+> Parameter fuzzing can generate a large number of requests. Use rate limiting and delays to avoid overwhelming the target server or triggering security controls.
