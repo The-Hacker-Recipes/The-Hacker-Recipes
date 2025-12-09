@@ -19,19 +19,19 @@ GraphQL endpoints can be discovered through various methods:
 
 ```bash
 # Test common GraphQL endpoint paths
-curl -X POST http://target.com/graphql \
+curl -X POST "http://target.com/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
-curl -X POST http://target.com/api/graphql \
+curl -X POST "http://target.com/api/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
-curl -X POST http://target.com/v1/graphql \
+curl -X POST "http://target.com/v1/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
-curl -X POST http://target.com/query \
+curl -X POST "http://target.com/query" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 ```

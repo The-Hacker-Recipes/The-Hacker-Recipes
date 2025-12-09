@@ -193,9 +193,7 @@ mkdir -p downloaded_js
 wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off -P downloaded_js/ http://target.com/
 
 # 2. Extract endpoints (process each file individually)
-for f in ./downloaded_js/*.js; do
-    python3 linkfinder.py -i "$f" -o cli
-done
+find ./downloaded_js -name "*.js" -exec python3 linkfinder.py -i {} -o cli \;
 
 # 3. Search for secrets
 python3 SecretFinder.py -i ./downloaded_js/ -o cli

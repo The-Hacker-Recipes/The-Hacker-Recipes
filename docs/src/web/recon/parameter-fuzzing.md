@@ -180,9 +180,9 @@ Parameter discovery can be combined with other reconnaissance techniques:
 ffuf -w wordlist.txt -u http://target.com/FUZZ
 
 # 2. For each discovered endpoint, find parameters
-for endpoint in $(cat discovered_endpoints.txt); do
+while IFS= read -r endpoint; do
     arjun -u "http://target.com$endpoint" -o "params_${endpoint//\//_}.json"
-done
+done < discovered_endpoints.txt
 ```
 
 ## Rate limiting considerations
