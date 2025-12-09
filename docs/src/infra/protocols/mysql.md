@@ -216,8 +216,8 @@ SELECT sys_eval('id');
 MySQL can read and write files if the user has `FILE` privilege.
 
 ```sql
--- Check FILE privilege (pre-MySQL 8.0)
-SELECT file_priv FROM mysql.user WHERE user = 'username';
+-- Check FILE privilege
+SHOW GRANTS FOR 'username'@'host';
 
 -- Read system files
 SELECT LOAD_FILE('/etc/passwd');

@@ -134,9 +134,6 @@ sqlcmd -S $TARGET -U username -P password -Q "SELECT @@version"
 # Execute SQL query (use --local-auth for SQL Server Authentication)
 netexec mssql $TARGET -u username -p password -q "SELECT @@version"
 
-# Execute SQL query with -X flag
-netexec mssql $TARGET -u username -p password -X "SELECT @@version"
-
 # Query databases
 netexec mssql $TARGET -u username -p password -q "SELECT name FROM sys.databases;"
 

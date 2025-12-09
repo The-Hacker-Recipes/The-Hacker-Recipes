@@ -124,7 +124,7 @@ ldapsearch -x \
 
 ```bash
 # Execute LDAP query (default attributes)
-netexec ldap $TARGET -u username -p password --query "(sAMAccountName=Administrator)" ""
+netexec ldap $TARGET -u username -p password --query "(sAMAccountName=Administrator)"
 
 # Execute LDAP query with specific attributes
 netexec ldap $TARGET -u username -p password --query "(sAMAccountName=Administrator)" "sAMAccountName objectClass pwdLastSet"
