@@ -15,7 +15,7 @@ Start by identifying all JavaScript files loaded by the application:
 
 ```bash
 # Extract JavaScript file URLs from HTML
-curl -s http://target.com | grep -oP 'src="[^"]*\.js[^"]*"' | cut -d'"' -f2
+curl -s http://$TARGET | grep -oP 'src="[^"]*\.js[^"]*"' | cut -d'"' -f2
 
 # Or use browser developer tools (F12 > Network > JS filter)
 ```
@@ -32,13 +32,13 @@ JavaScript files often contain API endpoints, GraphQL queries, and internal URLs
 
 ```bash
 # Analyze a single JavaScript file (CLI output)
-python3 linkfinder.py -i http://target.com/app.js -o cli
+python3 linkfinder.py -i http://$TARGET/app.js -o cli
 
 # Analyze all JavaScript files from a page (CLI output)
-python3 linkfinder.py -i http://target.com -o cli
+python3 linkfinder.py -i http://$TARGET -o cli
 
 # Save results to HTML file (redirect output)
-python3 linkfinder.py -i http://target.com -o html -r . -b "https://target.com" > results.html
+python3 linkfinder.py -i http://$TARGET -o html -r . -b "http://$TARGET" > results.html
 ```
 
 === JSFinder
@@ -47,7 +47,7 @@ python3 linkfinder.py -i http://target.com -o html -r . -b "https://target.com" 
 
 ```bash
 # Extract URLs from JavaScript
-python3 JSFinder.py -u http://target.com -d -ou urls.txt -os subdomains.txt
+python3 JSFinder.py -u http://$TARGET -d -ou urls.txt -os subdomains.txt
 ```
 
 :::
@@ -64,10 +64,10 @@ JavaScript files may contain hardcoded API keys, tokens, and other secrets.
 
 ```bash
 # Search for secrets in JavaScript files
-python3 SecretFinder.py -i http://target.com -o cli
+python3 SecretFinder.py -i http://$TARGET -o cli
 
 # Use custom regex patterns
-python3 SecretFinder.py -i http://target.com -e -o cli
+python3 SecretFinder.py -i http://$TARGET -e -o cli
 ```
 
 === JSA
@@ -76,7 +76,7 @@ python3 SecretFinder.py -i http://target.com -e -o cli
 
 ```bash
 # Analyze JavaScript files
-python3 jsa.py -u http://target.com
+python3 jsa.py -u http://$TARGET
 ```
 
 :::
@@ -85,11 +85,11 @@ python3 jsa.py -u http://target.com
 
 ```bash
 # Download all JavaScript files from a website
-wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off http://target.com/
+wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off http://$TARGET/
 
 # Or use a tool like getJS
 # Note: Options may vary slightly depending on the version/fork of getJS (-url/--url, etc.). Check the README of the repository you're using.
-getJS -url http://target.com -output js_files.txt
+getJS -url http://$TARGET -output js_files.txt
 ```
 
 ## GraphQL endpoint discovery
@@ -138,7 +138,7 @@ js-beautify obfuscated.js > beautified.js
 python3 JSScanner.py
 
 # Some forks support CLI flags
-python3 jsscanner.py -u http://target.com
+python3 jsscanner.py -u http://$TARGET
 ```
 
 === Burp Suite extensions
@@ -190,7 +190,7 @@ Modern browsers provide powerful tools for JavaScript analysis:
 ```bash
 # 1. Create directory and download all JavaScript files
 mkdir -p downloaded_js
-wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off -P downloaded_js/ http://target.com/
+wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off -P downloaded_js/ http://$TARGET/
 
 # 2. Extract endpoints (process each file individually)
 find ./downloaded_js -name "*.js" -exec python3 linkfinder.py -i {} -o cli \;

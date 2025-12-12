@@ -19,19 +19,19 @@ GraphQL endpoints can be discovered through various methods:
 
 ```bash
 # Test common GraphQL endpoint paths
-curl -X POST "http://target.com/graphql" \
+curl -X POST "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
-curl -X POST "http://target.com/api/graphql" \
+curl -X POST "http://$TARGET/api/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
-curl -X POST "http://target.com/v1/graphql" \
+curl -X POST "http://$TARGET/v1/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
-curl -X POST "http://target.com/query" \
+curl -X POST "http://$TARGET/query" \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 ```
@@ -44,13 +44,13 @@ Some GraphQL implementations accept queries via GET parameters:
 # Try GET request with query parameter
 # Note: In practice, GraphQL queries in GET requests should be URL-encoded ({ → %7B, } → %7D, etc.)
 # Some servers may accept unencoded queries, but this is not reliable
-curl "http://target.com/graphql?query={__schema{queryType{name}}}"
+curl "http://$TARGET/graphql?query={__schema{queryType{name}}}"
 
 # URL-encoded version (recommended)
-curl "http://target.com/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
+curl "http://$TARGET/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
 
 # Try GET request with variables (should also be URL-encoded)
-curl "http://target.com/graphql?query=query{users{id}}&variables={}"
+curl "http://$TARGET/graphql?query=query{users{id}}&variables={}"
 ```
 
 > [!NOTE]
@@ -58,7 +58,7 @@ curl "http://target.com/graphql?query=query{users{id}}&variables={}"
 
 ### JavaScript analysis
 
-GraphQL endpoints are often hardcoded in JavaScript files:
+GraphQL endpoints are often hardcoded in JavaScript files. For comprehensive JavaScript analysis techniques, see [JavaScript analysis](javascript-analysis.md).
 
 ```bash
 # Search for GraphQL endpoints in JavaScript
@@ -78,10 +78,10 @@ grep -r "mutation" downloaded_js_files/
 
 ```bash
 # Fingerprint GraphQL endpoint
-python3 graphw00f.py -d -t http://target.com/graphql
+python3 graphw00f.py -d -t http://$TARGET/graphql
 
 # Test multiple endpoints
-python3 graphw00f.py -d -t http://target.com/graphql -t http://target.com/api/graphql
+python3 graphw00f.py -d -t http://$TARGET/graphql -t http://$TARGET/api/graphql
 ```
 
 === GraphQLmap
@@ -90,13 +90,13 @@ python3 graphw00f.py -d -t http://target.com/graphql -t http://target.com/api/gr
 
 ```bash
 # Start interactive session
-python3 graphqlmap.py -u http://target.com/graphql
+python3 graphqlmap.py -u http://$TARGET/graphql
 
 # Execute introspection
-python3 graphqlmap.py -u http://target.com/graphql -i
+python3 graphqlmap.py -u http://$TARGET/graphql -i
 
 # Execute custom query
-python3 graphqlmap.py -u http://target.com/graphql -q "{ users { id name } }"
+python3 graphqlmap.py -u http://$TARGET/graphql -q "{ users { id name } }"
 ```
 
 === InQL
@@ -117,10 +117,10 @@ Install via Burp Suite's BApp Store and use through the context menu or active s
 
 ```bash
 # Audit GraphQL endpoint
-python3 graphql-cop.py -t http://target.com/graphql
+python3 graphql-cop.py -t http://$TARGET/graphql
 
 # Test with authentication
-python3 graphql-cop.py -t http://target.com/graphql -H "Authorization: Bearer token"
+python3 graphql-cop.py -t http://$TARGET/graphql -H "Authorization: Bearer token"
 ```
 
 :::
@@ -133,7 +133,7 @@ GraphQL introspection allows querying the schema to understand available types, 
 
 ```bash
 # Get schema information
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 ```
@@ -144,7 +144,7 @@ For full schema introspection, it's recommended to use automated tools (InQL, Gr
 
 ```bash
 # Simple introspection query (more reliable)
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { types { name } } }"}'
 
@@ -155,17 +155,17 @@ curl -X POST http://target.com/graphql \
 
 ```bash
 # List all types
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { types { name } } }"}'
 
 # List all queries
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { fields { name description args { name type { name } } } } } }"}'
 
 # List all mutations
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { mutationType { fields { name description args { name type { name } } } } } }"}'
 ```
@@ -176,12 +176,12 @@ Many GraphQL implementations expose a GraphiQL (or GraphQL Playground) interface
 
 ```bash
 # Check for GraphiQL interface
-curl http://target.com/graphql
-curl http://target.com/graphiql
-curl http://target.com/playground
+curl http://$TARGET/graphql
+curl http://$TARGET/graphiql
+curl http://$TARGET/playground
 
 # Look for HTML response with GraphiQL
-curl -s http://target.com/graphql | grep -i "graphiql\|graphql\|playground"
+curl -s http://$TARGET/graphql | grep -i "graphiql\|graphql\|playground"
 ```
 
 ## Identifying GraphQL implementations
@@ -195,7 +195,7 @@ Different GraphQL implementations have different characteristics:
 ```bash
 # Apollo Server often exposes /graphql endpoint
 # Look for "apollo" in response headers or error messages
-curl -I http://target.com/graphql | grep -i apollo
+curl -I http://$TARGET/graphql | grep -i apollo
 ```
 
 === GraphQL Yoga
@@ -210,8 +210,8 @@ curl -I http://target.com/graphql | grep -i apollo
 ```bash
 # Hasura typically uses /v1/graphql
 # May expose /console for admin interface
-curl http://target.com/v1/graphql
-curl http://target.com/console
+curl http://$TARGET/v1/graphql
+curl http://$TARGET/console
 ```
 
 :::
@@ -226,49 +226,52 @@ Once you've discovered a GraphQL endpoint, test these common queries:
 
 ```bash
 # Test basic query
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __typename }"}'
 
 # Test introspection
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
 # Test for users query
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ users { id name email } }"}'
 
 # Test for admin queries
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ admin { users { id name } } }"}'
 ```
 
 === Authentication
 
-GraphQL endpoints may require authentication:
+GraphQL endpoints may require authentication. Test with different authentication methods to determine what the endpoint accepts:
 
 ```bash
 # Test with common authentication headers
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer token" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
 # Test with API key
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -H "X-API-Key: key" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 
 # Test with cookies
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -H "Cookie: session=value" \
   -d '{"query":"{ __schema { queryType { name } } }"}'
 ```
+
+> [!NOTE]
+> These examples show how to test GraphQL endpoints with authentication. The actual authentication mechanism depends on the GraphQL implementation and may require valid credentials or tokens obtained through other means.
 
 === Error messages
 
@@ -276,9 +279,10 @@ GraphQL error messages can reveal valuable information:
 
 ```bash
 # Invalid query to trigger error
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ invalid }"}'
+```
 
 # Error messages may reveal:
 # - GraphQL implementation (Apollo, GraphQL Yoga, etc.)
@@ -296,21 +300,21 @@ curl -X POST http://target.com/graphql \
 
 ```bash
 # 1. Discover GraphQL endpoint
-curl -X POST http://target.com/graphql -H "Content-Type: application/json" -d '{"query":"{ __typename }"}'
+curl -X POST http://$TARGET/graphql -H "Content-Type: application/json" -d '{"query":"{ __typename }"}'
 
 # 2. Fingerprint implementation
-python3 graphw00f.py -d -t http://target.com/graphql
+python3 graphw00f.py -d -t http://$TARGET/graphql
 
 # 3. Test introspection
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __schema { queryType { name fields { name } } } }"}'
 
 # 4. Use automated tool for deeper analysis
-python3 graphqlmap.py -u http://target.com/graphql -i
+python3 graphqlmap.py -u http://$TARGET/graphql -i
 
 # 5. Test for common queries
-curl -X POST http://target.com/graphql \
+curl -X POST http://$TARGET/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ users { id name email } }"}'
 ```

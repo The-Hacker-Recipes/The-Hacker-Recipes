@@ -15,15 +15,15 @@ Start by identifying visible parameters and then test variations:
 
 ```bash
 # Test common parameter names
-curl "http://target.com/page?debug=true"
-curl "http://target.com/page?test=1"
-curl "http://target.com/page?admin=1"
-curl "http://target.com/page?api_key=test"
+curl "http://$TARGET/page?debug=true"
+curl "http://$TARGET/page?test=1"
+curl "http://$TARGET/page?admin=1"
+curl "http://$TARGET/page?api_key=test"
 
 # Test parameter variations
-curl "http://target.com/page?id=1&format=json"
-curl "http://target.com/page?id=1&callback=test"
-curl "http://target.com/page?id=1&output=xml"
+curl "http://$TARGET/page?id=1&format=json"
+curl "http://$TARGET/page?id=1&callback=test"
+curl "http://$TARGET/page?id=1&output=xml"
 ```
 
 ## Automated tools
@@ -36,22 +36,22 @@ curl "http://target.com/page?id=1&output=xml"
 
 ```bash
 # Basic parameter discovery
-arjun -u http://target.com/page
+arjun -u http://$TARGET/page
 
 # Discover parameters with custom wordlist
-arjun -u http://target.com/page -w /path/to/wordlist.txt
+arjun -u http://$TARGET/page -w /path/to/wordlist.txt
 
 # Discover POST parameters
-arjun -u http://target.com/page --data '{"existing":"param"}' -m POST
+arjun -u http://$TARGET/page --data '{"existing":"param"}' -m POST
 
 # Discover JSON parameters
-arjun -u http://target.com/api -m POST -H 'Content-Type: application/json' --data '{}'
+arjun -u http://$TARGET/api -m POST -H 'Content-Type: application/json' --data '{}'
 
 # Set delay between requests (useful for rate limiting)
-arjun -u http://target.com/page -d 1
+arjun -u http://$TARGET/page -d 1
 
 # Export results to file
-arjun -u http://target.com/page -o results.json
+arjun -u http://$TARGET/page -o results.json
 ```
 
 === ParamSpider
@@ -60,13 +60,13 @@ arjun -u http://target.com/page -o results.json
 
 ```bash
 # Discover parameters from Wayback Machine
-python3 paramspider.py -d target.com
+python3 paramspider.py -d $TARGET
 
 # Include subdomains
-python3 paramspider.py -d target.com --subs
+python3 paramspider.py -d $TARGET --subs
 
 # Use custom output directory
-python3 paramspider.py -d target.com -o /path/to/output/
+python3 paramspider.py -d $TARGET -o /path/to/output/
 ```
 
 === ParamMiner
@@ -81,13 +81,13 @@ Install via Burp Suite's BApp Store and use through the context menu or active s
 
 ```bash
 # Discover parameters
-x8 -u "http://target.com/page" -w /path/to/wordlist.txt
+x8 -u "http://$TARGET/page" -w /path/to/wordlist.txt
 
 # Use custom HTTP method
-x8 -u "http://target.com/api" -X POST -w /path/to/wordlist.txt
+x8 -u "http://$TARGET/api" -X POST -w /path/to/wordlist.txt
 
 # Test JSON parameters
-x8 -u "http://target.com/api" -X POST -H "Content-Type: application/json" -w /path/to/wordlist.txt
+x8 -u "http://$TARGET/api" -X POST -H "Content-Type: application/json" -w /path/to/wordlist.txt
 ```
 
 :::
@@ -101,7 +101,7 @@ Common parameter wordlists can be found in:
 
 ```bash
 # Use SecLists parameter wordlist
-arjun -u http://target.com/page -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
+arjun -u http://$TARGET/page -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
 ```
 
 ## Response comparison
@@ -110,10 +110,11 @@ Parameter discovery relies on comparing responses. A parameter is considered "fo
 
 ```bash
 # Baseline request (no parameters)
-curl http://target.com/page > baseline.html
+curl http://$TARGET/page > baseline.html
 
 # Test with parameter
-curl "http://target.com/page?test=1" > test.html
+curl "http://$TARGET/page?test=1" > test.html
+```
 
 # Compare responses
 diff baseline.html test.html
@@ -126,19 +127,19 @@ Tools like Arjun automatically handle response comparison and can detect differe
 ### GET parameters
 
 ```bash
-arjun -u "http://target.com/page?existing=param" -m GET
+arjun -u "http://$TARGET/page?existing=param" -m GET
 ```
 
 ### POST form data
 
 ```bash
-arjun -u http://target.com/page -m POST --data "existing=param"
+arjun -u http://$TARGET/page -m POST --data "existing=param"
 ```
 
 ### JSON parameters
 
 ```bash
-arjun -u http://target.com/api -m POST \
+arjun -u http://$TARGET/api -m POST \
   -H "Content-Type: application/json" \
   --data '{"existing":"param"}'
 ```
@@ -146,7 +147,7 @@ arjun -u http://target.com/api -m POST \
 ### XML parameters
 
 ```bash
-arjun -u http://target.com/api -m POST \
+arjun -u http://$TARGET/api -m POST \
   -H "Content-Type: application/xml" \
   --data '<?xml version="1.0"?><root><existing>param</existing></root>'
 ```
@@ -157,8 +158,8 @@ Some applications accept parameters via custom headers:
 
 ```bash
 # Test custom headers
-curl -H "X-API-Key: test" http://target.com/api
-curl -H "X-Admin: true" http://target.com/admin
+curl -H "X-API-Key: test" http://$TARGET/api
+curl -H "X-Admin: true" http://$TARGET/admin
 ```
 
 ## Common parameter patterns
@@ -176,12 +177,12 @@ Look for parameters that might indicate:
 Parameter discovery can be combined with other reconnaissance techniques:
 
 ```bash
-# 1. Discover endpoints with directory fuzzing
-ffuf -w wordlist.txt -u http://target.com/FUZZ
+# 1. Discover endpoints with directory fuzzing (see [directory fuzzing](directory-fuzzing.md))
+ffuf -w wordlist.txt -u http://$TARGET/FUZZ
 
 # 2. For each discovered endpoint, find parameters
 while IFS= read -r endpoint; do
-    arjun -u "http://target.com$endpoint" -o "params_${endpoint//\//_}.json"
+    arjun -u "http://$TARGET$endpoint" -o "params_${endpoint//\//_}.json"
 done < discovered_endpoints.txt
 ```
 
@@ -191,10 +192,10 @@ Parameter fuzzing can generate many requests. Be mindful of rate limiting on the
 
 ```bash
 # Use delays to avoid rate limiting
-arjun -u http://target.com/page -d 0.5
+arjun -u http://$TARGET/page -d 0.5
 
 # Passive mode with explicit scope
-arjun -u http://target.com/page --passive target.com
+arjun -u http://$TARGET/page --passive $TARGET
 ```
 
 > [!TIP]

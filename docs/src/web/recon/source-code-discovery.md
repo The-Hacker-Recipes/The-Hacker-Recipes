@@ -21,7 +21,8 @@ Git repositories can be exposed if the `.git/` directory is accessible. This all
 
 ```bash
 # Download exposed Git repository
-python3 GitHack.py http://target.com/.git/
+python3 GitHack.py http://$TARGET/.git/
+```
 
 # Note: Some versions/forks may support specifying output directory with -o option
 ```
@@ -32,23 +33,23 @@ python3 GitHack.py http://target.com/.git/
 
 ```bash
 # Download Git repository
-python3 git_dumper.py http://target.com/.git/ output/
+python3 git_dumper.py http://$TARGET/.git/ output/
 ```
 
 === Manual testing
 
 ```bash
 # Check if .git directory is accessible
-curl -I http://target.com/.git/
+curl -I http://$TARGET/.git/
 
 # Try to access Git config
-curl http://target.com/.git/config
+curl http://$TARGET/.git/config
 
 # Try to access Git index
-curl http://target.com/.git/index
+curl http://$TARGET/.git/index
 
 # List Git objects (if directory listing is enabled)
-curl http://target.com/.git/objects/
+curl http://$TARGET/.git/objects/
 ```
 
 :::
@@ -59,10 +60,10 @@ Subversion (SVN) repositories can also be exposed, typically through the `.svn/`
 
 ```bash
 # Check for SVN entries
-curl http://target.com/.svn/entries
+curl http://$TARGET/.svn/entries
 
 # Try to access SVN wc.db (SQLite database)
-curl http://target.com/.svn/wc.db
+curl http://$TARGET/.svn/wc.db
 ```
 
 Tools like [SVN Dumper](https://github.com/anantshri/svn-extractor) can be used to extract information from exposed SVN repositories.
@@ -73,25 +74,25 @@ Backup files are often created during development or deployment and may be left 
 
 ```bash
 # Common backup file extensions to test
-curl http://target.com/index.php.bak
-curl http://target.com/index.php.old
-curl http://target.com/index.php.swp
-curl http://target.com/index.php~
-curl http://target.com/index.php.tmp
-curl http://target.com/index.php.orig
-curl http://target.com/index.php.save
+curl http://$TARGET/index.php.bak
+curl http://$TARGET/index.php.old
+curl http://$TARGET/index.php.swp
+curl http://$TARGET/index.php~
+curl http://$TARGET/index.php.tmp
+curl http://$TARGET/index.php.orig
+curl http://$TARGET/index.php.save
 ```
 
 ### Automated discovery
 
-Use directory fuzzing tools with backup file wordlists:
+Use [directory fuzzing](directory-fuzzing.md) tools with backup file wordlists:
 
 ```bash
 # Using ffuf with backup extensions
-ffuf -w /path/to/wordlist.txt -u http://target.com/FUZZ -e .bak,.old,.swp,.tmp,.orig,.save
+ffuf -w /path/to/wordlist.txt -u http://$TARGET/FUZZ -e .bak,.old,.swp,.tmp,.orig,.save
 
 # Using gobuster
-gobuster dir -u http://target.com -w /path/to/wordlist.txt -x bak,old,swp,tmp
+gobuster dir -u http://$TARGET -w /path/to/wordlist.txt -x bak,old,swp,tmp
 ```
 
 ## Configuration files discovery
@@ -100,14 +101,14 @@ Configuration files often contain sensitive information and should not be public
 
 ```bash
 # Common configuration files
-curl http://target.com/.env
-curl http://target.com/config.php
-curl http://target.com/web.config
-curl http://target.com/appsettings.json
-curl http://target.com/settings.py
-curl http://target.com/config.yaml
-curl http://target.com/.htaccess
-curl http://target.com/.gitignore
+curl http://$TARGET/.env
+curl http://$TARGET/config.php
+curl http://$TARGET/web.config
+curl http://$TARGET/appsettings.json
+curl http://$TARGET/settings.py
+curl http://$TARGET/config.yaml
+curl http://$TARGET/.htaccess
+curl http://$TARGET/.gitignore
 ```
 
 ## IDE and editor files
@@ -116,16 +117,16 @@ IDE and editor files can reveal project structure and sometimes sensitive inform
 
 ```bash
 # Check for IDE directories
-curl http://target.com/.idea/
-curl http://target.com/.vscode/
-curl http://target.com/.project
-curl http://target.com/.classpath
-curl http://target.com/.settings/
+curl http://$TARGET/.idea/
+curl http://$TARGET/.vscode/
+curl http://$TARGET/.project
+curl http://$TARGET/.classpath
+curl http://$TARGET/.settings/
 
 # Check for editor files
-curl http://target.com/.DS_Store
-curl http://target.com/.vimrc
-curl http://target.com/.emacs
+curl http://$TARGET/.DS_Store
+curl http://$TARGET/.vimrc
+curl http://$TARGET/.emacs
 ```
 
 ## DS_Store files
@@ -134,7 +135,8 @@ curl http://target.com/.emacs
 
 ```bash
 # Download and parse DS_Store file
-curl http://target.com/.DS_Store -o ds_store_file
+curl http://$TARGET/.DS_Store -o ds_store_file
+```
 
 # Use tools like ds_store_parser (various implementations available on GitHub)
 python3 ds_store_parser.py ds_store_file
@@ -146,11 +148,11 @@ While `robots.txt` and sitemaps are meant to be public, they can reveal hidden d
 
 ```bash
 # Check robots.txt
-curl http://target.com/robots.txt
+curl http://$TARGET/robots.txt
 
 # Check sitemap
-curl http://target.com/sitemap.xml
-curl http://target.com/sitemap.txt
+curl http://$TARGET/sitemap.xml
+curl http://$TARGET/sitemap.txt
 ```
 
 ## Automated scanning
@@ -164,7 +166,7 @@ curl http://target.com/sitemap.txt
 ```bash
 # Scan for exposed files
 # Note: Check the project README for exact syntax as options may vary by version
-python3 dumpall.py -u http://target.com
+python3 dumpall.py -u http://$TARGET
 ```
 
 === GitLeaks
