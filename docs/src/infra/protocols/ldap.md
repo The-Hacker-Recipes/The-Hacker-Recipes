@@ -87,6 +87,39 @@ ldapsearch -x -H ldap://$TARGET -s base supportedLDAPVersion
 ldapsearch -x -H ldap://$TARGET -s base supportedSASLMechanisms
 ```
 
+## Authentication
+
+LDAP supports several authentication methods:
+
+* **Anonymous binding**: Unauthenticated access (see [Anonymous binding](#anonymous-binding) section)
+* **Simple authentication**: Username/password authentication
+* **SASL authentication**: Simple Authentication and Security Layer mechanisms (GSSAPI/Kerberos, DIGEST-MD5, etc.)
+
+In Active Directory environments, LDAP authentication typically uses:
+* Distinguished Name (DN) format: `CN=user,CN=Users,DC=domain,DC=local`
+* Domain credentials format: `domain\user` or `user@domain.local`
+
+### Bruteforce
+
+::: tabs
+
+=== NetExec
+
+[NetExec](https://github.com/Pennyw0rth/NetExec) can bruteforce LDAP credentials.
+
+```bash
+# Bruteforce LDAP credentials
+netexec ldap $TARGET -d domain -u users.txt -p passwords.txt
+```
+
+=== Hydra
+
+```bash
+hydra -l username -P /path/to/passwords.txt ldap://$TARGET
+```
+
+:::
+
 ### Authenticated queries
 
 Once authenticated, you can query the directory for detailed information.
@@ -131,9 +164,6 @@ netexec ldap $TARGET -u username -p password --query "(sAMAccountName=Administra
 
 # Basic LDAP enumeration
 netexec ldap $TARGET -d domain -u user -p password
-
-# Bruteforce LDAP credentials
-netexec ldap $TARGET -d domain -u users.txt -p passwords.txt
 ```
 
 :::
@@ -182,7 +212,8 @@ ldapsearch -x \
     "(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=65536))" \
     sAMAccountName
 
-# List users that don't require Kerberos pre-authentication (ASREPRoastable) (userAccountControl flag: 4194304)
+# List users that don't require Kerberos pre-authentication (ASREPRoastable)
+# These users are vulnerable to AS-REP roasting attacks (userAccountControl flag: 4194304)
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "domain\\user" \

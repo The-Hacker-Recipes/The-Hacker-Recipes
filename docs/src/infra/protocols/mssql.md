@@ -45,7 +45,7 @@ nmap -p 1433 -sV $TARGET
 > [!NOTE]
 > Banner grabbing via `nc` may be unreliable because MSSQL uses the TDS protocol which requires a proper handshake. Sometimes you'll see version information, but sometimes `nc` shows nothing or closes immediately. Use `nmap` for more reliable results.
 
-### Authentication enumeration
+## Authentication
 
 MSSQL supports two authentication methods:
 * **Windows Authentication**: Uses Windows credentials (Kerberos/NTLM). When using tools like NetExec, this defaults to NTLM authentication (not Windows Kerberos) unless `--local-auth` is specified.
@@ -54,12 +54,80 @@ MSSQL supports two authentication methods:
 > [!TIP]
 > It's important to distinguish between Windows Authentication and SQL Server Authentication. Use `--local-auth` in NetExec when authenticating with SQL Server credentials, otherwise NetExec will attempt Windows Authentication (NTLM by default).
 
+### Authentication enumeration
+
+Check if SQL Server Authentication is enabled and enumerate authentication methods.
+
 ```bash
 # Check if SQL Server Authentication is enabled
 nmap -p 1433 --script ms-sql-info $TARGET
 ```
 
-### Database enumeration
+### Default credentials
+
+Historically, MSSQL used `sa` / `sa` as default credentials, but since SQL Server 2005, Microsoft forces password selection during installation. Default credentials are mainly found on:
+
+* Old SQL Server versions (pre-2005)
+* Development environments
+* Negligent administrator configurations
+
+Common default credentials to test:
+* `sa` / `sa`
+* `sa` / `<empty>`
+* `admin` / `admin`
+* `administrator` / `administrator`
+
+### Bruteforce
+
+::: tabs
+
+=== Hydra
+
+```bash
+hydra -l sa -P /path/to/passwords.txt $TARGET mssql
+```
+
+=== Metasploit
+
+```bash
+msfconsole
+use auxiliary/scanner/mssql/mssql_login
+set RHOSTS $TARGET
+set USERNAME sa
+set PASS_FILE /path/to/passwords.txt
+run
+```
+
+=== Nmap
+
+```bash
+nmap -p 1433 --script ms-sql-brute --script-args userdb=/path/to/users.txt,passdb=/path/to/passwords.txt $TARGET
+```
+
+=== NetExec
+
+[NetExec](https://github.com/Pennyw0rth/NetExec) can bruteforce MSSQL credentials.
+
+```bash
+netexec mssql $TARGET -u sa -p /path/to/passwords.txt
+```
+
+:::
+
+### Windows Authentication
+
+If MSSQL is configured for Windows Authentication, you can use Windows credentials or Kerberos tickets.
+
+```bash
+# With Windows credentials
+mssqlclient.py -p 1433 'DOMAIN/username:password'@'$TARGET' -windows-auth
+
+# With Kerberos ticket
+export KRB5CCNAME=/path/to/ticket.ccache
+mssqlclient.py -p 1433 'DOMAIN/username'@'$TARGET' -windows-auth -k
+```
+
+## Database enumeration
 
 Once authenticated, enumerate databases, tables, and users.
 
@@ -148,72 +216,6 @@ netexec mssql $TARGET -u username -p password --rid-brute
 ```
 
 :::
-
-## Authentication
-
-### Default credentials
-
-Historically, MSSQL used `sa` / `sa` as default credentials, but since SQL Server 2005, Microsoft forces password selection during installation. Default credentials are mainly found on:
-
-* Old SQL Server versions (pre-2005)
-* Development environments
-* Negligent administrator configurations
-
-Common default credentials to test:
-* `sa` / `sa`
-* `sa` / `<empty>`
-* `admin` / `admin`
-* `administrator` / `administrator`
-
-### Bruteforce
-
-::: tabs
-
-=== Hydra
-
-```bash
-hydra -l sa -P /path/to/passwords.txt $TARGET mssql
-```
-
-=== Metasploit
-
-```bash
-msfconsole
-use auxiliary/scanner/mssql/mssql_login
-set RHOSTS $TARGET
-set USERNAME sa
-set PASS_FILE /path/to/passwords.txt
-run
-```
-
-=== Nmap
-
-```bash
-nmap -p 1433 --script ms-sql-brute --script-args userdb=/path/to/users.txt,passdb=/path/to/passwords.txt $TARGET
-```
-
-=== NetExec
-
-[NetExec](https://github.com/Pennyw0rth/NetExec) can bruteforce MSSQL credentials.
-
-```bash
-netexec mssql $TARGET -u sa -p /path/to/passwords.txt
-```
-
-:::
-
-### Windows Authentication
-
-If MSSQL is configured for Windows Authentication, you can use Windows credentials or Kerberos tickets.
-
-```bash
-# With Windows credentials
-mssqlclient.py -p 1433 'DOMAIN/username:password'@'$TARGET' -windows-auth
-
-# With Kerberos ticket
-export KRB5CCNAME=/path/to/ticket.ccache
-mssqlclient.py -p 1433 'DOMAIN/username'@'$TARGET' -windows-auth -k
-```
 
 ## Exploitation
 

