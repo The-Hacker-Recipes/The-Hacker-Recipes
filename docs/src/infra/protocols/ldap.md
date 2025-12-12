@@ -96,8 +96,8 @@ LDAP supports several authentication methods:
 * **SASL authentication**: Simple Authentication and Security Layer mechanisms (GSSAPI/Kerberos, DIGEST-MD5, etc.)
 
 In Active Directory environments, LDAP authentication typically uses:
-* Distinguished Name (DN) format: `CN=user,CN=Users,DC=domain,DC=local`
-* Domain credentials format: `domain\user` or `user@domain.local`
+* Distinguished Name (DN) format: `CN=$USER,CN=Users,DC=$DOMAIN,DC=local`
+* Domain credentials format: `$DOMAIN\$USER` or `$USER@$DOMAIN.local`
 
 ### Bruteforce
 
@@ -109,13 +109,13 @@ In Active Directory environments, LDAP authentication typically uses:
 
 ```bash
 # Bruteforce LDAP credentials
-netexec ldap $TARGET -d domain -u users.txt -p passwords.txt
+netexec ldap $TARGET -d $DOMAIN -u users.txt -p passwords.txt
 ```
 
 === Hydra
 
 ```bash
-hydra -l username -P /path/to/passwords.txt ldap://$TARGET
+hydra -l $USER -P /path/to/passwords.txt ldap://$TARGET
 ```
 
 :::
@@ -132,23 +132,23 @@ Once authenticated, you can query the directory for detailed information.
 # Authenticate and query
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "CN=user,CN=Users,DC=domain,DC=local" \
-    -w password \
-    -b "DC=domain,DC=local"
+    -D "CN=$USER,CN=Users,DC=$DOMAIN,DC=local" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local"
 
 # Query with domain credentials (domain\\user format)
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local"
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local"
 
 # Query with domain credentials (user@domain.local format - commonly used for AD)
 ldapsearch -x \
-    -H ldap://domain.local \
-    -D "user@domain.local" \
+    -H ldap://$DOMAIN.local \
+    -D "$USER@$DOMAIN.local" \
     -W \
-    -b "DC=domain,DC=local"
+    -b "DC=$DOMAIN,DC=local"
 ```
 
 === NetExec
@@ -157,13 +157,13 @@ ldapsearch -x \
 
 ```bash
 # Execute LDAP query (default attributes)
-netexec ldap $TARGET -u username -p password --query "(sAMAccountName=Administrator)"
+netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)"
 
 # Execute LDAP query with specific attributes
-netexec ldap $TARGET -u username -p password --query "(sAMAccountName=Administrator)" "sAMAccountName objectClass pwdLastSet"
+netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)" "sAMAccountName objectClass pwdLastSet"
 
 # Basic LDAP enumeration
-netexec ldap $TARGET -d domain -u user -p password
+netexec ldap $TARGET -d $DOMAIN -u $USER -p $PASSWORD
 ```
 
 :::
@@ -178,18 +178,18 @@ netexec ldap $TARGET -d domain -u user -p password
 # List all users
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(objectClass=user)" \
     sAMAccountName
 
 # List users with description (often contain passwords or sensitive info)
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(objectClass=user)" \
     sAMAccountName description
 
@@ -197,18 +197,18 @@ ldapsearch -x \
 # Uses LDAP_MATCHING_RULE_BIT_AND (OID: 1.2.840.113556.1.4.803)
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=2))" \
     sAMAccountName
 
 # List users with password never expires (userAccountControl flag: 65536)
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=65536))" \
     sAMAccountName
 
@@ -216,9 +216,9 @@ ldapsearch -x \
 # These users are vulnerable to AS-REP roasting attacks (userAccountControl flag: 4194304)
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=4194304))" \
     sAMAccountName
 ```
@@ -229,10 +229,10 @@ ldapsearch -x \
 
 ```bash
 # Enumerate all users
-netexec ldap $TARGET -u username -p password --users
+netexec ldap $TARGET -u $USER -p $PASSWORD --users
 
 # Get users with descriptions (often contain passwords or sensitive info)
-netexec ldap $TARGET -u username -p password -M get-desc-users
+netexec ldap $TARGET -u $USER -p $PASSWORD -M get-desc-users
 ```
 
 :::
@@ -247,9 +247,9 @@ netexec ldap $TARGET -u username -p password -M get-desc-users
 # List all groups
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(objectClass=group)" \
     sAMAccountName
 
@@ -258,18 +258,18 @@ ldapsearch -x \
 # This query may fail in non-English environments
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(&(objectClass=group)(cn=Domain Admins))" \
     member
 
 # List group members
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(&(objectClass=group)(cn=GroupName))" \
     member
 ```
@@ -280,7 +280,7 @@ ldapsearch -x \
 
 ```bash
 # Enumerate all groups
-netexec ldap $TARGET -u username -p password --groups
+netexec ldap $TARGET -u $USER -p $PASSWORD --groups
 ```
 
 :::
@@ -295,18 +295,18 @@ netexec ldap $TARGET -u username -p password --groups
 # List all computers
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(objectClass=computer)" \
     sAMAccountName
 
 # List domain controllers
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(&(objectClass=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" \
     sAMAccountName dNSHostName
 ```
@@ -317,7 +317,7 @@ ldapsearch -x \
 
 ```bash
 # Enumerate all computers
-netexec ldap $TARGET -u username -p password --computers
+netexec ldap $TARGET -u $USER -p $PASSWORD --computers
 ```
 
 :::
@@ -328,9 +328,9 @@ netexec ldap $TARGET -u username -p password --computers
 # Get password policy
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "domain\\user" \
-    -w password \
-    -b "DC=domain,DC=local" \
+    -D "$DOMAIN\\$USER" \
+    -w $PASSWORD \
+    -b "DC=$DOMAIN,DC=local" \
     "(objectClass=domainDNS)" \
     minPwdLength maxPwdAge pwdHistoryLength \
     lockoutThreshold lockoutDuration
@@ -341,8 +341,8 @@ ldapsearch -x \
 ```bash
 # List trust relationships with important attributes
 ldapsearch -x -H ldap://$TARGET \
-  -D "domain\\user" -w password \
-  -b "DC=domain,DC=local" \
+  -D "$DOMAIN\\$USER" -w $PASSWORD \
+  -b "DC=$DOMAIN,DC=local" \
   "(objectClass=trustedDomain)" \
   trustPartner trustDirection trustAttributes trustType flatName
 ```

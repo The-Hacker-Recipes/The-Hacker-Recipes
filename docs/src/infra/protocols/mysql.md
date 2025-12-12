@@ -134,13 +134,13 @@ The MySQL command-line client is the standard tool for interacting with MySQL da
 
 ```bash
 # Connect
-mysql -h $TARGET -u username -p
+mysql -h $TARGET -u $USER -p
 
 # Connect with password
-mysql -h $TARGET -u username -ppassword
+mysql -h $TARGET -u $USER -p$PASSWORD
 
 # Execute single query
-mysql -h $TARGET -u username -ppassword -e "SELECT @@version;"
+mysql -h $TARGET -u $USER -p$PASSWORD -e "SELECT @@version;"
 ```
 
 Once connected, useful commands:

