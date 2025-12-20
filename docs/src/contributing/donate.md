@@ -2,12 +2,16 @@
 authors: AzeTIIx, ShutdownRepo
 category: contributing
 ---
->[!NOTE] We are stopping donations.
->While we truly appreciate the support, the limited number of donations made it difficult to turn this system into something that brings real added value to the project, especially considering the time and effort it requires.
+>[!WARNING] Donations are stopped
+>We appreciate the support previous donators have made to this project. However, considering the number of donations and total amount gathered, we have found it difficult to really make something out of it. If we take into account the time and effort it requires us to "handle" those donations, it doesn't make sense to keep doing it. Some of you voted on [a previous X post](https://x.com/_nwodtuhs/status/1931408889079033970) in favor of this previous donations being used to gift top contributors. This wish will be respected, we're working on something special, a nice token of appreciation for the people that wrote quality content.
 >
->The best way to support The Hacker Recipes is by contributing directly: submitting pull requests, improving existing content, or sharing new ideas.
+>From now on, the best way to support The Hacker Recipes is by contributing directly: [writing](write) and submitting pull requests, helping review existing PRs, and any help that'd come to mind. For companies, [buying ads]() is still a thing for now.
 >
->We’re truly grateful to everyone who supported the project through donations your help and trust have meant a lot ❤️
+>Of course, this decision wasn't easy to make. We tried ads, we tried donations, and ads are not helping enough. The project currently has no way to sustain itself besides having people contribute on it 100% for free and Internet points.
+>
+>We’re truly grateful to everyone who supported the project through donations, and to everyone that have and will contribute their time and brain-juice ❤️
+>
+>*This page will be kept as-is for *
 
 # Donate ❤️
 
