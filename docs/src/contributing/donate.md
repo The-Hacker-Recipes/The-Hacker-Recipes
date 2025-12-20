@@ -2,12 +2,12 @@
 authors: AzeTIIx, ShutdownRepo
 category: contributing
 ---
-> [!NOTE] We are stopping donations.
+>[!NOTE] We are stopping donations.
 >While we truly appreciate the support, the limited number of donations made it difficult to turn this system into something that brings real added value to the project, especially considering the time and effort it requires.
 >
-> The best way to support The Hacker Recipes is by contributing directly: submitting pull requests, improving existing content, or sharing new ideas.
+>The best way to support The Hacker Recipes is by contributing directly: submitting pull requests, improving existing content, or sharing new ideas.
 >
-> We’re truly grateful to everyone who supported the project through donations your help and trust have meant a lot ❤️
+>We’re truly grateful to everyone who supported the project through donations your help and trust have meant a lot ❤️
 
 # Donate ❤️
 
