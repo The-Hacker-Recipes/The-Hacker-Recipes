@@ -42,6 +42,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 - [ESC13  "issuance-policiy-with-privileged-group-linked"](certificate-templates.md#esc13-issuance-policiy-with-privileged-group-linked)
 - [ESC14  "weak-explicit-mapping"](certificate-templates.md#esc14-weak-explicit-mapping)
 - [ESC15  "arbitrary application policy"](certificate-templates.md#esc15-CVE-2024-49019-arbitrary-application-policy)
+- [ESC16  "Security Extension Disabled on CA"](certificate-templates#esc16-security-extension-disabled-on-ca)
 - [Certifried.md](certifried.md)
 
 ### Terminology
@@ -144,7 +145,7 @@ Certify.exe cas
 
 The different domain escalation scenarios are detailed in the following parts.
 
-- ESC1 to ESC3, ESC9, ESC10, ESC13, ESC14 and ESC15: [Certificate Templates](certificate-templates.md)
+- ESC1 to ESC3, ESC9, ESC10, ESC13, ESC14, ESC15 and ESC16: [Certificate Templates](certificate-templates.md)
 - ESC6 and ESC12: [Certificate Authority](certificate-authority.md)
 - ESC4, ESC5 & ESC7: [Access Controls](access-controls.md)
 - ESC8, ESC11: [Unsigned Endpoints](unsigned-endpoints.md)
