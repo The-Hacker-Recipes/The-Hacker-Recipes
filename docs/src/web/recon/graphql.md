@@ -5,322 +5,147 @@ category: web
 
 # GraphQL
 
-GraphQL is a query language and runtime for APIs that allows clients to request exactly the data they need. Unlike REST APIs, GraphQL uses a single endpoint and allows clients to specify the structure of the response.
+GraphQL exposes an API through a single endpoint. During web assessments, particular attention should be given to areas that GraphQL implementations frequently leave vulnerable: **schema discovery**, **authorization issues (BOLA/IDOR)**, and **dangerous resolver inputs**.
 
-During reconnaissance, GraphQL endpoints can reveal schema structure and available queries/mutations, field names and types, internal API structure, business logic and relationships, and potentially sensitive information through introspection. GraphQL endpoints are typically found at `/graphql`, `/api/graphql`, `/v1/graphql`, `/query`, or custom paths defined by the application.
+## Quick workflow
 
-GraphQL can be vulnerable to information disclosure through introspection, Denial of Service (DoS) through complex queries, authorization bypasses, and injection attacks (SQL, NoSQL, command injection).
+1. Find the endpoint and confirm it behaves like GraphQL
+2. Map the schema (introspection, GraphiQL/Playground, frontend queries)
+3. Use the schema to generate requests
+4. Test authorization and input handling on high-signal operations (object fetchers, list resolvers, write mutations)
 
-## Endpoint discovery
+## Find the endpoint
 
-GraphQL endpoints can be discovered through various methods:
+Common locations include `/graphql`, `/api/graphql`, `/v1/graphql` and `/query`, but guessing should be avoided:
 
-### Common paths
+- Frontend JS: see [JavaScript analysis](javascript-analysis.md)
+- Source code leaks: see [Source code discovery](source-code-discovery.md)
+- Proxy traffic: Burp "HTTP history" and "Site map"
 
-```bash
-# Test common GraphQL endpoint paths
-curl -X POST "http://$TARGET/graphql" \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
+## Confirm it is GraphQL
 
-curl -X POST "http://$TARGET/api/graphql" \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
+Universal queries work across all GraphQL implementations and confirm the endpoint:
 
-curl -X POST "http://$TARGET/v1/graphql" \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
+:::: tabs
 
-curl -X POST "http://$TARGET/query" \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
-```
+=== Burp (recommended)
 
-### GET requests
+- Create a POST request to the suspected endpoint
+- Send it to Repeater
+- Use `{"query":"query{__typename}"}` and look for `data` and/or `errors` in the response
 
-Some GraphQL implementations accept queries via GET parameters:
+=== CLI
 
 ```bash
-# Try GET request with query parameter
-# Note: In practice, GraphQL queries in GET requests should be URL-encoded ({ → %7B, } → %7D, etc.)
-# Some servers may accept unencoded queries, but this is not reliable
-curl "http://$TARGET/graphql?query={__schema{queryType{name}}}"
-
-# URL-encoded version (recommended)
-curl "http://$TARGET/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
-
-# Try GET request with variables (should also be URL-encoded)
-curl "http://$TARGET/graphql?query=query{users{id}}&variables={}"
+curl -sS "http://$TARGET/graphql" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"query{__typename}"}'
 ```
+
+::::
 
 > [!NOTE]
-> In practice, all GraphQL GET requests shown above should be URL-encoded. Some servers may still accept raw braces, but this is not reliable across all implementations.
+> Some stacks accept GET queries, but POST + JSON should be used for efficient testing unless specific requirements exist (caching, WAF behavior, logging).
 
-### JavaScript analysis
+## Map the schema
 
-GraphQL endpoints are often hardcoded in JavaScript files. For comprehensive JavaScript analysis techniques, see [JavaScript analysis](javascript-analysis.md).
+### Introspection (preferred)
 
-```bash
-# Search for GraphQL endpoints in JavaScript
-grep -r "graphql" downloaded_js_files/
-grep -r "/graphql" downloaded_js_files/
-grep -r "query.*{" downloaded_js_files/
-grep -r "mutation" downloaded_js_files/
-```
+When introspection is available, tooling should be used instead of manually crafting long queries.
 
-## Automated tools
+:::: tabs
 
-::: tabs
+=== InQL (Burp)
 
-=== Graphw00f
-
-[Graphw00f](https://github.com/dolevf/graphw00f) (Python) is a tool for fingerprinting and identifying GraphQL implementations.
-
-```bash
-# Fingerprint GraphQL endpoint
-python3 graphw00f.py -d -t http://$TARGET/graphql
-
-# Test multiple endpoints
-python3 graphw00f.py -d -t http://$TARGET/graphql -t http://$TARGET/api/graphql
-```
+- [InQL](https://github.com/doyensec/inql) can be installed from Burp's BApp Store
+- A GraphQL request can be selected, right-clicked, and introspection can be run through InQL
+- The generated schema can be used to create query/mutation templates
 
 === GraphQLmap
 
-[GraphQLmap](https://github.com/swisskyrepo/GraphQLmap) (Python) is an interactive GraphQL security testing tool.
-
 ```bash
-# Start interactive session
-python3 graphqlmap.py -u http://$TARGET/graphql
-
-# Execute introspection
-python3 graphqlmap.py -u http://$TARGET/graphql -i
-
-# Execute custom query
-python3 graphqlmap.py -u http://$TARGET/graphql -q "{ users { id name } }"
+python3 graphqlmap.py -u "http://$TARGET/graphql" -i
 ```
+
+::::
+
+### When introspection is disabled
+
+Some implementations block full introspection but allow partial queries. Incremental introspection fragments can be attempted:
+
+- `__schema{queryType{name}}` or `__type(name:"User"){name}` can be tested
+- Errors can be triggered to identify field/type names (invalid fields, wrong args)
+- Operations can be extracted from the frontend (Apollo clients, bundled queries, persisted queries)
+- GraphiQL/Playground interfaces should be checked (often left enabled in non-production environments)
+
+> [!TIP]
+> When one valid operation has been observed, it provides a reliable base for authorization testing.
+
+## What to test (fast and high-signal)
+
+### BOLA / IDOR on object access
+
+Prioritize resolvers that fetch objects by identifier (e.g., `user(id:)`, `invoice(id:)`, `document(id:)`, `order(id:)`, `node(id:)`).
+
+- IDs should be changed across users/tenants
+- Error patterns should be compared (403 vs 404 vs empty object)
+- Inconsistencies should be noted where responses return data but with redacted fields
+
+### Over-fetching and hidden fields
+
+Fields not displayed in the UI can be requested (e.g., `role`, `isAdmin`, `email`, `internalNotes`, `permissions`) and responses compared across different roles.
+
+### Mutations (authz + ownership)
+
+Mutations that update ownership or privileges should be identified (e.g., `updateUser`, `setRole`, `addMember`, `inviteUser`, `updateTenant`) and tested for:
+
+- Missing object-level checks
+- Trusting client-provided `userId` / `tenantId` / `ownerId`
+- Weak “can edit self” checks that allow editing others
+
+### Unsanitized arguments (injection/SSRF)
+
+Resolvers often forward arguments directly to other systems without proper sanitization. Testing should include:
+
+- **SQL/NoSQL injection**: String arguments passed to database queries
+- **Command injection**: Arguments used in system commands or file operations
+- **SSRF**: URL fields used in HTTP requests (`url`, `endpoint`, `webhook`)
+- **Path traversal**: File/path-like arguments (`filename`, `path`, `file`)
+- **Regex DoS**: Complex regex patterns in string filters
+- **Pagination abuse**: Unbounded list sizes (`first`, `limit`, `offset`)
+
+### DoS primitives (controlled testing)
+
+> [!CAUTION]
+> Deeply nested queries, large lists, and repeated fragments can overwhelm backends. Payloads should be kept controlled and testing should be coordinated when conducted in production environments.
+
+## Useful tools
+
+:::: tabs
 
 === InQL
 
-[InQL](https://github.com/doyensec/inql) is a Burp Suite extension for GraphQL security testing.
+[InQL](https://github.com/doyensec/inql) provides fast schema mapping and query generation directly within Burp.
 
-Features:
-* Automatic schema introspection
-* Query generation
-* Vulnerability detection
-* Integration with Burp Suite
+=== GraphQLmap
 
-Install via Burp Suite's BApp Store and use through the context menu or active scan.
+[GraphQLmap](https://github.com/swisskyrepo/GraphQLmap) provides an alternative when Burp cannot be used.
 
 === GraphQL Cop
 
-[GraphQL Cop](https://github.com/dolevf/GraphQL-Cop) (Python) is a security auditing tool for GraphQL endpoints.
+[GraphQL Cop](https://github.com/dolevf/GraphQL-Cop) runs common checks against a GraphQL endpoint.
 
 ```bash
-# Audit GraphQL endpoint
-python3 graphql-cop.py -t http://$TARGET/graphql
-
-# Test with authentication
-python3 graphql-cop.py -t http://$TARGET/graphql -H "Authorization: Bearer token"
+python3 graphql-cop.py -t "http://$TARGET/graphql"
 ```
 
-:::
+=== Graphw00f
 
-## Introspection
-
-GraphQL introspection allows querying the schema to understand available types, queries, and mutations. This is enabled by default in many implementations but can be disabled in production.
-
-### Basic introspection query
+[Graphw00f](https://github.com/dolevf/graphw00f) can fingerprint GraphQL implementations, which proves useful for identifying vendor-specific behavior.
 
 ```bash
-# Get schema information
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
+python3 graphw00f.py -d -t "http://$TARGET/graphql"
 ```
 
-### Full schema introspection
+::::
 
-For full schema introspection, it's recommended to use automated tools (InQL, GraphQLmap, GraphQL-Cop) as they handle the complex introspection queries reliably. Manual introspection can be done with simpler queries:
-
-```bash
-# Simple introspection query (more reliable)
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { types { name } } }"}'
-
-# For full schema, use automated tools instead of manual complex queries
-```
-
-### Common introspection queries
-
-```bash
-# List all types
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { types { name } } }"}'
-
-# List all queries
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { fields { name description args { name type { name } } } } } }"}'
-
-# List all mutations
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { mutationType { fields { name description args { name type { name } } } } } }"}'
-```
-
-## GraphiQL interface
-
-Many GraphQL implementations expose a GraphiQL (or GraphQL Playground) interface for interactive querying. These interfaces are often found at `/graphql` (with HTML content-type), `/graphiql`, `/playground`, `/explorer`, or `/console`.
-
-```bash
-# Check for GraphiQL interface
-curl http://$TARGET/graphql
-curl http://$TARGET/graphiql
-curl http://$TARGET/playground
-
-# Look for HTML response with GraphiQL
-curl -s http://$TARGET/graphql | grep -i "graphiql\|graphql\|playground"
-```
-
-## Identifying GraphQL implementations
-
-Different GraphQL implementations have different characteristics:
-
-::: tabs
-
-=== Apollo Server
-
-```bash
-# Apollo Server often exposes /graphql endpoint
-# Look for "apollo" in response headers or error messages
-curl -I http://$TARGET/graphql | grep -i apollo
-```
-
-=== GraphQL Yoga
-
-```bash
-# GraphQL Yoga may expose /graphql endpoint
-# Check for specific error messages
-```
-
-=== Hasura
-
-```bash
-# Hasura typically uses /v1/graphql
-# May expose /console for admin interface
-curl http://$TARGET/v1/graphql
-curl http://$TARGET/console
-```
-
-:::
-
-## Testing queries and authentication
-
-::: tabs
-
-=== Common queries
-
-Once you've discovered a GraphQL endpoint, test these common queries:
-
-```bash
-# Test basic query
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __typename }"}'
-
-# Test introspection
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
-
-# Test for users query
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ users { id name email } }"}'
-
-# Test for admin queries
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ admin { users { id name } } }"}'
-```
-
-=== Authentication
-
-GraphQL endpoints may require authentication. Test with different authentication methods to determine what the endpoint accepts:
-
-```bash
-# Test with common authentication headers
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer token" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
-
-# Test with API key
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: key" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
-
-# Test with cookies
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -H "Cookie: session=value" \
-  -d '{"query":"{ __schema { queryType { name } } }"}'
-```
-
-> [!NOTE]
-> These examples show how to test GraphQL endpoints with authentication. The actual authentication mechanism depends on the GraphQL implementation and may require valid credentials or tokens obtained through other means.
-
-=== Error messages
-
-GraphQL error messages can reveal valuable information:
-
-```bash
-# Invalid query to trigger error
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ invalid }"}'
-```
-
-# Error messages may reveal:
-# - GraphQL implementation (Apollo, GraphQL Yoga, etc.)
-# - Stack traces
-# - Internal paths
-# - Database information
-```
-
-> [!NOTE]
-> If you receive an error like "Introspection is not allowed" or similar, this means introspection is disabled, not that the endpoint is unusable. You can still query the API if you know the schema structure.
-
-:::
-
-## Example workflow
-
-```bash
-# 1. Discover GraphQL endpoint
-curl -X POST http://$TARGET/graphql -H "Content-Type: application/json" -d '{"query":"{ __typename }"}'
-
-# 2. Fingerprint implementation
-python3 graphw00f.py -d -t http://$TARGET/graphql
-
-# 3. Test introspection
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __schema { queryType { name fields { name } } } }"}'
-
-# 4. Use automated tool for deeper analysis
-python3 graphqlmap.py -u http://$TARGET/graphql -i
-
-# 5. Test for common queries
-curl -X POST http://$TARGET/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ users { id name email } }"}'
-```
-
-> [!TIP]
-> GraphQL introspection is often enabled by default in development environments. Always test for introspection even if it's disabled, as it can reveal the entire API structure.
-
-> [!CAUTION]
-> GraphQL endpoints can be vulnerable to DoS attacks through complex nested queries. Be careful when testing to avoid overwhelming the server.

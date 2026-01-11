@@ -5,20 +5,9 @@ category: web
 
 # JavaScript analysis
 
-Modern web applications heavily rely on JavaScript for client-side functionality. Analyzing JavaScript files can reveal valuable information during reconnaissance: hidden API endpoints and routes, API keys and authentication tokens, sensitive configuration data, internal URLs and domains, function names and business logic, third-party service integrations, and comments with sensitive information.
+Modern web applications rely heavily on JavaScript for client-side functionality. JavaScript analysis during reconnaissance can reveal hidden API endpoints, authentication tokens, configuration data, internal URLs, business logic, third-party integrations, and sensitive comments.
 
-JavaScript files are typically found in `/js/`, `/javascript/`, `/assets/js/`, inline JavaScript within HTML pages, external JavaScript libraries and frameworks, and minified and obfuscated JavaScript files.
-
-## Manual analysis
-
-Start by identifying all JavaScript files loaded by the application:
-
-```bash
-# Extract JavaScript file URLs from HTML
-curl -s http://$TARGET | grep -oP 'src="[^"]*\.js[^"]*"' | cut -d'"' -f2
-
-# Or use browser developer tools (F12 > Network > JS filter)
-```
+JavaScript files are typically located in `/js/`, `/javascript/`, `/assets/js/`, or embedded within HTML pages. Browser developer tools can be used to identify loaded JavaScript files through the Network tab.
 
 ## Endpoint discovery
 
@@ -83,47 +72,15 @@ python3 jsa.py -u http://$TARGET
 
 ## Downloading JavaScript files
 
-```bash
-# Download all JavaScript files from a website
-wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off http://$TARGET/
-
-# Or use a tool like getJS
-# Note: Options may vary slightly depending on the version/fork of getJS (-url/--url, etc.). Check the README of the repository you're using.
-getJS -url http://$TARGET -output js_files.txt
-```
+JavaScript files should be downloaded for offline analysis. Tools like `wget` or `getJS` can be used to retrieve all JavaScript files from a target website.
 
 ## GraphQL endpoint discovery
 
-JavaScript files often contain GraphQL queries that reveal endpoint URLs and schema information.
-
-```bash
-# Search for GraphQL endpoints in JavaScript
-grep -r "graphql" downloaded_js_files/
-grep -r "/graphql" downloaded_js_files/
-grep -r "query.*{" downloaded_js_files/
-grep -r "mutation" downloaded_js_files/
-```
+JavaScript files frequently contain GraphQL queries that reveal endpoint URLs and schema information. See [GraphQL analysis](graphql.md) for detailed techniques.
 
 ## Deobfuscation and beautification
 
-Many JavaScript files are minified or obfuscated. Tools can help make them readable:
-
-```bash
-# Using js-beautify
-js-beautify obfuscated.js > beautified.js
-```
-
-* [deobfuscate.io](https://deobfuscate.io/) is a powerful online JavaScript deobfuscator that can remove common obfuscation techniques including:
-  * Array unpacking
-  * Proxy function replacement
-  * Expression simplification
-  * Dead branch removal
-  * String operation reversal
-  * Property simplification
-
-* Browser developer tools can also format JavaScript: Right-click in the Sources tab > Format
-
-* Command-line tools like `js-beautify` can format minified code
+Minified or obfuscated JavaScript files can be made readable using tools like `js-beautify` or [deobfuscate.io](https://deobfuscate.io/). Browser developer tools can also format JavaScript through the Sources tab.
 
 ## Automated scanning
 
@@ -153,64 +110,32 @@ Install via Burp Suite's BApp Store and use through the context menu or active s
 
 ## Common patterns to search for
 
-When analyzing JavaScript files, look for these patterns:
+JavaScript files should be analyzed for patterns indicating sensitive information:
 
-```javascript
-// API endpoints
-/api/, /v1/, /v2/, /graphql
-
-// Authentication tokens
-token, apiKey, secret, password, auth
-
-// URLs and domains
-http://, https://, fetch(, axios., $.ajax
-
-// Configuration
-config, settings, env, environment
-
-// Sensitive functions
-admin, delete, remove, update, create
-```
+- API endpoints: `/api/`, `/v1/`, `/v2/`, `/graphql`
+- Authentication tokens: `token`, `apiKey`, `secret`, `password`, `auth`
+- URLs and domains: `http://`, `https://`, `fetch(`, `axios.`, `$.ajax`
+- Configuration: `config`, `settings`, `env`, `environment`
+- Sensitive functions: `admin`, `delete`, `remove`, `update`, `create`
 
 ## Browser-based analysis
 
-Modern browsers provide powerful tools for JavaScript analysis:
+Modern browsers provide developer tools for JavaScript analysis:
 
-1. **Developer Tools (F12)**:
-   * Sources tab: View all JavaScript files
-   * Network tab: Monitor JavaScript requests
-   * Console tab: Execute JavaScript and inspect variables
-
-2. **Extensions**:
-   * **Retire.js**: Detects vulnerable JavaScript libraries
-   * **Wappalyzer**: Identifies technologies including JavaScript frameworks
+- **Sources tab**: View and debug JavaScript files
+- **Network tab**: Monitor JavaScript requests and responses
+- **Console tab**: Execute JavaScript and inspect variables
+- **Extensions**: Retire.js for vulnerable library detection, Wappalyzer for technology identification
 
 ## Example workflow
 
-```bash
-# 1. Create directory and download all JavaScript files
-mkdir -p downloaded_js
-wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off -P downloaded_js/ http://$TARGET/
-
-# 2. Extract endpoints (process each file individually)
-find ./downloaded_js -name "*.js" -exec python3 linkfinder.py -i {} -o cli \;
-
-# 3. Search for secrets
-python3 SecretFinder.py -i ./downloaded_js/ -o cli
-
-# 4. Search for GraphQL
-grep -r "graphql" ./downloaded_js/
-
-# 5. Analyze manually for business logic
-cat important_file.js | less
-```
+1. Download JavaScript files using `wget` or `getJS`
+2. Extract endpoints with LinkFinder or JSFinder
+3. Search for secrets with SecretFinder or JSA
+4. Check for GraphQL patterns
+5. Manually review important files for business logic
 
 > [!TIP]
-> JavaScript analysis is often one of the most valuable reconnaissance techniques for web applications. Many modern applications expose sensitive information through client-side JavaScript that should never be accessible to end users.
+> JavaScript analysis frequently reveals sensitive information that should not be accessible through client-side code.
 
-> [!SUCCESS]
-> Automation and integration
-> 
-> * Combine JavaScript analysis with [parameter fuzzing](parameter-fuzzing.md) to test discovered endpoints
-> * Use [GraphQL endpoint discovery](graphql.md) techniques when GraphQL queries are found in JavaScript
-> * Integrate with Burp Suite for automated analysis during web application testing
+JavaScript analysis should be combined with [parameter fuzzing](parameter-fuzzing.md) and integrated with Burp Suite for comprehensive web application testing.

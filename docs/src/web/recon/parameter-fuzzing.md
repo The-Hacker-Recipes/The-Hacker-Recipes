@@ -5,26 +5,9 @@ category: web
 
 # Parameter fuzzing
 
-Parameter fuzzing (also known as parameter discovery) is the process of finding hidden or undocumented HTTP parameters in web applications. These parameters may not be visible in the HTML forms or API documentation but can still be accepted by the server.
+Parameter fuzzing involves discovering hidden or undocumented HTTP parameters that may not appear in forms or API documentation but are accepted by the server. These parameters can lead to unauthorized access, information disclosure, parameter pollution, business logic flaws, and security control bypass.
 
-Hidden parameters can lead to unauthorized access to functionality, information disclosure, parameter pollution vulnerabilities, business logic flaws, and bypass of security controls. Parameters can be found in GET query strings (`?param=value`), POST form data, JSON request bodies, HTTP headers, and cookies.
-
-## Manual testing
-
-Start by identifying visible parameters and then test variations:
-
-```bash
-# Test common parameter names
-curl "http://$TARGET/page?debug=true"
-curl "http://$TARGET/page?test=1"
-curl "http://$TARGET/page?admin=1"
-curl "http://$TARGET/page?api_key=test"
-
-# Test parameter variations
-curl "http://$TARGET/page?id=1&format=json"
-curl "http://$TARGET/page?id=1&callback=test"
-curl "http://$TARGET/page?id=1&output=xml"
-```
+Parameters can exist in GET queries, POST data, JSON bodies, HTTP headers, and cookies.
 
 ## Automated tools
 
@@ -94,112 +77,41 @@ x8 -u "http://$TARGET/api" -X POST -H "Content-Type: application/json" -w /path/
 
 ## Wordlists
 
-Common parameter wordlists can be found in:
-* [SecLists](https://github.com/danielmiessler/SecLists) - `Discovery/Web-Content/burp-parameter-names.txt`
-* [ParamMiner](https://github.com/PortSwigger/param-miner) - Check the repository for available wordlists
-* Custom wordlists based on technology stack
+Parameter wordlists should include common patterns from [SecLists](https://github.com/danielmiessler/SecLists) (`Discovery/Web-Content/burp-parameter-names.txt`) and technology-specific terms.
 
-```bash
-# Use SecLists parameter wordlist
-arjun -u http://$TARGET/page -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
-```
+Parameter discovery relies on response comparison. Tools automatically detect differences in response length, status codes, timing, and content similarity.
 
-## Response comparison
+## Parameter locations
 
-Parameter discovery relies on comparing responses. A parameter is considered "found" if the response differs from the baseline:
+Parameters can be tested in different HTTP locations:
 
-```bash
-# Baseline request (no parameters)
-curl http://$TARGET/page > baseline.html
+- **GET parameters**: Query string parameters
+- **POST data**: Form data, JSON bodies, XML payloads
+- **HTTP headers**: Custom headers like `X-API-Key`, `X-Admin`
 
-# Test with parameter
-curl "http://$TARGET/page?test=1" > test.html
-```
-
-# Compare responses
-diff baseline.html test.html
-```
-
-Tools like Arjun automatically handle response comparison and can detect different response lengths, different status codes, different response times, and different content (using similarity algorithms).
-
-## Testing different parameter locations
-
-### GET parameters
-
-```bash
-arjun -u "http://$TARGET/page?existing=param" -m GET
-```
-
-### POST form data
-
-```bash
-arjun -u http://$TARGET/page -m POST --data "existing=param"
-```
-
-### JSON parameters
-
-```bash
-arjun -u http://$TARGET/api -m POST \
-  -H "Content-Type: application/json" \
-  --data '{"existing":"param"}'
-```
-
-### XML parameters
-
-```bash
-arjun -u http://$TARGET/api -m POST \
-  -H "Content-Type: application/xml" \
-  --data '<?xml version="1.0"?><root><existing>param</existing></root>'
-```
-
-### HTTP headers
-
-Some applications accept parameters via custom headers:
-
-```bash
-# Test custom headers
-curl -H "X-API-Key: test" http://$TARGET/api
-curl -H "X-Admin: true" http://$TARGET/admin
-```
+Tools like Arjun and x8 support all these locations.
 
 ## Common parameter patterns
 
-Look for parameters that might indicate:
-* Debug modes: `debug`, `test`, `dev`, `verbose`
-* Format control: `format`, `output`, `callback`, `jsonp`
-* Access control: `admin`, `role`, `privilege`, `access`
-* API keys: `api_key`, `token`, `secret`, `auth`
-* Pagination: `page`, `limit`, `offset`, `count`
-* Filtering: `filter`, `search`, `q`, `query`
+Common parameter patterns include:
+
+- Debug modes: `debug`, `test`, `dev`, `verbose`
+- Format control: `format`, `output`, `callback`, `jsonp`
+- Access control: `admin`, `role`, `privilege`, `access`
+- API keys: `api_key`, `token`, `secret`, `auth`
+- Pagination: `page`, `limit`, `offset`, `count`
+- Filtering: `filter`, `search`, `q`, `query`
 
 ## Integration with other tools
 
-Parameter discovery can be combined with other reconnaissance techniques:
-
-```bash
-# 1. Discover endpoints with directory fuzzing (see [directory fuzzing](directory-fuzzing.md))
-ffuf -w wordlist.txt -u http://$TARGET/FUZZ
-
-# 2. For each discovered endpoint, find parameters
-while IFS= read -r endpoint; do
-    arjun -u "http://$TARGET$endpoint" -o "params_${endpoint//\//_}.json"
-done < discovered_endpoints.txt
-```
+Parameter discovery should be combined with endpoint discovery techniques. For each discovered endpoint, parameters can be enumerated using tools like Arjun.
 
 ## Rate limiting considerations
 
-Parameter fuzzing can generate many requests. Be mindful of rate limiting on the target, WAF detection and blocking, and server load.
-
-```bash
-# Use delays to avoid rate limiting
-arjun -u http://$TARGET/page -d 0.5
-
-# Passive mode with explicit scope
-arjun -u http://$TARGET/page --passive $TARGET
-```
+Parameter fuzzing generates numerous requests. Delays should be used to avoid rate limiting, WAF detection, and server overload.
 
 > [!TIP]
-> Parameter fuzzing is most effective when combined with other reconnaissance techniques. Always test discovered parameters for actual vulnerabilities, not just their existence.
+> Discovered parameters should be tested for actual vulnerabilities, not just existence.
 
 > [!CAUTION]
-> Parameter fuzzing can generate a large number of requests. Use rate limiting and delays to avoid overwhelming the target server or triggering security controls.
+> Large request volumes can overwhelm servers or trigger security controls. Rate limiting should be implemented.
