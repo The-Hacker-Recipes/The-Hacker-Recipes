@@ -194,6 +194,12 @@ Invoke-PassTheCert -a -NoBanner
 
 # Create the computer with sAMAccountName 'COMPUTATOR$', with UAC flags 'WORKSTATION_TRUST_ACCOUNT,TRUSTED_TO_AUTH_FOR_DELEGATION'
 Invoke-PassTheCert -Action 'CreateObject' -LdapConnection $LdapConnection -ObjectType 'Computer' -Object 'CN=COMPUTATOR,CN=Computers,DC=X' -sAMAccountName 'COMPUTATOR$' -NewPassword 'P@ssw0rd123!' -UACFlags 'WORKSTATION_TRUST_ACCOUNT,TRUSTED_TO_AUTH_FOR_DELEGATION'
+
+# Disable the account 'CN=COMPUTATOR,CN=Computers,DC=X'
+Invoke-PassTheCert -Action 'DisableAccount' -LdapConnection $LdapConnection -Identity 'CN=COMPUTATOR,CN=Computers,DC=X'
+
+# Delete the object 'CN=COMPUTATOR,CN=Computers,DC=X'
+Invoke-PassTheCert -Action 'DeleteObject' -LdapConnection $LdapConnection -Object 'CN=COMPUTATOR,CN=Computers,DC=X'
 ```
 
 :::
