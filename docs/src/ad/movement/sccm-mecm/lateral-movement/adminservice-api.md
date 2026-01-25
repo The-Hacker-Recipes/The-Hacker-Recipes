@@ -9,6 +9,9 @@ category: ad
 
 It appears that, with SCCM administrative rights, it is possible to directly interact with the AdminService API, without using CMPivot, for post SCCM exploitation purpose.
 
+> [!CAUTION]
+> Prior to Configuration Manager version 2509, the AdminService API was vulnerable to NTLM relay attacks, allowing attackers to take over the SCCM hierarchy by relaying coerced NTLM authentication from site servers to remote SMS Providers. This vulnerability has been patched in version 2509, which now rejects NTLM authentication attempts. For more details, see [TAKEOVER-5](https://github.com/subat0mik/Misconfiguration-Manager/blob/main/attack-techniques/TAKEOVER/TAKEOVER-5/takeover-5_description.md) and [Microsoft's update notes](https://learn.microsoft.com/en-us/intune/configmgr/core/plan-design/changes/whats-new-in-version-2509#adminservice-now-rejects-ntlm-authentication).
+
 > [!TIP]
 > For additional attack techniques and defense strategies related to AdminService API abuse in SCCM, refer to the following techniques from the [Misconfiguration-Manager repository](https://github.com/subat0mik/Misconfiguration-Manager/tree/main/attack-techniques):
 > - [RECON-4: CMPivot](https://github.com/subat0mik/Misconfiguration-Manager/blob/main/attack-techniques/RECON/RECON-4/recon-4_description.md)
