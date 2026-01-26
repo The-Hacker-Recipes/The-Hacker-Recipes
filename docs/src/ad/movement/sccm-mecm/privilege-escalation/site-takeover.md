@@ -258,7 +258,7 @@ SharpSCCM.exe get site-push-settings -mp "SCCM-Server" -sc "$SITE_CODE"
 > [!CAUTION]
 > Some requirements are needed to perform the attack:
 > 
-> * a passive site server is present on the network and its reachable
+> * a passive site server is present on the network and it's reachable
 > * knowing the NetBIOS name, FQDN, or IP address of the passive and active site servers is required
 > * SMB signing is not required on the active site server (default)
 
