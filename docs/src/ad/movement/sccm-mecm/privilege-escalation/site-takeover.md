@@ -23,7 +23,7 @@ Some SCCM configurations make it possible to abuse the permissions of the site s
 
 ### Relaying the primary site server
 
-A site server machine account is required to be member of the local Administrators group on the site database server and on every site server hosting the "SMS Provider" role in the hierarchy (See [SCCM Topology](../../index#topology)):
+A site server machine account is required to be member of the local Administrators group on the site database server and on every site server hosting the "SMS Provider" role in the hierarchy (See [SCCM Topology](../index.md#topology)):
 
 > The user account that installs the site must have the following permissions:
 >
