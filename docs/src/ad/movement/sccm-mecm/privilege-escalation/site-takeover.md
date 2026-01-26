@@ -51,7 +51,7 @@ As described by [Garrett Foster](https://twitter.com/garrfoster) in this [articl
 > [!CAUTION]
 > Some requirements are needed to perform the attack:
 > 
-> * automatic site assignment and automatic site-wide [client push installation](../../index#client-push-installation-1) are enabled
+> * automatic site assignment and automatic site-wide [client push installation](../client-push-coercion.md#client-push-installation-1) are enabled
 > * fallback to NTLM authentication is enabled (default)
 > * the hotfix [KB15599094](https://learn.microsoft.com/fr-fr/mem/configmgr/hotfix/2207/15599094) is not installed (it prevents the client push installation account to perform an NTLM connection to a client)
 > * PKI certificates are not required for client authentication (default)
