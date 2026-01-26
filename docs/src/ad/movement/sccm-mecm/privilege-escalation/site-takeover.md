@@ -66,7 +66,7 @@ As described by [Garrett Foster](https://twitter.com/garrfoster) in this [articl
 >   * knowing the NetBIOS name, FQDN, or IP address of a site management point is required
 >   * knowing the NetBIOS name, FQDN, or IP address of the site database server is required
 > 
-> The first four requirements above apply to the [client push installation coercion technique](coercion/client-push-coercion.md). But without them, a regular coercion technique could still be used (petitpotam, printerbug, etc.).
+> The first four requirements above apply to the [client push installation coercion technique](client-push-coercion.md). But without them, a regular coercion technique could still be used (petitpotam, printerbug, etc.).
 
 #### Step 1: retrieve the controlled user SID
 
