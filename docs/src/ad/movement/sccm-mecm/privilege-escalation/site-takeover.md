@@ -51,7 +51,7 @@ As described by [Garrett Foster](https://twitter.com/garrfoster) in this [articl
 > [!CAUTION]
 > Some requirements are needed to perform the attack:
 > 
-> * automatic site assignment and automatic site-wide [client push installation](../client-push-coercion.md#client-push-installation-1) are enabled
+> * automatic site assignment and automatic site-wide [client push installation](client-push-coercion.md#client-push-installation-1) are enabled
 > * fallback to NTLM authentication is enabled (default)
 > * the hotfix [KB15599094](https://learn.microsoft.com/fr-fr/mem/configmgr/hotfix/2207/15599094) is not installed (it prevents the client push installation account to perform an NTLM connection to a client)
 > * PKI certificates are not required for client authentication (default)
@@ -66,7 +66,7 @@ As described by [Garrett Foster](https://twitter.com/garrfoster) in this [articl
 >   * knowing the NetBIOS name, FQDN, or IP address of a site management point is required
 >   * knowing the NetBIOS name, FQDN, or IP address of the site database server is required
 > 
-> The first four requirements above apply to the [client push installation coercion technique](../coercion/client-push-coercion.md). But without them, a regular coercion technique could still be used (petitpotam, printerbug, etc.).
+> The first four requirements above apply to the [client push installation coercion technique](coercion/client-push-coercion.md). But without them, a regular coercion technique could still be used (petitpotam, printerbug, etc.).
 
 #### Step 1: retrieve the controlled user SID
 
