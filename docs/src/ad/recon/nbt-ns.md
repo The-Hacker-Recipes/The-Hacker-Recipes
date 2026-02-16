@@ -11,7 +11,7 @@ The tools [nbtscan](http://www.unixwiz.net/tools/nbtscan.html) and [nmblookup](h
 
 ```bash
 # Name lookup on a range
-nbtscan -r "$TARGET"
+nbtscan -r "$RANGE"
 
 # Find names and workgroup from an IP address
 nmblookup -A "$TARGET"

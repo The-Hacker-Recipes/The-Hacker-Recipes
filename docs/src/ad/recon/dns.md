@@ -50,8 +50,8 @@ In order to function properly, the tools need to know the domain name and which 
 If needed, the nameservers may be found with a port scan on the network by looking for DNS ports `53/TCP` and `53/UDP`.
 
 ```bash
-nmap -v -sV -p 53 "$TARGET"
-nmap -v -sV -sU -p 53 "$TARGET"
+nmap -v -sV -p 53 "$RANGE"
+nmap -v -sV -sU -p 53 "$RANGE"
 ```
 
 > [!TIP]
@@ -65,7 +65,7 @@ In Active Directory Integrated DNS, reverse lookup zones are used to resolve IP 
 
 ```bash
 # standard lookup
-host "$TARGET"
+host "$DC_HOST"
 
 # reverse lookup
 host "$TARGET"

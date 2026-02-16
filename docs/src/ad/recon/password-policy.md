@@ -23,7 +23,7 @@ polenum -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --pass-pol
 
 # ldapsearch-ad (obtained through LDAP)
-ldapsearch-ad.py -l "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -t pass-pol
+ldapsearch-ad -l "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -t pass-pol
 
 # enum4linux-ng (obtained through MS-RPC)
 enum4linux-ng -P -w -u "$USER" -p "$PASSWORD" "$DC_IP"
