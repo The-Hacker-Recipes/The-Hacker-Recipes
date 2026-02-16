@@ -11,10 +11,10 @@ The tools [nbtscan](http://www.unixwiz.net/tools/nbtscan.html) and [nmblookup](h
 
 ```bash
 # Name lookup on a range
-nbtscan -r $SUBNET/$MASK
+nbtscan -r "$TARGET"
 
 # Find names and workgroup from an IP address
-nmblookup -A $IPAdress
+nmblookup -A "$TARGET"
 ```
 
 > [!SUCCESS]

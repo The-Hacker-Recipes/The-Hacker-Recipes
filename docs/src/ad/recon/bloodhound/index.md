@@ -69,7 +69,7 @@ bloodhound.py --zip -c All -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -dc "$DC_HOST"
 An alternative called [RustHound](https://github.com/OPENCYBER-FR/RustHound) (Rust) can be used as well.
 
 ```bash
-rusthound --zip -d "$DOMAIN" -i "$DC_IP" -u '$USER@$DOMAIN' -p '$PASSWORD' -o "OUTDIR"
+rusthound --zip -d "$DOMAIN" -i "$DC_IP" -u "$USER@$DOMAIN" -p "$PASSWORD" -o "$OUTDIR"
 ```
 
 :::

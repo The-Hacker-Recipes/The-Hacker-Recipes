@@ -50,8 +50,8 @@ In order to function properly, the tools need to know the domain name and which 
 If needed, the nameservers may be found with a port scan on the network by looking for DNS ports `53/TCP` and `53/UDP`.
 
 ```bash
-nmap -v -sV -p 53 $SUBNET/$MASK
-nmap -v -sV -sU -p 53 $SUBNET/$MASK
+nmap -v -sV -p 53 "$TARGET"
+nmap -v -sV -sU -p 53 "$TARGET"
 ```
 
 > [!TIP]
@@ -65,16 +65,16 @@ In Active Directory Integrated DNS, reverse lookup zones are used to resolve IP 
 
 ```bash
 # standard lookup
-host $hostname
+host "$TARGET"
 
 # reverse lookup
-host $IP_address
+host "$TARGET"
 
 # manual PTR resolution request
-nslookup -type=ptr $IP_address
+nslookup -type=ptr "$TARGET"
 
 # PTR restolution on a range
-dnsrecon -r $RANGE -n $DC_IP
+dnsrecon -r "$RANGE" -n "$DC_IP"
 ```
 
 ## Dump DNS Records in a Domain

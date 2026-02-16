@@ -91,7 +91,7 @@ Using auth-level = 1 (No authentication) against the MS-NRPC (Netlogon) interfac
 The method calls the `DsrGetDcNameEx2` function after binding MS-NRPC interface to check if the user or computer exists without any credentials. 
 The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implments this type of enumeration
 ```bash 
-python3 nauth.py -t target -u users_file.txt -f computers_file.txt
+python3 nauth.py -t "$TARGET" -u users_file.txt -f computers_file.txt
 ```
 
 ## Resources
