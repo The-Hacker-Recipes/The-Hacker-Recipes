@@ -29,10 +29,10 @@ The epmapper (MS-RPC EndPoint Mapper) maps services to ports. It uses port 135/T
 
 ```bash
 # with rpcdump.py (example with target port 135/TCP)
-rpcdump.py -port 135 $TARGET_IP
+rpcdump.py -port 135 "$TARGET"
 
 # with rpcdump.exe (example with target port 593/TCP)
-rpcdump.exe -p 593 $TARGET_IP
+rpcdump.exe -p 593 "$TARGET"
 ```
 
 ### Null sessions
@@ -55,7 +55,7 @@ The Samba utility named [rpcclient](https://www.samba.org/samba/docs/current/man
 * `getdompwinfo`: get password policy
 
 ```bash
-rpcclient -c "command" -U "" -N $TARGET_IP
+rpcclient -c "command" -U "" -N "$TARGET"
 ```
 
 ### RID Cycling
@@ -75,7 +75,7 @@ Among these services is IObjectExporter(OXIDResolver GUID=99fcfec4–5260–101b
 
 To sum up, if the IOXIDResolver service is active and accessible on a windows host, it is possible to find new network endpoints(like IPv6 address) on this last one (via anonymous connection or with credentials). A python script exists to do this task remotly [IOXIDResolver-ng](https://github.com/Anh4ckin3/IOXIDResolver-ng).
 ```bash
-python IOXIDResolver-ng.py -t $TARGET_IP
+python IOXIDResolver-ng.py -t "$TARGET"
 
 # OUTPUT EXEMPLE
 [*] Anonymous connection on MSRPC

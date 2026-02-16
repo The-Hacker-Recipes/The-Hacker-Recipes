@@ -17,16 +17,16 @@ On UNIX-like systems, there are many alternatives that allow obtaining the passw
 
 ```bash
 # polenum (obtained through MS-RPC)
-polenum -d $DOMAIN -u $USER -p $PASSWORD -d $DOMAIN
+polenum -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 
 # netexec (obtained through MS-RPC)
-nxc smb $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --pass-pol
+nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --pass-pol
 
 # ldapsearch-ad (obtained through LDAP)
-ldapsearch-ad.py -l $LDAP_SERVER -d $DOMAIN -u $USER -p $PASSWORD -t pass-pol
+ldapsearch-ad.py -l "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -t pass-pol
 
 # enum4linux-ng (obtained through MS-RPC)
-enum4linux-ng -P -w -u $USER -p $PASSWORD $DOMAIN_CONTROLLER 
+enum4linux-ng -P -w -u "$USER" -p "$PASSWORD" "$DC_IP"
 ```
 
 

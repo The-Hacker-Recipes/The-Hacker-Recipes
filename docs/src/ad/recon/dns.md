@@ -17,18 +17,18 @@ nslookup is a DNS client that can be used to query SRV records. It usually comes
 
 ```bash
 # find the PDC (Principal Domain Controller)
-nslookup -type=srv _ldap._tcp.pdc._msdcs.$FQDN_DOMAIN
+nslookup -type=srv _ldap._tcp.pdc._msdcs."$DOMAIN"
 
 # find the DCs (Domain Controllers)
-nslookup -type=srv _ldap._tcp.dc._msdcs.$FQDN_DOMAIN
+nslookup -type=srv _ldap._tcp.dc._msdcs."$DOMAIN"
 
 # find the GC (Global Catalog, i.e. DC with extended data)
-nslookup -type=srv gc._msdcs.$FQDN_DOMAIN
+nslookup -type=srv gc._msdcs."$DOMAIN"
 
 # Other ways to find services hosts that may be DCs 
-nslookup -type=srv _kerberos._tcp.$FQDN_DOMAIN
-nslookup -type=srv _kpasswd._tcp.$FQDN_DOMAIN
-nslookup -type=srv _ldap._tcp.$FQDN_DOMAIN
+nslookup -type=srv _kerberos._tcp."$DOMAIN"
+nslookup -type=srv _kpasswd._tcp."$DOMAIN"
+nslookup -type=srv _ldap._tcp."$DOMAIN"
 ```
 
 The same commands can be operated the old way with nslookup.
@@ -39,7 +39,7 @@ The same commands can be operated the old way with nslookup.
 The [nmap](https://nmap.org/) tool can be used with its [dns-srv-enum.nse](https://nmap.org/nsedoc/scripts/dns-srv-enum.html) script to operate those queries.
 
 ```bash
-nmap --script dns-srv-enum --script-args dns-srv-enum.domain=$FQDN_DOMAIN
+nmap --script dns-srv-enum --script-args dns-srv-enum.domain="$DOMAIN"
 ```
 
 :::
@@ -87,7 +87,7 @@ By default any user in Active Directory can enumerate all DNS records in the Dom
 [adidnsdump](https://github.com/dirkjanm/adidnsdump) can be used for that purpose.
 
 ```bash
-adidnsdump -u <DOMAIN_FQDN>\\<USERNAME> ldap://<DC_IP> -r
+adidnsdump -u "$DOMAIN"\\"$USER" -p "$PASSWORD" ldap://"$DC_IP" -r
 cat records.csv
 ```
 
@@ -107,7 +107,7 @@ bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" get dnsDump
 
 netexec's [Enum_dns](https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-enum_dns) module utilizes WMI to dump DNS information from an Active Directory DNS Server. It extracts `MicrosoftDNS_ResourceRecord` (complete zone information) from all found domains.
 ```bash
-netexec smb -u <USERNAME> -p <PASSWORD> -d <DOMAIN> -M enum_dns
+netexec smb "$DC_IP" -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -M enum_dns
 ```
 > [!TIP]
 > So far this module only works with Administrative privileges.
@@ -119,5 +119,5 @@ netexec smb -u <USERNAME> -p <PASSWORD> -d <DOMAIN> -M enum_dns
 If zone transfers are allowed, `dig` can be used to request a zone transfer.
 
 ```bash
-dig axfr @<DC_IP> <DOMAIN_FQDN>
+dig axfr @"$DC_IP" "$DOMAIN"
 ```

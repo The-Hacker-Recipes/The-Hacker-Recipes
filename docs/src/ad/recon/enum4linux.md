@@ -23,7 +23,7 @@ The following techniques can be operated.
 All of the techniques mentioned above (except RID cycling) will be operated when running the following command.
 
 ```bash
-enum4linux-ng.py -A $TARGET_IP
+enum4linux-ng -A "$TARGET"
 ```
 
 RID cycling can be enabled with the `-R` option.
