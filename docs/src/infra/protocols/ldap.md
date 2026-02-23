@@ -7,7 +7,7 @@ category: infra
 
 ## Theory
 
-LDAP (Lightweight Directory Access Protocol) is a vendor-neutral protocol designed for accessing and managing directory information services. It typically runs on port `389/TCP` (LDAP) or `636/TCP` (LDAPS - LDAP over SSL/TLS). In Active Directory environments, LDAP also uses port `3268/TCP` (Global Catalog) and `3269/TCP` (Global Catalog over TLS), which are commonly used for cross-domain forest enumeration.
+LDAP (Lightweight Directory Access Protocol) is a vendor-neutral protocol designed for accessing and managing directory information services. It typically runs on port `389/TCP` (LDAP) or `636/TCP` (LDAPS — LDAP over SSL/TLS). In Active Directory environments, LDAP also uses port `3268/TCP` (Global Catalog) and `3269/TCP` (Global Catalog over TLS), which are commonly used for cross-domain forest enumeration.
 
 LDAP uses a hierarchical structure where each entry has a Distinguished Name (DN) and attributes (key-value pairs) depending on the entry type (user, group, computer, etc.). In Active Directory, common DN structures include:
 * `CN=Users,DC=domain,DC=tld`
@@ -15,7 +15,10 @@ LDAP uses a hierarchical structure where each entry has a Distinguished Name (DN
 * `OU=OUname,DC=domain,DC=tld`
 
 > [!NOTE]
-> Kerberos is not LDAP - they are different protocols. However, in pentesting, LDAP enumeration and Kerberos abuse are often related, as LDAP is used to query Active Directory information that can then be exploited via Kerberos attacks.
+> Kerberos is not LDAP — they are different protocols. However, in pentesting, LDAP enumeration and Kerberos abuse are often related, as LDAP is used to query Active Directory information that can then be exploited via [Kerberos attacks](../../ad/movement/kerberos/kerberoast.md).
+
+> [!NOTE]
+> The DN examples above use `DC=domain,DC=tld` as a generic placeholder. In practice, the domain components match the actual domain name (e.g., `DC=contoso,DC=com` for `contoso.com`). All examples in this page use `$DOMAIN` as a variable — the DN base should be adapted to match the target environment.
 
 Exploiting LDAP can lead to:
 * User and group enumeration
@@ -30,11 +33,11 @@ Exploiting LDAP can lead to:
 
 #### Port scanning
 
-LDAP typically runs on port `389/TCP` (LDAP) or `636/TCP` (LDAPS). In Active Directory environments, also scan for Global Catalog ports `3268/TCP` and `3269/TCP` (GC over TLS).
+LDAP typically runs on port `389/TCP` (LDAP) or `636/TCP` (LDAPS). In Active Directory environments, Global Catalog ports `3268/TCP` and `3269/TCP` (GC over TLS) should also be scanned.
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
 # Basic port scan
@@ -56,7 +59,7 @@ Test-NetConnection -ComputerName $TARGET -Port 636
 Test-NetConnection -ComputerName $TARGET -Port 3268
 Test-NetConnection -ComputerName $TARGET -Port 3269
 
-# Using nmap (if available)
+# Using nmap
 nmap -p 389,636,3268,3269 $TARGET
 ```
 
@@ -64,28 +67,29 @@ nmap -p 389,636,3268,3269 $TARGET
 
 #### Anonymous binding
 
-LDAP anonymous binding allows unauthenticated access to directory information. Anonymous bind is often restricted in Active Directory environments (commonly hardened since the Windows Server 2003 era), but it should still be tested. Some attributes remain readable anonymously (RootDSE, namingContexts).
+LDAP anonymous binding allows unauthenticated access to directory information. Anonymous bind is often restricted in Active Directory environments (commonly hardened since Windows Server 2003), but testing for it is still recommended. Some attributes remain readable anonymously (RootDSE, namingContexts).
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
+
+[ldapsearch](https://www.openldap.org/) is the standard command-line tool for LDAP queries on UNIX-like systems.
 
 ```bash
 # Test anonymous binding
 ldapsearch -x -h $TARGET -s base
 
-# Test with ldapsearch
+# Query naming contexts anonymously
 ldapsearch -x -H ldap://$TARGET -s base namingcontexts
 
-# Using NetExec (if available)
-netexec ldap $TARGET --no-bruteforce
+# Using NetExec (test anonymous access)
+netexec ldap $TARGET -u '' -p ''
 ```
 
 === Windows
 
 ```powershell
-# Using LDP.exe (GUI tool)
-# Launch LDP.exe, connect to $TARGET:389, then bind anonymously
+# LDP.exe: connect to $TARGET:389, then perform anonymous bind
 
 # Using PowerShell with System.DirectoryServices.Protocols (LDAP)
 $ldap = New-Object System.DirectoryServices.Protocols.LdapConnection("$TARGET")
@@ -98,63 +102,23 @@ $ldap = New-Object System.DirectoryServices.Protocols.LdapConnection($identifier
 $ldap.SessionOptions.SecureSocketLayer = $true
 $ldap.AuthType = [System.DirectoryServices.Protocols.AuthType]::Anonymous
 $ldap.Bind()
-
-# Using PowerShell with System.DirectoryServices.Protocols (Global Catalog over TLS)
-$identifier = New-Object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("$TARGET", 3269)
-$ldap = New-Object System.DirectoryServices.Protocols.LdapConnection($identifier)
-$ldap.SessionOptions.SecureSocketLayer = $true
-$ldap.AuthType = [System.DirectoryServices.Protocols.AuthType]::Anonymous
-$ldap.Bind()
 ```
 
 :::
 
 > [!TIP]
-> Even with anonymous binding disabled, some metadata (naming contexts, DNS server name, Domain Functional Level) can often be obtained anonymously. Easy enumeration via anonymous bind is more common with OpenLDAP or old AD versions than modern Active Directory environments.
+> Even with anonymous binding disabled, some metadata (naming contexts, DNS server name, Domain Functional Level) can often be obtained anonymously via the RootDSE. Full anonymous enumeration is more common with OpenLDAP or legacy AD versions than modern Active Directory environments.
 
-#### RootDSE query
+#### RootDSE and server information
 
-The RootDSE (Directory Service Entry) provides basic server information and metadata. Querying RootDSE is useful for service identification and enumeration.
-
-::: tabs
-
-=== Unix-like
-
-```bash
-# Using ldapsearch (recommended method)
-ldapsearch -x -H ldap://$TARGET -s base -b "" "(objectClass=*)" +
-```
-
-=== Windows
-
-```powershell
-# Using LDP.exe
-# Launch LDP.exe, connect to $TARGET:389, view RootDSE
-
-# Using PowerShell
-$ldap = New-Object System.DirectoryServices.Protocols.LdapConnection("$TARGET")
-$request = New-Object System.DirectoryServices.Protocols.SearchRequest
-$request.DistinguishedName = ""
-$request.Scope = [System.DirectoryServices.Protocols.SearchScope]::Base
-$request.Filter = "(objectClass=*)"
-$ldap.SendRequest($request)
-```
-
-:::
-
-> [!NOTE]
-> Using `nc -vn $TARGET 389` does not work effectively for LDAP banner grabbing. LDAP does not return a simple plaintext banner, and `nc` generally returns nothing except an unusable handshake. Use `ldapsearch` or LDAP tools to properly obtain LDAP server information.
-
-#### Basic information
-
-Gather basic server information and metadata.
+The RootDSE (Directory Service Entry) provides basic server information and metadata without requiring authentication. Querying RootDSE is useful for service identification and gathering domain context.
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
-# Get root DSE (Directory Service Entry) - basic server information
+# Get RootDSE (all operational attributes)
 ldapsearch -x -H ldap://$TARGET -s base -b "" "(objectClass=*)" +
 
 # Get naming contexts
@@ -172,7 +136,6 @@ ldapsearch -x -H ldap://$TARGET -s base supportedSASLMechanisms
 ```powershell
 # Using PowerShell with System.DirectoryServices.Protocols
 $ldap = New-Object System.DirectoryServices.Protocols.LdapConnection("$TARGET")
-$ldap.Credential = New-Object System.Net.NetworkCredential($null, $null)
 $request = New-Object System.DirectoryServices.Protocols.SearchRequest
 $request.DistinguishedName = ""
 $request.Scope = [System.DirectoryServices.Protocols.SearchScope]::Base
@@ -190,6 +153,9 @@ $rootDSE.Properties["supportedLDAPVersion"]
 
 :::
 
+> [!NOTE]
+> Using `nc -vn $TARGET 389` does not work effectively for LDAP banner grabbing. LDAP does not return a simple plaintext banner and `nc` generally returns nothing useful. LDAP tools such as `ldapsearch` should be used instead.
+
 ### Authentication
 
 LDAP supports several authentication methods:
@@ -199,44 +165,39 @@ LDAP supports several authentication methods:
 * **SASL authentication**: Simple Authentication and Security Layer mechanisms (GSSAPI/Kerberos, DIGEST-MD5, etc.)
 
 In Active Directory environments, LDAP authentication typically uses:
-* Distinguished Name (DN) format: `CN=$USER,CN=Users,DC=$DOMAIN,DC=local`
-* Domain credentials format: `$DOMAIN\$USER` or `$USER@$DOMAIN.local`
+* Distinguished Name (DN) format: `CN=$USER,CN=Users,DC=domain,DC=tld`
+* Domain credentials format: `$DOMAIN\$USER` or `$USER@$DOMAIN`
+
+> [!NOTE]
+> LDAP signing and channel binding may be enforced on the server, which can prevent certain tools from connecting. If LDAP queries fail unexpectedly, LDAP signing requirements should be verified.
 
 #### Bruteforce
 
+> [!WARNING]
+> Depending on the domain password policy, bruteforcing authentication could lead to accounts getting locked out when reaching maximum allowed tries. The lockout threshold and observation window should be checked before attempting bruteforce (see [Password policy](#password-policy)).
+
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
+
+[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) and [Hydra](https://github.com/vanhauser-thc/thc-hydra) (C) can be used for LDAP bruteforce attacks.
 
 ```bash
 # Using NetExec
-netexec ldap $TARGET -d $DOMAIN -u users.txt -p passwords.txt
+netexec ldap $TARGET -d $DOMAIN -u $WORDLIST -p $WORDLIST
 
 # Using Hydra
-hydra -l $USER -P /path/to/passwords.txt ldap://$TARGET
+hydra -l $USER -P $WORDLIST ldap://$TARGET
 ```
 
 === Windows
 
 ```powershell
-# Using NetExec (if available)
-netexec ldap $TARGET -d $DOMAIN -u users.txt -p passwords.txt
+# Using NetExec
+netexec ldap $TARGET -d $DOMAIN -u $WORDLIST -p $WORDLIST
 
-# Using PowerShell for basic credential testing
-$users = Get-Content users.txt
-$passwords = Get-Content passwords.txt
-foreach ($user in $users) {
-    foreach ($pass in $passwords) {
-        try {
-            $ldap = New-Object System.DirectoryServices.Protocols.LdapConnection("$TARGET")
-            $ldap.Credential = New-Object System.Net.NetworkCredential($user, $pass, $DOMAIN)
-            $ldap.Bind()
-            Write-Host "Valid: $user:$pass"
-        } catch {
-            # Invalid credentials
-        }
-    }
-}
+# Using Hydra
+hydra -l $USER -P $WORDLIST ldap://$TARGET
 ```
 
 :::
@@ -247,33 +208,32 @@ Once authenticated, directory queries can be executed to retrieve detailed infor
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
-# Authenticate and query
+# Authenticate and query with DN format
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "CN=$USER,CN=Users,DC=$DOMAIN,DC=local" \
     -w $PASSWORD \
     -b "DC=$DOMAIN,DC=local"
 
-# Query with domain credentials (domain\\user format - AD-specific)
-# Note: This format is AD-specific and may not work with non-AD LDAP servers
+# Query with domain credentials (DOMAIN\user format — AD-specific)
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$DOMAIN\\$USER" \
     -w $PASSWORD \
     -b "DC=$DOMAIN,DC=local"
 
-# Query with domain credentials (user@domain.local format - commonly used for AD)
+# Query with UPN format (user@domain — commonly used for AD)
 ldapsearch -x \
-    -H ldap://$DOMAIN.local \
-    -D "$USER@$DOMAIN.local" \
+    -H ldap://$TARGET \
+    -D "$USER@$DOMAIN" \
     -W \
     -b "DC=$DOMAIN,DC=local"
 
-# Using NetExec for custom queries
-netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)"
+# Using NetExec for custom LDAP queries
+netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)" ""
 netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)" "sAMAccountName objectClass pwdLastSet"
 netexec ldap $TARGET -d $DOMAIN -u $USER -p $PASSWORD
 ```
@@ -296,17 +256,28 @@ $searcher.SearchRoot = [ADSI]"LDAP://$TARGET/DC=$DOMAIN,DC=local"
 $searcher.Filter = "(objectClass=*)"
 $searcher.FindAll()
 
-# Using NetExec (if available)
-netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)"
+# Using NetExec
+netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)" ""
 ```
 
 :::
 
-### User enumeration
+> [!TIP]
+> For large Active Directory environments, LDAP result set size limits may apply (default: 1000 entries). The `-E pr=1000/noprompt` option for ldapsearch enables paged results to retrieve all entries.
+> ```bash
+> ldapsearch -x -H ldap://$TARGET -D "$DOMAIN\\$USER" -w $PASSWORD -b "DC=$DOMAIN,DC=local" "(objectClass=user)" -E pr=1000/noprompt
+> ```
+
+### Authenticated enumeration
+
+> [!TIP]
+> For comprehensive Active Directory enumeration, tools like [BloodHound](../../ad/recon/bloodhound/index.md) / SharpHound, [ldeep](https://github.com/franc-pentest/ldeep) (Python), and [ldapdomaindump](https://github.com/dirkjanm/ldapdomaindump) (Python) can automate LDAP-based enumeration at scale. See also the [LDAP recon page](../../ad/recon/ldap.md) for AD-specific enumeration techniques.
+
+#### User enumeration
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
 # List all users
@@ -346,7 +317,7 @@ ldapsearch -x \
     "(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=65536))" \
     sAMAccountName
 
-# List users that don't require Kerberos pre-authentication (ASREPRoastable)
+# List users without Kerberos pre-authentication (ASREPRoastable)
 # These users are vulnerable to AS-REP roasting attacks (userAccountControl flag: 4194304)
 ldapsearch -x \
     -H ldap://$TARGET \
@@ -360,6 +331,9 @@ ldapsearch -x \
 netexec ldap $TARGET -u $USER -p $PASSWORD --users
 netexec ldap $TARGET -u $USER -p $PASSWORD -M get-desc-users
 ```
+
+> [!TIP]
+> Users without Kerberos pre-authentication are vulnerable to [AS-REP roasting](../../ad/movement/kerberos/asreproast.md).
 
 === Windows
 
@@ -383,17 +357,17 @@ $searcher.Filter = "(objectClass=user)"
 $searcher.PropertiesToLoad.Add("sAMAccountName") | Out-Null
 $searcher.FindAll()
 
-# Using NetExec (if available)
+# Using NetExec
 netexec ldap $TARGET -u $USER -p $PASSWORD --users
 ```
 
 :::
 
-### Group enumeration
+#### Group enumeration
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
 # List all groups
@@ -405,9 +379,8 @@ ldapsearch -x \
     "(objectClass=group)" \
     sAMAccountName
 
-# List domain admins
-# Note: In environments with localized languages, the CN may differ (e.g., "Administrateurs du domaine" in French)
-# This query may fail in non-English environments
+# List Domain Admins members
+# Note: in non-English environments, the CN may differ (e.g., "Administrateurs du domaine" in French)
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$DOMAIN\\$USER" \
@@ -416,7 +389,7 @@ ldapsearch -x \
     "(&(objectClass=group)(cn=Domain Admins))" \
     member
 
-# List group members
+# List specific group members
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$DOMAIN\\$USER" \
@@ -446,17 +419,17 @@ $searcher.PropertiesToLoad.Add("sAMAccountName") | Out-Null
 $searcher.PropertiesToLoad.Add("member") | Out-Null
 $searcher.FindAll()
 
-# Using NetExec (if available)
+# Using NetExec
 netexec ldap $TARGET -u $USER -p $PASSWORD --groups
 ```
 
 :::
 
-### Computer enumeration
+#### Computer enumeration
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
 # List all computers
@@ -468,7 +441,7 @@ ldapsearch -x \
     "(objectClass=computer)" \
     sAMAccountName
 
-# List domain controllers
+# List domain controllers (userAccountControl flag: 8192 = SERVER_TRUST_ACCOUNT)
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$DOMAIN\\$USER" \
@@ -497,20 +470,20 @@ $searcher.Filter = "(objectClass=computer)"
 $searcher.PropertiesToLoad.Add("sAMAccountName") | Out-Null
 $searcher.FindAll()
 
-# Using NetExec (if available)
+# Using NetExec
 netexec ldap $TARGET -u $USER -p $PASSWORD --computers
 ```
 
 :::
 
-### Password policy
+#### Password policy
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
-# Get password policy
+# Get default domain password policy
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$DOMAIN\\$USER" \
@@ -541,11 +514,11 @@ $domain.Properties["lockoutDuration"]
 > [!NOTE]
 > The password policy retrieved from the domain object represents the default domain policy. Fine-Grained Password Policies (FGPP) may override the default domain policy for specific users or groups. FGPP policies are stored in `msDS-PasswordSettings` objects and can be queried separately.
 
-### Trust relationships
+#### Trust relationships
 
 ::: tabs
 
-=== Unix-like
+=== UNIX-like
 
 ```bash
 # List trust relationships with important attributes
@@ -586,16 +559,18 @@ $searcher.FindAll()
 
 ## Resources
 
-### References
+[RFC 4511 - Lightweight Directory Access Protocol (LDAP): The Protocol](https://www.rfc-editor.org/rfc/rfc4511)
 
-- [RFC 4511 - Lightweight Directory Access Protocol (LDAP): The Protocol](https://www.rfc-editor.org/rfc/rfc4511)
-- [RFC 4510 - Lightweight Directory Access Protocol (LDAP): Technical Specification Road Map](https://www.rfc-editor.org/rfc/rfc4510)
-- [Microsoft - LDAP Policies](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-ldap-authentication-works)
-- [Microsoft - RootDSE](https://learn.microsoft.com/en-us/windows/win32/ad/rootdse)
-- [OpenLDAP - Administrator's Guide](https://www.openldap.org/doc/admin24/)
-- [LDAP Wiki - LDAP Search Best Practices](https://ldapwiki.com/wiki/LDAP%20Search%20Best%20Practices)
+[RFC 4510 - Lightweight Directory Access Protocol (LDAP): Technical Specification Road Map](https://www.rfc-editor.org/rfc/rfc4510)
 
-### Tools
+[Microsoft - LDAP Policies](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-ldap-authentication-works)
 
-- [NetExec - LDAP module documentation](https://www.netexec.wiki/)
-- [HackTricks - Pentesting LDAP](https://book.hacktricks.xyz/network-services-pentesting/pentesting-ldap)
+[Microsoft - RootDSE](https://learn.microsoft.com/en-us/windows/win32/ad/rootdse)
+
+[OpenLDAP - Administrator's Guide](https://www.openldap.org/doc/admin24/)
+
+[LDAP Wiki - LDAP Search Best Practices](https://ldapwiki.com/wiki/LDAP%20Search%20Best%20Practices)
+
+[NetExec - LDAP module documentation](https://www.netexec.wiki/)
+
+[HackTricks - Pentesting LDAP](https://book.hacktricks.xyz/network-services-pentesting/pentesting-ldap)
