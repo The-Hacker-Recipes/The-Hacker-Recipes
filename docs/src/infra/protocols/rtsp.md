@@ -105,7 +105,7 @@ You can gently probe the network for active RTSP services.
 
 ```bash
 # -sV: Attempts to determine service versions, which can often reveal camera manufacturers and models.
-nmap -p 544  -sV "$TARGET_IP"
+nmap -p 554  -sV "$TARGET_IP"
 # --script=rtsp-methods: This script connects to the RTSP service and issues an OPTIONS * request to determine which RTSP methods the server supports.
 nmap -p 554 --script=rtsp-methods "$TARGET_IP"
 # --script=rtsp-url-brute: This is a more intrusive but often highly effective script.
