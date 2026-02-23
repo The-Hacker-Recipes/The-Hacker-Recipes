@@ -96,7 +96,7 @@ Remove-ADIDNSNode -Node *
 Resolve-DnsName NameThatDoesntExist
 ```
 
-Alternatively, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used to query DnsReecords, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+Alternatively, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used to query DnsRecords, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
 
 > Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
 ```powershell
