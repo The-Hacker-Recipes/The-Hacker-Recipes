@@ -42,13 +42,13 @@ ldapsearch -H "ldap://$TARGET" -x -b "DC=DOMAIN,DC=LOCAL"
 The ldapsearch-ad Python script can also be used to enumerate essential information like domain admins that have their password set to never expire, default password policies and the ones found in GPOs, trusts, kerberoastable accounts, and so on.\
 
 ```bash
-ldapsearch-ad --type all --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD\
+ldapsearch-ad --type all --server "$DC_IP" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD"
 ```
 
 The FFL (Forest Functional Level), DFL (Domain Functional Level), DCFL (Domain Controller Functionality Level) and naming contexts can be listed with the following command.\
 
 ```bash
-ldapsearch-ad --type info --server $DOMAIN_CONTROLLER --domain $DOMAIN --username $USER --password $PASSWORD
+ldapsearch-ad --type info --server "$DC_IP" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD"
 ```
 
 
@@ -58,13 +58,13 @@ The windapsearch script ([Go](https://github.com/ropnop/go-windapsearch) (prefer
 
 ```bash
 # enumerate users (authenticated bind)
-windapsearch -d $DOMAIN -u $USER -p $PASSWORD --dc $DomainController --module users
+windapsearch -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --dc "$DC_IP" --module users
 
 # enumerate users (anonymous bind)
-windapsearch --dc $DomainController --module users
+windapsearch --dc "$DC_IP" --module users
 
 # obtain metadata (anonymous bind)
-windapsearch --dc $DomainController --module metadata
+windapsearch --dc "$DC_IP" --module metadata
 ```
 
 
@@ -73,7 +73,7 @@ windapsearch --dc $DomainController --module metadata
 [ldapdomaindump](https://github.com/dirkjanm/ldapdomaindump) is an Active Directory information dumper via LDAP, outputting information in human-readable HTML files.
 
 ```bash
-ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump $DOMAIN_CONTROLLER
+ldapdomaindump --user "$DOMAIN"\\"$USER" --password "$PASSWORD" --outdir ldapdomaindump "$DC_IP"
 ```
 
 
@@ -82,7 +82,7 @@ ldapdomaindump --user 'DOMAIN\USER' --password $PASSWORD --outdir ldapdomaindump
 With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), it is possible to gather lots of information regarding the domain users and groups, the computers, [ADCS](../movement/adcs/), etc. through a [NTLM authentication relayed](../movement/ntlm/relay.md) within an LDAP session.
 
 ```bash
-ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa
+ntlmrelayx -t ldap://"$DC_IP" --dump-adcs --dump-laps --dump-gmsa
 ```
 
 :::
@@ -97,16 +97,16 @@ ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa
 
 ```bash
 # list PKIs/CAs
-nxc ldap "domain_controller" -d "domain" -u "user" -p "password" -M adcs
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M adcs
 
 # list subnets referenced in AD-SS
-nxc ldap "domain_controller" -d "domain" -u "user" -p "password" -M subnets
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M subnets
 
 # machine account quota
-nxc ldap "domain_controller" -d "domain" -u "user" -p "password" -M maq
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 
 # users description
-nxc ldap "domain_controller" -d "domain" -u "user" -p "password" -M get-desc-users
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M get-desc-users
 ```
 
 The PowerShell equivalent to netexec's `subnets` modules is the following

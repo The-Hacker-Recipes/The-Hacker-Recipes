@@ -60,7 +60,7 @@ From UNIX-like system, a non-official (but very effective nonetheless) Python ve
 [BloodHound.py](https://github.com/fox-it/BloodHound.py) is a Python ingestor for BloodHound.
 
 ```bash
-bloodhound.py --zip -c All -d $DOMAIN -u $USERNAME -p $PASSWORD -dc $DOMAIN_CONTROLLER
+bloodhound.py --zip -c All -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -dc "$DC_HOST" -ns "$DC_IP"
 ```
 
 > [!TIP]
@@ -69,7 +69,7 @@ bloodhound.py --zip -c All -d $DOMAIN -u $USERNAME -p $PASSWORD -dc $DOMAIN_CONT
 An alternative called [RustHound](https://github.com/OPENCYBER-FR/RustHound) (Rust) can be used as well.
 
 ```bash
-rusthound --zip -d "$DOMAIN" -i "$DC_IP" -u '$USER@$DOMAIN' -p '$PASSWORD' -o "OUTDIR"
+rusthound --zip -d "$DOMAIN" -i "$DC_IP" -u "$USER@$DOMAIN" -p "$PASSWORD" -o "$OUTDIR"
 ```
 
 :::
