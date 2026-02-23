@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, ThePirateWhoSmellsOfSunflowersn jamarir
+authors: ShutdownRepo, ThePirateWhoSmellsOfSunflowers, jamarir
 category: ad
 ---
 
