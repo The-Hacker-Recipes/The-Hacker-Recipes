@@ -19,6 +19,6 @@ The following command will enable the analyze modes and will give interesting in
 * The "enabled" or "disabled" state of protocols like LLMNR, NBTNS, MDNS, LANMAN, BROWSER
 
 ```bash
-responder --interface "eth0" --analyze
-responder -I "eth0" -A
+responder --interface "$INTERFACE" --analyze
+responder -I "$INTERFACE" -A
 ```

@@ -5,7 +5,7 @@ category: ad
 
 # enum4linux ⚙️
 
-The Perl script [enum4linux.pl](https://github.com/CiscoCXSecurity/enum4linux) is a powerful tool able to operate recon techniques for [LDAP](ldap.md), [NBT-NS](nbt-ns.md) and [MS-RPC](ms-rpc.md). It's an alternative to a similar program named [enum.exe](https://packetstormsecurity.com/files/download/31882/enum.tar.gz) (C++) created for Windows systems. Lately, a rewrite of enum4linux in Python has surfaced, called [enum4linux-ng.py](https://github.com/cddmp/enum4linux-ng). The enum4linux scripts are mainly wrappers around the Samba tools [nmblookup](https://www.samba.org/samba/docs/current/man-html/nmblookup.1.html), [net](https://www.samba.org/samba/docs/current/man-html/net.8.html), [rpcclient](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html) and [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html).
+The Perl script [enum4linux.pl](https://github.com/CiscoCXSecurity/enum4linux) is a powerful tool able to operate recon techniques for [LDAP](ldap.md), [NBT-NS](nbt-ns.md) and [MS-RPC](ms-rpc.md). It's an alternative to a similar program named [enum.exe](https://packetstormsecurity.com/files/download/31882/enum.tar.gz) (C++) created for Windows systems. Lately, a rewrite of enum4linux in Python has surfaced, called [enum4linux-ng](https://github.com/cddmp/enum4linux-ng). The enum4linux scripts are mainly wrappers around the Samba tools [nmblookup](https://www.samba.org/samba/docs/current/man-html/nmblookup.1.html), [net](https://www.samba.org/samba/docs/current/man-html/net.8.html), [rpcclient](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html) and [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html).
 
 The following techniques can be operated.
 
@@ -23,7 +23,7 @@ The following techniques can be operated.
 All of the techniques mentioned above (except RID cycling) will be operated when running the following command.
 
 ```bash
-enum4linux-ng.py -A $TARGET_IP
+enum4linux-ng -A "$TARGET"
 ```
 
 RID cycling can be enabled with the `-R` option.
