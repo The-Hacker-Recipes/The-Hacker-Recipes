@@ -7,9 +7,9 @@ category: ad
 
 ## Theory
 
-Kerberos tickets can be cached on systems to allow for faster authentication without requiring users to re-enter credentials. **Understanding how these tickets are stored is crucial for both defensive and offensive operations.**
+Kerberos tickets can be cached on systems to allow for faster authentication without requiring users to re-enter credentials.
 
-From a red-team perspective, even though Linux and Windows use different cache formats to store Kerberos tickets (Kerberos on Linux uses `ccache` files, while Windows uses `kirbi` formats), the actual Kerberos ticket data (encrypted TGT/TGS blobs) are compatible, **which can enable cross-platform pivoting**.
+From a red-team perspective, even though Linux and Windows use different cache formats to store Kerberos tickets (Kerberos on Linux uses `ccache` files, while Windows uses `kirbi` formats), the actual Kerberos ticket data (encrypted TGT/ST blobs) are compatible, which can enable cross-platform pivoting.
 
 ### Storage Methods
 
