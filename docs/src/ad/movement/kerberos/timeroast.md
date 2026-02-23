@@ -38,7 +38,7 @@ This approach is particularly valuable for initial access scenarios where no dom
 The [Timeroast](https://github.com/SecuraBV/Timeroast) (Python) tool can extract computer account password hashes from a domain controller.
 
 ```bash
-python3 timeroast.py $DC_IP
+python3 timeroast.py "$DC_IP"
 ```
 
 Alternatively, [NetExec](https://github.com/Pennyw0rth/NetExec) (formerly CrackMapExec) includes a Timeroasting module that can perform the attack without authentication.
