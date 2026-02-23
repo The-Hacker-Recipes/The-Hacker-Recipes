@@ -47,18 +47,6 @@ Alternatively, [NetExec](https://github.com/Pennyw0rth/NetExec) (formerly CrackM
 netexec smb "$DC_IP" -M timeroast
 ```
 
-The extracted SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300 (requires a recent or beta version). 
-
-Alternatively, the [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks, though it is slower than optimized Hashcat operations.
-
-```bash
-# Using Hashcat (mode 31300)
-hashcat -m 31300 -a 0 -O hashes.txt $wordlist --username
-
-# Using timecrack.py (alternative)
-timecrack.py extracted_hashes.txt $wordlist
-```
-
 === Windows
 
 The [Timeroast](https://github.com/SecuraBV/Timeroast) (PowerShell) tool can be used to perform the attack from Windows systems.
@@ -106,6 +94,12 @@ When the hash file contains RIDs as usernames (as output by tools like `netexec`
 hashcat -m 31300 -a 0 -O hashes.txt $wordlist --username
 ```
 
+Alternatively, the [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks, though it is slower than optimized Hashcat operations.
+
+```bash
+timecrack.py extracted_hashes.txt $wordlist
+```
+
 > [!TIP]
 > When cracking SNTP hashes, supplement standard wordlists and rule sets with a custom wordlist containing all computer account names (lowercased, without the trailing `$`). This approach helps identify cases where computer passwords match their hostnames—a pattern frequently observed when accounts are created using the `net computer` command or when the "Assign this computer account as a pre-Windows 2000 Computer" compatibility option is enabled in the Active Directory Users and Computers GUI.
 
@@ -119,4 +113,3 @@ hashcat -m 31300 -a 0 -O hashes.txt $wordlist --username
 [https://github.com/The-Viper-One/Invoke-AuthenticatedTimeRoast](https://github.com/The-Viper-One/Invoke-AuthenticatedTimeRoast)
 
 [Timeroasting, Trustroasting and Computer Spraying - Secura Whitepaper](https://cybersecurity.bureauveritas.com/uploads/whitepapers/Secura-WP-Timeroasting-v3.pdf)
-
