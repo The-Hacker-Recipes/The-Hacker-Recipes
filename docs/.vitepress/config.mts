@@ -391,7 +391,7 @@ export default defineConfig({
                                     },
                                     {
                                         "text": "Timeroast",
-                                        "link": "/ad/movement/kerberos/timeroasting.md"
+                                        "link": "/ad/movement/kerberos/timeroast.md"
                                     },
                                     {
                                         "text": "Delegations",
