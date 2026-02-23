@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, mpgn, sckdev
+authors: ShutdownRepo, mpgn, sckdev, jamarir
 category: ad
 ---
 
@@ -83,6 +83,30 @@ With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https
 
 ```bash
 ntlmrelayx -t ldap://"$DC_IP" --dump-adcs --dump-laps --dump-gmsa
+```
+
+
+=== Invoke-PassTheCert
+
+With the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork, we may dump LDAP entries or ACEs as follows, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Dump any LDAP object in the 'ADLAB.LOCAL' domain, then extract the ones with the WORKSTATION_TRUST_ACCOUNT, or NORMAL_ACCOUNT UAC flags
+$DumpLdap = Invoke-PassTheCert -Action 'Filter' -LdapConnection $LdapConnection -SearchBase 'DC=ADLAB,DC=LOCAL' -SearchScope Subtree -Properties * -LDAPFilter '(objectClass=*)'
+$DumpLdap |?{$_.sAMAccountName -ne $null -and ($_.useraccountcontrol -like '*WORKSTATION_TRUST_ACCOUNT*' -or $_.useraccountcontrol -like '*NORMAL_ACCOUNT*')} |Select-Object sAMAccountName,description,useraccountcontrol,distinguishedname,serviceprincipalname |fl
+
+# Dump all the inbound ACEs of user 'Kinda KU. USY' in the 'ADLAB.LOCAL' domain, then extract the permissive rights granted to non-default RIDs (i.e. above 1000), or permissive groups (e.g. 'Everyone' with SID 'S-1-1-0')
+$DumpInboundACLs = Invoke-PassTheCert -Action 'GetInboundACEs' -LdapConnection $LdapConnection -Object 'CN=Kinda KU. USY,CN=Users,DC=ADLAB,DC=LOCAL'
+$DumpInboundACLs |?{ $_.AceQualifier -eq 'AccessAllowed' -and ($_.AccessMaskNames -ilike '*GenericAll*' -or $_.AccessMaskNames -ilike '*GenericWrite*' -or $_.AccessMaskNames -ilike '*WriteProperty*' -or $_.AccessMaskNames -ilike '*WriteDACL*') -and ($_.SecurityIdentifier -match 'S-1-5-21-(\d+-){3}\d{4,}' -or $_.SecurityIdentifier -match 'S-1-5-21-(\d+-){3}513' -or $_.SecurityIdentifier -match 'S-1-5-21-(\d+-){3}515' -or $_.SecurityIdentifier -in @('S-1-1-0', 'S-1-5-11', 'S-1-5-15', 'S-1-5-7', 'S-1-5-32-545', 'S-1-5-32-546')) }
 ```
 
 :::
