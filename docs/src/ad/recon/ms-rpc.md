@@ -1,5 +1,5 @@
 ---
-authors: Anh4ckin3, Sud0Ru, ShutdownRepo
+authors: Anh4ckin3, AzeTIIx, Sud0Ru, ShutdownRepo
 category: ad
 ---
 
@@ -29,10 +29,10 @@ The epmapper (MS-RPC EndPoint Mapper) maps services to ports. It uses port 135/T
 
 ```bash
 # with rpcdump.py (example with target port 135/TCP)
-rpcdump.py -port 135 $TARGET_IP
+rpcdump.py -port 135 "$TARGET"
 
 # with rpcdump.exe (example with target port 593/TCP)
-rpcdump.exe -p 593 $TARGET_IP
+rpcdump.exe -p 593 "$TARGET"
 ```
 
 ### Null sessions
@@ -55,7 +55,7 @@ The Samba utility named [rpcclient](https://www.samba.org/samba/docs/current/man
 * `getdompwinfo`: get password policy
 
 ```bash
-rpcclient -c "command1,command2" $TARGET_IP
+rpcclient -c "command" -U "" -N "$TARGET"
 ```
 
 ### RID Cycling
@@ -75,7 +75,7 @@ Among these services is IObjectExporter(OXIDResolver GUID=99fcfec4–5260–101b
 
 To sum up, if the IOXIDResolver service is active and accessible on a windows host, it is possible to find new network endpoints(like IPv6 address) on this last one (via anonymous connection or with credentials). A python script exists to do this task remotly [IOXIDResolver-ng](https://github.com/Anh4ckin3/IOXIDResolver-ng).
 ```bash
-python IOXIDResolver-ng.py -t $TARGET_IP
+python IOXIDResolver-ng.py -t "$TARGET"
 
 # OUTPUT EXEMPLE
 [*] Anonymous connection on MSRPC
@@ -86,12 +86,12 @@ python IOXIDResolver-ng.py -t $TARGET_IP
 [+] aNetworkAddr addresse : db69:ecdc:d85:1b54:1676:7fa4:f3fe:4249 (IPv6)
 ```
 
-### Enumerate Doamin users and computers
+### Enumerate Domain users and computers
 Using auth-level = 1 (No authentication) against the MS-NRPC (Netlogon) interface on domain controllers.
 The method calls the `DsrGetDcNameEx2` function after binding MS-NRPC interface to check if the user or computer exists without any credentials. 
-The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implments this type of enumeration
+The [NauthNRPC](https://github.com/sud0Ru/NauthNRPC) tool implements this type of enumeration
 ```bash 
-python3 nauth.py -t target -u users_file.txt -f computers_file.txt
+python3 nauth.py -t "$TARGET" -u users_file.txt -f computers_file.txt
 ```
 
 ## Resources

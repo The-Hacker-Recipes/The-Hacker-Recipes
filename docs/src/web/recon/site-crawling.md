@@ -13,13 +13,19 @@ Crawling is a technique used to recursively follow those links and build the ind
 
 ## Practice
 
-Tools like [hakrawler](https://github.com/hakluke/hakrawler) (Go), [scrapy](https://scrapy.org/) (Python) and [spidy](https://github.com/rivermont/spidy) (Python), and many other tools can be used for that purpose.
+Tools like [katana](https://github.com/projectdiscovery/katana) (Go), [hakrawler](https://github.com/hakluke/hakrawler) (Go), [scrapy](https://scrapy.org/) (Python) and [spidy](https://github.com/rivermont/spidy) (Python), and many other tools can be used for that purpose.
 
+:::tabs
 
-```bash
+== katana
+
+katana -u $URL -d 10
+
+== hakrawler
+
 echo $URL | hakrawler -d 10
-```
 
+:::
 
 Burp Suite's graphical interface is a great alternative (`Dashboard > New scan (Crawl)` then `Target`).
 

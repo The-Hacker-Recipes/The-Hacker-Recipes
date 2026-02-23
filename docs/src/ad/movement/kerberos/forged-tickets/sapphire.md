@@ -11,7 +11,7 @@ Sapphire tickets are similar to [Diamond tickets](diamond.md) in the way the tic
 
 ## Practice
 
-Since Diamond tickets modify PACs on-the-fly to include arbitrary group IDs, chances are some detection software are (of will be) able to detect discrepancies between a PAC's values and actual AD relationships (e.g. a PAC indicates a user belongs to some groups when in fact it doesn't).
+Since Diamond tickets modify PACs on-the-fly to include arbitrary group IDs, chances are that some detection software can (or will be able to) detect discrepancies between a PAC's values and actual AD relationships (e.g. a PAC indicates a user belongs to some groups when in fact it doesn't).
 
 Sapphire tickets are an alternative to obtaining similar tickets in a stealthier way, by including a legitimate powerful user's PAC in the ticket. There will be no discrepancy anymore between what's in the PAC and what's in Active Directory.
 

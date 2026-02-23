@@ -174,7 +174,7 @@ export default defineConfig({
                                                 "link": "/ad/movement/credentials/dumping/kerberos-key-list.md"
                                             },
                                             {
-                                                "text": "🛠️ Cached Kerberos tickets",
+                                                "text": "Cached Kerberos tickets",
                                                 "link": "/ad/movement/credentials/dumping/cached-kerberos-tickets.md"
                                             },
                                             {
@@ -390,6 +390,10 @@ export default defineConfig({
                                         "link": "/ad/movement/kerberos/kerberoast.md"
                                     },
                                     {
+                                        "text": "Timeroast",
+                                        "link": "/ad/movement/kerberos/timeroast.md"
+                                    },
+                                    {
                                         "text": "Delegations",
                                         "link": "/ad/movement/kerberos/delegations/index.md",
                                         "collapsed": true,
@@ -533,11 +537,45 @@ export default defineConfig({
                                 "items": [
                                     {
                                         "text": "Privilege escalation",
-                                        "link": "/ad/movement/sccm-mecm/privilege-escalation.md"
+                                        "link": "/ad/movement/sccm-mecm/privilege-escalation/index.md",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "Credential harvesting",
+                                                "link": "/ad/movement/sccm-mecm/privilege-escalation/credential-harvesting.md"
+                                            },
+                                            {
+                                                "text": "Client Push coercion",
+                                                "link": "/ad/movement/sccm-mecm/privilege-escalation/client-push-coercion.md"
+                                            },
+                                            {
+                                                "text": "Site takeover",
+                                                "link": "/ad/movement/sccm-mecm/privilege-escalation/site-takeover.md"
+                                            }
+                                        ]
                                     },
                                     {
                                         "text": "Lateral movement",
-                                        "link": "/ad/movement/sccm-mecm/lateral-movement.md"
+                                        "link": "/ad/movement/sccm-mecm/lateral-movement/index.md",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "Enumeration",
+                                                "link": "/ad/movement/sccm-mecm/lateral-movement/enumeration.md"
+                                            },
+                                            {
+                                                "text": "Deployment",
+                                                "link": "/ad/movement/sccm-mecm/lateral-movement/deployment.md"
+                                            },
+                                            {
+                                                "text": "AdminService API",
+                                                "link": "/ad/movement/sccm-mecm/lateral-movement/adminservice-api.md"
+                                            },
+                                            {
+                                                "text": "Hierarchy takeover",
+                                                "link": "/ad/movement/sccm-mecm/lateral-movement/hierarchy-takeover.md"
+                                            }
+                                        ]
                                     }
                                 ]
                             },

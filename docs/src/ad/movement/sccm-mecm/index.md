@@ -1,5 +1,5 @@
 ---
-authors: BlWasp, ShutdownRepo
+authors: BlWasp, ShutdownRepo, felixbillieres
 category: ad
 ---
 
@@ -84,7 +84,7 @@ SCCM reconnaissance can be performed in many ways. The goal is to enumerate whet
 
 [pxethiefy.py](https://github.com/csandker/pxethiefy) (Python), which is based on [PXEThief](https://github.com/MWR-CyberSec/PXEThief), can be used to query for PXE boot media. The Pre-Boot Execution Environment (PXE) is a mechanism for booting a computer over the network. Specifically, instead of booting from a CD drive, USB key or hard disk and finding the boot program, the PC will use the network to read such a program from the PXE server.
 
-![](./assets/SCCM_Recon_Linux_pxethiefy.png)
+![](<./assets/SCCM_Recon_Linux_pxethiefy.png>)
 
 There are a few things to note:
 
@@ -136,7 +136,7 @@ Using LDAP queries from a domain-joined Windows machine:
 ([ADSISearcher]("objectClass=mSSMSManagementPoint")).FindAll() | % {$_.Properties}
 ```
 
-![](./assets/SCCM_Recon_ADSI.png)
+![](<./assets/SCCM_Recon_ADSI.png>)
 
 
 
@@ -152,7 +152,7 @@ Get-WmiObject -Class SMS_Authority -Namespace root\CCM
 SharpSCCM.exe local site-info
 ```
 
-![](./assets/SCCM_Recon_WMI-SharpSCCM.png)
+![](<./assets/SCCM_Recon_WMI-SharpSCCM.png>)
 
 :::
 
@@ -165,17 +165,15 @@ The different phases of an SCCM environment compromise are detailled in the foll
 
 This page will describe how to compromise a SCCM infrastructure.
 
-
 > [!TIP]
-> Read the [privilege-escalation.md](privilege-escalation.md) article for more insight
-
+> Read the [privilege-escalation](privilege-escalation/index.md) section for more insight
 
 #### Post-exploitation (i.e. lateral movement)
 
 After the SCCM infrastructure compromise, this page will describe how to pivot through the network with the help of the SCCM features.
 
 > [!TIP]
-> Read the [lateral-movement.md](lateral-movement) article for more insight
+> Read the [lateral-movement](lateral-movement/index.md) section for more insight
 
 
 ## Resources
@@ -211,3 +209,5 @@ After the SCCM infrastructure compromise, this page will describe how to pivot t
 [https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087](https://posts.specterops.io/sccm-hierarchy-takeover-41929c61e087)
 
 [https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43](https://posts.specterops.io/sccm-hierarchy-takeover-with-high-availability-7dcbd3696b43)
+
+[https://github.com/subat0mik/Misconfiguration-Manager/tree/main/attack-techniques](https://github.com/subat0mik/Misconfiguration-Manager/tree/main/attack-techniques)
