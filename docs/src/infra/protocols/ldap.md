@@ -91,7 +91,12 @@ ldapsearch -x -h <ldap-server> -b "ou=users,dc=example,dc=com" "(objectclass=ine
 :::
 
 ## Attacks Vector
-- Creating Vulnerable  Accounts: Create new, stealthy user accounts (often with hidden attributes or custom descriptions) and add them to highly privileged groups (e.g., "Domain Admins," "Enterprise Admins").
+> [!WARNING]
+> The following section is for educational and defensive purposes only.
+> Unauthorized access or modification of systems is illegal.
+
+- **Backdoor Account Creation**: Attackers with write permissions might create hidden admin accounts.
+- **Mitigation**: Enforce least privilege, monitor for new account creation, and regularly audit privileged groups.
 
 
 ```bash
