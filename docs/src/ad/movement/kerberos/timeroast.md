@@ -47,7 +47,9 @@ Alternatively, [NetExec](https://github.com/Pennyw0rth/NetExec) (formerly CrackM
 netexec smb "$DC_IP" -M timeroast
 ```
 
-The extracted SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300 (requires a recent or beta version). Alternatively, the [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks, though it is slower than optimized Hashcat operations.
+The extracted SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300 (requires a recent or beta version). 
+
+Alternatively, the [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks, though it is slower than optimized Hashcat operations.
 
 ```bash
 # Using Hashcat (mode 31300)
