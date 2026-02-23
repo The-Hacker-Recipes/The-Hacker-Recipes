@@ -44,7 +44,7 @@ python3 timeroast.py "$DC_IP"
 Alternatively, [NetExec](https://github.com/Pennyw0rth/NetExec) (formerly CrackMapExec) includes a Timeroasting module that can perform the attack without authentication.
 
 ```bash
-netexec smb $DC_IP -M timeroast
+netexec smb "$DC_IP" -M timeroast
 ```
 
 The extracted SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300 (requires a recent or beta version). Alternatively, the [timecrack](https://github.com/SecuraBV/Timeroast/blob/main/extra-scripts/timecrack.py) Python script can perform dictionary-based attacks, though it is slower than optimized Hashcat operations.
