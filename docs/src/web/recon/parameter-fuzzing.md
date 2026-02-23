@@ -42,14 +42,14 @@ Parameter discovery relies on comparing server responses to identify accepted pa
 
 === Arjun
 
-[Arjun](https://github.com/s0md3v/Arjun) provides fast parameter discovery across GET, POST, JSON, and XML formats.
+[Arjun](https://github.com/s0md3v/Arjun) (Python) can be used for fast parameter discovery across GET, POST, JSON, and XML formats.
 
 ```bash
 # Basic parameter discovery
 arjun -u http://$TARGET/page
 
 # Discover parameters with custom wordlist
-arjun -u http://$TARGET/page -w /path/to/wordlist.txt
+arjun -u http://$TARGET/page -w $WORDLIST
 
 # Discover POST parameters
 arjun -u http://$TARGET/page --data '{"existing":"param"}' -m POST
@@ -66,7 +66,7 @@ arjun -u http://$TARGET/page -o results.json
 
 === ParamSpider
 
-[ParamSpider](https://github.com/devanshbatham/ParamSpider) discovers parameters from web archives and crawler data.
+[ParamSpider](https://github.com/devanshbatham/ParamSpider) (Python) can be used to discover parameters from web archives and crawler data.
 
 ```bash
 # Discover parameters from Wayback Machine
@@ -76,28 +76,26 @@ python3 paramspider.py -d $TARGET
 python3 paramspider.py -d $TARGET --subs
 
 # Use custom output directory
-python3 paramspider.py -d $TARGET -o /path/to/output/
+python3 paramspider.py -d $TARGET -o ./output/
 ```
 
 === ParamMiner
 
-[ParamMiner](https://github.com/PortSwigger/param-miner) is a Burp Suite extension for comprehensive parameter discovery.
-
-Installation occurs via Burp Suite's BApp Store. The extension can be used through the context menu or active scanning features.
+[ParamMiner](https://github.com/PortSwigger/param-miner) is a Burp Suite extension for comprehensive parameter discovery. It can be installed via Burp Suite's BApp Store and used through the context menu or active scanning features.
 
 === x8
 
-[x8](https://github.com/Sh1Yo/x8) provides fast parameter discovery with support for various HTTP methods.
+[x8](https://github.com/Sh1Yo/x8) (Rust) can be used for fast parameter discovery with support for various HTTP methods.
 
 ```bash
 # Discover parameters
-x8 -u "http://$TARGET/page" -w /path/to/wordlist.txt
+x8 -u "http://$TARGET/page" -w $WORDLIST
 
 # Use custom HTTP method
-x8 -u "http://$TARGET/api" -X POST -w /path/to/wordlist.txt
+x8 -u "http://$TARGET/api" -X POST -w $WORDLIST
 
 # Test JSON parameters
-x8 -u "http://$TARGET/api" -X POST -H "Content-Type: application/json" -w /path/to/wordlist.txt
+x8 -u "http://$TARGET/api" -X POST -H "Content-Type: application/json" -w $WORDLIST
 ```
 
 :::
@@ -138,41 +136,18 @@ curl -H "X-API-Key: test" http://$TARGET/api
 curl -H "X-Admin: true" http://$TARGET/admin
 ```
 
-### Common parameter patterns
-
-Testing should focus on parameters that commonly indicate security-relevant functionality:
-
-- **Debug modes**: `debug`, `test`, `dev`, `verbose`
-- **Format control**: `format`, `output`, `callback`, `jsonp`
-- **Access control**: `admin`, `role`, `privilege`, `access`
-- **API keys**: `api_key`, `token`, `secret`, `auth`
-- **Pagination**: `page`, `limit`, `offset`, `count`
-- **Filtering**: `filter`, `search`, `q`, `query`
-
 ### Integration with other techniques
 
-Parameter discovery should be combined with endpoint enumeration workflows.
+Parameter discovery can be combined with endpoint enumeration workflows.
 
 ```bash
 # 1. Discover endpoints with directory fuzzing
-ffuf -w wordlist.txt -u http://$TARGET/FUZZ
+ffuf -w $WORDLIST -u http://$TARGET/FUZZ
 
 # 2. For each discovered endpoint, enumerate parameters
 while IFS= read -r endpoint; do
     arjun -u "http://$TARGET$endpoint" -o "params_${endpoint//\//_}.json"
 done < discovered_endpoints.txt
-```
-
-### Rate limiting considerations
-
-Parameter fuzzing generates significant request volumes that may trigger security controls.
-
-```bash
-# Use delays to avoid detection
-arjun -u http://$TARGET/page -d 0.5
-
-# Passive discovery mode
-arjun -u http://$TARGET/page --passive $TARGET
 ```
 
 > [!TIP]
@@ -183,15 +158,14 @@ arjun -u http://$TARGET/page --passive $TARGET
 
 ## Resources
 
-### Tools
-- [Arjun](https://github.com/s0md3v/Arjun) - Multi-format parameter discovery
-- [ParamSpider](https://github.com/devanshbatham/ParamSpider) - Archive-based parameter discovery
-- [ParamMiner](https://github.com/PortSwigger/param-miner) - Burp Suite extension
-- [x8](https://github.com/Sh1Yo/x8) - Fast parameter enumeration
+[Arjun — multi-format parameter discovery](https://github.com/s0md3v/Arjun)
 
-### Wordlists
-- [SecLists](https://github.com/danielmiessler/SecLists) - `Discovery/Web-Content/burp-parameter-names.txt`
+[ParamSpider — archive-based parameter discovery](https://github.com/devanshbatham/ParamSpider)
 
-### References
-- [Parameter Discovery Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/01-Information_Gathering/03-Review_Webserver_Metafiles_for_Information_Leakage)
-- [HTTP Parameter Pollution](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/07-Test_HTTP_Methods)
+[ParamMiner — Burp Suite extension for parameter mining](https://github.com/PortSwigger/param-miner)
+
+[x8 — fast parameter enumeration](https://github.com/Sh1Yo/x8)
+
+[SecLists — Discovery/Web-Content/burp-parameter-names.txt](https://github.com/danielmiessler/SecLists)
+
+[OWASP — testing for HTTP parameter pollution](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/04-Testing_for_HTTP_Parameter_Pollution)
