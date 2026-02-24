@@ -62,7 +62,7 @@ python3 main.py -u '$USER' -d $DOMAIN --dc-ip $DC_IP --nt-hash $NT_HASH kdsinfo
 python3 main.py -u '$USER' -d $DOMAIN --dc-ip $DC_IP --ccache admin.ccache kdsinfo
 ```
 
-The dumped KDS root keys are output in Base64 format, suitable for offline password computation later.
+The dumped KDS root keys are printed in base64, and can be used for password calculation later on.
 
 :::
 
