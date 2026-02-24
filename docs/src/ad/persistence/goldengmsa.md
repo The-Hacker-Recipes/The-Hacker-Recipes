@@ -166,7 +166,7 @@ python3 main.py compute \
     --pwdid 'AQAAAEtEU0sC...<base64>...'
 ```
 
-Unlike the Windows tool, pyGoldenGMSA outputs the NTLM hash directly in both NT-only format and nxc format, eliminating the need for manual hash conversion:
+Unlike the Windows tool, pyGoldenGMSA outputs the NT hash directly in both NT-only format and nxc format, eliminating the need for manual hash conversion:
 
 ```
 NTLM Hash (NT only):     1c368c74ef1bcbd4892c95a8d6de0f30
