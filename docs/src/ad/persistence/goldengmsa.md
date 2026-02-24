@@ -169,8 +169,8 @@ python3 main.py compute \
 Unlike the Windows tool, pyGoldenGMSA outputs the NT hash directly in both NT-only format and nxc format, eliminating the need for manual hash conversion:
 
 ```
-NTLM Hash (NT only):     1c368c74ef1bcbd4892c95a8d6de0f30
-NTLM Hash (nxc format):  aad3b435b51404eeaad3b435b51404ee:1c368c74ef1bcbd4892c95a8d6de0f30
+NT hash:     1c368c74ef1bcbd4892c95a8d6de0f30
+LM:NT format:  aad3b435b51404eeaad3b435b51404ee:1c368c74ef1bcbd4892c95a8d6de0f30
 ```
 
 :::
