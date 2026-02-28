@@ -13,28 +13,20 @@ SCCM is an on-premise solution, but Microsoft also maintains a cloud-native clie
 
 ### Topology
 
-SCCM operates in a Client-Server architecture deployed on a "site", representing the SCCM environment. Each client (server or workstation) has an agent installed used to communicate with its SCCM server, the [Primary Site server](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/design-a-hierarchy-of-sites#BKMK_ChoosePriimary).
+SCCM operates in a client-server architecture deployed on a "site", representing the SCCM environment. The following components may be found in an SCCM installation:
 
-Clients are logically grouped into [boundary groups](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/configure/boundary-groups), that are a set of network locations allowing clients to communicate with the SCCM closest resources in an SCCM site.
+* [Primary Site Server](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/design-a-hierarchy-of-sites#BKMK_ChoosePriimary): the main SCCM server that manages clients (like distributing software updates) and can have child servers attached to it for scalability purposes. Each SCCM site is identified by a three-character code to distinguish it in an SCCM hierarchy.
+* [Secondary Sites](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/design-a-hierarchy-of-sites#BKMK_ChooseSecondary): child servers attached to a primary site server, generally deployed for scalability purposes.
+* [Passive Site Server](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/configure/site-server-high-availability): a high-availability component that can be failovered to, if an active Site Server stops.
+* [Management Point (MP)](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-site-system-servers-and-site-system-roles#management-point): an SCCM server role that sits between the site server and clients, providing clients with necessary policies and configuration to communicate with the site server and receive configuration data from them. The management point also uses the site database to retrieve policies and configuration information needed by SCCM clients.
+* [Distribution Point (DP)](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-site-system-servers-and-site-system-roles#distribution-point): the SCCM component that hosts and distributes software packages, updates, OS images, etc. to clients upon request.
+* [Site Database Server](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-the-site-database): a Microsoft SQL Server (MSSQL) instance that stores all information about clients, software updates, hardware and software inventories, configuration settings of the site, etc. This database is used by the site server to retrieve and store information about managed devices.
+* [SMS Provider](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-the-sms-provider#about): provides a set of interfaces between the site server and the site database. It provides clients with valuable information such as available software updates, and allows those clients to communicate information (e.g. status of a software deployment, inventory data to store in the site database). "SMS" stands for "System Management Service".
+* [Central Administration Site (CAS)](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/design-a-hierarchy-of-sites#central-administration-site): an optional component used in large environments that host multiple SCCM sites (e.g. a huge company, with one SCCM site per continent). It manages all the primary sites from one point, does some reporting, and is totally optional.
+* [Boundary Groups](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/configure/boundary-groups): a set of network locations allowing clients to communicate with the SCCM closest resources in an SCCM site. Boundary groups also allow for [automatic site assignment](https://learn.microsoft.com/en-us/mem/configmgr/core/clients/deploy/assign-clients-to-a-site#automatic-site-assignment) for discovered clients based on their network location to attach them to the right site and ensure they receive the right configuration.
+* Clients: each client (server or workstation) has an agent installed used to communicate with its SCCM server. Each SCCM site is identified by a three-character code to distinguish it in an SCCM hierarchy. This is needed at the client registration process.
 
-Boundary groups also allow for [automatic site assignment](https://learn.microsoft.com/en-us/mem/configmgr/core/clients/deploy/assign-clients-to-a-site#automatic-site-assignment) for discovered clients based on their network location to attach them to the right site and ensure they receive the right configuration.
-
-> [!TIP]
-> Each SCCM site is identified by a three-character code to distinguish it in an SCCM hierarchy. This is needed at the client registration process.
-
-The primary site server manages the clients (like distributing software updates) and can have child servers attached to it ([secondary sites](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/design-a-hierarchy-of-sites#BKMK_ChooseSecondary)), generally for scalability purpose. In case of high availability in required, it is also possible to find a [passive site server](https://learn.microsoft.com/en-us/mem/configmgr/core/servers/deploy/configure/site-server-high-availability) that will be used only if the active site server stop working.
-
-Between the site server and clients sites [the management point](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-site-system-servers-and-site-system-roles#management-point) which is an SCCM server role allowing to provide clients with necessary policies and configuration to communicate with the site server and receive configuration data from them.
-
-To get software packages, updates, OS images, etc. clients request the [distribution point](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-site-system-servers-and-site-system-roles#distribution-point), which is the SCCM component that hosts and distributes them.
-
-All information about the clients, software updates, hardware and software inventories, configuration settings of the site, etc. are stored in a Microsoft SQL Server (MSSQL) instance, known as the [site database server](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-the-site-database). This database is used by the site server to retrieve and store information about the managed devices and is also used by the management point to retrieve policies and configuration information needed by the SCCM clients.
-
-In addition, another component called the [SMS Provider](https://learn.microsoft.com/en-us/mem/configmgr/core/plan-design/hierarchy/plan-for-the-sms-provider#about), provides a set of interfaces between the site server and the site database to give the clients needed information like available software updates and allow them communicate information like status of a software deployment and inventory data to store in the site database.
-
-Finally, in big environments that host multiple SCCM sites (think about a big company, with one SCCM site per continent), it is possible to encounter a Central Administration Site (CAS). This type of site allows to manage all the primary sites from one point, make some reporting, and is totally optional.
-
-All the previously described components can be installed on a single physical server, or dispatched between multiple servers for load balancing purpose for example.
+All of these components can be installed on a single physical server, or dispatched between multiple servers for load balancing purposes, for example.
 
 ![](<./assets/SCCM_Topology.png>)
 
