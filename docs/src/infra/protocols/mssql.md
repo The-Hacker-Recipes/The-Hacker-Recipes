@@ -176,8 +176,8 @@ The [Impacket](https://github.com/fortra/impacket) (Python) script `mssqlclient.
 # With Windows credentials
 mssqlclient.py -p 1433 '$DOMAIN/$USER:$PASSWORD'@'$TARGET' -windows-auth
 
-# With Kerberos ticket
-export KRB5CCNAME=$KRB5CCNAME
+# With Kerberos ticket (using a specific ccache)
+export KRB5CCNAME=/tmp/krb5cc_$(id -u)  # or the path to your Kerberos ticket cache
 mssqlclient.py -p 1433 '$DOMAIN/$USER'@'$TARGET' -windows-auth -k
 ```
 
