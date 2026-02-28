@@ -212,25 +212,26 @@ Once authenticated, directory queries can be executed to retrieve detailed infor
 
 ```bash
 # Authenticate and query with DN format
+BASE_DN="DC=domain,DC=tld"
 ldapsearch -x \
     -H ldap://$TARGET \
-    -D "CN=$USER,CN=Users,DC=$DOMAIN,DC=local" \
+    -D "CN=$USER,CN=Users,$BASE_DN" \
     -w $PASSWORD \
-    -b "DC=$DOMAIN,DC=local"
+    -b "$BASE_DN"
 
 # Query with domain credentials (DOMAIN\user format — AD-specific)
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$DOMAIN\\$USER" \
     -w $PASSWORD \
-    -b "DC=$DOMAIN,DC=local"
+    -b "$BASE_DN"
 
 # Query with UPN format (user@domain — commonly used for AD)
 ldapsearch -x \
     -H ldap://$TARGET \
     -D "$USER@$DOMAIN" \
     -W \
-    -b "DC=$DOMAIN,DC=local"
+    -b "$BASE_DN"
 
 # Using NetExec for custom LDAP queries
 netexec ldap $TARGET -u $USER -p $PASSWORD --query "(sAMAccountName=Administrator)" ""
