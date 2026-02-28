@@ -239,7 +239,7 @@ Resolver inputs should be tested for injection vulnerabilities.
 # Basic SQL injection in filter
 curl -sS "http://$TARGET/graphql" \
   -H "Content-Type: application/json" \
-  -d '{"query":"query{users(filter:\"name\\' OR 1=1 --\"){id name}}"}'
+  -d "{\"query\":\"query{users(filter:\\\"name' OR 1=1 --\\\"){id name}}\"}"
 
 # NoSQL injection
 curl -sS "http://$TARGET/graphql" \
