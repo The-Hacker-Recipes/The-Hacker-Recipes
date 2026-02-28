@@ -294,8 +294,8 @@ SHOW VARIABLES LIKE 'plugin_dir';
 
 -- Create UDF (requires write access to plugin directory and CREATE FUNCTION privilege)
 -- Linux: .so extension, Windows: .dll extension
-CREATE FUNCTION sys_exec RETURNS string SONAME 'lib_mysqludf_sys.so';
-CREATE FUNCTION sys_eval RETURNS string SONAME 'lib_mysqludf_sys.so';
+CREATE FUNCTION sys_exec RETURNS INT SONAME 'lib_mysqludf_sys.so';
+CREATE FUNCTION sys_eval RETURNS TEXT SONAME 'lib_mysqludf_sys.so';
 
 -- Execute command
 SELECT sys_exec('whoami');
