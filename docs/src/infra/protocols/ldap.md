@@ -76,11 +76,11 @@ LDAP anonymous binding allows unauthenticated access to directory information. A
 [ldapsearch](https://www.openldap.org/) is the standard command-line tool for LDAP queries on UNIX-like systems.
 
 ```bash
-# Test anonymous binding
-ldapsearch -x -h $TARGET -s base
+# Test anonymous binding (RootDSE)
+ldapsearch -x -h $TARGET -b "" -s base "(objectClass=*)"
 
 # Query naming contexts anonymously
-ldapsearch -x -H ldap://$TARGET -s base namingcontexts
+ldapsearch -x -H ldap://$TARGET -b "" -s base "(objectClass=*)" namingContexts
 
 # Using NetExec (test anonymous access)
 netexec ldap $TARGET -u '' -p ''
