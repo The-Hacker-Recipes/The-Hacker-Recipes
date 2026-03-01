@@ -74,7 +74,7 @@ Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIden
 Alternatively, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
 
 > Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
-> Also, its [DeepDiveIntoACEsAndSDDLs](https://github.com/jamarir/Invoke-PassTheCert/tree/main/utils/DeepDiveIntoACEsAndSDDLs) can be looked up for in-depth details and granular exploitations (ACEs, SDDLs).
+> Also, its [DeepDiveIntoACEsAndSDDLs](https://github.com/jamarir/Invoke-PassTheCert/tree/main/utils/DeepDiveIntoACEsAndSDDLs) can be consulted for in-depth details and granular exploitations (ACEs, SDDLs).
 ```powershell
 # Import the PowerShell script and show its manual
 Import-Module .\Invoke-PassTheCert.ps1
