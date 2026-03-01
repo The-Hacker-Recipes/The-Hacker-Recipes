@@ -96,7 +96,7 @@ $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP'
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
 
-# Returns all the objects of class `domain` in the `ADLAB.LOCAL` domain, and extract the MAQ attribute
+# Returns all the objects of class `domain` in the `ADLAB.LOCAL` domain, and extracts the MAQ attribute
 Invoke-PassTheCert -Action 'Filter' -LdapConnection $LdapConnection -SearchBase 'DC=ADLAB,DC=LOCAL' -SearchScope Subtree -Properties * -LDAPFilter '(objectClass=domain)' |Select-Object distinguishedName,ms-DS-MachineAccountQuota
 
 # Disable the account 'CN=COMPUTATOR,CN=Computers,DC=X'
