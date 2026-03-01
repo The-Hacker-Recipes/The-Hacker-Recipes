@@ -84,7 +84,7 @@ FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) project is an
 StandIn.exe --object ms-DS-MachineAccountQuota=*
 ```
 
-Another alternative is to use [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell)
+Another alternative is to use the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell).
 
 > Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
 ```powershell
