@@ -49,7 +49,7 @@ Pass the cert technique can be done with [PassTheCert](https://github.com/Almond
 
 It can also be done with this [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork (PowerShell version).
 
-> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash), and provide numerous actions (e.g. raw LDAP queries, Shadow Credentials enumeration & exploitation, DnsRecords enumeration, etc.)
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash), and provides numerous actions (e.g. raw LDAP queries, Shadow Credentials enumeration & exploitation, DnsRecords enumeration, etc.)
 ```powershell
 # Import the PowerShell script and show its manual
 Import-Module .\Invoke-PassTheCert.ps1
