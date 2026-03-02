@@ -1162,6 +1162,10 @@ export default defineConfig({
                             {
                                 "text": "🛠️ SOCKS proxy",
                                 "link": "/infra/pivoting/socks-proxy.md"
+                            },
+                            {
+                                "text": "🛠️ L3 Tunneling",
+                                "link": "/infra/pivoting/l3-tunneling"
                             }
                         ]
                     }
