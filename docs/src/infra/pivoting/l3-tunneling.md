@@ -11,10 +11,6 @@ L3 tunneling is a pivoting technique that provides access to one or more remote 
 
 Unlike [SOCKS proxying](socks-proxy.md), which requires proxy-aware tools (e.g., `proxychains`), or [port forwarding](port-forwarding.md), which is limited to specific port-to-port mappings, VPN-like approaches transparently carry traffic to selected target prefixes. This enables the use of standard tooling (scanners, exploit frameworks, clients) with minimal to no adaptation.
 
-Depending on the tool, traffic is either:
-- carried as IP packets via a virtual network interface (typically a **TUN** device), or
-- transparently redirected and forwarded (e.g., firewall-based interception).
-
 Several tools can provide this operator experience, but they rely on different mechanisms. As a result, protocol coverage (TCP/UDP/ICMP), DNS handling, and required privileges can vary significantly.
 
 ## Practice
