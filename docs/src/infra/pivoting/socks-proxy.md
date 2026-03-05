@@ -51,7 +51,6 @@ ssh -N -R $PORT $CONTROLLED_TARGET
 A SOCKS setup can be defined in `~/.ssh/config` and started with `ssh`.
 
 For dynamic port forwarding:
-
 ```
 Host pivot
     HostName $CONTROLLED_TARGET
@@ -61,8 +60,7 @@ Host pivot
     RequestTTY no
 ```
 
-For reverse dynamic port forwarding:
-
+Or for reverse dynamic port forwarding:
 ```
 Host pivot
     HostName $CONTROLLED_TARGET
