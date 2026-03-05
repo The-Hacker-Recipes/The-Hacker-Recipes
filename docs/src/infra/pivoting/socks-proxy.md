@@ -121,8 +121,9 @@ A minimal configuration can be saved in a `3proxy.cfg` file:
 
 ```
 daemon
-auth none
-allow *
+auth strong
+users $USER:CL:$PASSWORD
+allow $PASSWORD
 socks -p$PORT -i127.0.0.1
 ```
 
