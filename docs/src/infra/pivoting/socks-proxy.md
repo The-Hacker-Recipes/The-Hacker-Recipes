@@ -108,8 +108,9 @@ A minimal configuration can be saved in a `3proxy.cfg` file:
 
 ```
 daemon
-auth none
-allow *
+users $USER:CL:$PASSWORD
+auth strong
+allow $USER
 socks -p$PORT -i127.0.0.1
 ```
 
@@ -119,7 +120,8 @@ The proxy server can then be launched with:
 3proxy /path/to/3proxy.cfg
 ```
 
-Port `$PORT` can then be [forwarded](port-forwarding.md) to access the proxy from the attacker's machine. 
+Binding the service to `127.0.0.1` keeps it local to the pivot. Port `$PORT` can then be [forwarded](port-forwarding.md) to the attacker's machine.
+If remote hosts need direct access, bind to a specific interface or to `0.0.0.0`.
 
 === 🛠️ plink
 TO DO
@@ -148,12 +150,12 @@ In certain scenarios, SOCKS proxies can be chained. This can easily be used with
 ![](<./assets/Chained dynamic port forwarding commands SSH.png>)
 Setting up the SOCKS proxy servers (with SSH){.caption}
 
-> [!WARNING] 
-> Binding a SOCKS proxy to `0.0.0.0` exposes the listener to every host on the network, which allows any actor with network access to reuse the tunnel. Exposure can be reduce by keeping the SOCKS service local to the distant pivot and [forwarding](port-forwarding.md) it through the initial pivot. That way the proxy is never directly reachable from the network.
+> [!WARNING]
+> Binding a SOCKS proxy to `0.0.0.0` exposes the listener to every host on the network, allowing any actor with network access to use the tunnel. This exposure can be reduced by keeping the SOCKS service local to the remote pivot and [forwarding](port-forwarding.md) it through the initial pivot. That way, the proxy is never directly reachable from the network.
 
 > [!TIP]
 > When jumping through an intermediate pivot, `ssh -J someuser@pivot1 someuser@pivot2` combined with `ssh -N -D $PORT` keeps only a single SOCKS proxy running on the attacker machine.
-> `ssh -J` (ProxyJump) automate the process of chaining SOCKS proxy.
+> `ssh -J` (ProxyJump) automates the process of chaining proxies.
 
 ![](<./assets/Chained dynamic port forwarding commands proxychains.png>)
 Setting up the SOCKS proxy client (proxychains){.caption}
