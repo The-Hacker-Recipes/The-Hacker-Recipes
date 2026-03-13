@@ -556,7 +556,7 @@ A TDO account cannot use NTLM authentication, only Kerberos. Consequently, once 
 
 The trust account name is the NetBIOS name of the trusting domain followed by `$`. Following the intro example, the trust account created in domain A for the trusting domain B is `DOMAIN_B$`. A TGT for this account must be requested on the trusted domain using the credentials obtained in the previous step. The [Pass-the-Key](../kerberos/ptk) technique applies here, using either the NT hash (RC4) or, when available from `tdo_dump`, the AES-256 key (preferred, avoids RC4 downgrade detection).
 
-The resulting TGT can then be used for various attacks against the trusted domain, including [LDAP Recon](../../recon/ldap), [AD CS exploitation](../adcs), [computer account creation](../builtins/machineaccountquota#create-a-computer-account), and [Kerberoasting](../kerberos/kerberoast).
+The resulting TGT can then be used for various attacks against the trusted domain, including [LDAP Recon](../../recon/ldap), [AD CS exploitation](../adcs/), [computer account creation](../builtins/machineaccountquota#create-a-computer-account), and [Kerberoasting](../kerberos/kerberoast).
 
 ::: tabs
 
