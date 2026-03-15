@@ -19,7 +19,7 @@ Group Policy-based logon scripts (Modern logon scripts), configured at `User Con
 
 ### Abusing scriptPath
 
-**Write scriptPath**: write access to `scriptPath` allows setting a custom exploit script as the user's logon script, provided write permissions exist on the NETLOGON share (NTFS and share permissions).
+**Write scriptPath**: write access to `scriptPath` allows setting a custom exploit script as the user's logon script. If the script is hosted in NETLOGON/SYSVOL (or via a relative path resolved there), write access to that share is required. If `scriptPath` points to another UNC location, write access to that referenced location is sufficient instead.
 
 **Read scriptPath**: read access (default for domain users) reveals the file `scriptPath` points to. If write permissions exist on that file, the same attacks apply without needing write access to `scriptPath` or NETLOGON. This is especially useful with "stub" logon scripts, where `scriptPath` references a file on another share where domain users may have write access.
 
