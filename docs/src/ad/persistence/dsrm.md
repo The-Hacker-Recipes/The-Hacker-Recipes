@@ -42,7 +42,7 @@ mimikatz.exe "sekurlsa::pth /domain:$DC_HOST /user:Administrator /ntlm:$NT_HASH 
 
 == UNIX-like
 
-[Impacket](https://github.com/fortra/impacket)'s `secretsdump`, `reg`, and `wmiexec` scripts can be used to perform the attack remotely.
+[Impacket](https://github.com/fortra/impacket)'s `secretsdump.py`, `reg.py`, and `wmiexec.py` scripts can be used to perform the attack remotely.
 
 ```bash
 # Retrieve the DSRM account hash from the DC's local SAM database (Administrator:500 entry)
