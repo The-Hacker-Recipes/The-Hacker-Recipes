@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, jamarir
 category: ad
 ---
 
@@ -43,6 +43,22 @@ From non-domain-joined machines, it can be done with [PowerView](https://github.
 
 ```bash
 Get-DomainPolicy
+```
+
+Also, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Returns any Password-Policy-related attribute of any object of class `domain` in the 'ADLAB.LOCAL' Domain
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'PassPol' -SearchBase 'DC=ADLAB,DC=LOCAL'
 ```
 
 :::
