@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, jamarir
 category: ad
 ---
 
@@ -17,16 +17,16 @@ On UNIX-like systems, there are many alternatives that allow obtaining the passw
 
 ```bash
 # polenum (obtained through MS-RPC)
-polenum -d $DOMAIN -u $USER -p $PASSWORD -d $DOMAIN
+polenum -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 
 # netexec (obtained through MS-RPC)
-nxc smb $DOMAIN_CONTROLLER -d $DOMAIN -u $USER -p $PASSWORD --pass-pol
+nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --pass-pol
 
 # ldapsearch-ad (obtained through LDAP)
-ldapsearch-ad.py -l $LDAP_SERVER -d $DOMAIN -u $USER -p $PASSWORD -t pass-pol
+ldapsearch-ad -l "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -t pass-pol
 
 # enum4linux-ng (obtained through MS-RPC)
-enum4linux-ng -P -w -u $USER -p $PASSWORD $DOMAIN_CONTROLLER 
+enum4linux-ng -P -w -u "$USER" -p "$PASSWORD" "$DC_IP"
 ```
 
 
@@ -43,6 +43,22 @@ From non-domain-joined machines, it can be done with [PowerView](https://github.
 
 ```bash
 Get-DomainPolicy
+```
+
+Also, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).
+
+> Note: the [README](https://github.com/jamarir/Invoke-PassTheCert/blob/main/README.md) contains the methodology to request a certificate using [certreq](https://github.com/GhostPack/Certify/issues/13#issuecomment-3622538862) from Windows (with a password, or an NTHash).
+```powershell
+# Import the PowerShell script and show its manual
+Import-Module .\Invoke-PassTheCert.ps1
+.\Invoke-PassTheCert.ps1 -?
+# Authenticate to LDAP/S
+$LdapConnection = Invoke-PassTheCert-GetLDAPConnectionInstance -Server 'LDAP_IP' -Port 636 -Certificate cert.pfx
+# List all the available actions
+Invoke-PassTheCert -a -NoBanner
+
+# Returns any Password-Policy-related attribute of any object of class `domain` in the 'ADLAB.LOCAL' Domain
+Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'PassPol' -SearchBase 'DC=ADLAB,DC=LOCAL'
 ```
 
 :::

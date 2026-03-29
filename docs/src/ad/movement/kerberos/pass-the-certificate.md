@@ -44,17 +44,15 @@ Alternatively, [Certipy](https://github.com/ly4k/Certipy) (Python) can be used f
 
 
 ```bash
-certipy auth -pfx "PATH_TO_PFX_CERT" -dc-ip 'dc-ip' -username 'user' -domain 'domain'
+certipy auth -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -dc-ip 'dc-ip' -username 'user' -domain 'domain'
 ```
 
-
-Certipy's commands don't support PFXs with password. The following command can be used to "unprotect" a PFX file.
-
-
-```bash
-certipy cert -export -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -out "unprotected.pfx"
-```
-
+> [!TIP]
+> Older Certipy's version don't support PFXs with password. The following command can be used to "unprotect" a PFX file.
+>
+> ```bash
+> certipy cert -export -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -out "unprotected.pfx"
+> ```
 
 The ticket obtained can then be used to
 

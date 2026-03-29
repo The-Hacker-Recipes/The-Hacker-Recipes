@@ -58,7 +58,7 @@ During the `TKEY` request, Kerberos authentication takes place via `AP-REQ` and 
 
 As the DNS is usually on the domain controller, the Kerberos tickets obtained will be valid for services on the DC, the account name being the same. However, the `TKEY` request asks for the exchanges to be signed. A relay to LDAP/S is therefore impossible, as the latter will automatically set up the signature. Furthermore, as the SPN requested is `DNS`, this also limits the possibilities. However:
 
-* The HTTP/S services [from AD CS](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8) and [SCCM](../sccm-mecm/privilege-escalation.md) can be very good targets as HTTP does not expect a request for a signature.
+* The HTTP/S services [from AD CS](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8) and [SCCM](../sccm-mecm/privilege-escalation/index.md) can be very good targets as HTTP does not expect a request for a signature.
 * Many services are actually mapped to the `HOST` service, and this is the case with `DNS`. So any host with a `HOST` service becomes valid.
 
 Here are the steps to follow to set up a Kerberos relay using IPv6 DNS poisoning:

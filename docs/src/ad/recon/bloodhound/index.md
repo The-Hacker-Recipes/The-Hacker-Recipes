@@ -60,16 +60,16 @@ From UNIX-like system, a non-official (but very effective nonetheless) Python ve
 [BloodHound.py](https://github.com/fox-it/BloodHound.py) is a Python ingestor for BloodHound.
 
 ```bash
-bloodhound.py --zip -c All -d $DOMAIN -u $USERNAME -p $PASSWORD -dc $DOMAIN_CONTROLLER
+bloodhound.py --zip -c All -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -dc "$DC_HOST" -ns "$DC_IP"
 ```
 
 > [!TIP]
-> This ingestor is not as powerful as the C# one. It mostly misses GPO collection methods but a good news is that it can do pass-the-hash. It becomes really useful when compromising a domain account's NT hash.
+> This ingestor is not as powerful as the C# one. It lacks most GPO collection methods, but you can complete GPO collection with [GPOHound](https://github.com/cogiceo/GPOHound). The good news is that it can do pass-the-hash. It becomes really useful when compromising a domain account's NT hash.
 
 An alternative called [RustHound](https://github.com/OPENCYBER-FR/RustHound) (Rust) can be used as well.
 
 ```bash
-rusthound --zip -d "$DOMAIN" -i "$DC_IP" -u '$USER@$DOMAIN' -p '$PASSWORD' -o "OUTDIR"
+rusthound --zip -d "$DOMAIN" -i "$DC_IP" -u "$USER@$DOMAIN" -p "$PASSWORD" -o "$OUTDIR"
 ```
 
 :::

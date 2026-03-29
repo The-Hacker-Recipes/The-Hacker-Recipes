@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { createClient } from '@supabase/supabase-js'
 
 // Define types for our data
 interface Supporter {
@@ -26,11 +25,6 @@ interface ProcessedSupporter {
 const supporters = ref<ProcessedSupporter[]>([])
 const error = ref<string | null>(null)
 const loading = ref(true)
-
-const supabase = createClient(
-  'https://fvenaxmvigueigzjfkls.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZW5heG12aWd1ZWlnempma2xzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1MjgzNjcsImV4cCI6MjA0NzEwNDM2N30.rBWw75mH4NWNMM5ri-qNrCWSr3S_RHHnXoIxHbrRZ2c'
-)
 
 // Update the conversion rates with more currencies
 const CONVERSION_RATES = {
@@ -88,7 +82,7 @@ function formatAmount(amount: number, wasConverted: boolean): string {
 function processSupporter(supporter: Supporter, maxAmount: number): ProcessedSupporter {
   const { amount, wasConverted } = normalizeAmount(supporter.amount, supporter.currency)
   const processed: ProcessedSupporter = {
-    displayName: supporter.name_or_link,
+    displayName: supporter.name_or_link === 'ANON_DONATION' ? 'Anonymous' : supporter.name_or_link,
     amount: amount,
     colorStyle: getColorStyle(supporter._colorPosition || 0, 1),
     formattedAmount: formatAmount(amount, wasConverted),
@@ -131,11 +125,64 @@ function processSupporter(supporter: Supporter, maxAmount: number): ProcessedSup
   return processed
 }
 
-function isWithinLast12Months(dateStr: string): boolean {
-  const date = new Date(dateStr)
-  const twelveMonthsAgo = new Date()
-  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
-  return date >= twelveMonthsAgo
+function parseCSV(csvText: string): Supporter[] {
+  const lines = csvText.trim().split('\n')
+  const headers = lines[0].split(',').map(h => h.trim())
+  
+  // Find column indices
+  const nameIndex = headers.indexOf('name_or_link')
+  const amountIndex = headers.indexOf('amount')
+  const currencyIndex = headers.indexOf('currency')
+  const dateIndex = headers.indexOf('created_at')
+  
+  const supporters: Supporter[] = []
+  
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i]
+    if (!line.trim()) continue
+    
+    // CSV parsing (handles quoted and unquoted fields)
+    const values: string[] = []
+    let current = ''
+    let inQuotes = false
+    
+    for (let j = 0; j < line.length; j++) {
+      const char = line[j]
+      const nextChar = line[j + 1]
+      
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          // Escaped quote
+          current += '"'
+          j++ // Skip next quote
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes
+        }
+      } else if (char === ',' && !inQuotes) {
+        values.push(current.trim())
+        current = ''
+      } else {
+        current += char
+      }
+    }
+    // Add the last value
+    values.push(current.trim())
+    
+    if (values.length > Math.max(nameIndex, amountIndex, currencyIndex, dateIndex)) {
+      const amount = parseFloat(values[amountIndex] || '0')
+      if (!isNaN(amount)) {
+        supporters.push({
+          name_or_link: values[nameIndex] || '',
+          amount: amount,
+          currency: values[currencyIndex] || 'USD',
+          created_at: values[dateIndex] || ''
+        })
+      }
+    }
+  }
+  
+  return supporters
 }
 
 async function getDonaters() {
@@ -143,24 +190,49 @@ async function getDonaters() {
     loading.value = true
     error.value = null
 
-    const { data, error: supabaseError } = await supabase
-      .from('supporters')
-      .select('name_or_link, amount, currency, created_at')
+    // Load CSV from public directory
+    const response = await fetch('/database/supporters_rows.csv')
+    if (!response.ok) {
+      throw new Error(`Failed to load CSV: ${response.statusText}`)
+    }
+    
+    const csvText = await response.text()
+    const allData = parseCSV(csvText)
 
-    if (supabaseError) throw supabaseError
-    if (!data) throw new Error('No data received from Supabase')
-
-    // Filter out ANON_DONATION entries and those older than 12 months
-    const filteredData = data
-      .filter(supporter => 
-        supporter.name_or_link !== 'ANON_DONATION' && 
-        isWithinLast12Months(supporter.created_at)
-      )
+    // Group donations by name_or_link (same person can have multiple donations)
+    const groupedMap = new Map<string, { totalAmount: number; firstDate: string }>()
+    
+    allData.forEach(supporter => {
+      const key = supporter.name_or_link
+      const { amount } = normalizeAmount(supporter.amount, supporter.currency)
+      
+      if (groupedMap.has(key)) {
+        // Add to existing total
+        const existing = groupedMap.get(key)!
+        existing.totalAmount += amount
+        // Keep the earliest date
+        if (new Date(supporter.created_at) < new Date(existing.firstDate)) {
+          existing.firstDate = supporter.created_at
+        }
+      } else {
+        // Create new entry
+        groupedMap.set(key, {
+          totalAmount: amount,
+          firstDate: supporter.created_at
+        })
+      }
+    })
+    
+    // Convert map to array of Supporters
+    const groupedData: Supporter[] = Array.from(groupedMap.entries()).map(([name_or_link, data]) => ({
+      name_or_link,
+      amount: data.totalAmount,
+      currency: 'USD', // All amounts are now normalized to USD
+      created_at: data.firstDate
+    }))
     
     // Get unique amounts and find the maximum
-    const amounts = [...new Set(filteredData.map(s => 
-      normalizeAmount(s.amount, s.currency).amount
-    ))]
+    const amounts = [...new Set(groupedData.map(s => s.amount))]
     const maxAmount = Math.max(...amounts)
     
     // Sort amounts in descending order to ensure consistent color assignment
@@ -169,12 +241,11 @@ async function getDonaters() {
     // Create a mapping of amount to its position in the sorted unique amounts
     const amountPositions = new Map(amounts.map((amount, index) => [amount, index / (amounts.length - 1)]))
 
-    supporters.value = filteredData
+    supporters.value = groupedData
       .map(supporter => {
-        const { amount } = normalizeAmount(supporter.amount, supporter.currency)
         return processSupporter({
           ...supporter,
-          _colorPosition: amountPositions.get(amount) || 0
+          _colorPosition: amountPositions.get(supporter.amount) || 0
         }, maxAmount)
       })
       .sort((a, b) => b.amount - a.amount)
@@ -196,7 +267,7 @@ onMounted(() => {
   <p v-if="error" class="error">{{ error }}</p>
   <p v-else-if="loading" class="loading">Loading supporters...</p>
   <p v-else-if="supporters.length === 0" class="empty">
-    No active supporters in the last 12 months.
+    No supporters found.
   </p>
   <div v-else class="supporters">
     <div class="all-supporters">
