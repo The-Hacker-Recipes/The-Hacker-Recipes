@@ -1,159 +1,168 @@
 ---
-authors: ShutdownRepo, Tednoob17
+authors: Tednoob17
 category: infra
 ---
 
-# 🛠️ LDAP
+# 🛠️ RTSP
 
 ## Theory
 
-LDAP (Lightweight Directory Access Protocol) is a standardized network protocol primarily used for directory services — authentication and resource access in networked environments. It operates over TCP, defaulting to port `389` for plain connections and port `636` for LDAPS (LDAP over TLS).
+RTSP (Real Time Streaming Protocol) is a network control protocol designed to establish and manage media sessions between endpoints. It operates at the application layer and controls the delivery of streaming media such as audio and video, typically from IP cameras, media servers, and surveillance systems.
 
-In environments such as Active Directory, LDAP is the primary interface for querying the directory. Anonymous binds are sometimes permitted, which allows unauthenticated enumeration of naming contexts and base attributes. With valid credentials — even low-privileged ones — a significant amount of information becomes accessible, including users, groups, computers, GPOs, and delegation configurations.
+The default control port is `554` over TCP. Media data is usually delivered separately via RTP (Real-time Transport Protocol) over UDP on negotiated ports. Some implementations use port `8554` as a non-standard alternative, and RTSPS (RTSP over TLS) typically operates on port `322`.
 
-### Common LDAP attributes
+RTSP URLs follow a predictable format:
+```
+rtsp://[username]:[password]@[ip_address]:[port]/[path_to_stream]
+```
 
-| Attribute | Description |
+| URL component | Description |
 |---|---|
-| `namingContexts` | Returns the base DN(s) of the directory (e.g. `DC=contoso,DC=local`) |
-| `objectClass` | Defines the type of an LDAP object (e.g. `user`, `group`, `computer`) |
-| `sAMAccountName` | The logon name of a user or machine account in Active Directory |
-| `memberOf` | Lists the groups an object belongs to |
-| `userAccountControl` | Bitmask encoding account properties (e.g. disabled, no pre-auth required) |
-| `servicePrincipalName` | SPNs associated with an account, relevant for Kerberoasting |
-| `adminCount` | Indicates objects under AdminSDHolder protection |
+| `rtsp://` | Protocol identifier |
+| `[username]:[password]@` | Optional credentials, required on authenticated streams |
+| `[ip_address]` | IP address or hostname of the streaming device |
+| `[port]` | Control port, defaults to `554` (often omitted) |
+| `[path_to_stream]` | Device-specific stream path (e.g. `/stream1`, `/live/ch0`, `/onvif/profile1/media.smp`) |
+
+### Common RTSP methods
+
+| Method | Description |
+|---|---|
+| `OPTIONS` | Retrieves the list of methods supported by the server |
+| `DESCRIBE` | Returns stream metadata (codec, resolution, FPS) in SDP format |
+| `SETUP` | Negotiates transport parameters (UDP/TCP ports) for a stream |
+| `PLAY` | Starts media delivery from the server |
+| `PAUSE` | Suspends media delivery without tearing down the session |
+| `TEARDOWN` | Terminates the session and releases server resources |
 
 ## Practice
 
 ### Enumeration
 
+#### Port scanning
+
+Open RTSP services can be discovered with nmap. The `rtsp-methods` script issues an `OPTIONS` request to identify supported RTSP methods, while `rtsp-url-brute` attempts to enumerate valid stream paths.
+
+:::tabs
+=== Unix-like
+```bash
+# Discover RTSP service and version
+nmap -p 554,8554 -sV $TARGET
+
+# Identify supported RTSP methods
+nmap -p 554 --script=rtsp-methods $TARGET
+
+# Enumerate valid stream paths
+nmap -p 554 --script=rtsp-url-brute $TARGET
+```
+
+:::
+
 #### Banner grabbing
 
-The LDAP rootDSE (Root Directory Service Entry) is publicly accessible without credentials on most implementations. It exposes useful metadata such as naming contexts, supported LDAP versions, and the domain controller's DNS hostname.
+A raw `OPTIONS` request can be sent directly to retrieve server headers and identify the RTSP implementation. RTSP requires CRLF (`\r\n`) line endings.
 
 :::tabs
 === Unix-like
 ```bash
-# Retrieve naming contexts (base DN) from rootDSE
-ldapsearch -x -H ldap://$TARGET -b "" -s base namingContexts
+echo -e "OPTIONS rtsp://$TARGET:554/ RTSP/1.0\r\nCSeq: 1\r\n\r\n" | nc -nv $TARGET 554
+```
 
-# Retrieve all rootDSE attributes
-ldapsearch -x -H ldap://$TARGET -b "" -s base "(objectclass=*)"
+:::
+
+#### OSINT
+
+Publicly exposed RTSP services can be discovered through internet-wide search engines without interacting with the target directly.
+
+:::tabs
+=== Shodan
+```
+port:554
+rtsp
+```
+
+=== Google dorks
+```
+inurl:/view.shtml intitle:"Live View"
+inurl:/CGI_Stream.cgi
+```
+
+:::
+
+#### Stream inspection
+
+Once a valid stream URL is identified, metadata can be retrieved without recording the stream. Forcing TCP transport is useful when UDP traffic is filtered.
+
+:::tabs
+=== Unix-like
+```bash
+# Probe stream metadata without decoding (unauthenticated)
+ffmpeg -i rtsp://$TARGET:554/$STREAM_PATH -c copy -f null -
+
+# Probe with credentials
+ffmpeg -i rtsp://$USER:$PASSWORD@$TARGET:554/$STREAM_PATH -c copy -f null -
+
+# Force TCP transport
+ffmpeg -rtsp_transport tcp -i rtsp://$TARGET:554/$STREAM_PATH -c copy -f null -
 ```
 
 === Windows
 ```powershell
-# Query rootDSE using ADSI
-[System.DirectoryServices.DirectoryEntry]::new("LDAP://$TARGET/rootDSE").Properties
+# Open stream with VLC from command line
+vlc rtsp://$TARGET:554/$STREAM_PATH
 ```
 
 :::
 
-#### Anonymous bind
+### Attacks
 
-When anonymous binds are permitted, directory objects can be enumerated without credentials. The extent of accessible data depends on the server's access control configuration.
+#### Default and weak credentials
+
+IP cameras and media servers frequently ship with well-known default credentials. Credential brute-forcing can be performed with Hydra against the RTSP service.
 
 :::tabs
 === Unix-like
 ```bash
-# Enumerate all objects accessible via anonymous bind
-ldapsearch -x -H ldap://$TARGET -b "$BASE_DN"
-
-# Filter for user objects only
-ldapsearch -x -H ldap://$TARGET -b "$BASE_DN" "(objectclass=user)"
-
-# Filter for group objects
-ldapsearch -x -H ldap://$TARGET -b "$BASE_DN" "(objectclass=group)"
+hydra -L "$WORDLIST_USER" -P "$WORDLIST_PASS" -s 554 $TARGET rtsp
 ```
 
 :::
 
-#### Authenticated enumeration
+#### Unauthenticated stream access
 
-With valid domain credentials, LDAP can be queried for a significantly larger set of objects and attributes, including users, groups, computers, GPOs, and delegation settings.
+Some devices are misconfigured to allow unauthenticated access when the stream path is known. Access can be attempted directly without supplying credentials.
 
 :::tabs
 === Unix-like
 ```bash
-# Enumerate all user objects
-# $BASE_DN: full base DN of the domain, e.g. "DC=contoso,DC=local"
-ldapsearch -x -H ldap://$DC_IP \
-  -D "$USER@$DOMAIN" -W \
-  -b "$BASE_DN" "(objectclass=user)"
-
-# Enumerate computer accounts
-ldapsearch -x -H ldap://$DC_IP \
-  -D "$USER@$DOMAIN" -W \
-  -b "$BASE_DN" "(objectclass=computer)"
-
-# windapsearch (windapsearch.py) — enumerate domain users
-python3 windapsearch.py --dc-ip $DC_IP -u "$USER" -p "$PASSWORD" --users
-
-# windapsearch — enumerate domain admins
-python3 windapsearch.py --dc-ip $DC_IP -u "$USER" -p "$PASSWORD" --da
-
-# windapsearch — enumerate computers
-python3 windapsearch.py --dc-ip $DC_IP -u "$USER" -p "$PASSWORD" --computers
-
-# ldeep — dump all LDAP objects to a local folder
-ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://$DC_IP all "dump/$DOMAIN"
+ffmpeg -i rtsp://$TARGET:554/$STREAM_PATH -c copy -f null -
 ```
 
 === Windows
 ```powershell
-# Using PowerView — enumerate domain users
-Get-DomainUser -Server $DC_IP
-
-# Using PowerView — enumerate domain groups
-Get-DomainGroup -Server $DC_IP
-
-# Using PowerView — enumerate domain computers
-Get-DomainComputer -Server $DC_IP
-
-# Using built-in Active Directory module
-Get-ADUser -Filter * -Server $DC_IP
-Get-ADComputer -Filter * -Server $DC_IP
+vlc rtsp://$TARGET:554/$STREAM_PATH
 ```
 
 :::
 
-#### Nmap scripts
+#### Stream capture
 
-Port discovery and LDAP service identification can be performed with nmap.
-
-:::tabs
-=== Unix-like
-```bash
-# Discover LDAP/LDAPS ports and run enumeration scripts
-nmap -p 389,636 --script=ldap-search,ldap-rootdse $TARGET
-
-# More aggressive scan with service version detection
-nmap -p 389,636 -sV --script=ldap-search,ldap-ls $TARGET
-```
-
-:::
-
-### Authentication check
-
-The identity associated with an LDAP bind can be verified using `ldapwhoami`. This is useful to confirm that credentials are valid and to determine the effective bind DN.
+An accessible stream can be recorded locally for offline analysis.
 
 :::tabs
 === Unix-like
 ```bash
-# Verify identity of an authenticated bind
-ldapwhoami -x -H ldap://$DC_IP -D "$USER@$DOMAIN" -W
-
-# Verify anonymous bind (returns anonymous if allowed)
-ldapwhoami -x -H ldap://$TARGET
+# Record 30 minutes of video stream to a file
+ffmpeg -i rtsp://$USER:$PASSWORD@$TARGET:554/$STREAM_PATH \
+  -map 0:v -c:v copy -t 00:30:00 output.mp4
 ```
 
 :::
 
 ## Resources
 
-* [LDAP - Wikipedia](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol)
-* [windapsearch](https://github.com/ropnop/windapsearch)
-* [ldeep](https://github.com/franc-pentest/ldeep)
-* [ldapsearch man page](https://linux.die.net/man/1/ldapsearch)
-* [HackTricks - LDAP](https://book.hacktricks.xyz/network-services-pentesting/pentesting-ldap)
-* [LDAP enumeration - GeeksforGeeks](https://www.geeksforgeeks.org/ethical-hacking/ldap-enumeration/)
+* [RTSP - Wikipedia](https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol)
+* [HackTricks - RTSP pentesting](https://book.hacktricks.xyz/network-services-pentesting/554-8554-pentesting-rtsp)
+* [nmap rtsp-methods script](https://nmap.org/nsedoc/scripts/rtsp-methods.html)
+* [nmap rtsp-url-brute script](https://nmap.org/nsedoc/scripts/rtsp-url-brute.html)
+* [FFmpeg RTSP documentation](https://ffmpeg.org/ffmpeg-protocols.html#rtsp)
