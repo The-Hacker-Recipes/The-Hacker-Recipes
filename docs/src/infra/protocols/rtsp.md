@@ -1,156 +1,170 @@
 ---
-authors: ShutdownRepo, Tednoob17
+authors: Tednoob17
 category: infra
 ---
 
 # 🛠️ RTSP
 
 ## Theory
-Real-Time Streaming Protocol also know as RTSP is a network control protocol designed for controls streaming media systems. The protocol facilitates the creation and management of media sessions between endpoints.
-The default RTSP control port is 554 (commonly over TCP). Media usually streams via RTP over UDP on negotiated ports. Some servers also use 8554 as a non-standard alternative.
 
-## Basic usage
-Connect to an RTSP service
-We can use various various tool to connect to a RTSP service like media server, ip cameras and video surveillance or media player and client. For that we can use command-line tools and a couple of handy applications.
+RTSP (Real Time Streaming Protocol) is a network control protocol designed to control streaming media systems. It facilitates the creation and management of media sessions between endpoints, primarily for IP cameras, media servers, and video surveillance systems.
 
-The key to unlocking an RTSP stream is its URL. These URLs typically follow a predictable format:
+The default control port is `554` over TCP. Media data is delivered separately via RTP (Real-time Transport Protocol) over UDP on negotiated ports. Some implementations use port `8554` as a non-standard alternative, and RTSPS (RTSP over TLS) typically operates on port `322`.
 
-```bash
+RTSP URLs follow a predictable format:
+```
 rtsp://[username]:[password]@[ip_address]:[port]/[path_to_stream]
 ```
-- `rtsp://` : The protocol, clearly stating "Hey, this is an RTSP stream."  
-- `[username]:[password]@` : Often optional, but required for authenticated streams (e.g., most IP cameras).  
-- `[ip_address]` : The IP address or hostname of the device serving the stream (e.g., 192.168.1.42).  
-- `[port]` : The RTSP port, usually 554 (often omitted if it's the default).  
-Some devices use non-standard ports (e.g., 8554), support TLS as `rtsps://` (commonly TCP 322 or 8554), or require RTSP over TCP (interleaved). In VLC/FFmpeg you can force TCP (e.g., ffplay -rtsp_transport tcp ...).
-- `[path_to_stream]` : The specific path on the device that identifies the stream (e.g., `/stream1` , `/live/ch0` , `/onvif/profile1/media.smp`).  
-This is the part that varies wildly between manufacturers!
 
-The tool most used for basic RTSP consumption will be VLC Media Player and, for the more CLI-inclined, FFmpeg.
-### Graphical Way (VLC Media Player)
+| URL component | Description |
+|---|---|
+| `rtsp://` | Protocol identifier |
+| `[username]:[password]@` | Optional credentials, required on authenticated streams |
+| `[ip_address]` | IP address or hostname of the streaming device |
+| `[port]` | Control port, defaults to `554` (often omitted). Some devices use `8554` or support TLS via `rtsps://` (TCP `322`) |
+| `[path_to_stream]` | Device-specific stream path (e.g. `/stream1`, `/live/ch0`, `/onvif/profile1/media.smp`) |
 
-Follow these steps to connect to an RTSP service:
+### Common RTSP methods
 
-VLC is the Swiss Army knife of media. If it streams, VLC probably plays it. This is your quickest route to eyeball an RTSP feed.
+| Method | Description |
+|---|---|
+| `OPTIONS` | Retrieves the list of methods supported by the server |
+| `DESCRIBE` | Returns stream metadata (codec, resolution, FPS) in SDP format |
+| `SETUP` | Negotiates transport parameters (UDP/TCP ports) for a stream |
+| `PLAY` | Starts media delivery from the server |
+| `PAUSE` | Suspends media delivery without tearing down the session |
+| `TEARDOWN` | Terminates the session and releases server resources |
 
-Open **VLC** :
-- Go to `Media` > `Open Network Stream`  (or `Ctrl+N` / `Cmd+N`).
-In the "Please enter a network URL:" field, paste your RTSP URL.
-- Example (Common IP Camera Default):
-  `rtsp://admin:password@192.168.1.10:554/stream1`
-- Example (Public Test Stream):
-  `rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4`
-(This is a widely used public test stream if you don't have a camera handy.)
-- Click Play.
+## Practice
 
-### The Command-Line Way (FFmpeg)
+### Enumeration
 
-For those who live in the terminal, ffmpeg is your friend. It's incredibly powerful for processing media and to simply view an RTSP stream (though it usually sends it to a player like FFplay or pipes it elsewhere).
+#### Port scanning
 
-First, ensure you have FFmpeg installed. If you're on Linux, it's often sudo apt install ffmpeg or sudo dnf install ffmpeg. On macOS, brew install ffmpeg. Windows users, grab a static build.
-
-To view an RTSP stream with ffplay (which comes with FFmpeg):
-
-```bash
-ffplay rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4
-```
-
-Or, if you want to test the connection and see stream information without a GUI:
-
-```bash
-ffmpeg -i rtsp://admin:password@192.168.1.10:554/stream1 -c copy -f null -
-```
-
-What's happening here?:
-- `-i` : Specifies the input source (your RTSP URL).
-- `-c copy` : Tells FFmpeg to just copy the video/audio streams without re-encoding.
-- `-f null -` : Sends the output to a "null" destination, essentially discarding it. We're just interested in the connection and the information FFmpeg reports.
-
-You'll see a lot of verbose output: connection attempts, stream details (codec, resolution, FPS), and potentially error messages if it fails.
-
-## Footprinting and Passive Recon
-
-### Information Gathering
-
-- OSINT (Open-Source Intelligence):
+Open RTSP services can be discovered with nmap. The `rtsp-methods` script issues an `OPTIONS` request to identify supported RTSP methods, while `rtsp-url-brute` attempts to enumerate valid stream paths.
 
 :::tabs
-
-=== Google dork
-The dig utility performs DNS lookups and displays responses from name servers.
-
+=== Unix-like
 ```bash
-# publicly exposed camera feeds, security system
+# Discover RTSP service and version
+nmap -p 554,8554 -sV $TARGET
 
-inurl:/view.shtml intitle:"Live View" or inurl:/CGI_Stream.cgi
+# Identify supported RTSP methods
+nmap -p 554 --script=rtsp-methods $TARGET
+
+# Enumerate valid stream paths
+nmap -p 554 --script=rtsp-url-brute $TARGET
 ```
 
-=== Shodan.io
-The search engine for the Internet of Things
-
-```bash
-# find publicly exposed RTSP services
-
-port:554 or rtsp
-```
 :::
 
+#### Banner grabbing
 
-## Enumeration
+A raw `OPTIONS` request can be sent directly to retrieve server headers and identify the RTSP implementation. RTSP requires CRLF line endings; `printf` is preferred over `echo -e` for portability.
 
-
-- Port Scanning (Nmap):
-
-You can gently probe the network for active RTSP services.
-
+:::tabs
+=== Unix-like
 ```bash
-# -sV: Attempts to determine service versions, which can often reveal camera manufacturers and models.
-nmap -p 554  -sV "$TARGET_IP"
-# --script=rtsp-methods: This script connects to the RTSP service and issues an OPTIONS * request to determine which RTSP methods the server supports.
-nmap -p 554 --script=rtsp-methods "$TARGET_IP"
-# --script=rtsp-url-brute: This is a more intrusive but often highly effective script.
-nmap -p 554 --script=rtsp-url-brute "sq$TARGET_IP"
+printf 'OPTIONS rtsp://%s:554/ RTSP/1.0\r\nCSeq: 1\r\n\r\n' "$TARGET" | nc -nv "$TARGET" 554
 ```
 
-- Banner Grabbing
-For a quick, raw look at the service, you can try connecting directly and sending an OPTIONS request.
+:::
 
-```bash
-echo -e "OPTIONS rtsp://$TARGET_IP:554/ RTSP/1.0\nCSeq: 1\n\n" | nc -nv $TARGET_IP 554
+#### OSINT
+
+Publicly exposed RTSP services can be discovered through internet-wide search engines without interacting with the target directly.
+
+:::tabs
+=== Shodan
+```
+port:554
+rtsp
 ```
 
-## Attack Vectors
+=== Google dorks
 
-- Default and Weak Credentials:
-This is the most common and impactful attack vector. Many IP cameras ship with widely known default usernames and passwords, or users set easily guessable ones.
-
-```bash
-hydra -L userlist.txt -P passlist.txt rtsp://$TARGET_IP -s 554 -t 10
-# -t for threads
-# userlist.txt: Common defaults (admin, root, user).
-# passlist.txt: Common defaults (admin, 12345, password, blank lines), plus dictionary words.
+Use targeted Google search operators to discover publicly exposed RTSP and IP camera interfaces.
 ```
-- Anonymous/Unauthenticated Access:
- A shockingly common misconfiguration. Some cameras are set to allow anyone to view the stream if they know the RTSP URL, without any authentication.
-```bash
-vlc rtsp://$TARGET_IP:$PORT/$STREAM_PATH
-```
-- Unencrypted Streams: RTSP, in its basic form, does not encrypt the actual video/audio data (RTP). Even if the RTSP control channel is authenticated, the media payload might be sent in the clear.
-
-
-## Post-Exploitation: Beyond the Stream
-
-RTSP devices offer unique opportunities for persistence and deeper network pivots.
-- Live Stream Recording: Use FFmpeg to record the live stream for detailed post-operation analysis. This is your digital evidence locker.
-
-```bash
-ffmpeg -i rtsp://$USER:$PASS@$IP:$PORT/$PATH -map 0:v -c:v copy -t 00:30:00 recorded_intel42.mp4
+inurl:/view.shtml intitle:"Live View"
+inurl:/CGI_Stream.cgi
 ```
 
+:::
 
-## Ressources
-* [wireshark rtsp](https://wiki.wireshark.org/RTSP)
-* [RTSP wikipedia](https://en.wikipedia.org/wiki/Real-Time_Streaming_Protocol)
-* [n0a110w github](https://n0a110w.github.io/notes/security-stuff/services/rtsp.html)
-* [Victor Mendonça](https://blog.victormendonca.com/2018/02/09/how-to-scan-for-rtsp-urls)
-* [exploit notes](https://exploit-notes.hdks.org/exploit/network/protocol/rtsp-pentesting/)
+#### Stream inspection
+
+Once a valid stream URL is identified, metadata can be retrieved without recording the stream. Forcing TCP transport is useful when UDP traffic is filtered.
+
+:::tabs
+=== Unix-like
+```bash
+# Probe stream metadata without decoding (unauthenticated)
+ffmpeg -i rtsp://$TARGET:554/$STREAM_PATH -c copy -f null -
+
+# Probe with credentials
+ffmpeg -i "rtsp://$USER:$PASSWORD@$TARGET:554/$STREAM_PATH" -c copy -f null -
+
+# Force TCP transport
+ffmpeg -rtsp_transport tcp -i rtsp://$TARGET:554/$STREAM_PATH -c copy -f null -
+```
+
+=== Windows
+```powershell
+# Open stream with VLC from command line
+vlc rtsp://$TARGET:554/$STREAM_PATH
+```
+
+:::
+
+### Attacks
+
+#### Default and weak credentials
+
+IP cameras and media servers frequently ship with well-known default credentials. Credential brute-forcing can be performed with Hydra against the RTSP service.
+
+:::tabs
+=== Unix-like
+```bash
+hydra -L "$WORDLIST_USER" -P "$WORDLIST_PASS" -s 554 $TARGET rtsp
+```
+
+:::
+
+#### Unauthenticated stream access
+
+Some devices are misconfigured to allow unauthenticated access when the stream path is known. Access can be attempted directly without supplying credentials.
+
+:::tabs
+=== Unix-like
+```bash
+ffmpeg -i rtsp://$TARGET:554/$STREAM_PATH -c copy -f null -
+```
+
+=== Windows
+```powershell
+vlc rtsp://$TARGET:554/$STREAM_PATH
+```
+
+:::
+
+#### Stream capture
+
+An accessible stream can be recorded locally for offline analysis.
+
+:::tabs
+=== Unix-like
+```bash
+# Record 30 minutes of video stream to a file
+ffmpeg -i "rtsp://$USER:$PASSWORD@$TARGET:554/$STREAM_PATH" \
+  -map 0:v -c:v copy -t 00:30:00 output.mp4
+```
+
+:::
+
+## Resources
+
+* [RTSP - Wikipedia](https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol)
+* [HackTricks - RTSP pentesting](https://book.hacktricks.xyz/network-services-pentesting/554-8554-pentesting-rtsp)
+* [nmap rtsp-methods script](https://nmap.org/nsedoc/scripts/rtsp-methods.html)
+* [nmap rtsp-url-brute script](https://nmap.org/nsedoc/scripts/rtsp-url-brute.html)
+* [FFmpeg RTSP documentation](https://ffmpeg.org/ffmpeg-protocols.html#rtsp)
