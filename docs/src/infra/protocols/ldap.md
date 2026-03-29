@@ -6,110 +6,79 @@ category: infra
 # 🛠️ LDAP
 
 ## Theory
-LDAP (Lightweight Directory Access Protocol) is a standardized network protocol  primarily utilized for user authentication and resource access in a network environment.
-The default port used by LDAP on TCP/IP is 389; its secure version, LDAPS, uses TLS (formerly SSL) and typically listens on port 636.
 
-## Basic Usage
+LDAP (Lightweight Directory Access Protocol) is a standardized network protocol primarily used for directory services — authentication and resource access in networked environments. It operates over TCP, defaulting to port `389` for plain connections and port `636` for LDAPS (LDAP over TLS).
 
-- LDAP Search
-You can connect to an LDAP server and perform a search using the `ldapsearch` cli command.
+In environments such as Active Directory, LDAP is the primary interface for querying the directory. Anonymous binds are sometimes permitted, which allows unauthenticated enumeration of naming contexts and base attributes. With valid credentials — even low-privileged ones — a significant amount of information becomes accessible.
 
-```bash
-ldapsearch -x -h "$ldap-server" -b "$base-dn" -D "$bind-dn" -w "$password" -s "$search-scope" "$filter"
-```
-- LDAP Authentication
-To authenticate against an LDAP server, you can use the `ldapwhoami` cli command.
+## Practice
 
-```bash
-ldapwhoami -x -h "$ldap-server" -D "$bind-dn" -w "$password"
-```
+### Enumeration
 
-###   Authentication Reconnaissance & Enumeration
-####  Initial Discovery
-```bash
-nmap -p 389,636 --script=ldap-search,ldap-ls "$target_ip_range_or_domain_controller"
-# -sV: Service version detection can reveal the underlying directory service
-# --script=ldap-search: This script allows you to perform generic LDAP searches.
-# --script=ldap-ls: Lists directory contents.
-```
+#### Anonymous bind
 
-#### Banner Grabbing
-Even without authenticating, an LDAP server might reveal valuable meta-information.
+When anonymous binds are permitted, naming contexts and base DSE attributes can be retrieved without credentials.
 
 :::tabs
-=== ldapsearch
+== Unix-like
 ```bash
-ldapsearch -x -h "$target_ip" -p 389 -s base namingContexts
-# -x: Use simple authentication (often for anonymous bind if allowed).
-# -h: Host IP.
-# -p: Port.
-# -s base: Search base object only.
-# namingContexts: Attribute to retrieve the base DN (Distinguished Name) of the domain, e.g., dc=example,dc=com.
-ldapsearch -x -h "$ldap-server" -b "" -s base "(objectclass=*)"
-# Retrieve rootDSE/base attributes (e.g., namingContexts), not all directory objects
+# Retrieve naming contexts (base DN)
+ldapsearch -x -H ldap://$TARGET -s base namingContexts
 
+# Retrieve all base DSE attributes
+ldapsearch -x -H ldap://$TARGET -b "" -s base "(objectclass=*)"
 ```
 
-=== Netcat/Telnet
-
-```bash
-nc -nv $target_ip 389
-# LDAP uses BER/ASN.1 and won't return meaningful text banners over raw TCP.
-# Use ldapsearch against rootDSE to safely enumerate server info:
-# ldapsearch -x -H ldap://"$target_ip" -b "" -s base "(objectclass=*)" 
+== Windows
+```powershell
+# Using ADSI to retrieve rootDSE properties
+[System.DirectoryServices.DirectoryEntry]::new("LDAP://$TARGET/rootDSE").Properties
 ```
+
 :::
 
-####  Authenticated & Unauthenticated Enumeration
+#### Authenticated enumeration
 
-A low-privileged set of credentials, such as a phishing attack or an exposed web service, can unlock a vast amount of information.
+With valid domain credentials, LDAP can be queried for users, groups, computers, GPOs, delegations, and more.
+
 :::tabs
-=== enum4linux
- `enum4linux` : While often associated with SMB, `enum4linux` can perform some basic **LDAP** enumeration, especially useful for Active Directory.
+== Unix-like
+```bash
+# Enumerate all user objects
+ldapsearch -x -H ldap://$DC_IP \
+  -D "$USER@$DOMAIN" -w "$PASSWORD" \
+  -b "dc=$DOMAIN,dc=local" "(objectclass=user)"
 
-```bash
-enum4linux -a "$target_ip"
-```
-=== windapsearch
-`windapsearch` : A powerful Python tool for comprehensive LDAP queries in Windows domains, especially when you have valid credentials.
+# windapsearch — enumerate domain users
+python3 windapsearch.py --dc-ip $DC_IP -u "$USER" -p "$PASSWORD" --users
 
-```bash
-python3 windapsearch.py --dc-ip "$target_dc_ip" -u "$domain_user" -p "$password" --users
-# Basic usage to enumerate users
-```
-=== ldeep
-`ldeep` : Another useful Python tool for dumping information like delegations, GPOs, trusts, users, and machines from LDAP.
-```bash
-ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" all "dump/$DOMAIN"
+# ldeep — dump all LDAP objects to a local folder
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://$DC_IP all "dump/$DOMAIN"
 ```
 
-=== ldapsearch
-
-```bash
-ldapsearch -x -h <ldap-server> -b "ou=users,dc=example,dc=com" "(objectclass=inetOrgPerson)"
+== Windows
+```powershell
+# Using PowerView
+Get-DomainUser -Server $DC_IP
 ```
+
 :::
 
-## Attacks Vector
-> [!WARNING]
-> The following section is for educational and defensive purposes only.
-> Unauthorized access or modification of systems is illegal.
+#### Nmap scripts
 
-- **Backdoor Account Creation**: Attackers with write permissions might create hidden admin accounts.
-- **Mitigation**: Enforce least privilege, monitor for new account creation, and regularly audit privileged groups.
+Port enumeration and service identification can be performed with nmap.
 
-
+:::tabs
+== Unix-like
 ```bash
-ldapmodify -x -H ldap://"$dc_ip" -D "CN=adminuser,CN=Users,DC=example,DC=com" -w "adminpassword" -f add_admin.ldif
-# add: member
-# Create an ldif file (e.g., add_admin.ldif)
-# member: CN=your_vulnerable_user_account,CN=Users,DC=example,DC=com
+nmap -p 389,636 --script=ldap-search,ldap-ls $TARGET
 ```
 
+:::
 
 ## Resources
-* [LDAP Wikipedia](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol)
-* [gokulg.med](https://medium.com/@gokulg.me/introduction-92199491c808)
-* [vaadata](https://www.vaadata.com/blog/active-directory-security-best-practices-vulnerabilities-and-attacks/)
-* [purplesec](https://purplesec.us/learn/privilege-escalation-attacks/)
-* [geeksforgeeks](https://www.geeksforgeeks.org/ethical-hacking/ldap-enumeration/)
+
+* [LDAP - Wikipedia](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol)
+* [windapsearch](https://github.com/ropnop/windapsearch)
+* [ldeep](https://github.com/franc-pentest/ldeep)
+* [LDAP enumeration - GeeksforGeeks](https://www.geeksforgeeks.org/ethical-hacking/ldap-enumeration/)
