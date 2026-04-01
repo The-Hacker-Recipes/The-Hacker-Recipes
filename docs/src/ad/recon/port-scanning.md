@@ -27,5 +27,5 @@ The [nmap](https://nmap.org/) utility can be used to scan for open ports in an I
 # -n for no name resolution
 # --open to only show (possibly) open port(s)
 # -p for port(s) number(s) to scan
-nmap -sS -n --open -p 88,389 $IP_RANGE
+nmap -sS -n --open -p 88,389 "$RANGE"
 ```
