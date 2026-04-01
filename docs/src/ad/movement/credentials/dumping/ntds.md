@@ -82,7 +82,7 @@ DISKSHADOW> exit
 ```
 
 We can then copy the `NTDS.dit` file directly from the `E:` drive.
-```
+```powershell
 PS C:\Tools> robocopy /B E:\Windows\NTDS .\ntds ntds.dit
 ```
 
