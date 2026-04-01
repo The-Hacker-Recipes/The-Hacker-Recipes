@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1003.003
-authors: ShutdownRepo, almandin, sckdev
+authors: ShutdownRepo, almandin, sckdev, 0xW1LD
 category: ad
 ---
 
