@@ -66,7 +66,7 @@ Invoke-NinjaCopy.ps1 -Path "C:\Windows\NTDS\NTDS.dit" -LocalDestination "C:\Wind
 
 ### DiskShadow
 The `diskshadow.exe` utility can be used to interface with the Volume Shadow Copy Service.
-```
+```powershell
 PS C:\Tools> diskshadow.exe
 Microsoft DiskShadow version 1.0
 Copyright (C) 2013 Microsoft Corporation                                                       
