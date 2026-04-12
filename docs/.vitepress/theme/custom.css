@@ -160,3 +160,7 @@
     max-width: 80px;
     max-height: 40px;
 }
+
+.VPDocAsideSponsors {
+    padding-bottom: clamp(1rem, 3vw, 1.4rem);
+}
