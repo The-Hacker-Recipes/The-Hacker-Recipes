@@ -161,6 +161,7 @@
     max-height: 40px;
 }
 
-.VPDocAsideSponsors {
+/* Padding seulement quand au moins un sponsor est affiché (grille non vide) */
+.VPDocAsideSponsors:has(.vp-sponsor-grid-link) {
     padding-bottom: clamp(1rem, 3vw, 1.4rem);
 }
