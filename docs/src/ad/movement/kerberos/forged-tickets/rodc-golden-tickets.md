@@ -19,7 +19,7 @@ With administrative access to an [RODC](../../builtins/rodc.md), it is possible 
 === UNIX-like
 
 > [!NOTE]
-> _At the time of writing, 15th Apr. 2026,_ [_the pull request_](https://github.com/fortra/impacket/pull/2169) _adding the `-rodcNo` is pending._
+> _At the time of writing, 15th Apr. 2026,_ [_the pull request_](https://github.com/fortra/impacket/pull/2169) _adding the `-rodcNo` flag in `ticketer.py` is pending._
 
 There are [Impacket](https://github.com/fortra/impacket) scripts for each step of a golden ticket creation : retrieving the domain SID, creating the RODC golden ticket.
 
