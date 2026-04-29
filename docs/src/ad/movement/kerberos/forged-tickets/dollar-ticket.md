@@ -13,6 +13,14 @@ The Dollar Ticket Attack exploits name confusion vulnerabilities in Kerberos aut
 
 In Active Directory, machine accounts are created with a trailing dollar sign (e.g., `MACHINE$`). However, when Kerberos tickets are processed by certain services, particularly MIT-style Kerberos acceptors, the username mapping mechanism strips this trailing `$` character. This creates an opportunity for privilege escalation.
 
+The attack flow operates as follows:
+
+1. **Account Creation**: An attacker creates a machine account named `root$` (via `addcomputer.py -computer-name root`)
+2. **Ticket Request**: The attacker requests a TGT for the principal `root` (via `kinit root`)
+3. **KDC Behavior**: The Windows KDC does not find a user account named `root`, but finds the machine account `root$` and issues a ticket for it
+4. **Principal Mapping**: When the ticket is presented to an MIT Kerberos service (e.g., SSH on Linux), the service maps `root$@DOMAIN.COM` to the local user `root` by stripping the trailing `$`
+5. **Privilege Escalation**: The attacker gains access as the privileged local user `root`
+
 The core vulnerability stems from two key behaviors:
 
 1. **MachineAccountQuota**: By default, Windows Active Directory allows authenticated users to create up to 10 machine accounts without special privileges through the `ms-DS-MachineAccountQuota` attribute
@@ -67,10 +75,10 @@ addcomputer.py -k -dc-host $DC_IP -computer-name 'root' -computer-pass 'ComplexP
 # Alternative: Use LDAPS for account creation
 addcomputer.py -debug -k -dc-host $DC_IP "$DOMAIN/$USER" -method LDAPS -computer-name root
 
-# Request ticket for newly created machine account (note the trailing $)
-kinit 'root$'
+# Request ticket for the principal 'root' (KDC will find and issue ticket for 'root$')
+kinit root
 
-# Authenticate to target Linux/Unix service
+# Authenticate to target Linux/Unix service (MIT Kerberos maps root$ -> root)
 ssh -o PreferredAuthentications=gssapi-with-mic -l root $TARGET
 ```
 
@@ -219,6 +227,7 @@ Implement monitoring for suspicious machine account creation:
 - Monitor for machine accounts with privileged usernames (e.g., `root$`, `admin$`)
 - Detect Kerberos authentication patterns inconsistent with normal behavior
 - Track `KRB_TGS_REQ` requests without corresponding `KRB_AS_REQ` events
+
 
 ## Resources
 
