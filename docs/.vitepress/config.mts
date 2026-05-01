@@ -1034,7 +1034,7 @@ export default defineConfig({
                                 "link": "/infra/protocols/kerberos.md"
                             },
                             {
-                                "text": "🛠️ LDAP",
+                                "text": "LDAP",
                                 "link": "/infra/protocols/ldap.md"
                             },
                             {
@@ -1046,7 +1046,7 @@ export default defineConfig({
                                 "link": "/infra/protocols/rtsp.md"
                             },
                             {
-                                "text": "🛠️ MSSQL",
+                                "text": "MSSQL",
                                 "link": "/infra/protocols/mssql.md"
                             },
                             {
@@ -1054,7 +1054,7 @@ export default defineConfig({
                                 "link": "/infra/protocols/nfs.md"
                             },
                             {
-                                "text": "🛠️ MySQL",
+                                "text": "MySQL",
                                 "link": "/infra/protocols/mysql.md"
                             },
                             {
