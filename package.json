@@ -14,6 +14,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",
     "cheerio": "^1.0.0",
+    "lucide-vue-next": "^1.0.0",
     "markdown-it-container": "^4.0.0",
     "medium-zoom": "^1.1.0",
     "vitepress": "^1.4.0"

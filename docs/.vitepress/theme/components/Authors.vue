@@ -78,8 +78,8 @@ watch(() => route.path, () => {
 .authors-container {
   justify-content: center;
   align-items: center;
-  margin-top: 24px;
-  margin-bottom: 24px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   padding: 16px 24px 24px 24px;
   border-radius: 12px;
   line-height: 18px;

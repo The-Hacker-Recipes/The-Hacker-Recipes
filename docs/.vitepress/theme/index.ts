@@ -14,7 +14,7 @@ import Donaters from './components/Donaters.vue'
 import DonationPricingTable from './components/DonationPricingTable.vue'
 import BannerSponsor from './components/BannerSponsor.vue'
 import AsideSponsors from './components/AsideSponsors.vue'
-import Donate from './components/Donate.vue'
+import Write from './components/Write.vue'
 import FooterLinks from './components/FooterLinks.vue';
 import ExegolHistoryImport from './components/ExegolHistoryImport.vue'
 import thrHistory from '../plugins/thrHistory.ts'
@@ -25,11 +25,11 @@ export default {
   
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'aside-ads-before': () =>  h('div', {}, [h(Donate),h(AsideSponsors)]), 
+      'aside-ads-before': () =>  h('div', {}, [h(Write),h(AsideSponsors)]), 
       'aside-ads-after': () => h(Authors),
       'doc-before': () => h(BannerSponsor),
       'doc-bottom': () => h(FooterLinks),
-      'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Donate), h(Authors)]): null,
+      'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Write), h(Authors)]): null,
       'doc-after': () =>isMobileorTablet.value? h(AsideSponsors, { style: { marginTop: '24px' } }): null,
       'not-found': () => h(PageNotFound),
     })
