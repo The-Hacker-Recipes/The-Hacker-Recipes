@@ -66,3 +66,7 @@ Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploi
 
 
 Once the Kerberoast hash is obtained, it can possibly be [cracked](../credentials/cracking.md) to recover the account's password if the password used is weak enough.
+
+## Resources
+
+[https://www.netexec.wiki/ldap-protocol/kerberoasting](https://www.netexec.wiki/ldap-protocol/kerberoasting)
