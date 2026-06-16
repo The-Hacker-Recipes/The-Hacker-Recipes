@@ -6,7 +6,7 @@ category: ad
 # Certificate Services (AD-CS)
 
 > [!TIP]
-> See [AD > Movement > Certificate Services (AD-CS)](../../movement/adcs/index) to know more about it.
+> See [AD > Movement > AD-CS](../../movement/adcs/index) to know more about it.
 
 ## Theory
 

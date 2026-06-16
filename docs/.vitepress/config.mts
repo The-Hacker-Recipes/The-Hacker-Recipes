@@ -515,7 +515,7 @@ export default defineConfig({
                                 ]
                             },
                             {
-                                "text": "Certificate Services (AD-CS)",
+                                "text": "AD-CS",
                                 "link": "/ad/movement/adcs/index.md",
                                 "collapsed": true,
                                 "items": [
@@ -695,7 +695,7 @@ export default defineConfig({
                                 ]
                             },
                             {
-                                "text": "Certificate Services (AD-CS)",
+                                "text": "AD-CS",
                                 "link": "/ad/persistence/adcs/index.md",
                                 "collapsed": true,
                                 "items": [
