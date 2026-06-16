@@ -375,11 +375,6 @@ export default defineConfig({
                                                 "text": "MS14-068",
                                                 "link": "/ad/movement/kerberos/forged-tickets/ms14-068.md"
                                             },
-                                            {
-                                                "text": 'Dollar Ticket',
-                                                "link": '/ad/movement/kerberos/forged-tickets/dollar-ticket.md',
-                                            }
-                                            
                                         ]
                                     },
                                     {
@@ -438,8 +433,19 @@ export default defineConfig({
                                         "link": "/ad/movement/kerberos/pass-the-certificate.md"
                                     },
                                     {
-                                        "text": "sAMAccountName spoofing",
-                                        "link": "/ad/movement/kerberos/samaccountname-spoofing.md"
+                                        "text": "Principal confusion",
+                                        "link": "/ad/movement/kerberos/principal-confusion/samaccountname-spoofing.md",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "sAMAccountName spoofing",
+                                                "link": "/ad/movement/kerberos/principal-confusion/samaccountname-spoofing.md"
+                                            },
+                                            {
+                                                "text": "Dollar ticket",
+                                                "link": "/ad/movement/kerberos/principal-confusion/dollar-ticket.md"
+                                            }
+                                        ]
                                     },
                                     {
                                         "text": "SPN-jacking",
