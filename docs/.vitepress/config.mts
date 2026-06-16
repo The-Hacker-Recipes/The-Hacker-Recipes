@@ -374,7 +374,12 @@ export default defineConfig({
                                             {
                                                 "text": "MS14-068",
                                                 "link": "/ad/movement/kerberos/forged-tickets/ms14-068.md"
+                                            },
+                                            {
+                                                "text": 'Dollar Ticket',
+                                                "link": '/ad/movement/kerberos/forged-tickets/dollar-ticket.md',
                                             }
+                                            
                                         ]
                                     },
                                     {
