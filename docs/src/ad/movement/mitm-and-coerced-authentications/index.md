@@ -3,7 +3,7 @@ authors: ShutdownRepo
 category: ad
 ---
 
-# MITM and coerced auths
+# MITM & coercion
 
 In Active Directory domains, attackers often rely on coerced authentications and MitM (man in the middle) techniques to operate lateral movement, especially when attempting authentication relaying attacks (e.g. [NTLM relay](../ntlm/relay.md) or [Kerberos relay](../kerberos/relay.md)), or when [abusing Kerberos delegations](../kerberos/delegations/).
 

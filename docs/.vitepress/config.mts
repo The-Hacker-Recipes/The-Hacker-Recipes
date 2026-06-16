@@ -224,7 +224,7 @@ export default defineConfig({
                                 ]
                             },
                             {
-                                "text": "MITM and coerced auths",
+                                "text": "MITM & coercion",
                                 "link": "/ad/movement/mitm-and-coerced-authentications/index.md",
                                 "collapsed": true,
                                 "items": [
