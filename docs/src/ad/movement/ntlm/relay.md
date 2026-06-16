@@ -233,14 +233,10 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 * It implements CVE-2019-1040 with the `--remove-mic` option, usually needed when attempting "cross-protocols unsigning relays" (e.g. SMB to SMB-with-required-signing, or SMB to LDAP/S). This option can also be used when NTLMv1 is allowed (NTLMv1 doesn't support MIC).
 * it implements CVE-2019-1019 with the `-remove-target` and `-machine-account` arguments
 * It has the ability to attack multiple targets with the `-tf` option instead of `-t`, and the `-w` option can be set to watch the target file for changes and update target list automatically
+* In multirelay scenarios, the `--keep-relaying` option can be useful when ntlmrelayx stops relaying on targets with a message like "[...] but there are no more targets left" (see [Impacket PR #1741](https://github.com/fortra/impacket/pull/1741))
+* When capturing NTLM authentications separately from relaying them, the NTLM server challenge can be set to a fixed value (e.g. `112233...`) to support deterministic captures/replays (see [capture](./capture.md))
 * the target can be specified with a target protocol like `ldap://target` but the "all" keyword can be used (`all://target`). If the protocol isn't specified, it defaults to smb.
 * It has the ability to relay connections for specific target users to be defined in the targets file
-* It has the ability to relay a single connection (SMB only for now) to multiple targets, see below
-
-> [!TIP]
-> Thanks to [the "multi-relay" feature](https://github.com/SecureAuthCorp/impacket/pull/767), another attacker machine/interface can be added to the targets to combine ntlmrelayx with Responder servers. The attackers will be able capture an NTLM response with a custom challenge on an interface/machine, while relaying on another.
-
-![](assets/capture_and_relay.png)
 
 > [!TIP]
 > The targets file used with the `-tf` option can contain the following
