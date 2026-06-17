@@ -1,5 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useData } from 'vitepress'
 import { ExternalLink } from 'lucide-vue-next'
+
+const { isDark } = useData()
+
+const logoSrc = computed(() =>
+  isDark.value
+    ? '/images/Exegol_Logo_DarkVersion_Horizontal.svg'
+    : '/images/Exegol_Logo_LightVersion_Horizontal.svg',
+)
 </script>
 
 <template>
@@ -14,7 +24,7 @@ import { ExternalLink } from 'lucide-vue-next'
       pentesting, red team, ctf
     </p>
     <div class="write__brand">
-      <img class="write__logo" src="/images/Exegol_Logo_DarkVersion_Horizontal.svg" alt="Exegol"/>
+      <img class="write__logo" :src="logoSrc" alt="Exegol" />
     </div>
   </a>
 </template>
