@@ -43,7 +43,7 @@ This step revolves around the `tgtdeleg` feature from [Rubeus](https://github.co
 Rubeus.exe tgtdeleg /nowrap
 ```
 
-The TGT can then be used with [Pass the Ticket](../ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step.
+The TGT can then be used with [Pass the Ticket](../pass-the/ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step.
 
 Alternatively, if the machine account credentials are known, a TGT can be requested commonly.
 
@@ -77,7 +77,7 @@ The TGT can then be used along with S4U2self to obtain a Service Ticket imperson
 
 === UNIX-like
 
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](../ptt.md)).
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](../pass-the/ptt.md)).
 
 ```bash
 export KRB5CCNAME="/path/to/ticket.ccache"
@@ -96,7 +96,7 @@ Rubeus.exe s4u /self /nowrap /impersonateuser:$TARGET_USER /altservice:"cifs/$TA
 :::
 
 
-Once a Service Ticket is received, it can be used with [pass-the-ticket](../ptt.md)/[pass-the-cache](../ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
+Once a Service Ticket is received, it can be used with [pass-the-ticket](../pass-the/ptt.md)/[pass-the-cache](../pass-the/ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
 
 > [!TIP]
 > This technique can also be used when receiving TGTs during a [Kerberos Unconstrained Delegation abuse](unconstrained.md) in order to gain local admin privileges over the victims.

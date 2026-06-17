@@ -25,7 +25,7 @@ The common way to conduct these attacks is to create a computer account. This is
 
 Then, in order to abuse this, the attacker has to control the account (A) the target object's (B) attribute has been populated with. Using that account's (A) credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
-In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service (B). 
+In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../pass-the/ptt.md) to access the target service (B). 
 
 > [!WARNING]
 > If the "impersonated" account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, the delegation will (probably) fail.
@@ -41,7 +41,7 @@ In the end, an RBCD abuse results in a Service Ticket to authenticate on the tar
 > * As it turns out, even after the patch, as of Jan. 24th 2023, members of the Protected Users group are now in fact protected against delegation, except for the native administrator account (RID 500), even if it's a member of the group. No idea if this is intended or not but it seems it's not the only security behavior of that group that doesn't apply for this account (e.g. RC4 pre-authentication still works for the RID-500 admin, even if member of the Protected Users group, source: [Twitter](https://twitter.com/Defte_/status/1597699988368556032)).
 
 > [!TIP]
-> A technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+> A technique called [AnySPN or "service class modification"](../pass-the/ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 
 ![](<assets/RBCD mindmap.png>)
 
@@ -89,12 +89,12 @@ getST.py -spn 'cifs/target' -impersonate "Administrator" -dc-ip "$DC_IP$" "$DOMA
 > In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](bronze-bit.md)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 
 > [!TIP]
-> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
+> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../pass-the/ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
 
 ---
 **Step 3**: Pass-the-ticket :passport_control: 
 
-Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
+Once the ticket is obtained, it can be used with [pass-the-ticket](../pass-the/ptt.md).
 
 
 === Windows
@@ -181,12 +181,12 @@ Rubeus.exe hash /user:$USER /domain:"$DOMAIN" /password:$PASSWORD
 > In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](bronze-bit.md)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
 
 > [!TIP]
-> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more services. This technique can be exploited with the `/altservice` flag with Rubeus.
+> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../pass-the/ptt.md#modifying-the-spn)) to access more services. This technique can be exploited with the `/altservice` flag with Rubeus.
 
 ---
 **Step 3**: Pass-the-ticket :passport_control: 
 
-Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../ptt.md)).
+Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../pass-the/ptt.md)).
 
 :::
 
@@ -200,7 +200,7 @@ The technique is as follows:
 1. Obtain a TGT for the SPN-less user allowed to delegate to a target and retrieve the TGT session key.
 2. Change the user's password hash and set it to the TGT session key.
 3. [Combine S4U2self and U2U](../#s4u2self-+-u2u) so that the SPN-less user can obtain a service ticket to itself, on behalf of another (powerful) user, and then proceed to S4U2proxy to obtain a service ticket to the target the user can delegate to, on behalf of the other, more powerful, user.
-4. [Pass the ticket](../ptt.md) and access the target, as the delegated other
+4. [Pass the ticket](../pass-the/ptt.md) and access the target, as the delegated other
 
 > [!NOTE]
 > While this technique allows for an abuse of the RBCD primitive, even when the [`MachineAccountQuota`](../../builtins/machineaccountquota.md) is set to 0, or when the absence of LDAPS limits the creation of computer accounts, it requires a sacrificial user account. In the abuse process, the user account's password hash will be reset with another hash that has no known plaintext, effectively preventing regular users from using this account.
@@ -243,7 +243,7 @@ nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M change-password -o NE
 KRB5CCNAME="$USER.ccache" nxc smb "$DC_IP" --use-kcache --delegate Administrator --u2u
 ```
 
-After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
+After these steps, the final service ticket can be used with [Pass-the-ticket](../pass-the/ptt.md).
 
 
 === Windows
@@ -252,7 +252,7 @@ From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be 
 
 The steps detailed in [PR #137](https://github.com/GhostPack/Rubeus/pull/137) can be followed.
 
-After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
+After these steps, the final service ticket can be used with [Pass-the-ticket](../pass-the/ptt.md).
 
 :::
 

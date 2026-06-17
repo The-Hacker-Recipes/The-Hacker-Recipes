@@ -69,11 +69,11 @@ The TGT is used to ask for STs. TGTs can be obtained when supplying a valid secr
 > 
 > _(_[_Kerberos keys calculation_](https://snovvcrash.rocks/2021/05/21/calculating-kerberos-keys.html)_)_
 
-Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT (if RC4 key is accepted). This is called [Overpass-the-hash](ptk.md).
+Again, Microsoft has poorly implemented the zero-knowledge proof concept in Kerberos. An attacker knowing a user's NT hash could use it to ask the KDC for a TGT (if RC4 key is accepted). This is called [Overpass-the-hash](pass-the/ptk.md).
 
 
 > [!TIP]
-> Read the [Pass the key](ptk.md) article for more insight
+> Read the [Pass the key](pass-the/ptk.md) article for more insight
 
 
 Users are not the only ones whose NT hashes can be used to abuse Kerberos.
@@ -86,7 +86,7 @@ Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 > Read the [Forged tickets](forged-tickets/) article for more insight
 
 
-[Overpass-the-hash](ptk.md), [silver ticket](forged-tickets/silver.md) and [golden ticket](forged-tickets/golden.md) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](ptt.md).
+[Overpass-the-hash](pass-the/ptk.md), [silver ticket](forged-tickets/silver.md) and [golden ticket](forged-tickets/golden.md) attacks are used by attackers to obtain illegitimate tickets that can then be used to access services using Kerberos without knowing any password. This is called [Pass-the-ticket](pass-the/ptt.md).
 
 
 

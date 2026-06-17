@@ -28,7 +28,7 @@ Want to know more about S4U2self and S4U2proxy (required to understand some dele
 
 Simply put, Service for User to Self (S4U2self) allows a service to obtain a Service Ticket, on behalf of another user (called "principal"), to itself. Service for User to Proxy (S4U2proxy) allows a service to obtain a Service Ticket, on behalf of a user to a different service. 
 
-Some of the following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](../ptt.md).
+Some of the following parts allow to obtain modified or crafted Kerberos tickets. Once obtained, these tickets can be used with [Pass-the-Ticket](../pass-the/ptt.md).
 
 ## Practice
 

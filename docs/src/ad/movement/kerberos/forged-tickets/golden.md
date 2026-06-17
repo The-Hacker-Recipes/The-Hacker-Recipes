@@ -7,7 +7,7 @@ category: ad
 
 ## Theory
 
-The long-term key of the `krbtgt` account can be used to forge a special TGT (Ticket Granting Ticket) that can later be used with [Pass-the-ticket](../ptt.md) to access any resource within the AD domain. The `krbtgt`'s key is used to encrypt the PAC. In a Golden Ticket scenario, an attacker that has knowledge of the `krbtgt` long-term key, will usually forge a PAC indicating that the user belongs to privileged groups. This PAC will be embedded in a forged TGT. The TGT will be used to request Service Tickets than will then feature the PAC presented in the TGT, hence granting lots of access to the attacker.
+The long-term key of the `krbtgt` account can be used to forge a special TGT (Ticket Granting Ticket) that can later be used with [Pass-the-ticket](../pass-the/ptt.md) to access any resource within the AD domain. The `krbtgt`'s key is used to encrypt the PAC. In a Golden Ticket scenario, an attacker that has knowledge of the `krbtgt` long-term key, will usually forge a PAC indicating that the user belongs to privileged groups. This PAC will be embedded in a forged TGT. The TGT will be used to request Service Tickets than will then feature the PAC presented in the TGT, hence granting lots of access to the attacker.
 
 ## Practice
 
@@ -55,7 +55,7 @@ kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes128:$KRBTGT_AES_128_KEY /u
 kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes256:$KRBTGT_AES_256_KEY /user:$USER /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../ptt.md#injecting-the-ticket).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../pass-the/ptt.md#injecting-the-ticket).
 
 :::
 

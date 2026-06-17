@@ -7,7 +7,7 @@ category: ad
 
 ## Theory
 
-The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../ptt.md) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
+The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../pass-the/ptt.md) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
 
 ## Practice
 
@@ -53,7 +53,7 @@ kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes128:$serviceAccount_aes128
 kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes256:$serviceAccount_aes256_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../ptt.md#injecting-the-ticket).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../pass-the/ptt.md#injecting-the-ticket).
 
 :::
 
