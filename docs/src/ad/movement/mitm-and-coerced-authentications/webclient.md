@@ -24,8 +24,8 @@ Attackers can remotely enumerate systems on which the WebClient is running, whic
 From UNIX-like systems, this can be achieved with [webclientservicescanner](https://github.com/Hackndo/WebclientServiceScanner) (Python) or using [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
 
 ```bash
-webclientservicescanner 'domain.local'/'user':'password'@'machine'
-netexec smb 'TARGETS' -d 'domain' -u 'user' -p 'password' -M webdav
+webclientservicescanner "$DOMAIN/$USER":"$PASSWORD"@"$TARGET"
+netexec smb "$TARGETS" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M webdav
 ```
 
 
@@ -34,7 +34,7 @@ netexec smb 'TARGETS' -d 'domain' -u 'user' -p 'password' -M webdav
 From Windows systems, this can be achived with [GetWebDAVStatus](https://github.com/G0ldenGunSec/GetWebDAVStatus) (C, C#)
 
 ```bash
-GetWebDAVStatus.exe 'machine'
+GetWebDAVStatus.exe $TARGET
 ```
 
 :::

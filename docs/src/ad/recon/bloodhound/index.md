@@ -7,7 +7,7 @@ category: ad
 
 ## Theory
 
-[BloodHound](https://github.com/BloodHoundAD/BloodHound) (Javascript webapp, compiled with Electron, uses [Neo4j](https://neo4j.com/) as graph DBMS) is an awesome tool that allows mapping of relationships within Active Directory environments. It mostly uses Windows API functions and LDAP namespace functions to collect data from domain controllers and domain-joined Windows systems.
+[BloodHound](https://github.com/BloodHoundAD/BloodHound) is an awesome tool that allows mapping of relationships within Active Directory environments. It mostly uses Windows API functions and LDAP namespace functions to collect data from domain controllers and domain-joined Windows systems. The current release is BloodHound Community Edition (CE), which uses a standalone web UI deployed via Docker (or natively) with a [Neo4j](https://neo4j.com/) backend — replacing the legacy Electron desktop app from older versions.
 
 ## Practice
 
@@ -26,6 +26,9 @@ It must be run from the context of a domain user, either directly through a logo
 ```bash
 SharpHound.exe --collectionmethods All
 ```
+
+> [!TIP]
+> SharpHound v2+ uses `-c All` instead of `--collectionmethods All`. The `--collectionmethods` flag applies to older (v1) builds.
 
 > [!TIP]
 > When running SharpHound from a `runas /netonly`-spawned command shell, you may need to let SharpHound know what username you are authenticating to other systems as with the `OverrideUserName` flag

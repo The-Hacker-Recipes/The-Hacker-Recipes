@@ -106,7 +106,7 @@ Below are different use-cases of ntlmrelayx.
 
 The following command will try to relay the authentication over SMB and attempt a remote [dump of the SAM & LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md) from the target if the relayed victim has the right privileges.
 
-At the time of this article update (12th Feb. 2022), [a pull request](https://github.com/SecureAuthCorp/impacket/pull/1253) adding LSA dump to the existing SAM dump is pending.
+At the time of this article update (17th Jun. 2026), [a pull request](https://github.com/SecureAuthCorp/impacket/pull/1253) adding LSA dump to the existing SAM dump is pending (since Feb. 2022).
 
 ```bash
 ntlmrelayx.py -t smb://$TARGET

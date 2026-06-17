@@ -10,7 +10,7 @@ category: ad
 
 When asking the KDC (Key Distribution Center) for a Service Ticket (ST), the requesting user needs to send a valid TGT (Ticket Granting Ticket) and the service name (`sname`) of the service wanted. If the TGT is valid, and if the service exists, the KDC sends the ST to the requesting user.
 
-Multiple formats are accepted for the `sname` field: servicePrincipalName (SPN), sAMAccountName (SAN), userPrincipalName (UPN), etc. (see [Kerberos tickets](./#tickets) "cname formats").
+Multiple formats are accepted for the `sname` field: servicePrincipalName (SPN), sAMAccountName (SAN), userPrincipalName (UPN), etc. (see [Kerberos tickets](./#tickets) "sname formats").
 
 The ST is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a service (by its SAN or SPN), he can request a ST for this service and crack it offline later in an attempt to retrieve that service account's password.
 
@@ -88,11 +88,8 @@ If an attacker knows of an account for which pre-authentication isn't required (
 
 The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) (Python) can perform all the necessary steps to request a ST for a service given its SPN (or name) and valid domain credentials.
 
-_At the time of writing, Sept. 28th 2022,_ [_the pull request (#1413)_](https://github.com/SecureAuthCorp/impacket/pull/1413) _adding the `-no-preauth` option for `GetUserSPNs.py` is pending._
-
-
 ```bash
-GetUserSPNs.py -no-preauth "bobby" -usersfile "services.txt" -dc-host "DC_IP_or_HOST" "DOMAIN.LOCAL"/
+GetUserSPNs.py -no-preauth "$USER" -usersfile "services.txt" -dc-host $DC_HOST $DOMAIN/
 ```
 
 
@@ -109,11 +106,8 @@ cifs/srv02
 
 [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
 
-_At the time of writing, Sept. 28th 2022,_ [_the pull request (#139)_](https://github.com/GhostPack/Rubeus/pull/139) _adding the `/nopreauth` option for Rubeus' `kerberoast` command is pending._
-
-
 ```powershell
-Rubeus.exe kerberoast /outfile:kerberoastables.txt /domain:"DOMAIN.LOCAL" /dc:"DC01.DOMAIN.LOCAL" /nopreauth:"nopreauth_user" /spn:"target_service"
+Rubeus.exe kerberoast /outfile:kerberoastables.txt /domain:"DOMAIN.LOCAL" /dc:$DC_HOST /nopreauth:$USER /spn:$TARGET_SPN
 ```
 
 

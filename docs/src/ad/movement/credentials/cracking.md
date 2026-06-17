@@ -117,7 +117,7 @@ More information on how to fully use hashcat can be found [here](https://www.4ar
 
 ### Hashcat alternative
 
-A robust alternative to hashcat is [John the Ripper](https://github.com/openwall/john), a.k.a. john (C). It handles some hash types that hashcat doesn't (Domain Cached Credentials for instance) but it also has a strong community that regularly releases tools in the form of "something2john" that convert things to a john crackable format (e.g. `bitlocker2john`, `1password2john`, `keepass2john`, `lastpass2john` and so on).
+A robust alternative to hashcat is [John the Ripper](https://github.com/openwall/john), a.k.a. john (C). It has a strong community that regularly releases `*2john` conversion tools that convert things to a john crackable format (e.g. `bitlocker2john`, `1password2john`, `keepass2john`, `lastpass2john` and so on) covering formats and file types that hashcat lacks dedicated converters for.
 
 ## Tips & tricks
 

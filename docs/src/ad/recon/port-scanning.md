@@ -16,7 +16,7 @@ In an Active Directory domain, domain controllers can be easily spotted dependin
 * `389/TCP` for LDAP
 * `636/TCP` for LDAPS (LDAP over TLS/SSL)
 * `445/TCP` and `445/UDP` for SMB
-* `464/TCP` and `445/UDP` for Kerberos password change
+* `464/TCP` and `464/UDP` for Kerberos password change
 * `3268/TCP` for LDAP Global Catalog
 * `3269/TCP` for LDAP Global Catalog over TLS/SSL
 

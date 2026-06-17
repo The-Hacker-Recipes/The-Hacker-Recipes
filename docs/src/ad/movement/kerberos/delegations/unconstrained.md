@@ -16,7 +16,7 @@ If an account (user or computer), with unconstrained delegations privileges, is 
 > **Nota bene**: the native, RID 500, "Administrator" account doesn't benefit from that restriction, even if it's added to the Protected Users group (source: [sensepost.com](https://sensepost.com/blog/2023/protected-users-you-thought-you-were-safe-uh/)).
 
 > [!NOTE]
-> Unconstrained delegation abuses are usually combined with an [MS-RPRN abuse (printerbug)](../../mitm-and-coerced-authentications/ms-rprn.md), [MS-EFSR abuse (petitpotam)](../../mitm-and-coerced-authentications/ms-efsr.md), [MS-FSRVP abuse (shadowcoerce)](../../mitm-and-coerced-authentications/ms-fsrvp.md), r [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
+> Unconstrained delegation abuses are usually combined with an [MS-RPRN abuse (printerbug)](../../mitm-and-coerced-authentications/ms-rprn.md), [MS-EFSR abuse (petitpotam)](../../mitm-and-coerced-authentications/ms-efsr.md), [MS-FSRVP abuse (shadowcoerce)](../../mitm-and-coerced-authentications/ms-fsrvp.md), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 
 ![](<assets/KUD mindmap.png>)
 

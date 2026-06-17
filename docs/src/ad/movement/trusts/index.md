@@ -155,7 +155,7 @@ When authenticating with NTLM, the process is highly similar, see the [NTLM auth
 
 Inter-forest trusts ("External" and "Forest" trusts) can be configured with different levels of authentication:
 
-* Forest-wide authentication: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level is specific to intra-forest trusts.
+* Forest-wide authentication: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level applies to intra-forest trusts and is the default for inter-forest forest trusts.
 * Domain-wide authentication: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).
 * Selective authentication: allows only specific users in the trusted domain to access resources in the trusting domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain. In order to allow a "trusted user" to access a "trusting resource", the resource's DACL must include an ACE in which the trusted user has the "`Allowed-To-Authenticate`" extended right (GUID: `68b1d179-0d15-4d4f-ab71-46152e79a7bc`).
 
@@ -344,7 +344,7 @@ From Windows systems, many tools like can be used to enumerate trusts. "[A Guide
 From domain-joined hosts, the `netdom` cmdlet can be used.
 
 ```powershell
-netdom trust /domain:DOMAIN.LOCAL
+netdom trust /domain:$DOMAIN
 ```
 
 #### PowerView

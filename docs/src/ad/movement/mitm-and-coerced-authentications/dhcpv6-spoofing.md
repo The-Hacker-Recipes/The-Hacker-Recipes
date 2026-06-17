@@ -37,7 +37,7 @@ dhcp6.spoof on
 
 # Configure and DNS DHCPv6 spoofing
 set dns.spoof.domains $DOMAIN_FQDN
-set dns.spoot.all true
+set dns.spoof.all true
 dns.spoof on
 ```
 

@@ -24,5 +24,5 @@ There are many ways attackers can do MitM or redirect/force targets authenticati
 | Requires domain credentials | x | | | | | | | x | requires emails-capable account |
 | Requires editing AD | x | | | | | | | | |
 | Requires privileged access to launch attack from a compromised system | | x | | | x | x | | | |
-| Targets limited to the same network segment as the attacker | | x | x | x | x | | | x | x |
+| Targets limited to the same network segment as the attacker | | x | x | x | x | | | | x |
 | Disruption | low | low | low | low to high | low to high | low to high | low to high | none | none |

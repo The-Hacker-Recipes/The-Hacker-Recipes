@@ -41,16 +41,16 @@ export KRB5CCNAME=$path_to_ticket.ccache
 
 === Windows
 
-The most simple way of injecting the ticket is to supply the `/ptt` flag directly to the command used to request/create a ticket. Both [mimikatz](https://github.com/GhostPack/Rubeus) and [Rubeus](https://github.com/GhostPack/Rubeus) accept this flag.
+The most simple way of injecting the ticket is to supply the `/ptt` flag directly to the command used to request/create a ticket. Both [mimikatz](https://github.com/gentilkiwi/mimikatz) and [Rubeus](https://github.com/GhostPack/Rubeus) accept this flag.
 
-This can also be done manually with [mimikatz](https://github.com/GhostPack/Rubeus) using [`kerberos::ptt`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/ptt) or [Rubeus](https://github.com/GhostPack/Rubeus).
+This can also be done manually with [mimikatz](https://github.com/gentilkiwi/mimikatz) using [`kerberos::ptt`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/ptt) or [Rubeus](https://github.com/GhostPack/Rubeus).
 
 ```powershell
 # use a .kirbi file
 kerberos::ptt $ticket_kirbi_file
 
 # use a .ccache file
-kerberos::ptt $ticket_ccache_file
+kerberos::ptc $ticket_ccache_file
 ```
 
 ```powershell
@@ -82,7 +82,7 @@ secretsdump.py -k $TARGET
 ```bash
 netexec smb $TARGETS -k --sam
 netexec smb $TARGETS -k --lsa
-netexecETS -k --ntds
+netexec smb $TARGETS -k --ntds
 ```
 
 [Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [NetExec](https://github.com/Pennyw0rth/NetExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/lsass.md)).
@@ -130,7 +130,7 @@ On Windows, legitimate tools like the [sysinternals](https://docs.microsoft.com/
 
 ### Modifying the SPN
 
-When requesting access to a service, a Service Ticket is used. It contains enough information about the user to allow the destination service to decide to grant access or not, without asking the Domain Controller. These pieces of information are stored in a protected blob inside the ST called PAC (Privilege Attribute Certificate). In theory, the user requesting access can't tamper with that PAC.
+When requesting access to a service, a Service Ticket is used. It contains enough information about the user to allow the destination service to decide to grant access or not, without asking the Domain Controller. These pieces of information are stored in a protected blob inside the ST called PAC (Privileged Attribute Certificate). In theory, the user requesting access can't tamper with that PAC.
 
 Another information stored in the ST, outside of the PAC, and unprotected, called `sname`, indicates what service the ticket is destined to be used for. This information is basically the SPN (Service Principal Name) of the target service. It's split into two elements: the service class, and the hostname.
 

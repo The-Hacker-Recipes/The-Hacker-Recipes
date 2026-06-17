@@ -34,7 +34,7 @@ WPAD spoofing can be combined with
 
 On old Windows systems (i.e. lacking the MS16-077 security update), the WPAD location could be obtained through insecure name resolution protocols like LLMNR and NBT-NS when standard DNS queries were failing (i.e. no DNS record for WPAD). This allowed attackers to operate [LLMNR and NBT-NS spoofing](llmnr-nbtns-mdns-spoofing.md) to answer those WPAD queries and redirect to a fake `wpad.dat` file, hence poisoning the web proxy configuration of the requesting clients, hence obtaining more traffic.
 
-[Responder](https://github.com/SpiderLabs/Responder) (Python) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers (listeners) that will [capture authentications](../ntlm/capture.md) and echo the NTLM hashes to the attacker.
+[Responder](https://github.com/lgandx/Responder) (Python) and [Inveigh](https://github.com/Kevin-Robertson/Inveigh) (Powershell) are great tools for name poisoning. In addition to name poisoning, they also have the ability to start servers (listeners) that will [capture authentications](../ntlm/capture.md) and echo the NTLM "hashes" to the attacker.
 
 ::: tabs
 
@@ -71,7 +71,7 @@ On up-to-date machines (i.e. with the MS16-077 security update applied), WPAD ca
 
 #### Pre CVE-2018-8320
 
-On machines that are not patched against [CVE-2018-8320](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2018-8320), there are two ways to bypass the GQBL: by [registering a wildcard record](adidns-spoofing.md#manuel-record-addition) or by registering a domain alias (DNAME) record, which can be conducted as follows with [Powermad](https://github.com/Kevin-Robertson/Powermad) (Powershell).
+On machines that are not patched against [CVE-2018-8320](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2018-8320), there are two ways to bypass the GQBL: by [registering a wildcard record](adidns-spoofing.md#manual-record-manipulation) or by registering a domain alias (DNAME) record, which can be conducted as follows with [Powermad](https://github.com/Kevin-Robertson/Powermad) (Powershell).
 
 ```bash
 New-ADIDNSNode -Node '*' -Data 'Pentest_IP_Address'

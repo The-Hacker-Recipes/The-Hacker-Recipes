@@ -16,7 +16,7 @@ While the wider implications of this bug, AD-DS-wise, were only suspected, in 20
 The following MS-EFSR's methods were detected vulnerable
 
 * `EfsRpcOpenFileRaw` and `EfsRpcEncryptFileSrv` ([partially patched by Microsoft](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-36942))
-* `EfsRpcEncryptFileSrv`, `EfsRpcDecryptFileSrv`, `EfsRpcQueryUsersOnFile`, `EfsRpcQueryRecoveryAgents`, `EfsRpcRemoveUsersFromFile`, `EfsRpcAddUsersToFile`, `EfsRpcFileKeyInfo`, `EfsRpcDuplicateEncryptionInfoFile`, `EfsRpcAddUsersToFileEx` (unpatched at the time of this article update, 29th December 2021)
+* `EfsRpcDecryptFileSrv`, `EfsRpcQueryUsersOnFile`, `EfsRpcQueryRecoveryAgents`, `EfsRpcRemoveUsersFromFile`, `EfsRpcAddUsersToFile`, `EfsRpcFileKeyInfo`, `EfsRpcDuplicateEncryptionInfoFile`, `EfsRpcAddUsersToFileEx` (unpatched at the time of this article update, 29th December 2021 — patch status may have changed since then, verify against current Microsoft guidance)
 
 ## Practice
 

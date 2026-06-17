@@ -17,7 +17,7 @@ On UNIX-like systems, there are many alternatives that allow obtaining the passw
 
 ```bash
 # polenum (obtained through MS-RPC)
-polenum -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+polenum -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 
 # netexec (obtained through MS-RPC)
 nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --pass-pol
