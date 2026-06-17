@@ -249,7 +249,7 @@ export default defineConfig({
                                         "link": "/ad/movement/mitm-and-coerced-authentications/wsus-spoofing.md"
                                     },
                                     {
-                                        "text": "LLMNR, NBT-NS, mDNS spoofing",
+                                        "text": "LLMNR, NBT-NS, mDNS",
                                         "link": "/ad/movement/mitm-and-coerced-authentications/llmnr-nbtns-mdns-spoofing.md"
                                     },
                                     {
@@ -261,20 +261,26 @@ export default defineConfig({
                                         "link": "/ad/movement/mitm-and-coerced-authentications/wpad-spoofing.md"
                                     },
                                     {
-                                        "text": "MS-EFSR abuse (PetitPotam)",
-                                        "link": "/ad/movement/mitm-and-coerced-authentications/ms-efsr.md"
-                                    },
-                                    {
-                                        "text": "MS-RPRN abuse (PrinterBug)",
-                                        "link": "/ad/movement/mitm-and-coerced-authentications/ms-rprn.md"
-                                    },
-                                    {
-                                        "text": "MS-FSRVP abuse (ShadowCoerce)",
-                                        "link": "/ad/movement/mitm-and-coerced-authentications/ms-fsrvp.md"
-                                    },
-                                    {
-                                        "text": "MS-DFSNM abuse (DFSCoerce)",
-                                        "link": "/ad/movement/mitm-and-coerced-authentications/ms-dfsnm.md"
+                                        "text": "RPC coercions",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "MS-EFSR abuse (PetitPotam)",
+                                                "link": "/ad/movement/mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md"
+                                            },
+                                            {
+                                                "text": "MS-RPRN abuse (PrinterBug)",
+                                                "link": "/ad/movement/mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md"
+                                            },
+                                            {
+                                                "text": "MS-FSRVP abuse (ShadowCoerce)",
+                                                "link": "/ad/movement/mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md"
+                                            },
+                                            {
+                                                "text": "MS-DFSNM abuse (DFSCoerce)",
+                                                "link": "/ad/movement/mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md"
+                                            }
+                                        ]
                                     },
                                     {
                                         "text": "PushSubscription abuse",
@@ -327,20 +333,52 @@ export default defineConfig({
                                         "link": "/ad/movement/kerberos/pre-auth-bruteforce.md"
                                     },
                                     {
-                                        "text": "Pass the key",
-                                        "link": "/ad/movement/kerberos/ptk.md"
+                                        "text": "Pass the ...",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "Pass the key",
+                                                "link": "/ad/movement/kerberos/pass-the/ptk.md"
+                                            },
+                                            {
+                                                "text": "Overpass the hash",
+                                                "link": "/ad/movement/kerberos/pass-the/opth.md"
+                                            },
+                                            {
+                                                "text": "Pass the ticket",
+                                                "link": "/ad/movement/kerberos/pass-the/ptt.md"
+                                            },
+                                            {
+                                                "text": "Pass the cache",
+                                                "link": "/ad/movement/kerberos/pass-the/ptc.md"
+                                            },
+                                            {
+                                                "text": "Pass the Certificate",
+                                                "link": "/ad/movement/kerberos/pass-the/pass-the-certificate.md"
+                                            }
+                                        ]
                                     },
                                     {
-                                        "text": "Overpass the hash",
-                                        "link": "/ad/movement/kerberos/opth.md"
-                                    },
-                                    {
-                                        "text": "Pass the ticket",
-                                        "link": "/ad/movement/kerberos/ptt.md"
-                                    },
-                                    {
-                                        "text": "Pass the cache",
-                                        "link": "/ad/movement/kerberos/ptc.md"
+                                        "text": "Roasting",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "ASREQroast",
+                                                "link": "/ad/movement/kerberos/roasting/asreqroast.md"
+                                            },
+                                            {
+                                                "text": "ASREProast",
+                                                "link": "/ad/movement/kerberos/roasting/asreproast.md"
+                                            },
+                                            {
+                                                "text": "Kerberoast",
+                                                "link": "/ad/movement/kerberos/roasting/kerberoast.md"
+                                            },
+                                            {
+                                                "text": "Timeroast",
+                                                "link": "/ad/movement/kerberos/roasting/timeroast.md"
+                                            }
+                                        ]
                                     },
                                     {
                                         "text": "Relay",
@@ -378,22 +416,6 @@ export default defineConfig({
                                         ]
                                     },
                                     {
-                                        "text": "ASREQroast",
-                                        "link": "/ad/movement/kerberos/asreqroast.md"
-                                    },
-                                    {
-                                        "text": "ASREProast",
-                                        "link": "/ad/movement/kerberos/asreproast.md"
-                                    },
-                                    {
-                                        "text": "Kerberoast",
-                                        "link": "/ad/movement/kerberos/kerberoast.md"
-                                    },
-                                    {
-                                        "text": "Timeroast",
-                                        "link": "/ad/movement/kerberos/timeroast.md"
-                                    },
-                                    {
                                         "text": "Delegations",
                                         "link": "/ad/movement/kerberos/delegations/index.md",
                                         "collapsed": true,
@@ -427,10 +449,6 @@ export default defineConfig({
                                     {
                                         "text": "UnPAC the hash",
                                         "link": "/ad/movement/kerberos/unpac-the-hash.md"
-                                    },
-                                    {
-                                        "text": "Pass the Certificate",
-                                        "link": "/ad/movement/kerberos/pass-the-certificate.md"
                                     },
                                     {
                                         "text": "Principal confusion",

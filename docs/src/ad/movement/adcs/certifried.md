@@ -129,7 +129,7 @@ certipy req -u 'computer$'@"$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$AD
 ```
 
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 > [!TIP]
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -143,7 +143,7 @@ Certify.exe request /ca:"domain\ca" /template:"Machine"
 ```
 
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate.
 
 :::
 

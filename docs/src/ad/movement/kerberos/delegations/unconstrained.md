@@ -16,7 +16,7 @@ If an account (user or computer), with unconstrained delegations privileges, is 
 > **Nota bene**: the native, RID 500, "Administrator" account doesn't benefit from that restriction, even if it's added to the Protected Users group (source: [sensepost.com](https://sensepost.com/blog/2023/protected-users-you-thought-you-were-safe-uh/)).
 
 > [!NOTE]
-> Unconstrained delegation abuses are usually combined with an [MS-RPRN abuse (printerbug)](../../mitm-and-coerced-authentications/ms-rprn.md), [MS-EFSR abuse (petitpotam)](../../mitm-and-coerced-authentications/ms-efsr.md), [MS-FSRVP abuse (shadowcoerce)](../../mitm-and-coerced-authentications/ms-fsrvp.md), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
+> Unconstrained delegation abuses are usually combined with an [MS-RPRN abuse (printerbug)](../../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [MS-EFSR abuse (petitpotam)](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [MS-FSRVP abuse (shadowcoerce)](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange) to gain domain admin privileges.
 
 ![](<assets/KUD mindmap.png>)
 
@@ -73,7 +73,7 @@ export KRB5CCNAME=`pwd`/'krbtgt.ccache'
 > [!CAUTION]
 > In case, for some reason, attacking a Domain Controller doesn't work (i.e. error saying`Ciphertext integrity failed.`) try to attack others (if you're certain the credentials you supplied were correct). Some replication and propagation issues could get in the way.
 
-Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md)) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
+Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
 
 The TGT will then be usable with [Pass the Ticket](../ptt.md) (to act as the victim) or with [S4U2self abuse](s4u2self-abuse.md) (to obtain local admin privileges over the victim).
 

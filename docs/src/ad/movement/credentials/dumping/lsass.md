@@ -19,7 +19,7 @@ The Local Security Authority Subsystem Service (LSASS) is a Windows service resp
 [Lsassy](https://github.com/Hackndo/lsassy) (Python) can be used to remotely extract credentials, from LSASS, on multiple hosts. As of today (22/07/2020), it is the Rolls-Royce of remote lsass credential harvesting.
 
 * several dumping methods: comsvcs.dll, [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump), [Dumpert](https://github.com/outflanknl/Dumpert)
-* several authentication methods: like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
+* several authentication methods: like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/pass-the/ptt.md) (Kerberos)
 * it can be used either as a standalone script, as a [NetExec](https://github.com/Pennyw0rth/NetExec) module or as a Python library
 * it can interact with a Neo4j database to set [BloodHound](https://github.com/BloodHoundAD/BloodHound) targets as "owned"
 

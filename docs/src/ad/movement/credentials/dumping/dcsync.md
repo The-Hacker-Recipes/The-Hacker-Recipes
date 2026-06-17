@@ -21,7 +21,7 @@ This attack requires the `DS-Replication-Get-Changes` and `DS-Replication-Get-Ch
 
 === UNIX-like
 
-On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md).
+On UNIX-like systems, this attack can be carried out with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) which has the ability to run this attack on an elevated context obtained through [plaintext password stuffing](../bruteforcing/stuffing.md), [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/pass-the/ptt.md).
 
 ```bash
 # using a plaintext password
@@ -57,7 +57,7 @@ ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':
 
 === Windows
 
-On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets/golden) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/ptt.md)).
+On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) (C) can be used [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync) to operate a DCSync and recover the `krbtgt` keys for a [golden ticket attack](../../kerberos/forged-tickets/golden) for example. For this attack to work, the following mimikatz command should run in an elevated context (i.e. through runas with plaintext password, [pass-the-hash](../../ntlm/pth.md) or [pass-the-ticket](../../kerberos/pass-the/ptt.md)).
 
 ```bash
 # Extract a specific user, in this case the krbtgt

@@ -11,9 +11,9 @@ The Kerberos authentication protocol works with tickets in order to grant access
 
 The pre-authentication requires the requesting user to supply its secret key (DES, RC4, AES128 or AES256) derived from the user password. Technically, when asking the KDC (Key Distribution Center) for a TGT (Ticket Granting Ticket), the requesting user needs to validate pre-authentication by sending a timestamp encrypted with it's own credentials in an `AS_REQ` message. It ensures the user is requesting a TGT for himself. When attackers obtain a man-in-the-middle position, they are sometimes able to capture pre-authentication messages, including the encrypted timestamps. Attackers can try to crack those encrypted timestamps to retrieve the user's password.
 
-This technique is similar to [ASREProasting](asreproast.md) but doesn't rely on a misconfiguration. It relies instead on an attacker successfully obtain a powerful enough [man-in-the-middle](../mitm-and-coerced-authentications/) position (i.e. [ARP poisoning](../mitm-and-coerced-authentications/arp-poisoning.md), [ICMP redirect](../mitm-and-coerced-authentications/icmp-redirect.md), [DHCPv6 spoofing](../mitm-and-coerced-authentications/dhcpv6-spoofing.md)).
+This technique is similar to [ASREProasting](asreproast.md) but doesn't rely on a misconfiguration. It relies instead on an attacker successfully obtain a powerful enough [man-in-the-middle](../../mitm-and-coerced-authentications/) position (i.e. [ARP poisoning](../../mitm-and-coerced-authentications/arp-poisoning.md), [ICMP redirect](../../mitm-and-coerced-authentications/icmp-redirect.md), [DHCPv6 spoofing](../../mitm-and-coerced-authentications/dhcpv6-spoofing.md)).
 
-This technique can be categorized as a [plaintext protocol credential dumping](../credentials/dumping/network-protocols.md) technique.
+This technique can be categorized as a [plaintext protocol credential dumping](../../credentials/dumping/network-protocols.md) technique.
 
 ## Practice
 
@@ -36,7 +36,7 @@ Captured encrypted timestamps can then be cracked with [hashcat](https://hashcat
 
 
 > [!TIP]
-> Read the [Cracking](../credentials/cracking.md) article for more insight
+> Read the [Cracking](../../credentials/cracking.md) article for more insight
 
 
 ## Resources

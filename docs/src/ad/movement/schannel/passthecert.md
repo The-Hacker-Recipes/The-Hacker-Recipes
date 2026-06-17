@@ -6,11 +6,11 @@ category: ad
 # Pass the Certificate
 
 > [!NOTE]
-> This technique extends the notion of [Pass the Certificate](../kerberos/pass-the-certificate.md), thus dubbed by myself, [@_nwodtuhs](https://twitter.com/_nwodtuhs/), in a Twitter thread about AD CS and PKINIT [here](https://twitter.com/_nwodtuhs/status/1451510341041594377). Even if both techniques share the same name and the same concept, the authentication method is different.
+> This technique extends the notion of [Pass the Certificate](../kerberos/pass-the/pass-the-certificate.md), thus dubbed by myself, [@_nwodtuhs](https://twitter.com/_nwodtuhs/), in a Twitter thread about AD CS and PKINIT [here](https://twitter.com/_nwodtuhs/status/1451510341041594377). Even if both techniques share the same name and the same concept, the authentication method is different.
 
 ## Theory
 
-Sometimes, Domain Controllers do not support [PKINIT](../kerberos/pass-the-certificate.md). This can be because their certificates do not have the `Smart Card Logon` EKU. Most of the time, domain controllers return `KDC_ERR_PADATA_TYPE_NOSUPP` error when the EKU is missing. Fortunately, several protocols — including LDAP — support Schannel, thus authentication through TLS. As the term "schannel authentication" is derived from the [Schannel SSP (Security Service Provider)](https://learn.microsoft.com/en-us/windows-server/security/tls/tls-ssl-schannel-ssp-overview) which is the Microsoft SSL/TLS implementation in Windows, it is important to note that schannel authentication is a SSL/TLS client authentication.
+Sometimes, Domain Controllers do not support [PKINIT](../kerberos/pass-the/pass-the-certificate.md). This can be because their certificates do not have the `Smart Card Logon` EKU. Most of the time, domain controllers return `KDC_ERR_PADATA_TYPE_NOSUPP` error when the EKU is missing. Fortunately, several protocols — including LDAP — support Schannel, thus authentication through TLS. As the term "schannel authentication" is derived from the [Schannel SSP (Security Service Provider)](https://learn.microsoft.com/en-us/windows-server/security/tls/tls-ssl-schannel-ssp-overview) which is the Microsoft SSL/TLS implementation in Windows, it is important to note that schannel authentication is a SSL/TLS client authentication.
 
 > [!TIP]
 > * Schannel authentication relies on TLS so it is, by design, not subject to channel binding, as the authentication is borne by TLS itself.

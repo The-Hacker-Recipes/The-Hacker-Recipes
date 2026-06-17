@@ -599,9 +599,9 @@ The [Kerberos Unconstrained Delegation](../kerberos/delegations/unconstrained#pr
 
 In most cases, the attacker will have to:
 
-1. coerce the authentication ([PrinterBug](../print-spooler-service/printerbug), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../mitm-and-coerced-authentications/ms-dfsnm), etc.) of a high-value target (e.g. domain controller) of the trusting domain
+1. coerce the authentication ([PrinterBug](../print-spooler-service/printerbug), [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr), [ShadowCoerce](../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp), [DFSCoerce](../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm), etc.) of a high-value target (e.g. domain controller) of the trusting domain
 2. retrieve the TGT delegated in the service ticket the trusting resource used to access the attacker-controlled KUD account
-3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](../kerberos/ptt)) in order to conduct privileged actions (e.g. [DCSync](../credentials/dumping/dcsync))
+3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](../kerberos/pass-the/ptt)) in order to conduct privileged actions (e.g. [DCSync](../credentials/dumping/dcsync))
 
 
 > [!TIP]

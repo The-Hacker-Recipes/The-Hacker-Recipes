@@ -8,7 +8,7 @@ category: ad
 
 ## Theory
 
-An attacker knowing a user's NT hash can use it to authenticate over NTLM (pass-the-hash) (or indirectly over Kerberos with [overpass-the-hash](../kerberos/ptk.md)).
+An attacker knowing a user's NT hash can use it to authenticate over NTLM (pass-the-hash) (or indirectly over Kerberos with [overpass-the-hash](../kerberos/pass-the/ptk.md)).
 
 ## Practice
 

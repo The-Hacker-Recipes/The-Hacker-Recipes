@@ -10,7 +10,7 @@ category: ad
 
 When asking the KDC (Key Distribution Center) for a Service Ticket (ST), the requesting user needs to send a valid TGT (Ticket Granting Ticket) and the service name (`sname`) of the service wanted. If the TGT is valid, and if the service exists, the KDC sends the ST to the requesting user.
 
-Multiple formats are accepted for the `sname` field: servicePrincipalName (SPN), sAMAccountName (SAN), userPrincipalName (UPN), etc. (see [Kerberos tickets](./#tickets) "sname formats").
+Multiple formats are accepted for the `sname` field: servicePrincipalName (SPN), sAMAccountName (SAN), userPrincipalName (UPN), etc. (see [Kerberos tickets](../#tickets) "sname formats").
 
 The ST is encrypted with the requested service account's NT hash. If an attacker has a valid TGT and knows a service (by its SAN or SPN), he can request a ST for this service and crack it offline later in an attempt to retrieve that service account's password.
 
@@ -66,7 +66,7 @@ Rubeus.exe kerberoast /outfile:kerberoastables.txt
 :::
 
 
-[Hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can then be used to try [cracking the hash](../credentials/cracking.md).
+[Hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can then be used to try [cracking the hash](../../credentials/cracking.md).
 
 ```bash
 hashcat -m 13100 kerberoastables.txt $wordlist
@@ -116,10 +116,10 @@ Rubeus.exe kerberoast /outfile:kerberoastables.txt /domain:"DOMAIN.LOCAL" /dc:$D
 
 ### Targeted Kerberoasting
 
-If an attacker controls an account with the rights to add an SPN to another ([`GenericAll`](../dacl/#genericall), [`GenericWrite`](../dacl/#genericwrite)), it can be abused to make that other account vulnerable to Kerberoast (see [exploitation](../dacl/targeted-kerberoasting.md)).
+If an attacker controls an account with the rights to add an SPN to another ([`GenericAll`](../../dacl/#genericall), [`GenericWrite`](../../dacl/#genericwrite)), it can be abused to make that other account vulnerable to Kerberoast (see [exploitation](../../dacl/targeted-kerberoasting.md)).
 
 > [!TIP]
-> Controlling a member of the [Account Operators](../builtins/security-groups) group, targeted Kerberoasting can be conducted for the whole domain (see [exploitation](../dacl/targeted-kerberoasting.md)).
+> Controlling a member of the [Account Operators](../../builtins/security-groups) group, targeted Kerberoasting can be conducted for the whole domain (see [exploitation](../../dacl/targeted-kerberoasting.md)).
 
 ## Resources
 

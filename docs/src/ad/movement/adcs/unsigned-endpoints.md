@@ -68,7 +68,7 @@ certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
 
 **2. Authentication coercion :chains:**
 
-Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
 
 > [!TIP]
 > Read the [mitm-and-coerced-authentications](../mitm-and-coerced-authentications/) article for more insight.
@@ -77,7 +77,7 @@ Just like any other NTLM relay attack, once the relay servers are running and wa
 
 **3. Loot :tada:**
 
-Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 
 === Windows
@@ -129,7 +129,7 @@ certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
 
 **2. Authentication coercion :chains:**
 
-Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
 
 
 > [!TIP]
@@ -139,7 +139,7 @@ Just like any other NTLM relay attack, once the relay servers are running and wa
 
 **3. Loot :tada:**
 
-Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 
 === Windows

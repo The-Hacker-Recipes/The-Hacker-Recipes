@@ -22,8 +22,8 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Plaintext passwords | [credential spraying](../bruteforcing/spraying), [stuffing](../bruteforcing/stuffing.md), [shuffling](../shuffling.md) or [silver tickets](../../kerberos/forged-tickets/) |
 | LM and NT hashes | [credential spraying](../bruteforcing/spraying), [stuffing](../bruteforcing/stuffing.md), [shuffling](../shuffling.md), [cracking](../cracking.md), [pass-the-hash](../../ntlm/pth.md) |
-| Kerberos keys (RC4, i.e. == NT hash) | [credential cracking](../cracking.md), [overpass-the-hash](../../kerberos/ptk.md) or [silver tickets](../../kerberos/forged-tickets/) |
-| Kerberos keys (DES, AES) | [credential cracking](../cracking.md), [pass-the-key](../../kerberos/ptk.md) or [silver tickets](../../kerberos/forged-tickets/) |
+| Kerberos keys (RC4, i.e. == NT hash) | [credential cracking](../cracking.md), [overpass-the-hash](../../kerberos/pass-the/ptk.md) or [silver tickets](../../kerberos/forged-tickets/) |
+| Kerberos keys (DES, AES) | [credential cracking](../cracking.md), [pass-the-key](../../kerberos/pass-the/ptk.md) or [silver tickets](../../kerberos/forged-tickets/) |
 | Domain Cached Credentials (DCC1 or DCC2) | [credential cracking](../cracking.md) |
 
 ## Practice
@@ -96,7 +96,7 @@ Here are some examples and tools that can be used for local/remote/offline dumpi
 
 === secretsdump
 
-[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../ntlm/pth.md) (LM/NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos).
+[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../ntlm/pth.md) (LM/NTLM), or [pass-the-ticket](../../kerberos/pass-the/ptt.md) (Kerberos).
 
 ```bash
 # Remote dumping of SAM & LSA secrets
@@ -121,7 +121,7 @@ secretsdump.py -sam '/path/to/sam.save' -security '/path/to/security.save' -syst
 
 === netexec
 
-[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) can be used to remotely dump SAM and LSA secrets, on multiple hosts. It offers several authentication methods like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
+[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) can be used to remotely dump SAM and LSA secrets, on multiple hosts. It offers several authentication methods like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/pass-the/ptt.md) (Kerberos)
 
 ```bash
 # Remote dumping of SAM/LSA secrets

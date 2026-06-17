@@ -42,7 +42,7 @@ certipy forge -ca-pfx "CA.pfx" -upn "administrator@$DOMAIN" -subject "CN=Adminis
 > [!WARNING]
 > On environments with post-May 2022 strong mapping enforcement (`StrongCertificateBindingEnforcement` set to `1` or `2`), forged certificates must include a valid `szOID_NTDS_CA_SECURITY_EXT` SID extension matching the impersonated principal. Use the `-sid` flag in `certipy forge` (e.g. `certipy forge -ca-pfx "CA.pfx" -upn "administrator@corp.local" -sid "S-1-5-..."`) to embed the correct SID.
 
-The certificate can then be used with [Pass the Certificate](../../movement/kerberos/pass-the-certificate.md).
+The certificate can then be used with [Pass the Certificate](../../movement/kerberos/pass-the/pass-the-certificate.md).
 
 
 === Windows

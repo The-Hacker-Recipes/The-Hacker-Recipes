@@ -136,13 +136,13 @@ For more insight on NTLM relay attacks and tools options, see the corresponding 
 
 #### Step 3: coerce authentication
 
-The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc.).
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
+From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc. (not based on triggering the client push installation).
 
 There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
 
@@ -229,13 +229,13 @@ For more insight on NTLM relay attacks and tools options, see the corresponding 
 
 #### Step 2: Authentication coercion
 
-The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc.).
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
+From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc. (not based on triggering the client push installation).
 
 There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
 
@@ -289,7 +289,7 @@ For more insight on NTLM relay attacks and tools options, see the corresponding 
 
 #### Step 2: authentication coercion
 
-The passive site server's authentication can be coerced with ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+The passive site server's authentication can be coerced with ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc.).
 
 If the NTLM relay attack is a success and ntlmrelayx.py has effectively sent the request to the active server, a SMB session through socks proxy has been opened with administrative rights.
 

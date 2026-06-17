@@ -155,7 +155,7 @@ certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOS
 > [!WARNING]
 > The `$ADCS_HOST` target must be a FQDN (not an IP).
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 > [!TIP]
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -181,7 +181,7 @@ Once a vulnerable template is found, a request shall be made to obtain a certifi
 Certify.exe request /ca:'domain\ca' /template:"Vulnerable template" /altname:"admin"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 :::
 
@@ -576,7 +576,7 @@ If a vulnerable template is found, there is no particular issuance requirement, 
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$TEMPLATE"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
 
 
 === Windows
@@ -599,7 +599,7 @@ Now, request a certificate for this template with [Certify](https://github.com/G
 .\Certify.exe request /ca:domain\ca /template:"Vulnerable template"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
 
 :::
 
@@ -754,7 +754,7 @@ conn.modify(
 conn.unbind()
 ```
 
-The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 The certificate mapping written can be cleaned with the following python script.
 
@@ -810,7 +810,7 @@ Add-AltSecIDMapping -DistinguishedName $TARGET_DN -MappingString $MAPPING_STRING
 Get-AltSecIDMapping -DistinguishedName $TARGET_DN
 ```
 
-The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 The certificate mapping written can be cleaned with [Remove-AltSecIDMapping](https://github.com/JonasBK/Powershell/blob/master/Remove-AltSecIDMapping.ps1) (PowerShell).
 
@@ -873,7 +873,7 @@ With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll o
 certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -891,7 +891,7 @@ Then, [Certify](https://github.com/GhostPack/Certify) (C#) can be used to enroll
 Certify.exe request /ca:domain\ca /template:$TEMPLATE_MAIL
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -953,7 +953,7 @@ With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll o
 certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -971,7 +971,7 @@ Then, [Certify](https://github.com/GhostPack/Certify) (C#) can be used to enroll
 Certify.exe request /ca:domain\ca /template:$TEMPLATE
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -1032,7 +1032,7 @@ With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll o
 certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 
 === Windows
@@ -1051,7 +1051,7 @@ Then, [Certify](https://github.com/GhostPack/Certify) (C#) can be used to enroll
 Certify.exe request /ca:domain\ca /template:$TEMPLATE /machine
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -1163,7 +1163,7 @@ certipy auth \
     -username 'administrator' -domain "$DOMAIN"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -1196,7 +1196,7 @@ Set-DomainObject victim -Set @{'userPrincipalName'='$USER@corp.local'} -Verbose
 Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"$DOMAIN" /dc:"$DC_HOST" /show
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -1223,7 +1223,7 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) can be used t
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" -ca "$CA" -template "User" -upn "administrator@$DOMAIN" -sid "$ADMIN_SID"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 > [!NOTE]
 > * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modified in the `SAN`.
@@ -1236,7 +1236,7 @@ From Windows, [Certify](https://github.com/GhostPack/Certify) can be used to req
 ./Certify.exe request /ca:SERVER\CA /template:User /altname:administrator /url:tag:microsoft.com,2007-09-14:sid:<ADMINISTRATOR_SID>
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 > [!NOTE]
 > * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modified in the `SAN`.

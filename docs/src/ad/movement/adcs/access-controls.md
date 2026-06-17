@@ -49,7 +49,7 @@ In order to obtain an abusable template, some attributes and parameters need to 
    3. PKINIT Client Authentication (OID: `1.3.6.1.5.2.3.4`)
    4. Any Purpose (OID: `2.5.29.37.0`)
    5. No EKU
-6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](../kerberos/ptt.md).
+6. Request a certificate (with a high-privileged user's name set as SAN) for authentication and perform [Pass the Ticket](../kerberos/pass-the/ptt.md).
 
 ::: tabs
 
@@ -226,7 +226,7 @@ certipy ca -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -retrieve 100
 ```
 
-The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-The-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 
 === Windows

