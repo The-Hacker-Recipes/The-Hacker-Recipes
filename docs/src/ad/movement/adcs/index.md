@@ -81,7 +81,7 @@ Alternatively, information like the PKI's CA and DNS names can be gathered throu
 [netexec](https://github.com/Pennyw0rth/NetExec)'s [adcs](https://github.com/Pennyw0rth/NetExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
 
 ```bash
-netexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
+netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M adcs
 ```
 
 
@@ -90,7 +90,7 @@ netexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
 [windapsearch ](https://github.com/ropnop/windapsearch)(Python) can be used to manually to the LDAP query.
 
 ```bash
-windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base 'CN=Configuration,DC=domain,DC=local' --attrs dn,dnshostname --dc 'domaincontroller' -d 'domain.local' -u 'user' -p 'password'
+windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base "$BASE_DN" --attrs dn,dnshostname --dc "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 ```
 
 
@@ -99,7 +99,7 @@ windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base '
 With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), thanks to [SAERXCIT](https://twitter.com/saerxcit) ([PR#1214](https://github.com/SecureAuthCorp/impacket/pull/1214)), it is possible to gather information regarding ADCS like the name and host of the CA, the certificate templates enrollment rights for those allowing client authentication and not requiring manager approval, etc. With ntlmrelayx, these information can be gathered through a relayed LDAP session.
 
 ```bash
-ntlmrelayx -t "ldap://domaincontroller" --dump-adcs
+ntlmrelayx -t "ldap://$DC_HOST" --dump-adcs
 ```
 
 :::

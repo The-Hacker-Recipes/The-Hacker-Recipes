@@ -25,7 +25,7 @@ Attackers can then proceed to [DNS spoofing](dns-spoofing.md). Once the clients 
 [mitm6](https://github.com/fox-it/mitm6) (Python) is an all-in-one tool for DHCPv6 spoofing + DNS poisoning. The following command can be run to make mitm6 redirect internal traffic only.
 
 ```bash
-mitm6 --interface eth0 --domain $DOMAIN_FQDN
+mitm6 --interface "$INTERFACE" --domain "$DOMAIN_FQDN"
 ```
 
 [bettercap](https://www.bettercap.org/) (Go) can also be used for DHCPv6 spoofing and [DNS spoofing](dns-spoofing.md).

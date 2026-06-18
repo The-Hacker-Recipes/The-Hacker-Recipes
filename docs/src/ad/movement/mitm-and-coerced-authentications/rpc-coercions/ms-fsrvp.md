@@ -24,7 +24,7 @@ A requirement to the abuse is to have the "File Server VSS Agent Service" enable
 
 ## Practice
 
-[Coercer](https://github.com/p0dalirius/Coercer) (Python) can also be used to trigger all available MS-RPC coercions (including this one) in a single tool, with or without target filtering.
+The recommended way to audit and exploit this technique is [Coercer](https://github.com/p0dalirius/Coercer) (Python), which supports all available MS-RPC coercion methods in a single tool.
 
 ```bash
 # Scan for available coercion methods

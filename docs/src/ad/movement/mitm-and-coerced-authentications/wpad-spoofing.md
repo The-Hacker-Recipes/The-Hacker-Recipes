@@ -46,8 +46,7 @@ The following command will start [LLMNR, NBTS and mDNS spoofing](llmnr-nbtns-mdn
 * The `-P/--ProxyAuth` option to force the Windows client to authenticate after the `wpad.dat` is accessed and when the client starts using the proxy
 
 ```bash
-responder --interface "eth0" --wpad --ProxyAuth
-responder -I "eth0" -wP
+responder --interface "$INTERFACE" --wpad
 ```
 
 

