@@ -70,7 +70,7 @@ The trust "flavor", on the other hand, represents the nature of the trust relati
 | Shortcut (a.k.a. cross-link) | Transitive | Either | Either | Manual |
 | Realm | Either | Either | Kerberos V5 only | Manual |
 | Forest | Transitive | Either | Either | Manual |
-| External | Non-transitive | One-way | NTLM only | Manual |
+| External | Non-transitive | One-way | Either | Manual |
 
 
 
@@ -651,6 +651,8 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 [https://secureidentity.se/msds-shadowprincipal/](https://secureidentity.se/msds-shadowprincipal/)
 
 [https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services](https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services)
+
+[https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/dd560679(v=ws.10)](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/dd560679(v=ws.10))
 
 ### Offensive POV
 
