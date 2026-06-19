@@ -70,7 +70,7 @@ The trust "flavor", on the other hand, represents the nature of the trust relati
 | Shortcut (a.k.a. cross-link) | Transitive | Either | Either | Manual |
 | Realm | Either | Either | Kerberos V5 only | Manual |
 | Forest | Transitive | Either | Either | Manual |
-| External | Non-transitive | One-way | NTLM only | Manual |
+| External | Non-transitive | One-way | Either | Manual |
 
 
 
