@@ -652,6 +652,8 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 
 [https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services](https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services)
 
+[https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/dd560679(v=ws.10)](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/dd560679(v=ws.10))
+
 ### Offensive POV
 
 [https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/](https://www.securesystems.de/blog/active-directory-spotlight-trusts-part-2-operational-guidance/)
