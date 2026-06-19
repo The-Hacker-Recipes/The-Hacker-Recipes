@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useData } from 'vitepress'
 import { ExternalLink } from 'lucide-vue-next'
-
-const { isDark } = useData()
-
-const logoSrc = computed(() =>
-  isDark.value
-    ? '/images/Exegol_Logo_DarkVersion_Horizontal.svg'
-    : '/images/Exegol_Logo_LightVersion_Horizontal.svg',
-)
 </script>
 
 <template>
@@ -24,7 +14,8 @@ const logoSrc = computed(() =>
       pentesting, red team, ctf
     </p>
     <div class="write__brand">
-      <img class="write__logo" :src="logoSrc" alt="Exegol" />
+      <img class="write__logo write__logo--light" src="/images/Exegol_Logo_LightVersion_Horizontal.svg" alt="Exegol" />
+      <img class="write__logo write__logo--dark" src="/images/Exegol_Logo_DarkVersion_Horizontal.svg" alt="Exegol" />
     </div>
   </a>
 </template>
@@ -126,6 +117,9 @@ const logoSrc = computed(() =>
   transition: transform 0.25s ease;
 }
 
+/* Light is default; dark variant hidden until html.dark is present */
+.write__logo--dark { display: none; }
+
 .write:hover .write__logo {
   transform: scale(1.06);
 }
@@ -182,4 +176,13 @@ const logoSrc = computed(() =>
     background: var(--vp-c-bg-alt);
   }
 }
+</style>
+
+<!-- Non-scoped: html.dark has specificity (0,2,1) which beats the scoped
+     .write__logo--dark[data-v-xxxx] rule at (0,2,0), so source order can't
+     cause a surprise. VitePress applies .dark to <html> synchronously before
+     any JS/hydration, so no flash on initial load. -->
+<style>
+html.dark .write__logo--light { display: none; }
+html.dark .write__logo--dark  { display: block; }
 </style>
