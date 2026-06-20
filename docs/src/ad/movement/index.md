@@ -17,14 +17,14 @@ Below is a checklist to go through when conducting a pentest. Order is irrelevan
 ### Kerberos configuration
 
 * [ ] `krbtgt`'s password has been changed in the last 6 months to prevent [Golden Ticket](../persistence/kerberos/forged-tickets) persistence attacks. From UNIX-like systems, this can be checked with [Impacket](https://github.com/SecureAuthCorp/impacket/)'s [Get-ADUsers.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetADUsers.py) script.
-* [ ] The RC4 `etype` is disabled for Kerberos to prevent [overpass-the-hash](kerberos/opth) and [NTLMv1 capture](ntlm/capture) and [cracking](credentials/cracking#tips-and-tricks) to [Silver Ticket](../persistence/kerberos/forged-tickets) attacks. This can be checked by attempting to obtain a TGT with an NT hash.
-* [ ] No account is configured with `Do not require Kerberos Pre-Authentication` allowing for [ASREProast](kerberos/asreproast) attacks, or make sure those account have strong password resistant to [cracking](credentials/cracking).
-* [ ] User accounts that have at least one `ServicePrincipalName`, hence vulnerable to [Kerberoast](kerberos/kerberoast), have a strong password, resistant to [cracking.](credentials/cracking)
+* [ ] The RC4 `etype` is disabled for Kerberos to prevent [overpass-the-hash](kerberos/pass-the/opth) and [NTLMv1 capture](ntlm/capture) and [cracking](credentials/cracking#tips-and-tricks) to [Silver Ticket](../persistence/kerberos/forged-tickets) attacks. This can be checked by attempting to obtain a TGT with an NT hash.
+* [ ] No account is configured with `Do not require Kerberos Pre-Authentication` allowing for [ASREProast](kerberos/roasting/asreproast) attacks, or make sure those account have strong password resistant to [cracking](credentials/cracking).
+* [ ] User accounts that have at least one `ServicePrincipalName`, hence vulnerable to [Kerberoast](kerberos/roasting/kerberoast), have a strong password, resistant to [cracking.](credentials/cracking)
 
 ### Patch management
 
 * [ ] Domain Controllers are patched against [ZeroLogon](netlogon/zerologon).
-* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](kerberos/samaccountname-spoofing).
+* [ ] Domain Controllers are patched against [Kerberos sAMAccountName spoofing](kerberos/principal-confusion/samaccountname-spoofing).
 * [ ] [MS14-068](kerberos/forged-tickets/ms14-068) is patched, preventing forging of powerful Kerberos tickets.
 * [ ] [PrivExchange](exchange-services/privexchange) patches are applied, protecting Exchange servers from [authentication coercion attacks relying on the PushSubscription API](mitm-and-coerced-authentications/pushsubscription-abuse), and [ACE abuse](dacl/) attacks relying on the `EXCHANGE WINDOWS PERMISSION` group having `WriteDacl` permissions against the domain object allowing for [DCSync](credentials/dumping/dcsync).
 * [ ] Patches for NTLM tampering vulnerabilities (e.g. CVE-2019-1040, CVE-2019-1019, CVE-2019-1166) are applied to limit [NTLM relay](ntlm/relay) attacks.

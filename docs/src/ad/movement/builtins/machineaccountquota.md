@@ -15,7 +15,7 @@ There are multiple ways attackers can leverage that power.
 
 * [Force client authentications](../mitm-and-coerced-authentications/), [relay those authentications](../ntlm/relay.md) to domain controllers using LDAPS, and take advantage of authenticated sessions to create a domain computer account. This account can then be used as a foothold on the AD domain to operate authenticated recon (i.e. [with BloodHound](../../recon/bloodhound/index) for example)
 * Create a computer account and use it for [Kerberos RBCD attacks](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) when leveraging owned accounts with sufficient permissions (i.e. ACEs like `GenericAll`, `GenericWrite` or `WriteProperty`) against a target machine
-* Create a computer account and use it for a [Kerberos Unconstrained Delegation](../kerberos/delegations/#unconstrained-delegations) attack when leveraging owned accounts with sufficient permissions (i.e. the `SeEnableDelegationPrivilege` user right)
+* Create a computer account and use it for a [Kerberos Unconstrained Delegation](../kerberos/delegations/#unconstrained-delegations) attack when leveraging owned accounts with sufficient permissions
 * Profit from special rights that members of the Domain Computers group could inherit
 * Profit from special rights that could automatically be applied to new domain computers based on their account name
 
@@ -161,27 +161,27 @@ Certipy also offers option to set the UPN (`-upn`), SAM account name (`-sam`), S
 The [Powermad](https://github.com/Kevin-Robertson/Powermad) module (PowerShell) can be used to create a domain computer account.
 
 ```powershell
-$password = ConvertTo-SecureString 'SomePassword' -AsPlainText -Force
-New-MachineAccount -MachineAccount 'PENTEST01' -Password $($password) -Verbose
+$password = ConvertTo-SecureString $PASSWORD -AsPlainText -Force
+New-MachineAccount -MachineAccount $COMPUTER_NAME -Password $($password) -Verbose
 ```
 
 While the machine account can only be deleted by domian administrators, it can be deactivated by the creator account with the following command using the Powermad module.
 
 ```powershell
-Disable-MachineAccount -MachineAccount 'PENTEST01' -Verbose
+Disable-MachineAccount -MachineAccount $COMPUTER_NAME -Verbose
 ```
 
 An alternative is to use FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) (C#, .NET assembly) project to create a new password account with a random password, disable the account, or delete it (with elevated privileges):
 
 ```powershell
 # Create the account
-StandIn.exe --computer 'PENTEST01' --make
+StandIn.exe --computer $COMPUTER_NAME --make
 
 # Disable the account
-StandIn.exe --computer 'PENTEST01' --disable
+StandIn.exe --computer $COMPUTER_NAME --disable
 
 # Delete the account (requires elevated rights)
-StandIn.exe --computer 'PENTEST01' --delete
+StandIn.exe --computer $COMPUTER_NAME --delete
 ```
 
 :::

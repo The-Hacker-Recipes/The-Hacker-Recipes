@@ -23,7 +23,7 @@ For certificate request purposes, the `MS-ICPR` (ICertPassage Remote Protocol) R
 
 These attacks, like all [NTLM relay attacks](../ntlm/relay.md), require a victim account to authenticate to an attacker-controlled machine. An attacker can coerce authentication by many means, see [MITM and coerced authentication coercion techniques](../mitm-and-coerced-authentications/). Once the incoming authentication is received by the attacker, it can be relayed to an AD CS web endpoint.
 
-Once the relayed session is obtained, the attacker poses as the relayed account and can request a client authentication certificate. The certificate template used needs to be configured for authentication (i.e. EKUs like Client Authentication, PKINIT Client Authentication, Smart Card Logon, Any Purpose (`OID 2.5.29.37.0`), or no EKU (`SubCA`)) and allowing low-priv users to enroll can be abused to authenticate as any other user/machine/admin.
+Once the relayed session is obtained, the attacker poses as the relayed account and can request a client authentication certificate. The certificate template used needs to be configured for authentication (i.e. EKUs like Client Authentication, PKINIT Client Authentication, Smart Card Logon, Any Purpose (`OID 2.5.29.37.0`), or no EKU (`SubCA`)) and allowing low-priv users to enroll. The certificate is issued as the relayed victim. It does not allow arbitrary impersonation. Privilege escalation to admin requires coercing a privileged account (e.g., a domain controller or Exchange server) into authenticating to the relay.
 
 > [!SUCCESS]
 > The default User and Machine/Computer templates match those criteria and are very often enabled.
@@ -44,7 +44,7 @@ This allows for lateral movement, account persistence, and in some cases privile
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used to conduct the ESC8 escalation scenario.
 
 ```bash
-ntlmrelayx -t http://$PKI.domain.local/certsrv/certfnsh.asp --adcs --template "Template name"
+ntlmrelayx -t http://$PKI.$DOMAIN/certsrv/certfnsh.asp --adcs --template "Template name"
 ```
 
 > [!TIP]
@@ -68,7 +68,7 @@ certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
 
 **2. Authentication coercion :chains:**
 
-Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
 
 > [!TIP]
 > Read the [mitm-and-coerced-authentications](../mitm-and-coerced-authentications/) article for more insight.
@@ -77,7 +77,7 @@ Just like any other NTLM relay attack, once the relay servers are running and wa
 
 **3. Loot :tada:**
 
-Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 
 === Windows
@@ -105,7 +105,7 @@ Certify.exe cas
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used to conduct the ESC11 escalation scenario.
 
 ```bash
-ntlmrelayx -t rpc://$PKI.domain.local -rpc-mode ICPR -icpr-ca-name $CA_NAME -smb2support --template "Template name"
+ntlmrelayx -t rpc://$PKI.$DOMAIN -rpc-mode ICPR -icpr-ca-name $CA_NAME -smb2support --template "Template name"
 ```
 
 > [!TIP]
@@ -129,7 +129,7 @@ certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -stdout -enabled
 
 **2. Authentication coercion :chains:**
 
-Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
+Just like any other NTLM relay attack, once the relay servers are running and waiting for incoming NTLM authentications, authentication coercion techniques can be used (e.g. [PrinterBug](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [PrivExchange](../exchange-services/privexchange.md)) to force accounts/machines to authenticate to the relay servers.
 
 
 > [!TIP]
@@ -139,7 +139,7 @@ Just like any other NTLM relay attack, once the relay servers are running and wa
 
 **3. Loot :tada:**
 
-Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+Once incoming NTLM authentications are relayed and authenticated sessions abused, base64-encoded PFX certificates will be obtained and usable with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 
 === Windows

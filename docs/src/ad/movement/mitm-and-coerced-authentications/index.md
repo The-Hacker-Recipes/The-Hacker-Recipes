@@ -3,7 +3,7 @@ authors: ShutdownRepo
 category: ad
 ---
 
-# MITM and coerced auths
+# MITM & coercion
 
 In Active Directory domains, attackers often rely on coerced authentications and MitM (man in the middle) techniques to operate lateral movement, especially when attempting authentication relaying attacks (e.g. [NTLM relay](../ntlm/relay.md) or [Kerberos relay](../kerberos/relay.md)), or when [abusing Kerberos delegations](../kerberos/delegations/).
 
@@ -14,7 +14,7 @@ There are many ways attackers can do MitM or redirect/force targets authenticati
 > [!WARNING]
 > This page is a work-in-progress
 
-| MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns-spoofing.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-spoofing.md) | [ARP](arp-poisoning.md) | [DNS](dns-spoofing.md) | [WPAD](wpad-spoofing.md) | [PrinterBug](ms-rprn.md) | [PrivExchange](../exchange-services/privexchange.md) |
+| MITM Technique | [ADIDNS](adidns-spoofing.md) | [LLMNR](llmnr-nbtns-mdns-spoofing.md) | [NBNS](../../recon/nbt-ns.md) | [DHCPv6](dhcpv6-spoofing.md) | [ARP](arp-poisoning.md) | [DNS](dns-spoofing.md) | [WPAD](wpad-spoofing.md) | [PrinterBug](rpc-coercions/ms-rprn.md) | [PrivExchange](../exchange-services/privexchange.md) |
 | --------------------------------------------------------------------- | -------------------------- | ------------------------------------ | ------------------------------------ | --------------------------- | ------------------------------------------------------------------ | ---------------------- | ------------------------ | ------------------------ | -------------------------------- |
 | Can require waiting for replication/syncing | x | | | | | | | | |
 | Easy to start and stop attacks | | x | x | takes \~5 minutes to revert | revert time depends on targets arp cache timeout (usually \~60 sec | x | x | x | x |
@@ -24,5 +24,5 @@ There are many ways attackers can do MitM or redirect/force targets authenticati
 | Requires domain credentials | x | | | | | | | x | requires emails-capable account |
 | Requires editing AD | x | | | | | | | | |
 | Requires privileged access to launch attack from a compromised system | | x | | | x | x | | | |
-| Targets limited to the same network segment as the attacker | | x | x | x | x | | | x | x |
+| Targets limited to the same network segment as the attacker | | x | x | x | x | | | | x |
 | Disruption | low | low | low | low to high | low to high | low to high | low to high | none | none |

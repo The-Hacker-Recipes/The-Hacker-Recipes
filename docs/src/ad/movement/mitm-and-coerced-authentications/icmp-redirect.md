@@ -6,7 +6,7 @@ category: ad
 # 🛠️ ICMP Redirect
 
 ```bash
-python3 tools/Icmp-Redirect.py --interface eth0 --ip $my_ip --gateway $gateway --target $target --route $dnsserver1 --secondaryroute $dnsserver2
+python3 tools/Icmp-Redirect.py --interface $INTERFACE --ip $my_ip --gateway $gateway --target $target --route $dnsserver1 --secondaryroute $dnsserver2
 ```
 
 need iptable

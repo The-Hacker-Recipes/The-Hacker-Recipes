@@ -70,7 +70,7 @@ The trust "flavor", on the other hand, represents the nature of the trust relati
 | Shortcut (a.k.a. cross-link) | Transitive | Either | Either | Manual |
 | Realm | Either | Either | Kerberos V5 only | Manual |
 | Forest | Transitive | Either | Either | Manual |
-| External | Non-transitive | One-way | NTLM only | Manual |
+| External | Non-transitive | One-way | Either | Manual |
 
 
 
@@ -155,7 +155,7 @@ When authenticating with NTLM, the process is highly similar, see the [NTLM auth
 
 Inter-forest trusts ("External" and "Forest" trusts) can be configured with different levels of authentication:
 
-* Forest-wide authentication: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level is specific to intra-forest trusts.
+* Forest-wide authentication: allows unrestricted authentication from the trusted forest's principals to the trusting forest's resources. This is the least secure level, it completely opens one forest to another (authentication-wise though, not access-wise). This level applies to intra-forest trusts and is the default for inter-forest forest trusts.
 * Domain-wide authentication: allows unrestricted authentication from the trusted domain's principals to the trusting domain's resources. This is more secure than forest-wide authentication because it only allows users in a specific (trusted) domain to access resources in another (trusting).
 * Selective authentication: allows only specific users in the trusted domain to access resources in the trusting domain. This is the most secure type of trust because it allows administrators to tightly control access to resources in the trusted domain. In order to allow a "trusted user" to access a "trusting resource", the resource's DACL must include an ACE in which the trusted user has the "`Allowed-To-Authenticate`" extended right (GUID: `68b1d179-0d15-4d4f-ab71-46152e79a7bc`).
 
@@ -321,7 +321,7 @@ From UNIX-like systems, tools like [ldeep](https://github.com/franc-pentest/ldee
 ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" trusts
 
 # ldapdomaindump will store HTML, JSON and Greppable output
-ldapdomaindump --user 'DOMAIN\USER' --password "$PASSWORD" --outdir "ldapdomaindump" "$DC_HOST"
+ldapdomaindump --user "$DOMAIN\\$USER" --password "$PASSWORD" --outdir "ldapdomaindump" "$DC_HOST"
 
 # ldapsearch-ad
 ldapsearch-ad --server "$DC_HOST" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD" --type trusts
@@ -344,7 +344,7 @@ From Windows systems, many tools like can be used to enumerate trusts. "[A Guide
 From domain-joined hosts, the `netdom` cmdlet can be used.
 
 ```powershell
-netdom trust /domain:DOMAIN.LOCAL
+netdom trust /domain:$DOMAIN
 ```
 
 #### PowerView
@@ -599,9 +599,9 @@ The [Kerberos Unconstrained Delegation](../kerberos/delegations/unconstrained#pr
 
 In most cases, the attacker will have to:
 
-1. coerce the authentication ([PrinterBug](../print-spooler-service/printerbug), [PetitPotam](../mitm-and-coerced-authentications/ms-efsr), [ShadowCoerce](../mitm-and-coerced-authentications/ms-fsrvp), [DFSCoerce](../mitm-and-coerced-authentications/ms-dfsnm), etc.) of a high-value target (e.g. domain controller) of the trusting domain
+1. coerce the authentication ([PrinterBug](../print-spooler-service/printerbug), [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr), [ShadowCoerce](../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp), [DFSCoerce](../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm), etc.) of a high-value target (e.g. domain controller) of the trusting domain
 2. retrieve the TGT delegated in the service ticket the trusting resource used to access the attacker-controlled KUD account
-3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](../kerberos/ptt)) in order to conduct privileged actions (e.g. [DCSync](../credentials/dumping/dcsync))
+3. authenticate to trusting resources using the extracted TGT ([Pass the Ticket](../kerberos/pass-the/ptt)) in order to conduct privileged actions (e.g. [DCSync](../credentials/dumping/dcsync))
 
 
 > [!TIP]
@@ -651,6 +651,8 @@ When an ADCS is installed and configured in an Active Directory environment, a C
 [https://secureidentity.se/msds-shadowprincipal/](https://secureidentity.se/msds-shadowprincipal/)
 
 [https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services](https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services)
+
+[https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/dd560679(v=ws.10)](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/dd560679(v=ws.10))
 
 ### Offensive POV
 

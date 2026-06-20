@@ -6,7 +6,10 @@ category: ad
 
 # LLMNR, NBT-NS, mDNS spoofing
 
-In some environments (like Windows ones), multicast name resolution protocols are enabled by default, such as LLMNR (Local-Link Multicast Name Resolution), NBT-NS (NetBIOS Name Service) and mDNS (multicast Domain Name System). Those environments can fallback to those protocols when standard domain name resolution protocols fail. Windows systems attempt to resolve names in the following order: DNS, LLMNR and NBT-NS.
+In some environments (like Windows ones), multicast name resolution protocols are enabled by default, such as LLMNR (Link-Local Multicast Name Resolution), NBT-NS (NetBIOS Name Service) and mDNS (multicast Domain Name System). Those environments can fallback to those protocols when standard domain name resolution protocols fail. Windows systems attempt to resolve names in the following order: DNS, LLMNR and NBT-NS.
+
+> [!NOTE]
+> Protocol ports: LLMNR operates on UDP/TCP 5355; NBT-NS operates on UDP 137 (broadcast); mDNS operates on UDP 5353 (multicast). Note that Windows does not generally use mDNS for Active Directory name resolution. mDNS poisoning primarily affects Apple/Bonjour and Linux clients, or specific non-AD-aware applications. The LLMNR/NBT-NS fallback chain is the primary target in Windows AD environments.
 
 Attackers can then answer those multicast or broadcast queries. The victims are then redirected to the attacker asking them to authenticate in order to access whatever they ask for. Their authentication is then relayed.
 
@@ -19,15 +22,15 @@ Attackers can then answer those multicast or broadcast queries. The victims are 
 The following command will make Responder analyze the network to see if LLMNR, NBT-NS and mDNS are used, and to inspect BROWSER requests.
 
 ```bash
-responder --interface "eth0" --analyze
-responder -I "eth0" -A
+responder --interface "$INTERFACE" --analyze
+responder -I "$INTERFACE" -A
 ```
 
-The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md).
+The following command will start LLMNR, NBT-NS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, SQL, FTP, IMAP, POP3, DNS, LDAP, ...) will [capture NTLM responses](../ntlm/capture.md).
 
 ```bash
-responder --interface "eth0"
-responder -I "eth0"
+responder --interface "$INTERFACE"
+responder -I "$INTERFACE"
 ```
 
 
@@ -39,7 +42,7 @@ The following command will make Inveigh inspect the network to see if LLMNR, NBT
 Invoke-Inveigh -ConsoleOutput Y -Inspect
 ```
 
-The following command will start LLMNR, NBTS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, DNS, LDAP, ...) will [capture NTLM hashes](../ntlm/capture.md) (even from machine accounts) and set the Challenge to `1122334455667788` (to [crack NTLM hashes](../credentials/cracking.md#practice) with [crack.sh](https://crack.sh/)).
+The following command will start LLMNR, NBT-NS and mDNS spoofing. Name resolution queries for the wpad server will be answered just like any other query. Fake authentication servers (HTTP/S, SMB, DNS, LDAP, ...) will [capture NTLM responses](../ntlm/capture.md) (even from machine accounts) and set the Challenge to `1122334455667788` (to [crack NTLM responses](../credentials/cracking.md#practice)).
 
 Inveigh also starts a WPAD rogue proxy server by default for [WPAD abuse](wpad-spoofing.md).
 

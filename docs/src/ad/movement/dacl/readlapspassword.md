@@ -7,6 +7,10 @@ category: ad
 
 This abuse can be carried out when controlling an object that has `GenericAll` or `AllExtendedRights` (or combination of `GetChanges` and (`GetChangesInFilteredSet` or `GetChangesAll`) for domain-wise synchronization) over the target computer configured for LAPS. The attacker can then read the LAPS password of the computer account (i.e. the password of the computer's local administrator).
 
+> **Legacy LAPS** (Microsoft LAPS v1) stores the password in `ms-Mcs-AdmPwd` and expiration time in `ms-Mcs-AdmPwdExpirationTime`.
+> 
+> **Windows LAPS** (built-in, Windows 11 22H2 / Server 2025+) uses `msLAPS-Password` (cleartext), `msLAPS-EncryptedPassword` (encrypted), and `msLAPS-PasswordExpirationTime`, and introduces a dedicated "Read LAPS password" extended right. In modern environments, check for both attribute sets.
+
 ::: tabs
 
 === UNIX-like

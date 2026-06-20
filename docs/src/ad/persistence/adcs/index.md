@@ -6,7 +6,7 @@ category: ad
 # Certificate Services (AD-CS)
 
 > [!TIP]
-> See [AD > Movement > Certificate Services (AD-CS)](../../movement/adcs/index) to know more about it.
+> See [AD > Movement > AD-CS](../../movement/adcs/index) to know more about it.
 
 ## Theory
 
@@ -16,7 +16,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 * Credential theft (dubbed THEFT1 to THEFT5)
 * Account persistence (dubbed PERSIST1 to PERSIST3)
-* Domain escalation (dubbed ESC1 to ESC14)
+* Domain escalation (dubbed ESC1 to ESC16)
     * based on [misconfigured certificate templates](../../movement/adcs/certificate-templates.md)
     * based on [dangerous CA configuration](../../movement/adcs/certificate-authority.md)
     * related to [access control vulnerabilities](../../movement/adcs/access-controls.md)

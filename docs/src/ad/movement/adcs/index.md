@@ -13,7 +13,7 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 * Credential theft (dubbed THEFT1 to THEFT5)
 * Account persistence (dubbed PERSIST1 to PERSIST3)
-* Domain escalation (dubbed ESC1 to ESC14)
+* Domain escalation (dubbed ESC1 to ESC16)
  * based on [misconfigured certificate templates](certificate-templates.md)
  * based on [dangerous CA configuration](certificate-authority.md)
  * related to [access control vulnerabilities](access-controls.md)
@@ -27,21 +27,23 @@ In [their research papers](https://posts.specterops.io/certified-pre-owned-d9591
 
 ### Escalation techniques
 
-- [ESC1 "template-allows-san"](certificate-templates.md#template-allows-san-esc1)
-- [ESC2  "any-purpose-eku"](certificate-templates.md#any-purpose-eku-esc2)
-- [ESC3  "certificate-agent-eku"](certificate-templates.md#certificate-agent-eku-esc3)
-- [ESC4  "certificate-templates"](access-controls.md#certificate-templates-esc4)
-- [ESC5  "other-objects"](access-controls.md#other-objects-esc5)
-- [ESC6  "editf_attributesubjectaltname2"](certificate-authority.md#editf_attributesubjectaltname2-esc6)
-- [ESC7  "certificate-authority"](access-controls.md#certificate-authority-esc7)
-- [ESC8  "web-endpoint-esc8](unsigned-endpoints.md#web-endpoint-esc8)
-- [ESC9  "no-security-extension"](certificate-templates.md#no-security-extension-esc9)
-- [ESC10  "weak-certificate-mapping"](certificate-templates.md#weak-certificate-mapping-esc10)
-- [ESC11  "rpc-endpoint"](unsigned-endpoints.md#rpc-endpoint-esc11)
-- [ESC12  "shell-access-to-adcs-ca-with-yubihsm"](certificate-authority.md#shell-access-to-adcs-ca-with-yubihsm-esc12)
-- [ESC13  "issuance-policiy-with-privileged-group-linked"](certificate-templates.md#esc13-issuance-policiy-with-privileged-group-linked)
-- [ESC14  "weak-explicit-mapping"](certificate-templates.md#esc14-weak-explicit-mapping)
-- [ESC15  "arbitrary application policy"](certificate-templates.md#esc15-CVE-2024-49019-arbitrary-application-policy)
+- [ESC1 "Template Allows SAN"](certificate-templates.md#template-allows-san-esc1)
+- [ESC2 "Any Purpose EKU"](certificate-templates.md#any-purpose-eku-esc2)
+- [ESC3 "Certificate Agent EKU"](certificate-templates.md#certificate-agent-eku-esc3)
+- [ESC4 "Certificate Templates"](access-controls.md#certificate-templates-esc4)
+- [ESC5 "Other Objects"](access-controls.md#other-objects-esc5)
+- [ESC6 "EDITF_ATTRIBUTESUBJECTALTNAME2"](certificate-authority.md#editf_attributesubjectaltname2-esc6)
+- [ESC7 "Certificate Authority"](access-controls.md#certificate-authority-esc7)
+- [ESC8 "Web Endpoint"](unsigned-endpoints.md#web-endpoint-esc8)
+- [ESC9 "No Security Extension"](certificate-templates.md#no-security-extension-esc9)
+- [ESC10 "Weak Certificate Mapping"](certificate-templates.md#weak-certificate-mapping-esc10)
+- [ESC11 "RPC Endpoint"](unsigned-endpoints.md#rpc-endpoint-esc11)
+- [ESC12 "Shell Access to ADCS CA with YubiHSM"](certificate-authority.md#shell-access-to-adcs-ca-with-yubihsm-esc12)
+- [ESC13 "Issuance Policy with Privileged Group Linked"](certificate-templates.md#esc13-issuance-policiy-with-privileged-group-linked)
+- [ESC14 "Weak Explicit Mapping"](certificate-templates.md#esc14-weak-explicit-mapping)
+- [ESC15 "Arbitrary Application Policy"](certificate-templates.md#esc15-CVE-2024-49019-arbitrary-application-policy)
+- [ESC16 "Security Extension Disabled on CA"](certificate-templates.md#esc16-security-extension-disabled-on-ca)
+
 - [Certifried.md](certifried.md)
 
 ### Terminology
@@ -79,7 +81,7 @@ Alternatively, information like the PKI's CA and DNS names can be gathered throu
 [netexec](https://github.com/Pennyw0rth/NetExec)'s [adcs](https://github.com/Pennyw0rth/NetExec/blob/master/cme/modules/adcs.py) module (Python) can be used to find PKI enrollment services in AD.
 
 ```bash
-netexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
+netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M adcs
 ```
 
 
@@ -88,7 +90,7 @@ netexec ldap 'domaincontroller' -d 'domain' -u 'user' -p 'password' -M adcs
 [windapsearch ](https://github.com/ropnop/windapsearch)(Python) can be used to manually to the LDAP query.
 
 ```bash
-windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base 'CN=Configuration,DC=domain,DC=local' --attrs dn,dnshostname --dc 'domaincontroller' -d 'domain.local' -u 'user' -p 'password'
+windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base "$BASE_DN" --attrs dn,dnshostname --dc "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 ```
 
 
@@ -97,7 +99,7 @@ windapsearch -m custom --filter '(objectCategory=pKIEnrollmentService)' --base '
 With [Impacket](https://github.com/SecureAuthCorp/impacket)'s [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (Python), thanks to [SAERXCIT](https://twitter.com/saerxcit) ([PR#1214](https://github.com/SecureAuthCorp/impacket/pull/1214)), it is possible to gather information regarding ADCS like the name and host of the CA, the certificate templates enrollment rights for those allowing client authentication and not requiring manager approval, etc. With ntlmrelayx, these information can be gathered through a relayed LDAP session.
 
 ```bash
-ntlmrelayx -t "ldap://domaincontroller" --dump-adcs
+ntlmrelayx -t "ldap://$DC_HOST" --dump-adcs
 ```
 
 :::
@@ -116,10 +118,10 @@ From UNIX-like systems, the [Certipy](https://github.com/ly4k/Certipy) (Python) 
 
 ```python
 # enumerate and save text, json and bloodhound (original) outputs
-certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -old-bloodhound
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -old-bloodhound
 
 # quickly spot vulnerable elements
-certipy find -u 'user@domain.local' -p 'password' -dc-ip 'DC_IP' -vulnerable -stdout
+certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -vulnerable -stdout
 ```
 
 Certipy also supports BloodHound. With the `-old-bloodhound` option, the data will be exported for the original version of [BloodHound](https://github.com/BloodHoundAD/BloodHound). With the `-bloodhound` option, the data will be exported for the modified version of BloodHound, [forked](https://github.com/ly4k/BloodHound/) by Certipy's [author](https://twitter.com/ly4k_) (default output when no flag is set).
@@ -163,7 +165,7 @@ Invoke-PassTheCert -Action 'LDAPEnum' -LdapConnection $LdapConnection -Enum 'Cer
 
 The different domain escalation scenarios are detailed in the following parts.
 
-- ESC1 to ESC3, ESC9, ESC10, ESC13, ESC14 and ESC15: [Certificate Templates](certificate-templates.md)
+- ESC1 to ESC3, ESC9, ESC10, ESC13, ESC14, ESC15 and ESC16: [Certificate Templates](certificate-templates.md)
 - ESC6 and ESC12: [Certificate Authority](certificate-authority.md)
 - ESC4, ESC5 & ESC7: [Access Controls](access-controls.md)
 - ESC8, ESC11: [Unsigned Endpoints](unsigned-endpoints.md)

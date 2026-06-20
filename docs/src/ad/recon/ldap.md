@@ -14,8 +14,8 @@ A lot of information on an AD domain can be obtained through LDAP. Most of the i
 The [ldeep](https://github.com/franc-pentest/ldeep) (Python) tool can be used to enumerate essential information like delegations, gpo, groups, machines, pso, trusts, users, and so on.
 
 ```bash
-# remotely dump information 
-ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" all "ldeepdump/$DOMAIN"
+# remotely dump information (as ldeep_DOMAIN)
+ldeep ldap -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -s ldap://"$DC_IP" all "ldeep_$DOMAIN"
 
 # parse saved information (in this case, enumerate trusts)
 ldeep cache -d "ldeepdump" -p "$DOMAIN" trusts
@@ -140,7 +140,7 @@ The PowerShell equivalent to netexec's `subnets` modules is the following
 ```
 
 > [!TIP]
-> LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/asreproast.md) (since this attack needs no authentication).
+> LDAP anonymous binding is usually disabled but it's worth checking. It could be handy to list the users and test for [ASREProasting](../movement/kerberos/roasting/asreproast.md) (since this attack needs no authentication).
 
 > [!SUCCESS]
 > Automation and scripting

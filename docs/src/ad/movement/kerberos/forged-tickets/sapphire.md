@@ -29,11 +29,11 @@ The arguments used to customize the PAC will be ignored (`-groups`, `-extra-sid`
 
 
 ```bash
-ticketer.py -request -impersonate 'domainadmin' \
--domain 'DOMAIN.FQDN' -user 'domain_user' -password 'password' \
--nthash 'krbtgt NT hash' -aesKey 'krbtgt AES key' \
--user-id '1115' -domain-sid 'S-1-5-21-...' \
-'baduser'
+ticketer.py -request -impersonate "$ADMIN_USER" \
+-domain "$DOMAIN" -user "$USER" -password "$PASSWORD" \
+-nthash "$KRBTGT_NT_HASH" -aesKey "$KRBTGT_AES_KEY" \
+-user-id "$USER_ID" -domain-sid "$DOMAIN_SID" \
+"$TARGET_USER"
 ```
 
 
@@ -46,7 +46,7 @@ _At the time of writing this recipe (September 2022), no equivalent exists for W
 
 
 > [!NOTE]
-> In 2021, Microsoft issued a patch ([KB5008380](https://support.microsoft.com/en-gb/topic/kb5008380-authentication-updates-cve-2021-42287-9dafac11-e0d0-4cb8-959a-143bd0201041)) for [CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287) (see [samaccountname-spoofing.md](../samaccountname-spoofing.md)). The patch is explained a bit more in [this blogpost](https://blog.netwrix.com/2022/01/10/pacrequestorenforcement-and-kerberos-authentication/). When the patch entered its enforcement phase (Oct. 11th 2022), it made the Sapphire Ticket attack harder to conduct.
+> In 2021, Microsoft issued a patch ([KB5008380](https://support.microsoft.com/en-gb/topic/kb5008380-authentication-updates-cve-2021-42287-9dafac11-e0d0-4cb8-959a-143bd0201041)) for [CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287) (see [samaccountname-spoofing.md](../principal-confusion/samaccountname-spoofing.md)). The patch is explained a bit more in [this blogpost](https://blog.netwrix.com/2022/01/10/pacrequestorenforcement-and-kerberos-authentication/). When the patch entered its enforcement phase (Oct. 11th 2022), it made the Sapphire Ticket attack harder to conduct.
 > 
 > The patch introduced two new structures inside a TGT's PAC: "Requestor" (`PAC_REQUESTOR`) and "Attributes" (`PAC_ATTRIBUTES_INFO`). Those structures are now required in TGTs for all up-to-date environments after the patch enforcement phase, and a `KDC_ERR_TGT_REVOKED` error is raised if a TGT is used without them.
 > 
