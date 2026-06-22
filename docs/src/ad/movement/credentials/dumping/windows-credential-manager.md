@@ -25,10 +25,10 @@ From Windows systems, `vaultcmd.exe` can be used to enumerate, check and list Mi
 vaultcmd /list
 
 #Check for credentials stored in the vault
-VaultCmd /listproperties:"$coffre_name"
+VaultCmd /listproperties:"$VAULT_NAME"
 
 #more information about the Vault 
-VaultCmd /listcreds:"$coffre_name"
+VaultCmd /listcreds:"$VAULT_NAME"
 ```
 
 The vault can be dumped in with [Get-WebCredentials.ps1](https://github.com/samratashok/nishang/blob/master/Gather/Get-WebCredentials.ps1) (PowerShell) .

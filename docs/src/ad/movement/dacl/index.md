@@ -39,7 +39,7 @@ All the aforementioned attacks (red blocks) are detailed in the child notes, exc
 
 > [!TIP] Self-attacks
 > 
-> * User and computers objects can conduct a [Kerberos RCD](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) attack on themselves.
+> * User and computers objects can conduct a [Kerberos RBCD](../kerberos/delegations/#resource-based-constrained-delegations-rbcd) attack on themselves.
 > * Computer objects can conduct a [Shadow Credentials](../kerberos/shadow-credentials.md) attack on themselves.
 
 > [!TIP] ACE inheritance

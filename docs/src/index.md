@@ -5,9 +5,7 @@ lastUpdated: false
 category: intro
 ---
 
-![](<assets/welcome.png>){.rawimg}
-
-<br>
+# The Hacker Recipes
 
 This project is aimed at providing technical guides on various hacking topics. The most advanced topics are Active Directory and Web services. Other topics will be added. The ultimate goal is to centralize all hacking techniques :eyes:
 

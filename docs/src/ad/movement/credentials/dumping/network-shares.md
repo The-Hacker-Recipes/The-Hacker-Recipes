@@ -45,7 +45,7 @@ Last but not least, one of the best tools to find sensitive information across a
 
 ```bash
 # Snaffle all the computers in the domain
-./Snaffler.exe -d domain.local -c  -s
+./Snaffler.exe -d $DOMAIN -c -s
 
 # Snaffle specific computers
 ./Snaffler.exe -n computer1,computer2 -s

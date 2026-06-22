@@ -30,7 +30,7 @@ In case the RODC has cached the principal's credentials and thus, is able to aut
 > [!TIP]
 > The RODC computer account has reset rights on the account `krbtgt_XXXXX`'s password.
 
-When the RODC generates the TGT, it indicates in the `kvno` field the version number of the key used to generate the ticket. With this TGT, it is possible to request a Service Ticket (ST) against the RODC or any accessible standard writable Domain Controller (provided that the principal is listed in `msDS-RevealOnDemandGroup` and not listed in `msDS-NeverRevealGroup`).
+When the RODC generates the TGT, it indicates in the `kvno` field the version number of the key used to generate the ticket. With this TGT, it is possible to request a Service Ticket (ST) against the RODC or any accessible standard writable Domain Controller. Note that the PRP attributes (`msDS-RevealOnDemandGroup` / `msDS-NeverRevealGroup`) govern which credentials are cached on the RODC. writable DCs issue service tickets following normal authorization rules regardless of PRP membership.
 
 ![](<assets/RODC Authentication mindmap.png>)
 

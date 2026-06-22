@@ -13,7 +13,7 @@ The idea behind this persistence technique is to have an attacker-controlled mac
 There are two requirements for a machine to act as a domain controller:
 
 1. Be registered as a DC in the domain**: this is done by;
-   1. modifying the computer's SPN (`ServicePrincipalName`) to `GC/$HOSTNAME.$DOMAIN/$DOMAIN`
+   1. modifying the computer's SPN (`ServicePrincipalName`) to `GC/$HOSTNAME.$DOMAIN/$DOMAIN` (and registering the DRS GUID SPN `E3514235-4B06-11D1-AB04-00C04FC2DCD2/$HOSTNAME.$DOMAIN` as part of the rogue DC registration)
    2. adding an entry like `CN=$HOSTNAME,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=$DOMAIN` with the following attribute values:
       * `objectClass: server`
       * `dNSHostName: $HOSTNAME.$DOMAIN`

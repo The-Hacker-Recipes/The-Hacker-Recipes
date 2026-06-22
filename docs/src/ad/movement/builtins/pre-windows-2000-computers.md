@@ -49,7 +49,7 @@ Testers can then change the Pre-Windows 2000 computer accounts' password (i.e. [
 > getTGT.py $DOMAIN/$COMPUTER_NAME\$:$COMPUTER_PASSWORD
 > ```
 > 
-> The ticket obtained can then be used with [ptt.md](../kerberos/ptt.md)
+> The ticket obtained can then be used with [ptt.md](../kerberos/pass-the/ptt.md)
 
 ## Resources
 

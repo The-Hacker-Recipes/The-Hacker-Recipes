@@ -46,7 +46,7 @@ mimikatz.exe "sekurlsa::pth /domain:<DC_NAME> /user:Administrator /ntlm:<NTLM_HA
 
 ## Mitigation
 
-Monitor registry changes to `HKLM\System\CurrentControlSet\Control\Lsa\DsrmAdminLogonBehavior` and alert on values `1` or `2` (Event ID 4794).
+Monitor registry changes to `HKLM\System\CurrentControlSet\Control\Lsa\DsrmAdminLogonBehavior` and alert on values `1` or `2`. Note that Event ID 4794 fires on DSRM password resets, not on registry key changes. To detect registry modifications to this key, enable object-level registry auditing or use Sysmon (Event ID 13) to monitor writes to `HKLM\System\CurrentControlSet\Control\Lsa\DsrmAdminLogonBehavior`.
 
 ## Resources
 

@@ -86,7 +86,7 @@ Invoke-AuthenticatedTimeRoast -DomainController $DC_IP -GenerateWordlist
 
 ### Cracking SNTP hashes
 
-SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300. This mode requires Hashcat v7.1.2 or later; earlier versions (such as v6.2.6) do not support this hash format.
+SNTP hashes can be cracked using [Hashcat](https://github.com/hashcat/hashcat) mode 31300. This mode requires Hashcat v7.0.0 or later; earlier versions (such as v6.2.6) do not support this hash format.
 
 When the hash file contains RIDs as usernames (as output by tools like `netexec` or `timeroast.py`), the `--username` flag must be used to properly parse the hash format.
 

