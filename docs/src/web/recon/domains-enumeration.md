@@ -51,7 +51,7 @@ Search engines like Google and Bing offer Dorking features that can be used to g
 >
 > ([blog.appsecco.com](https://blog.appsecco.com/))
 
-The following websites allow to search through their CT logs: [crt.sh](https://crt.sh/), [censys.io](https://censys.io/), [Facebook's CT monitor](https://developers.facebook.com/tools/ct/), [Google's CT monitor](https://transparencyreport.google.com/https/certificates).
+The following websites allow to search through their CT logs: [crt.sh](https://crt.sh/), [censys.io](https://censys.io/), [CertObserver's CT search](https://certobserver.com/ct-search).
 
 [Findomain](https://github.com/Findomain/Findomain) (Rust), [Subfinder](https://github.com/projectdiscovery/subfinder) (Go) and [Assetfinder](https://github.com/tomnomnom/assetfinder) (Go) mainly rely on Certificate Transparency logs enumeration.
 
