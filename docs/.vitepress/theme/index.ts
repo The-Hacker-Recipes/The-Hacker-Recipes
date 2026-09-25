@@ -25,7 +25,7 @@ export default {
   
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'aside-ads-before': () =>  h('div', {}, [h(Write),h(AsideSponsors)]), 
+      'aside-ads-before': () => h('div', { class: 'aside-stack' }, [h(Write), h(AsideSponsors)]), 
       'aside-ads-after': () => h(Authors),
       'doc-before': () => h(BannerSponsor),
       'doc-bottom': () => h(FooterLinks),

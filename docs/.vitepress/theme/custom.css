@@ -157,11 +157,27 @@
 }
 
 .vp-sponsor-grid.xmini .vp-sponsor-grid-image {
-    max-width: 80px;
-    max-height: 40px;
+    max-width: 140px;
+    max-height: 48px;
 }
 
-/* Padding seulement quand au moins un sponsor est affiché (grille non vide) */
-.VPDocAsideSponsors:has(.vp-sponsor-grid-link) {
-    padding-bottom: clamp(1rem, 3vw, 1.4rem);
+/*
+ * Aside: grayscale by default, full color on hover.
+ * No invert — sponsors with hasDark already ship theme-correct assets.
+ */
+.VPDocAsideSponsors .vp-sponsor-grid-image,
+.dark .VPDocAsideSponsors .vp-sponsor-grid-image {
+    filter: grayscale(1);
+}
+
+.VPDocAsideSponsors .vp-sponsor-grid-item:hover .vp-sponsor-grid-image,
+.dark .VPDocAsideSponsors .vp-sponsor-grid-item:hover .vp-sponsor-grid-image {
+    filter: none;
+}
+
+/* Equal gaps between Write / Sponsors / Authors in the right aside */
+.aside-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }

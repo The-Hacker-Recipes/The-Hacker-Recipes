@@ -10,14 +10,28 @@ const { page } = useData()
 const currentCategory = computed(() => page.value.frontmatter.category || '')
 const userCountry = ref(null)
 
+function countryFromQuery(): string | null {
+  if (typeof window === 'undefined') return null
+  const value = new URLSearchParams(window.location.search).get('country')
+  return value ? value.toUpperCase() : null
+}
+
 const fetchUserCountry = async () => {
+  const override = countryFromQuery()
+  if (override) {
+    userCountry.value = override
+    return
+  }
+
   try {
     const response = await fetch('https://api.country.is/')
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const result = await response.json()
-    userCountry.value = result.country_code || 'FR' // Défaut à FR si inconnu
+    // api.country.is returns { ip, country } (ISO 3166-1 alpha-2)
+    userCountry.value = result.country || 'FR'
   } catch (error) {
     console.error('Erreur lors de la récupération du pays:', error)
-    userCountry.value = 'FR' 
+    userCountry.value = 'FR'
   }
 }
 
@@ -42,14 +56,15 @@ const sponsors = computed(() => {
               (item.country.includes(userCountry.value) || item.country.includes('ALL'))
           ),
         };
-      }) ?? []
+      })
+      .filter((sponsor) => sponsor.items.length > 0) ?? []
   );
 });
 
 </script>
 
 <template>
-  <VPDocAsideSponsors v-if="data && sponsors !== null" :data="sponsors" />
+  <VPDocAsideSponsors v-if="data && sponsors?.length" :data="sponsors" />
 </template>
 
 <style>

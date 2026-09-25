@@ -1,20 +1,22 @@
 <template>
   <div class="authors-container">
-    <p class="authors-title">{{ title }}</p>
-    <div v-if="authors.length" class="authors-grid">
-      <a
-        v-for="author in authors"
-        :key="author.id"
-        :href="author.html_url"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="author"
-        :title="author.login"
-      >
-        <img :src="author.avatar_url + avatarSize" />
-      </a>
+    <div class="authors-inner">
+      <p class="authors-title">{{ title }}</p>
+      <div v-if="authors.length" class="authors-grid">
+        <a
+          v-for="author in authors"
+          :key="author.id"
+          :href="author.html_url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="author"
+          :title="author.login"
+        >
+          <img :src="author.avatar_url + avatarSize" />
+        </a>
+      </div>
+      <p v-else class="no-authors">{{ noAuthorsMessage }}</p>
     </div>
-    <p v-else class="no-authors">{{ noAuthorsMessage }}</p>
   </div>
 </template>
 
@@ -76,14 +78,19 @@ watch(() => route.path, () => {
 
 <style scoped>
 .authors-container {
+  display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding: 16px 24px 24px 24px;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  padding: 16px;
   border-radius: 12px;
   line-height: 18px;
   background-color: var(--vp-carbon-ads-bg-color);
+}
+
+.authors-inner {
+  width: fit-content;
+  max-width: 100%;
 }
 
 .authors-title {
@@ -94,15 +101,17 @@ watch(() => route.path, () => {
 }
 
 .authors-grid {
-  display: flex;
-  padding-top: 4px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 30px);
   gap: 4px;
+  padding-top: 4px;
 }
 
 .author img {
+  display: block;
   width: 30px;
   height: 30px;
+  box-sizing: border-box;
   padding: 1px;
   border-radius: 50%;
   border: none;
