@@ -161,9 +161,22 @@
     max-height: 48px;
 }
 
-/* Equal gaps between Write / Sponsors / Authors in the right aside */
+/* Equal gaps between Write / Sponsors / Authors */
 .aside-stack {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
+}
+
+@media (max-width: 1279px) {
+    .aside-stack {
+        margin-top: 1.25rem;
+        gap: 1rem;
+    }
+
+    /* Write already has its own mobile margin-top when alone; reset inside stack */
+    .aside-stack .write {
+        margin-top: 0;
+    }
 }

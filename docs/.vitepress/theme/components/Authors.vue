@@ -80,7 +80,7 @@ watch(() => route.path, () => {
 .authors-container {
   --authors-pad-x: clamp(1rem, 3.5vw, 1.75rem);
 
-  margin-top: 1rem;
+  margin-top: 0;
   margin-bottom: 0;
   padding: 16px var(--authors-pad-x) 16px;
   border-radius: 12px;
@@ -118,7 +118,8 @@ watch(() => route.path, () => {
   transition: transform 0.2s ease;
 }
 
-.author:hover img {
+.author:hover img,
+.author:active img {
   transform: scale(1.2);
 }
 
@@ -127,14 +128,23 @@ watch(() => route.path, () => {
   color: var(--vp-c-text-2);
 }
 
+@media (max-width: 1279px) {
+  .authors-container {
+    --authors-pad-x: clamp(1rem, 4.2vw, 1.65rem);
+    padding-top: clamp(1rem, 2.8vw, 1.35rem);
+    padding-bottom: clamp(1.1rem, 3.2vw, 1.55rem);
+    border-radius: 14px;
+  }
+
+  .authors-grid {
+    grid-template-columns: repeat(auto-fill, 30px);
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .authors-container {
     border-left: none;
-    padding-top: 24px;
-    padding-bottom: 24px;
-    border-top: 1px solid var(--vp-c-divider);
-    border-bottom: 1px solid var(--vp-c-divider);
-    margin-bottom: 18px;
   }
 
   .authors-title {

@@ -20,17 +20,19 @@ import ExegolHistoryImport from './components/ExegolHistoryImport.vue'
 import thrHistory from '../plugins/thrHistory.ts'
 const isMobileorTablet = useMediaQuery('(max-width: 1279px)')
 
+function asideBlocks() {
+  return h('div', { class: 'aside-stack' }, [h(Write), h(AsideSponsors), h(Authors)])
+}
+
 export default {
   extends: DefaultTheme,
   
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'aside-ads-before': () => h('div', { class: 'aside-stack' }, [h(Write), h(AsideSponsors)]), 
-      'aside-ads-after': () => h(Authors),
+      'aside-ads-before': () => isMobileorTablet.value ? null : asideBlocks(),
       'doc-before': () => h(BannerSponsor),
       'doc-bottom': () => h(FooterLinks),
-      'doc-footer-before': () =>isMobileorTablet.value? h('div', {}, [h(Write), h(Authors)]): null,
-      'doc-after': () =>isMobileorTablet.value? h(AsideSponsors, { style: { marginTop: '24px' } }): null,
+      'doc-footer-before': () => isMobileorTablet.value ? asideBlocks() : null,
       'not-found': () => h(PageNotFound),
     })
   },

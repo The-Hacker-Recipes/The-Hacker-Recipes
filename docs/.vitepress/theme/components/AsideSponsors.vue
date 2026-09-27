@@ -55,7 +55,7 @@ const ads = computed(() => {
 </script>
 
 <template>
-  <div v-if="ads.length" class="aside-ads">
+  <div class="aside-ads" :class="{ 'aside-ads--empty': !ads.length }">
     <a
       v-for="(ad, index) in ads"
       :key="ad.name"
@@ -78,6 +78,10 @@ const ads = computed(() => {
   width: 100%;
 }
 
+.aside-ads--empty {
+  display: none;
+}
+
 .aside-ad {
   --aside-ad-pad-x: clamp(1rem, 3.5vw, 1.75rem);
 
@@ -93,9 +97,11 @@ const ads = computed(() => {
   color: inherit;
   background: var(--vp-c-bg-soft);
   transition: background-color 0.2s ease;
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--vp-c-brand-1) 22%, transparent);
 }
 
-.aside-ad:hover {
+.aside-ad:hover,
+.aside-ad:active {
   background: var(--vp-c-bg-alt);
 }
 
@@ -125,13 +131,28 @@ const ads = computed(() => {
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-.aside-ad:hover .aside-ad__logo {
+.aside-ad:hover .aside-ad__logo,
+.aside-ad:active .aside-ad__logo {
   transform: scale(1.06);
+}
+
+@media (max-width: 1279px) {
+  .aside-ad {
+    --aside-ad-pad-x: clamp(1rem, 4.2vw, 1.65rem);
+    padding-top: clamp(1rem, 2.8vw, 1.35rem);
+    padding-bottom: clamp(1.1rem, 3.2vw, 1.55rem);
+    border-radius: 14px;
+  }
+
+  .aside-ad__logo {
+    max-width: min(100%, 11rem);
+    max-height: 3.25rem;
+  }
 }
 </style>
 
 <style>
-/* Light: colored. Dark: grayscale until hover. */
+/* Light: colored. Dark: grayscale until hover/active. */
 .aside-ad__logo {
   filter: none;
 }
@@ -140,7 +161,8 @@ const ads = computed(() => {
   filter: grayscale(1);
 }
 
-.dark .aside-ad:hover .aside-ad__logo {
+.dark .aside-ad:hover .aside-ad__logo,
+.dark .aside-ad:active .aside-ad__logo {
   filter: none;
 }
 </style>
