@@ -48,8 +48,10 @@ const sponsors = computed(() => {
     data?.value
       .filter((sponsor) => sponsor.tier !== 'Banner Sponsors')
       .map((sponsor) => {
+        const isBig = sponsor.size === 'big'
         return {
-          size: sponsor.size === 'big' ? 'mini' : 'xmini',
+          tier: isBig ? undefined : 'Ad partner',
+          size: isBig ? 'mini' : 'xmini',
           items: sponsor.items.filter(
             (item) =>
               item.categories.includes(currentCategory.value) &&
