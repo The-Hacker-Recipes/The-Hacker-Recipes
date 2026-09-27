@@ -15,6 +15,35 @@ function countryFromQuery(): string | null {
   return value ? value.toUpperCase() : null
 }
 
+type GeoEndpoint = { url: string; parse: (data: Record<string, unknown>) => string | null }
+
+const GEO_ENDPOINTS: GeoEndpoint[] = [
+  {
+    url: 'https://get.geojs.io/v1/ip/country.json',
+    parse: (data) => (typeof data.country === 'string' ? data.country : null),
+  },
+  {
+    url: 'https://api.country.is/',
+    parse: (data) => (typeof data.country === 'string' ? data.country : null),
+  },
+]
+
+async function detectCountry(): Promise<string> {
+  for (const endpoint of GEO_ENDPOINTS) {
+    try {
+      const response = await fetch(endpoint.url)
+      if (!response.ok) continue
+      const data = await response.json()
+      const code = endpoint.parse(data)
+      if (code && /^[a-z]{2}$/i.test(code)) return code.toUpperCase()
+    } catch {
+      // try next provider (CORS / network blocks are common in prod)
+    }
+  }
+  // Non-FR fallback so EXT partners stay visible when every geo API is blocked
+  return 'US'
+}
+
 const fetchUserCountry = async () => {
   const override = countryFromQuery()
   if (override) {
@@ -22,16 +51,7 @@ const fetchUserCountry = async () => {
     return
   }
 
-  try {
-    const response = await fetch('https://api.country.is/')
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const result = await response.json()
-    // api.country.is returns { ip, country } (ISO 3166-1 alpha-2)
-    userCountry.value = result.country || 'FR'
-  } catch (error) {
-    console.error('Erreur lors de la récupération du pays:', error)
-    userCountry.value = 'FR'
-  }
+  userCountry.value = await detectCountry()
 }
 
 onMounted(() => {
