@@ -150,7 +150,7 @@
     margin-left: 0;
 }
 
-/* GRID IMAGE CHANGE */
+/* GRID IMAGE CHANGE (home / dedicated sponsor pages) */
 .vp-sponsor-grid.mini .vp-sponsor-grid-image {
     max-width: 150px;
     max-height: 75px;
@@ -159,45 +159,6 @@
 .vp-sponsor-grid.xmini .vp-sponsor-grid-image {
     max-width: 140px;
     max-height: 48px;
-}
-
-/*
- * Aside logos: colored in light, grayscale in dark (full color on hover).
- * No invert — sponsors with hasDark already ship theme-correct assets.
- */
-.VPDocAsideSponsors .vp-sponsor-grid-image {
-    filter: none;
-}
-
-.dark .VPDocAsideSponsors .vp-sponsor-grid-image {
-    filter: grayscale(1);
-}
-
-.dark .VPDocAsideSponsors .vp-sponsor-grid-item:hover .vp-sponsor-grid-image {
-    filter: none;
-}
-
-/* Label above the card — don't clip the cartouche top */
-.VPDocAsideSponsors .vp-sponsor.aside {
-    overflow: visible;
-    border-radius: 0;
-}
-
-.VPDocAsideSponsors .vp-sponsor-grid-item {
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.VPDocAsideSponsors .vp-sponsor-tier {
-    background-color: transparent;
-    color: var(--vp-c-text-3);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1.2;
-    margin: 0 0 6px !important;
-    padding: 0 !important;
 }
 
 /* Equal gaps between Write / Sponsors / Authors in the right aside */

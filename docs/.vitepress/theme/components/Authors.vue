@@ -78,18 +78,18 @@ watch(() => route.path, () => {
 
 <style scoped>
 .authors-container {
-  display: flex;
-  justify-content: center;
+  --authors-pad-x: clamp(1rem, 3.5vw, 1.75rem);
+
   margin-top: 1rem;
   margin-bottom: 0;
-  padding: 16px;
+  padding: 16px var(--authors-pad-x) 16px;
   border-radius: 12px;
   line-height: 18px;
   background-color: var(--vp-carbon-ads-bg-color);
 }
 
 .authors-inner {
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
 }
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
-import { VPDocAsideSponsors } from 'vitepress/theme'
 import { useSponsor } from '../composables/sponsors'
 import { useData } from 'vitepress'
 
@@ -39,85 +38,109 @@ onMounted(() => {
   fetchUserCountry()
 })
 
-const sponsors = computed(() => {
-  if (userCountry.value === null) {
-    return null; // Attendre la récupération du pays
-  }
+/** Flat list of visible aside ads (banner tier excluded). */
+const ads = computed(() => {
+  if (userCountry.value === null || !data?.value) return []
 
-  return (
-    data?.value
-      .filter((sponsor) => sponsor.tier !== 'Banner Sponsors')
-      .map((sponsor) => {
-        const isBig = sponsor.size === 'big'
-        return {
-          tier: isBig ? undefined : 'Ad partner',
-          size: isBig ? 'mini' : 'xmini',
-          items: sponsor.items.filter(
-            (item) =>
-              item.categories.includes(currentCategory.value) &&
-              (item.country.includes(userCountry.value) || item.country.includes('ALL'))
-          ),
-        };
-      })
-      .filter((sponsor) => sponsor.items.length > 0) ?? []
-  );
-});
-
+  return data.value
+    .filter((group) => group.tier !== 'Banner Sponsors')
+    .flatMap((group) =>
+      group.items.filter(
+        (item) =>
+          item.categories.includes(currentCategory.value) &&
+          (item.country.includes(userCountry.value) || item.country.includes('ALL'))
+      )
+    )
+})
 </script>
 
 <template>
-  <VPDocAsideSponsors v-if="data && sponsors?.length" :data="sponsors" />
+  <div v-if="ads.length" class="aside-ads">
+    <a
+      v-for="(ad, index) in ads"
+      :key="ad.name"
+      class="aside-ad"
+      :href="ad.url"
+      target="_blank"
+      rel="sponsored noopener"
+    >
+      <p v-if="index === 0" class="aside-ad__label">Ad partner</p>
+      <img class="aside-ad__logo" :src="ad.img" :alt="ad.name" />
+    </a>
+  </div>
 </template>
 
-<style>
-.sponsor {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 14px;
-  padding-top: 0.4rem;
-  padding-bottom: 0.4rem;
-  position: relative;
-  font-size: 0.9rem;
-  font-weight: 700;
-  line-height: 1.1rem;
+<style scoped>
+.aside-ads {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+  flex-direction: column;
   gap: 1rem;
-  background-color: var(--vp-c-bg-alt);
-  border: 2px solid var(--vp-c-bg-alt);
-  transition: border-color 0.5s;
+  width: 100%;
 }
-.sponsor:hover {
-  border: 2px solid var(--vp-c-brand-light);
+
+.aside-ad {
+  --aside-ad-pad-x: clamp(1rem, 3.5vw, 1.75rem);
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem var(--aside-ad-pad-x) 1rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--vp-c-bg-soft);
+  transition: background-color 0.2s ease;
 }
-.sponsor img {
-  transition: transform 0.5s;
-  transform: scale(1.25);
+
+.aside-ad:hover {
+  background: var(--vp-c-bg-alt);
 }
-.sponsor:hover img {
-  transform: scale(1.75);
+
+.aside-ad:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 3px;
 }
-.sponsor .heading {
-  background-image: linear-gradient(
-    120deg,
-    #b047ff 16%,
-    var(--vp-c-brand-lighter),
-    var(--vp-c-brand-lighter)
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.sponsor .extra-info {
+
+.aside-ad__label {
+  margin: 0;
+  font-family: var(--vp-font-family-base);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
   color: var(--vp-c-text-1);
-  opacity: 0;
-  font-size: 0.7rem;
-  padding-left: 0.1rem;
-  transition: opacity 0.5s;
 }
-.sponsor:hover .extra-info {
-  opacity: 0.9;
+
+.aside-ad__logo {
+  display: block;
+  width: auto;
+  max-width: min(100%, 140px);
+  max-height: 48px;
+  height: auto;
+  margin-inline: auto;
+  object-fit: contain;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.aside-ad:hover .aside-ad__logo {
+  transform: scale(1.06);
+}
+</style>
+
+<style>
+/* Light: colored. Dark: grayscale until hover. */
+.aside-ad__logo {
+  filter: none;
+}
+
+.dark .aside-ad__logo {
+  filter: grayscale(1);
+}
+
+.dark .aside-ad:hover .aside-ad__logo {
+  filter: none;
 }
 </style>
