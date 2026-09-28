@@ -138,7 +138,7 @@ Testers can also use [ntlmrelayx](https://github.com/SecureAuthCorp/impacket/blo
 With [bloodyAD](https://github.com/CravateRouge/bloodyAD) (Python):
 
 ```bash
-bloodyad -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --host "$DC_HOST" add computer 'SomeName$' 'SomePassword'
+bloodyad -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --host "$DC_HOST" add computer 'SomeName' 'SomePassword'
 ```
 
 With [ldeep](https://github.com/franc-pentest/ldeep) (Python):
