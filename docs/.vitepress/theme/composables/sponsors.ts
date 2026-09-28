@@ -90,7 +90,7 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
     {
       name: 'Vulnotes',
       categories: ['all'],
-      country: 'EXT',
+      country: 'all',
       url: 'https://vulnotes.com/?utm_source=thr',
       img: '/images/sponsors/vulnotes.svg',
     },
