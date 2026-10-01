@@ -182,9 +182,6 @@ pypykatz live registry
 ```
 
 
-=== secretsdump.com
-
-[secretsdump.com](https://secretsdump.com) is a client-side reimplementation of Impacket's offline `secretsdump.py`, written in Rust and compiled to WebAssembly. The `SYSTEM`, `SAM`, `SECURITY` and `NTDS.dit` files are dropped into the browser and parsed locally to recover the boot key, SAM NT/LM hashes, LSA secrets and DCC2 cached logons. Nothing is uploaded, which is convenient for quick offline triage without installing tooling, or when the hives must not leave the analyst's machine.
 
 :::
 
