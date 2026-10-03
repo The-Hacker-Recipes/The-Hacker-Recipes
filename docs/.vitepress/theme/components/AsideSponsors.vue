@@ -75,35 +75,35 @@ const ads = computed(() => {
 </script>
 
 <template>
-  <div class="aside-ads" :class="{ 'aside-ads--empty': !ads.length }">
+  <div class="context-stack" :class="{ 'context-stack--empty': !ads.length }">
     <a
       v-for="(ad, index) in ads"
       :key="ad.name"
-      class="aside-ad"
+      class="context-card"
       :href="ad.url"
       target="_blank"
       rel="sponsored noopener"
     >
-      <p v-if="index === 0" class="aside-ad__label">Ad partner</p>
-      <img class="aside-ad__logo" :src="ad.img" :alt="ad.name" />
+      <p v-if="index === 0" class="context-card__label">Ad partner</p>
+      <img class="context-card__logo" :src="ad.img" :alt="ad.name" />
     </a>
   </div>
 </template>
 
 <style scoped>
-.aside-ads {
+.context-stack {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
 }
 
-.aside-ads--empty {
+.context-stack--empty {
   display: none;
 }
 
-.aside-ad {
-  --aside-ad-pad-x: clamp(1rem, 3.5vw, 1.75rem);
+.context-card {
+  --context-card-pad-x: clamp(1rem, 3.5vw, 1.75rem);
 
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@ const ads = computed(() => {
   gap: 0.5rem;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.85rem var(--aside-ad-pad-x) 1rem;
+  padding: 0.85rem var(--context-card-pad-x) 1rem;
   border-radius: 12px;
   text-decoration: none;
   color: inherit;
@@ -120,17 +120,17 @@ const ads = computed(() => {
   -webkit-tap-highlight-color: color-mix(in srgb, var(--vp-c-brand-1) 22%, transparent);
 }
 
-.aside-ad:hover,
-.aside-ad:active {
+.context-card:hover,
+.context-card:active {
   background: var(--vp-c-bg-alt);
 }
 
-.aside-ad:focus-visible {
+.context-card:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 3px;
 }
 
-.aside-ad__label {
+.context-card__label {
   margin: 0;
   font-family: var(--vp-font-family-base);
   font-size: 14px;
@@ -140,7 +140,7 @@ const ads = computed(() => {
   color: var(--vp-c-text-1);
 }
 
-.aside-ad__logo {
+.context-card__logo {
   display: block;
   width: auto;
   max-width: min(100%, 140px);
@@ -151,20 +151,20 @@ const ads = computed(() => {
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-.aside-ad:hover .aside-ad__logo,
-.aside-ad:active .aside-ad__logo {
+.context-card:hover .context-card__logo,
+.context-card:active .context-card__logo {
   transform: scale(1.06);
 }
 
 @media (max-width: 1279px) {
-  .aside-ad {
-    --aside-ad-pad-x: clamp(1rem, 4.2vw, 1.65rem);
+  .context-card {
+    --context-card-pad-x: clamp(1rem, 4.2vw, 1.65rem);
     padding-top: clamp(1rem, 2.8vw, 1.35rem);
     padding-bottom: clamp(1.1rem, 3.2vw, 1.55rem);
     border-radius: 14px;
   }
 
-  .aside-ad__logo {
+  .context-card__logo {
     max-width: min(100%, 11rem);
     max-height: 3.25rem;
   }
@@ -173,16 +173,16 @@ const ads = computed(() => {
 
 <style>
 /* Light: colored. Dark: grayscale until hover/active. */
-.aside-ad__logo {
+.context-card__logo {
   filter: none;
 }
 
-.dark .aside-ad__logo {
+.dark .context-card__logo {
   filter: grayscale(1);
 }
 
-.dark .aside-ad:hover .aside-ad__logo,
-.dark .aside-ad:active .aside-ad__logo {
+.dark .context-card:hover .context-card__logo,
+.dark .context-card:active .context-card__logo {
   filter: none;
 }
 </style>
