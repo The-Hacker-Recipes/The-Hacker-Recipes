@@ -86,7 +86,14 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
       country: 'all',
       url: 'https://www.example.com',
       img: '/images/sponsors/Logo_demo3.svg',
-    }
+    },
+    {
+      name: 'Vulnotes',
+      categories: ['all'],
+      country: 'all',
+      url: 'https://vulnotes.com/?utm_source=thr',
+      img: '/images/sponsors/vulnotes.svg',
+    },
   ],
   banner: [
     {
@@ -111,18 +118,17 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
 }
 
 function toggleDarkLogos() {
-  if (data.value) {
-    const isDark = document.documentElement.classList.contains('dark')
-    data.value.forEach(({ items }) => {
-      items.forEach((s: Sponsor) => {
-        if (s.hasDark) {
-          s.img = isDark
-            ? s.img.replace(/(\.\w+)$/, '-dark$1')
-            : s.img.replace(/-dark(\.\w+)$/, '$1')
-        }
-      })
+  if (!data.value) return
+
+  const isDark = document.documentElement.classList.contains('dark')
+  data.value.forEach(({ items }) => {
+    items.forEach((s: Sponsor) => {
+      if (!s.hasDark) return
+      // Always normalize first so repeated observer callbacks never produce *-dark-dark.svg
+      const base = s.img.replace(/-dark(\.\w+)$/, '$1')
+      s.img = isDark ? base.replace(/(\.\w+)$/, '-dark$1') : base
     })
-  }
+  })
 }
 
 export function useSponsor() {
@@ -148,7 +154,7 @@ export function useSponsor() {
       items: sponsorGroup.items.map(sponsor => ({
         ...sponsor,
         categories: sponsor.categories.includes('all') ? [...ALL_CATEGORIES] : sponsor.categories,
-        country: sponsor.country.includes('all') ? [...ALL_COUNTRIES] : sponsor.country
+        country: resolveCountries(sponsor.country),
       }))
     }))
 
@@ -179,6 +185,14 @@ function mapSponsors(sponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'>) {
       items: sponsors['banner'],
     },
   ]
+}
+
+/** Expand country targeting: `all` = everywhere, `EXT` = everywhere except FR. */
+function resolveCountries(country: string): string | string[] {
+  const normalized = country.toLowerCase()
+  if (normalized === 'all') return [...ALL_COUNTRIES]
+  if (normalized === 'ext') return ALL_COUNTRIES.filter((code) => code !== 'FR')
+  return country
 }
 
 const viteSponsorNames = new Set(

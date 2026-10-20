@@ -1,20 +1,22 @@
 <template>
   <div class="authors-container">
-    <p class="authors-title">{{ title }}</p>
-    <div v-if="authors.length" class="authors-grid">
-      <a
-        v-for="author in authors"
-        :key="author.id"
-        :href="author.html_url"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="author"
-        :title="author.login"
-      >
-        <img :src="author.avatar_url + avatarSize" />
-      </a>
+    <div class="authors-inner">
+      <p class="authors-title">{{ title }}</p>
+      <div v-if="authors.length" class="authors-grid">
+        <a
+          v-for="author in authors"
+          :key="author.id"
+          :href="author.html_url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="author"
+          :title="author.login"
+        >
+          <img :src="author.avatar_url + avatarSize" />
+        </a>
+      </div>
+      <p v-else class="no-authors">{{ noAuthorsMessage }}</p>
     </div>
-    <p v-else class="no-authors">{{ noAuthorsMessage }}</p>
   </div>
 </template>
 
@@ -76,14 +78,19 @@ watch(() => route.path, () => {
 
 <style scoped>
 .authors-container {
-  justify-content: center;
-  align-items: center;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding: 16px 24px 24px 24px;
+  --authors-pad-x: clamp(1rem, 3.5vw, 1.75rem);
+
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 16px var(--authors-pad-x) 16px;
   border-radius: 12px;
   line-height: 18px;
   background-color: var(--vp-carbon-ads-bg-color);
+}
+
+.authors-inner {
+  width: 100%;
+  max-width: 100%;
 }
 
 .authors-title {
@@ -94,22 +101,25 @@ watch(() => route.path, () => {
 }
 
 .authors-grid {
-  display: flex;
-  padding-top: 4px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 30px);
   gap: 4px;
+  padding-top: 4px;
 }
 
 .author img {
+  display: block;
   width: 30px;
   height: 30px;
+  box-sizing: border-box;
   padding: 1px;
   border-radius: 50%;
   border: none;
   transition: transform 0.2s ease;
 }
 
-.author:hover img {
+.author:hover img,
+.author:active img {
   transform: scale(1.2);
 }
 
@@ -118,14 +128,23 @@ watch(() => route.path, () => {
   color: var(--vp-c-text-2);
 }
 
+@media (max-width: 1279px) {
+  .authors-container {
+    --authors-pad-x: clamp(1rem, 4.2vw, 1.65rem);
+    padding-top: clamp(1rem, 2.8vw, 1.35rem);
+    padding-bottom: clamp(1.1rem, 3.2vw, 1.55rem);
+    border-radius: 14px;
+  }
+
+  .authors-grid {
+    grid-template-columns: repeat(auto-fill, 30px);
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .authors-container {
     border-left: none;
-    padding-top: 24px;
-    padding-bottom: 24px;
-    border-top: 1px solid var(--vp-c-divider);
-    border-bottom: 1px solid var(--vp-c-divider);
-    margin-bottom: 18px;
   }
 
   .authors-title {

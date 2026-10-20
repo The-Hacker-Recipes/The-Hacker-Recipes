@@ -33,7 +33,7 @@ import { ExternalLink } from 'lucide-vue-next'
   position: relative;
   display: block;
   width: 100%;
-  margin: 1rem 0;
+  margin: 0;
   padding: var(--write-pad-top) var(--write-pad-x) var(--write-pad-bottom);
   box-sizing: border-box;
   border-radius: 12px;
