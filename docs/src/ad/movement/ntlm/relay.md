@@ -376,3 +376,5 @@ The ntlmrelayx tool offers features making it a very valuable asset when pentest
 [https://www.synacktiv.com/publications/bypassing-windows-authentication-reflection-mitigations-for-system-shells-part-1](https://www.synacktiv.com/publications/bypassing-windows-authentication-reflection-mitigations-for-system-shells-part-1)
 
 [https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html](https://projectzero.google/2021/10/using-kerberos-for-authentication-relay.html)
+
+[https://en.hackita.it/articoli/ntlm-relay/](https://en.hackita.it/articoli/ntlm-relay/)
