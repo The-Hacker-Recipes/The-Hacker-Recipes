@@ -108,6 +108,8 @@ The following table should help for better understanding of the ACE types and wh
 
 [https://adsecurity.org/?p=3658](https://adsecurity.org/?p=3658)
 
+[https://en.hackita.it/articoli/bloodyad/](https://en.hackita.it/articoli/bloodyad/)
+
 ::: details BloodHound releases
 [https://medium.com/@_wald0/bloodhound-1-3-the-acl-attack-path-update-74aa56c5eb3a](https://medium.com/@_wald0/bloodhound-1-3-the-acl-attack-path-update-74aa56c5eb3a)
 
