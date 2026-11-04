@@ -19,3 +19,7 @@ curl --user-agent "PENTEST" "$URL/?parameter=/path/to/image/shell.gif&cmd=id"
 
 > [!TIP]
 > Other LFI to RCE via file upload methods may be found later on the chapter [LFI to RCE (via php wrappers)](file-upload.md#via-php-wrappers-and-streams).
+
+## Resources
+
+[https://en.hackita.it/articoli/file-upload-attack/](https://en.hackita.it/articoli/file-upload-attack/)
