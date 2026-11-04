@@ -21,7 +21,7 @@ When a web server wants to handle sessions, it can use PHP session cookies (`PHP
  * The user name for the session (from a parameter called `user`)
  * The language used by the user (from a parameter called `lang`)
 
- _Exemple :_
+ _Example :_
 
 ```http
 GET /?user=/var/lib/php/sessions/sess_[PHPSESSID] HTTP/2
